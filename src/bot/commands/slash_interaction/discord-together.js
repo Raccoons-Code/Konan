@@ -2,15 +2,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { CommandInteraction } = require('discord.js');
 const { DiscordTogether } = require('discord-together');
 
-function setChoices(discord_together) {
-  const choices = [];
-
-  Object.keys(discord_together.applications)
-    .forEach(application => choices.push([application, application]));
-
-  return choices;
-}
-
 module.exports = class extends SlashCommandBuilder {
   constructor(client) {
     super();
@@ -21,14 +12,19 @@ module.exports = class extends SlashCommandBuilder {
       .setDescription('Create a application together party')
       .addStringOption(option => option.setName('application')
         .setDescription('Select application')
-        .setChoices(setChoices(this.discord_together))
+        .setAutocomplete(true)
         .setRequired(true));
     this.t = client.t;
   }
 
   /** @param {CommandInteraction} interaction */
   async execute(interaction) {
+    this.interaction = interaction;
+
     const { locale, member, options } = interaction;
+
+    if (interaction.isAutocomplete())
+      return this.executeAutocomplete();
 
     if (!member.voice.channel)
       return interaction.reply({
@@ -38,5 +34,21 @@ module.exports = class extends SlashCommandBuilder {
 
     this.discord_together.createTogetherCode(member.voice.channel.id, options.getString('application'))
       .then(invite => interaction.reply(`${invite.code}`));
+  }
+
+  /** @param {AutocompleteInteraction} interaction */
+  async executeAutocomplete(interaction = this.interaction) {
+    if (interaction.responded) return;
+
+    const res = [];
+
+    Object.keys(this.discord_together.applications).forEach(application => {
+      res.push({
+        name: `${application}`,
+        value: `${application}`,
+      });
+    });
+
+    interaction.respond(res);
   }
 };
