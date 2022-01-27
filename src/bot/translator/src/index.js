@@ -1,5 +1,15 @@
+/** @type {options} */
 const _this = {};
 
+/** @param {options} options */
+function capitalize(string, options) {
+  if (options.capitalize || _this.capitalize)
+    return `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
+
+  return `${string.charAt(0).toLowerCase()}${string.slice(1)}`;
+}
+
+/** @param {options} object */
 function interpolate(text, object) {
   let _text;
   const prefix = _this.interpolation.prefix;
@@ -20,15 +30,10 @@ function interpolate(text, object) {
   return _text || text;
 }
 
-module.exports = new class {
-  /**
-   * @param {object} [options]
-   * @param {object} options.resources
-   * @param {object} [options.interpolation]
-   * @param {string} [options.interpolation.prefix]
-   * @param {string} [options.interpolation.suffix]
-   */
+class Idjsn {
+  /** @param {options} options */
   init(options) {
+    if (!options) return;
     if (!options.resources) return;
     if (!options.interpolation) options.interpolation = {};
     if (!options.interpolation.prefix) options.interpolation.prefix = '\\{\\{';
@@ -36,18 +41,41 @@ module.exports = new class {
 
     _this.resources = options.resources;
     _this.interpolation = options.interpolation;
-    _this.t = this.t;
+    return this;
   }
 
   /**
-   * @param {String} key
-   * @param {Object} [options]
-   * @param {String} [options.locale]
+   * @param {string} key
+   * @param {options} options
    */
   t(key, options) {
     if (!options) options = {};
+
+    _this.interpolation = options.interpolation || _this.interpolation;
+
     const locale = options.locale || 'en';
+
     const resources = _this.resources[locale] || _this.resources[locale.split(/_|-/)[0]];
-    return interpolate(resources?.translation?.[key] || key, options);
+
+    let text = resources?.translation?.[key] || key;
+
+    if (typeof options.capitalize === 'boolean' || typeof _this.capitalize === 'boolean')
+      text = capitalize(text, options);
+
+    return interpolate(text, options);
   }
+}
+
+const instance = new Idjsn();
+
+module.exports = instance;
+
+const options = {
+  resources: require('../resources'),
+  interpolation: {
+    prefix: String('\\{\\{'),
+    suffix: String('\\}\\}'),
+  },
+  capitalize: Boolean(),
+  locale: String('en'),
 };
