@@ -28,7 +28,7 @@ module.exports = class extends Command {
     const [type, reset] = args;
 
     if (!this.data.args.type.includes(type) || !this.data.args.reset.includes(reset))
-      return message.reply(`${this.t('Expected arguments:', { locale })}\nType: ${this.data.args.type.join(' ')}\nReset: ${this.data.args.reset.join(' ')}`);
+      return this.msg_del_time_async(await message.reply(`${this.t('Expected arguments:', { locale })}\nType: ${this.data.args.type.join(' ')}\nReset: ${this.data.args.reset.join(' ')}`), 10);
 
     const data = [];
     const commands = [];
@@ -55,13 +55,13 @@ module.exports = class extends Command {
         }
       }
 
-      this.msg_del_time_async(await message.reply(`${this.t('Successfully reloaded application (/) commands. Type:', { locale })} ${type}`).catch(() => null));
+      this.msg_del_time_async(await message.reply(`${this.t('Successfully reloaded application (/) commands. Type:', { locale })} ${type}`).catch(() => null), 10);
 
       console.log('Successfully reloaded application (/) commands.');
     } catch (error) {
       console.error(error);
 
-      this.msg_del_time_async(await message.reply(`${this.t('Error trying to reload application commands (/). Type:', { locale })} ${type}`).catch(() => null));
+      this.msg_del_time_async(await message.reply(`${this.t('Error trying to reload application commands (/). Type:', { locale })} ${type}`).catch(() => null), 10);
     }
   }
 };
