@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { AutocompleteInteraction, CommandInteraction, MessageEmbed } = require('discord.js');
-const { backup, restore } = require('../../backupAPI');
+const { backup, restore } = require('../../BackupAPI');
 const { prisma } = require('../../database');
 
 module.exports = class extends SlashCommandBuilder {
