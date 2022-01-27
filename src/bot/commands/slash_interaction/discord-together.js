@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { CommandInteraction } = require('discord.js');
+const { AutocompleteInteraction, CommandInteraction } = require('discord.js');
 const { DiscordTogether } = require('discord-together');
 
 module.exports = class extends SlashCommandBuilder {
@@ -8,45 +8,52 @@ module.exports = class extends SlashCommandBuilder {
     this.discord_together = new DiscordTogether(client);
     client.discord_together = this.discord_together;
     this.client = client;
+    this.t = client.t;
     this.data = this.setName('party')
-      .setDescription('Create a application together party')
-      .addStringOption(option => option.setName('application')
-        .setDescription('Select application')
+      .setDescription('Create an activity party together')
+      .addStringOption(option => option.setName('activity')
+        .setDescription('Select activity')
         .setAutocomplete(true)
         .setRequired(true));
-    this.t = client.t;
   }
 
   /** @param {CommandInteraction} interaction */
   async execute(interaction) {
     this.interaction = interaction;
 
-    const { locale, member, options } = interaction;
-
     if (interaction.isAutocomplete())
-      return this.executeAutocomplete();
+      return this.executeAutocomplete(interaction);
+
+    const { locale, member, options } = interaction;
 
     if (!member.voice.channel)
       return interaction.reply({
-        content: `${member}, ${this.t('you must be on a voice channel', { locale })}.`,
+        content: `${member}, ${this.t('you must be on a voice channel.', { locale })}`,
         ephemeral: true,
       });
 
-    this.discord_together.createTogetherCode(member.voice.channel.id, options.getString('application'))
-      .then(invite => interaction.reply(`${invite.code}`));
+    this.discord_together.createTogetherCode(member.voice.channel.id, options.getString('activity'))
+      .then(invite => interaction.reply(`${invite.code}`))
+      .catch(() => interaction.reply({
+        content: this.t('This activity does not exist.', { locale }),
+        ephemeral: true,
+      }));
   }
 
   /** @param {AutocompleteInteraction} interaction */
   async executeAutocomplete(interaction = this.interaction) {
     if (interaction.responded) return;
 
+    const { locale } = interaction;
+
     const res = [];
 
     Object.keys(this.discord_together.applications).forEach(application => {
-      res.push({
-        name: `${application}`,
-        value: `${application}`,
-      });
+      if (!/(dev$)/i.test(application))
+        res.push({
+          name: `${this.t(application, { locale, capitalize: true })}`,
+          value: `${application}`,
+        });
     });
 
     interaction.respond(res);

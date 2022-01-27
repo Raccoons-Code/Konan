@@ -1,7 +1,9 @@
 const { BitField, Intents } = require('discord.js');
 const { GlobSync } = require('glob');
+const Client = require('../classes/client');
 
 module.exports = new class {
+  /** @param {Client} client */
   init(client) {
     this.client = client;
     return this;
@@ -41,16 +43,16 @@ module.exports = new class {
     return this.eventFiles = new GlobSync(`${__dirname}/*.js`, { ignore: ['**/index.js'] }).found;
   }
 
-  loadEvents() {
+  loadEvents(client = this.client) {
     for (let i = 0; i < this.eventFiles.length; i++) {
       const eventFile = require(this.eventFiles[i]);
 
-      const event = this.isClass(eventFile) ? new eventFile(this.client) : eventFile;
+      const event = this.isClass(eventFile) ? new eventFile(client) : eventFile;
 
-      this.client[event.listener](event.name, (...args) => event.execute(...args));
+      client[event.listener](event.name, (...args) => event.execute(...args));
     }
 
-    return this.client;
+    return client;
   }
 
   loadIntents() {

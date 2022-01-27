@@ -12,11 +12,11 @@ module.exports = class extends Command {
 
 	/** @param {Message} message */
 	async execute(message) {
-		this.msg_del_time_async(message);
 		message.reply('Pong!').then(sent => {
+			this.msg_del_time_async(message);
 			const ping = sent.createdTimestamp - message.createdTimestamp;
 			sent.edit(`Pong! \`API: ${message.client.ws.ping}ms\`, \`BOT: ${ping}ms\``);
-			console.log(`${ping}ms`);
+			console.log(`Ping: ${ping}ms`);
 		});
 	}
 };

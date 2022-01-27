@@ -14,8 +14,10 @@ module.exports = class extends Command {
 
   /** @param {Message} message */
   async execute(message) {
-    this.message = message;
     this.msg_del_time_async(message);
+
+    this.message = message;
+
     const { args, guild } = message;
 
     const locale = guild?.preferredLocale;
@@ -26,7 +28,7 @@ module.exports = class extends Command {
     this[args[0]]?.(await message.reply(`${this.t('Fetching a random {{args[0]}}', { locale, args })}...`));
   }
 
-  async cat(message) {
+  async cat(message = this.message) {
     const { file } = await fetch('https://aws.random.cat/meow').then(response => response.json());
     this.msg_del_time_async(await message.edit({ content: null, files: [file] }), 6000);
   }

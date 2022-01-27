@@ -17,7 +17,7 @@ module.exports = class extends Command {
 		this.msg_del_time_async(message);
 		const { args, author, client, guild, guildId } = message;
 		const locale = guild?.preferredLocale;
-		const arg = args.shift();
+		const [arg] = args;
 		const number = parseInt(arg);
 
 		this.embeds = [new MessageEmbed()

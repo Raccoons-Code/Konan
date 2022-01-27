@@ -1,10 +1,12 @@
 const { Collection } = require('discord.js');
 const { GlobSync } = require('glob');
+const Client = require('../classes/client');
 const fs = require('fs');
 
 module.exports = new class {
+  /** @param {Client} client */
   init(client) {
-    this.client = client || {};
+    this.client = client;
     this.client.commandTypes = this.commandTypes;
     return this;
   }
@@ -71,14 +73,14 @@ module.exports = new class {
    * @param {Array<String>} commandTypes
    * @private
    */
-  loadCommands(commandTypes = this.commandTypes, commands = {}) {
+  loadCommands(commandTypes = this.commandTypes, commands = {}, client = this.client || {}) {
     Object.values(commandTypes).flat().forEach(dir => {
       const { found } = new GlobSync(`${__dirname}/${dir}/*.js`);
 
       for (let i = 0; i < found.length; i++) {
         const commandFile = require(found[i]);
 
-        const command = this.isClass(commandFile) ? new commandFile(this.client) : commandFile;
+        const command = this.isClass(commandFile) ? new commandFile(client) : commandFile;
 
         if (!command.data || !command.execute) continue;
 

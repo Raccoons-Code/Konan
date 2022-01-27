@@ -13,7 +13,6 @@ module.exports = class extends SlashCommandBuilder {
 
   /** @param {CommandInteraction} interaction */
   async execute(interaction) {
-    this.interaction = interaction;
     const user = interaction.options.getUser('user') || interaction.user;
 
     const mButton = new MessageButton()

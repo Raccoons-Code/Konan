@@ -5,6 +5,7 @@ module.exports = class extends SlashCommandBuilder {
   constructor(client) {
     super();
     this.client = client;
+    this.t = client.t;
     this.data = this.setName('info')
       .setDescription('Info')
       .addSubcommand(subCommand => subCommand.setName('server')
@@ -13,12 +14,12 @@ module.exports = class extends SlashCommandBuilder {
         .setDescription('User info')
         .addUserOption(option => option.setName('user')
           .setDescription('Select user.')));
-    this.t = client.t;
   }
 
   /** @param {CommandInteraction} interaction */
   async execute(interaction) {
     this.interaction = interaction;
+
     this.embeds = [new MessageEmbed().setColor('RANDOM')];
 
     this[interaction.options.getSubcommand()]?.();
@@ -26,7 +27,12 @@ module.exports = class extends SlashCommandBuilder {
 
   async server(interaction = this.interaction) {
     const { guild, locale } = interaction;
-    if (!guild) return interaction.reply({ content: this.t('Error! This command can only be used on one server.', { locale }), ephemeral: true });
+
+    if (!guild)
+      return interaction.reply({
+        content: this.t('Error! This command can only be used on one server.', { locale }),
+        ephemeral: true,
+      });
 
     this.embeds[0].setAuthor({ name: `${guild.name}` })
       .setThumbnail(`${guild.iconURL()}`)
@@ -44,7 +50,9 @@ module.exports = class extends SlashCommandBuilder {
 
   async user(interaction = this.interaction) {
     const { guild, locale, options } = interaction;
+
     const user = options.getUser('user') || interaction.user;
+
     const { joinedTimestamp, roles } = guild.members.resolve(user.id);
 
     this.embeds[0].setDescription(`${user}`)

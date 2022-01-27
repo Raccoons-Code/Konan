@@ -23,9 +23,9 @@ module.exports = class extends Client {
 
 	async login(token = this.token) {
 		process.on('unhandledRejection', console.error);
+		this.util = methods;
 		commands.init(this);
 		events.init(this);
-		this.util = methods;
 		this.commands = commands.commands;
 		this.options.intents = events.intents;
 		events.loadEvents();

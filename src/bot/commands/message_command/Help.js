@@ -13,7 +13,6 @@ module.exports = class extends Command {
 
   /** @param {Message} message */
   async execute(message) {
-    this.message = message;
     this.msg_del_time_async(message);
 
     const { client } = message;

@@ -11,7 +11,6 @@ module.exports = class extends ContextMenuCommandBuilder {
 
 	/** @param {UserContextMenuInteraction} interaction */
 	async execute(interaction) {
-		this.interaction = interaction;
 		const { user } = interaction.guild.members.resolve(interaction.targetId);
 
 		const mButton = new MessageButton()
