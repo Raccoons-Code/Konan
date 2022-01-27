@@ -32,8 +32,8 @@ module.exports = class extends Event {
 	}
 
 	CHAT_INPUT({ client, commandName } = this.interaction) {
-		const { commands, commandTypes: { interaction } } = client;
-		return commands[interaction.filter((v) => commands[v].has(commandName))[0]].get(commandName);
+		const { commands } = client;
+		return commands.slash_interaction.get(commandName);
 	}
 
 	MESSAGE({ client, commandName } = this.interaction) {

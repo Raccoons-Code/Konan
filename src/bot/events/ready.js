@@ -1,6 +1,5 @@
 const { Client, Event } = require('../classes');
 const { Permissions } = require('discord.js');
-const Commands = require('../commands');
 
 module.exports = class extends Event {
 	constructor(...args) {
@@ -28,42 +27,7 @@ module.exports = class extends Event {
 
 		console.log(`Ready! ${client.user.tag} is on ${client.guilds.cache.size} servers.`);
 
-		this.deployCommands();
 		this.deleteMyGuilds();
-	}
-
-	async deployCommands({ activate = false, global = false, reset = false } = this.deploySettings) {
-		if (!activate) return;
-
-		const data = [];
-		const commands = [];
-		const { applicationCommands } = new Commands();
-
-		Object.values(applicationCommands).forEach(e => commands.push(e.toJSON()));
-
-		commands.flat().forEach(e => data.push(e.data.toJSON()));
-
-		try {
-			if (global) {
-				if (reset) {
-					this.client.application.commands.set([]);
-				} else {
-					this.client.application.commands.set(data);
-				}
-			} else {
-				this.GUILD_ID.forEach(v => {
-					if (reset) {
-						this.client.guilds.fetch(v).then(guild => guild.commands.set([]));
-					} else {
-						this.client.guilds.fetch(v).then(guild => guild.commands.set(data));
-					}
-				});
-			}
-
-			console.log('Successfully reloaded application (/) commands.');
-		} catch (error) {
-			console.error(error);
-		}
 	}
 
 	async deleteMyGuilds(client = this.client) {

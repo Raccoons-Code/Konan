@@ -1,6 +1,6 @@
 const { Command } = require('../../classes');
 const { Message } = require('discord.js');
-const { Restore } = require('../../BackupAPI');
+const { restore } = require('../../BackupAPI');
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -12,9 +12,12 @@ module.exports = class extends Command {
 
   /** @param {Message} message */
   async execute(message) {
+    message.delete().catch(() => null);
     this.message = message;
 
-    const { args } = message;
+    const { args, author } = message;
+
+    if (!author.bot) return;
 
     this[args.shift()]?.();
   }
@@ -30,20 +33,24 @@ module.exports = class extends Command {
   async restore(message = this.message) {
     const { args, client } = message;
 
-    const guild_id = args.shift();
-    const key = args.shift();
+    const [guildId, key, userId] = args;
 
-    const backup = await this.prisma.backup.findFirst({ where: { id: key, guildId: guild_id } });
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId },
+      include: { backups: { where: { id: key } } },
+    });
 
-    if (!backup) return;
+    if (!user.backups.length) return;
 
-    const backup_filtered = Restore.create(backup.data);
+    const [backup] = user.backups;
+
+    const backup_filtered = restore.create(backup.data);
 
     const newGuild = await client.guilds.create(backup.data.name, backup_filtered);
 
     await this.prisma.user.update({
       where: { id: backup.userId },
-      data: { newGuild: newGuild.id, oldGuild: backup.guildId },
+      data: { newGuild: newGuild.id, oldGuild: guildId },
     }).catch(() => null);
 
     const channels = newGuild.channels.cache.filter(channel => channel.type === 'GUILD_TEXT');

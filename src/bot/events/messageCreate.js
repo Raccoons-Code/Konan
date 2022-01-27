@@ -13,9 +13,10 @@ module.exports = class extends Event {
 	/** @param {Message} message */
 	async execute(message) {
 		this.message = message;
+
 		const { author, channel, client, content, guild } = message;
 
-		if (author.bot && author.id != process.env.TEAM) return;
+		if (author.bot && process.env.TEAM?.split(',').includes(author.id)) return;
 
 		const { commands, commandTypes, user } = client;
 		const botRole = guild?.me.roles.botRole || user.id;
@@ -30,8 +31,6 @@ module.exports = class extends Event {
 		const command = commands[commandTypes.command.filter(v => commands[v].has(commandName))[0]]?.get(commandName);
 
 		if (!command) return;
-
-		if (guild?.me.permissionsIn(channel).missing(command.data.permissions).length) return;
 
 		if (!/(backup)/i.test(commandName))
 			await channel.sendTyping();
