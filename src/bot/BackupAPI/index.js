@@ -1,5 +1,5 @@
 module.exports = {
-  Backup: require('./backup'),
+  backup: require('./backup'),
   defaults: require('./defaults'),
-  Restore: require('./restore'),
+  restore: require('./restore'),
 };

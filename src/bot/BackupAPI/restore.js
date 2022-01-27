@@ -6,7 +6,7 @@ module.exports = class {
   }
 
   /** @private */
-  newRestore(backup = this.backup) {
+  create(backup = this.backup) {
     this.restore = backup;
     this.restore.channels = this.channelsDefaults();
     this.restore.roles = this.rolesDefaults();
@@ -71,7 +71,7 @@ module.exports = class {
 
   static create(backup) {
     const restore = new this(backup);
-    restore.newRestore();
+    restore.create();
     return restore.restore;
   }
 };

@@ -3,10 +3,9 @@ module.exports = class {
     this.guild = guild;
   }
 
-  /** @private */
-   newBackup() {
-    this.backup = this.guild.toJSON();
-    this.backup.icon = this.guild.iconURL();
+  create(guild = this.guild) {
+    this.backup = guild.toJSON();
+    this.backup.icon = guild.iconURL();
     this.backup.channels = this.getChannels();
     this.backup.roles = this.getRoles();
     return this.backup;
@@ -33,7 +32,7 @@ module.exports = class {
 
   static create(guild) {
     const backup = new this(guild);
-    backup.newBackup();
+    backup.create();
     return backup.backup;
   }
 };
