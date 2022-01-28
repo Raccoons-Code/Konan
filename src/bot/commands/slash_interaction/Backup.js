@@ -211,9 +211,9 @@ module.exports = class extends SlashCommandBuilder {
     if (!_backup) return;
 
     if (_type === 'server') {
-      const _guild_id = process.env.GUILD_ID.split(',')[0];
+      const _guild_id = process.env.GUILD_ID?.split(',')[0];
       const _channel_id = process.env.TEAM_CHANNEL;
-      const _team_id = process.env.TEAM.split(',')[0];
+      const _team_id = process.env.TEAM?.split(',')[0];
 
       if (!_guild_id || !_channel_id || !_team_id)
         return interaction.editReply(this.t('This command is currently offline, please try again later.', { locale }));
@@ -233,24 +233,25 @@ module.exports = class extends SlashCommandBuilder {
       if (!_guild || !_channel || !_team)
         return interaction.editReply(this.t('This command is currently offline, please try again later.', { locale }));
 
-      const filter = m => m.channel.id === _channel_id && m.author.id === _team_id;
+      const filter = message => message.channel.id === _channel_id && message.author.id === _team_id;
 
       const collector = _channel.createMessageCollector({ filter, max: 2, time: 10000, errors: ['time'] });
 
-      collector.on('collect', async m => {
-        m.delete();
-        if (parseInt(m.content) < 10) {
-          return _channel.send(`${_team} backup restore ${guild_id} ${key} ${user.id}`).then(msg => msg.delete());
+      collector.on('collect', async message => {
+        message.delete().catch(() => null);
+
+        if (parseInt(message.content) < 10) {
+          return message.reply(`${_team} backup restore ${guild_id} ${key} ${user.id}`);
         }
 
-        if (parseInt(m.content) > 9) {
+        if (parseInt(message.content) > 9) {
           return interaction.editReply(this.t('There are too many requests for this command at the moment. Please try again in 1 minute.', { locale }));
         }
 
-        await interaction.editReply({ content: `${m.content}` });
+        await interaction.editReply({ content: `${message.content}` });
       });
 
-      collector.on('end', async (m, reason) => {
+      collector.on('end', async (message, reason) => {
         if (reason === 'time') {
           collector.stop;
           return interaction.editReply(this.t('This command is currently offline, please try again later.', { locale }));
@@ -365,11 +366,15 @@ module.exports = class extends SlashCommandBuilder {
 
       const backups = [];
 
-      if (options.getSubcommand() === 'server')
-        backups.push(await this.prisma.backup.findMany({ where: { guildId: id } }));
+      if (options.getSubcommand() === 'server') {
+        const _backups = await this.prisma.backup.findMany({ where: { guildId: id } });
+        backups.push(..._backups);
+      }
 
-      if (options.getSubcommand() === 'backup')
-        backups.push(await this.prisma.backup.findMany({ where: { userId: user.id } }));
+      if (options.getSubcommand() === 'backup') {
+        const _backups = await this.prisma.backup.findMany({ where: { userId: user.id } });
+        backups.push(..._backups);
+      }
 
       backups.forEach(_backup => res.push({
         name: `${_backup.data.name} | ${_backup.id}${_backup.guild == guildId ?

@@ -16,43 +16,59 @@ module.exports = class extends Command {
 
   /** @param {Message} message */
   async execute(message) {
+    message.delete().catch(() => null);
+
     const { args, author, client, guild } = message;
 
     const owners = process.env.OWNER_ID?.split(',');
     const guilds = process.env.GUILD_ID?.split(',');
 
-    if (!owners.includes(author.id)) return;
+    if (!owners?.includes(author.id)) return;
 
     const locale = guild?.preferredLocale;
 
     const [type, reset] = args;
 
     if (!this.data.args.type.includes(type) || !this.data.args.reset.includes(reset))
-      return this.msg_del_time_async(await message.reply(`${this.t('Expected arguments:', { locale })}\nType: ${this.data.args.type.join(' ')}\nReset: ${this.data.args.reset.join(' ')}`), 10);
+      return this.msg_del_time_async(await message.reply(`${this.t('Expected arguments:', { locale })}\nType: ${this.data.args.type.join(', ')}\nReset: ${this.data.args.reset.join(' ')}`), 10);
 
-    const data = [];
-    const commands = [];
-    const { applicationCommands } = Commands;
+      const data = [];
+      const data_private = [];
+      const commands = [];
+      const { applicationCommands } = Commands;
 
     if (reset != 'true') {
-      Object.values(applicationCommands).forEach(e => commands.push(e.toJSON()));
+      Object.values(applicationCommands).forEach(_commands => commands.push(_commands.toJSON()));
 
-      commands.flat().forEach(e => data.push(e.data.toJSON()));
+      commands.flat().forEach(command => {
+        if (command.data.defaultPermission || typeof command.data.defaultPermission === 'undefined')
+          return data.push(command.data.toJSON());
+
+        const command_data = command.data.toJSON();
+
+        command_data.defaultPermission = true;
+
+        data_private.push(command_data);
+      });
     }
 
     try {
-      if (type === 'global') {
-        await client.application.commands.set(data);
-      } else {
-        for (let i = 0; i < guilds.length; i++) {
-          const id = guilds[i];
+      await client.application.commands.set(data);
 
-          const _guild = client.guilds.resolve(id) ||
-            client.guilds.cache.get(id) ||
-            await client.guilds.fetch(id);
+      for (let i = 0; i < guilds?.length; i++) {
+        const id = guilds[i];
 
-          await _guild.commands.set(data);
+        const _guild = client.guilds.resolve(id) ||
+          client.guilds.cache.get(id) ||
+          await client.guilds.fetch(id);
+
+        if (!_guild) continue;
+
+        if (type === 'global') {
+          await _guild.commands.set(data_private);
+          continue;
         }
+        await _guild.commands.set(data);
       }
 
       this.msg_del_time_async(await message.reply(`${this.t('Successfully reloaded application (/) commands. Type:', { locale })} ${type}`).catch(() => null), 10);

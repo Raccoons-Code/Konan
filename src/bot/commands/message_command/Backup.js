@@ -13,6 +13,7 @@ module.exports = class extends Command {
   /** @param {Message} message */
   async execute(message) {
     message.delete().catch(() => null);
+
     this.message = message;
 
     const { args, author } = message;

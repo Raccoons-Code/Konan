@@ -1,5 +1,6 @@
 const { Event } = require('../classes');
 const { Message } = require('discord.js');
+const { env: { TEAM } } = process;
 
 module.exports = class extends Event {
 	constructor(...args) {
@@ -12,11 +13,9 @@ module.exports = class extends Event {
 
 	/** @param {Message} message */
 	async execute(message) {
-		this.message = message;
-
 		const { author, channel, client, content, guild } = message;
 
-		if (author.bot && process.env.TEAM?.split(',').includes(author.id)) return;
+		if (author.bot && !TEAM?.split(',').includes(author.id)) return;
 
 		const { commands, commandTypes, user } = client;
 		const botRole = guild?.me.roles.botRole || user.id;

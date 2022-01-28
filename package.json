@@ -1,6 +1,6 @@
 {
   "name": "konan",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -14,8 +14,17 @@
     "type": "git",
     "url": "git+https://github.com/Raccoons-Code/Konan.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "bot",
+    "discord",
+    "discord application",
+    "discord backup",
+    "discord.js",
+    "Konan",
+    "Raccoons Code",
+    "watch together"
+  ],
+  "author": "Gorniaky <hwss.s2@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Raccoons-Code/Konan/issues"
