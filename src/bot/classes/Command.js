@@ -7,7 +7,7 @@ module.exports = class {
 	 * @param {object} data
 	 * @param {Array} [data.aliases]
 	 * @param {any|Array} [data.args]
-	 * @param {String|Array|object} [data.args_help]
+	 * @param {String|Array} [data.args_help]
 	 * @param {String} data.description
 	 * @param {String} [data.emoji]
 	 * @param {String} data.name

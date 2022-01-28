@@ -26,6 +26,8 @@ module.exports = class extends SlashCommandBuilder {
 
     const { locale, member, options } = interaction;
 
+    console.log(member.voice.channel);
+
     if (!member.voice.channel)
       return interaction.reply({
         content: `${member}, ${this.t('you must be on a voice channel.', { locale })}`,

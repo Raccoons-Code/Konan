@@ -6,7 +6,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: 'backup',
-      description: 'description',
+      description: 'Bot restricted backup command.',
     });
   }
 
@@ -45,7 +45,7 @@ module.exports = class extends Command {
 
     const [backup] = user.backups;
 
-    const backup_filtered = restore.create(backup.data);
+    const backup_filtered = restore.create(backup);
 
     const newGuild = await client.guilds.create(backup.data.name, backup_filtered);
 

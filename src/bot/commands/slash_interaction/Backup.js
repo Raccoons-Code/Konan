@@ -90,7 +90,7 @@ module.exports = class extends SlashCommandBuilder {
 
     const owner = await this.prisma.user.findFirst({
       where: { id: ownerId },
-      include: { guilds: { where: { userId: ownerId } }, backups: { where: { guildId } } },
+      include: { guilds: true, backups: { where: { guildId } } },
     });
 
     if (!owner) {
@@ -99,14 +99,16 @@ module.exports = class extends SlashCommandBuilder {
       return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
     }
 
-    if (!owner.guilds.length) {
-      const newbackup = await this.newGuild(guild);
+    const premium = Date.now() < owner.premium;
+
+    if (!owner.guilds.length || premium && !owner.guilds.some(g => g.id === guildId) && owner.guilds.length < 5) {
+      const newbackup = await this.newGuild(guild, { premium });
 
       return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
     }
 
-    if (!owner.backups.length) {
-      const newbackup = await this.newbackup(guild);
+    if (!owner.backups.length || premium && owner.backups.length < 5) {
+      const newbackup = await this.newBackup(guild, { premium });
 
       return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
     }
@@ -273,7 +275,7 @@ module.exports = class extends SlashCommandBuilder {
       roles,
       systemChannelFlags,
       systemChannelId,
-      verificationLevel } = restore.create(_backup.data);
+      verificationLevel } = restore.create(_backup);
 
     guild.edit({
       afkChannel: afkChannelId,
@@ -397,15 +399,17 @@ module.exports = class extends SlashCommandBuilder {
 
     const key = options.getString('key');
 
-    const _user = await this.prisma.user.findFirst({
+    const owner = await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
       include: { backups: { where: { id: key } }, guilds: { where: { id: guild.id } } },
     });
 
-    if (!_user || !_user.backups.length)
+    if (!owner || !owner.backups.length)
       return interaction.editReply(this.t('Could not find this backup.', { locale }));
 
-    const newbackup = await this.updatebackup(guild, key);
+    const premium = Date.now() < owner.premium;
+
+    const newbackup = await this.updatebackup(guild, key, { premium });
 
     return interaction.editReply(`${this.t('backup successfully done. Your key is:', { locale })} \`${newbackup.id}\``);
   }
@@ -414,11 +418,11 @@ module.exports = class extends SlashCommandBuilder {
   async updateAutocomplete(interaction = this.interaction) {
     if (interaction.responded) return;
 
-    const { guildId } = interaction;
+    const { guildId, user } = interaction;
 
     const res = [];
 
-    const backups = await this.prisma.backup.findMany({ where: { guildId } });
+    const backups = await this.prisma.backup.findMany({ where: { guildId, userId: user.id } });
 
     backups?.forEach(_backup => res.push({
       name: `${_backup.data.name} | ${_backup.id}`,
@@ -428,35 +432,44 @@ module.exports = class extends SlashCommandBuilder {
     interaction.respond(res);
   }
 
-  async newbackup(guild = this.interaction.guild) {
+  async newBackup(guild = this.interaction.guild, options) {
     const { id, ownerId } = guild;
 
-    const data = backup.create(guild);
+    const { premium } = options;
 
-    return await this.prisma.backup.create({ data: { id: `${Date.now()}`, data, guildId: id, userId: ownerId } });
+    const data = await backup.create(guild, options);
+
+    return await this.prisma.backup.create({
+      data: { id: `${Date.now()}`, data, guildId: id, premium, userId: ownerId },
+    });
   }
 
-  async newGuild(guild = this.interaction.guild) {
+  async newGuild(guild = this.interaction.guild, options) {
     const { id, ownerId } = guild;
 
     await this.prisma.guild.create({ data: { id, userId: ownerId } });
 
-    return await this.newbackup(guild);
+    return await this.newBackup(guild, options);
   }
 
-  async newUser(guild = this.interaction.guild) {
-    const { ownerId } = guild;
-
-    await this.prisma.user.create({ data: { id: ownerId, oldGuild: null, newGuild: null } }).catch(console.error);
-
-    return await this.newGuild(guild);
-  }
-
-  async updatebackup(guild = this.interaction.guild, key) {
+  async newUser(guild = this.interaction.guild, options) {
     const { id, ownerId } = guild;
 
-    const data = backup.create(guild);
+    await this.prisma.user.create({ data: { id: ownerId, guilds: { create: { id } } } }).catch(console.error);
 
-    return await this.prisma.backup.update({ where: { id: key }, data: { id: `${Date.now()}`, data, guildId: id, userId: ownerId } });
+    return await this.newBackup(guild, options);
+  }
+
+  async updatebackup(guild = this.interaction.guild, key, options) {
+    const { id, ownerId } = guild;
+
+    const { premium } = options;
+
+    const data = await backup.create(guild, options);
+
+    return await this.prisma.backup.update({
+      where: { id: key },
+      data: { id: `${Date.now()}`, data, guildId: id, premium, userId: ownerId },
+    });
   }
 };

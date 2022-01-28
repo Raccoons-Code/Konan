@@ -4,7 +4,7 @@ const { Interaction } = require('discord.js');
 module.exports = class extends Event {
 	constructor(...args) {
 		super(...args, {
-			intents: ['GUILDS'],
+			intents: ['GUILDS', 'GUILD_VOICE_STATES'],
 			name: 'interactionCreate',
 		});
 	}

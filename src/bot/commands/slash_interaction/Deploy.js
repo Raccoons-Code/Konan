@@ -9,7 +9,7 @@ module.exports = class extends SlashCommandBuilder {
     this.client = client;
     this.t = client.t;
     this.data = this.setName('deploy')
-      .setDescription('Deploy commands (Restricted for bot\'owner)')
+      .setDescription('Deploy commands (Restricted for bot\'owners).')
       .setDefaultPermission(true)
       .addStringOption(option => option.setName('type')
         .setDescription('Type of deploy')

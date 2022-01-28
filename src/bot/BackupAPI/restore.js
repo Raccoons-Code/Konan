@@ -1,17 +1,18 @@
 const defaults = require('./defaults.json');
 
 module.exports = class {
-  constructor(backup) {
+  constructor(backup, options) {
     this.backup = backup;
+    this.options = options;
   }
 
   /** @private */
   create(backup = this.backup) {
-    this.restore = backup;
-    this.restore.channels = this.channelsDefaults();
-    this.restore.roles = this.rolesDefaults();
-    this.restore = this.guildDefaults();
-    return this.restore;
+    this.data = backup.data;
+    this.data.channels = this.channelsDefaults();
+    this.data.roles = this.rolesDefaults();
+    this.data = this.guildDefaults();
+    return this.data;
   }
 
   channelsDefaults(backup = this.backup) {
@@ -69,9 +70,9 @@ module.exports = class {
     return this.guild_filtered;
   }
 
-  static create(backup) {
-    const restore = new this(backup);
+  static create(backup, options) {
+    const restore = new this(backup, options);
     restore.create();
-    return restore.restore;
+    return restore.data;
   }
 };

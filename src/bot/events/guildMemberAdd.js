@@ -43,7 +43,7 @@ module.exports = class extends Event {
   async newBackup(guild = this.member.guild) {
     const { id, ownerId } = guild;
 
-    const data = backup.create(guild);
+    const data = await backup.create(guild);
 
     return await this.prisma.backup.create({ data: { id: `${Date.now()}`, data, guildId: id, userId: ownerId } });
   }

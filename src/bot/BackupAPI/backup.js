@@ -1,28 +1,61 @@
+const { Guild } = require('discord.js');
+
 module.exports = class {
-  constructor(guild) {
+  /**
+   * @param {Guild} guild
+   * @param {options} [options]
+   */
+  constructor(guild, options) {
     this.guild = guild;
+    this.options = options;
   }
 
-  create(guild = this.guild) {
+  /**
+   * @param {Guild} guild
+   * @param {options} [options]
+   */
+  async create(guild = this.guild) {
     this.backup = guild.toJSON();
     this.backup.icon = guild.iconURL();
-    this.backup.channels = this.getChannels();
+    this.backup.channels = await this.getChannels();
     this.backup.roles = this.getRoles();
     return this.backup;
   }
 
-  getChannels(guild = this.guild) {
-    this.channels = guild.channels.cache;
-    if (!this.channels) return this.channels;
-    this.channels = this.channels.map(channel => {
-      if (!channel.permissionOverwrites.cache) return channel.toJSON();
-      channel.permissionOverwrites = channel.permissionOverwrites.cache.map(permission => {
-        permission.deny = permission.deny.toJSON();
-        permission.allow = permission.allow.toJSON();
-        return permission = permission.toJSON();
-      });
-      return channel.toJSON();
-    });
+  async getChannels(guild = this.guild, options = this.options) {
+    const channels = guild.channels.cache;
+
+    if (!channels.size)
+      return this.channels = channels.toJSON();
+
+    this.channels = channels.toJSON();
+
+    for (let i = 0; i < this.channels.length; i++) {
+      const channel = this.channels[i];
+
+      this.channel = channel.toJSON();
+
+      if (channel.permissionOverwrites.cache) {
+        this.channel.permissionOverwrites = channel.permissionOverwrites.cache.map(permission => {
+          if (typeof permission.deny === 'object')
+            permission.deny = permission.deny.toJSON();
+
+          if (typeof permission.allow === 'object')
+            permission.allow = permission.allow.toJSON();
+
+          return permission.toJSON();
+        });
+      }
+
+      if (options.premium) {
+        if (channel.messages?.cache?.size) {
+          this.channel.messages = channel.messages.cache.map(message => message.toJSON());
+        }
+      }
+
+      this.channels[i] = this.channel;
+    }
+
     return this.channels;
   }
 
@@ -30,9 +63,19 @@ module.exports = class {
     return this.roles = guild.roles.cache.map(role => role.toJSON());
   }
 
-  static create(guild) {
-    const backup = new this(guild);
-    backup.create();
+  /**
+   * @param {Guild} guild
+   * @param {options} [options]
+   */
+  static async create(guild, options) {
+    const backup = new this(guild, options || {});
+
+    await backup.create();
+
     return backup.backup;
   }
+};
+
+const options = {
+  premium: Boolean(),
 };
