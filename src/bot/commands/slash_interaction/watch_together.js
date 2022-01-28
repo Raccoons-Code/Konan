@@ -26,8 +26,6 @@ module.exports = class extends SlashCommandBuilder {
 
     const { locale, member, options } = interaction;
 
-    console.log(member.voice.channel);
-
     if (!member.voice.channel)
       return interaction.reply({
         content: `${member}, ${this.t('you must be on a voice channel.', { locale })}`,
@@ -35,11 +33,22 @@ module.exports = class extends SlashCommandBuilder {
       });
 
     this.discord_together.createTogetherCode(member.voice.channel.id, options.getString('activity'))
-      .then(invite => interaction.reply(`${invite.code}`))
+      .then(invite => this.timeout_erase(interaction.reply(`${invite.code}`), 60))
       .catch(() => interaction.reply({
-        content: this.t('This activity does not exist.', { locale }),
-        ephemeral: true,
+          content: this.t('This activity does not exist.', { locale }),
+          ephemeral: true,
       }));
+  }
+
+  /**
+   * @description delete one message with async timeout delay
+   * @param {Seconds<Number>} timeout
+   * @async
+   */
+  async timeout_erase(interaction, timeout = 0) {
+    if (!interaction) return console.error('Unable to delete undefined message.');
+    await this.client.util.waitAsync(timeout * 1000);
+    return await interaction.delete().catch(() => null);
   }
 
   /** @param {AutocompleteInteraction} interaction */
