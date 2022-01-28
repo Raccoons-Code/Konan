@@ -2,6 +2,7 @@ const { ContextMenuCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, UserContextMenuInteraction } = require('discord.js');
 
 module.exports = class extends ContextMenuCommandBuilder {
+	/** @param {Client} client */
 	constructor(client) {
 		super();
 		this.client = client;

@@ -1,8 +1,10 @@
 const { SlashCommandBuilder, SlashCommandChannelOption } = require('@discordjs/builders');
 const { CommandInteraction, Constants } = require('discord.js');
+const { Client } = require('../../classes');
 const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = Constants.ChannelTypes;
 
 module.exports = class extends SlashCommandBuilder {
+	/** @param {Client} client */
   constructor(client) {
     super();
     this.client = client;

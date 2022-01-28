@@ -1,9 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { AutocompleteInteraction, CommandInteraction, MessageEmbed } = require('discord.js');
+const { Client } = require('../../classes');
 const { backup, restore } = require('../../BackupAPI');
 const { prisma } = require('../../database');
 
 module.exports = class extends SlashCommandBuilder {
+	/** @param {Client} client */
   constructor(client) {
     super();
     this.client = client;

@@ -39,8 +39,10 @@
 		"body": [
 			"const { ContextMenuCommandBuilder } = require('@discordjs/builders');",
 			"const { MessageContextMenuInteraction } = require('discord.js');",
+			"const { Client } = require('../../classes');",
 			"",
 			"module.exports = class extends ContextMenuCommandBuilder {",
+			"  /** @param {Client} client */",
 			"  constructor(client) {",
 			"    super();",
 			"    this.client = client;",
@@ -62,8 +64,10 @@
 		"body": [
 			"const { ContextMenuCommandBuilder } = require('@discordjs/builders');",
 			"const { UserContextMenuInteraction } = require('discord.js');",
+			"const { Client } = require('../../classes');",
 			"",
 			"module.exports = class extends ContextMenuCommandBuilder {",
+			"  /** @param {Client} client */",
 			"  constructor(client) {",
 			"    super();",
 			"    this.client = client;",
@@ -108,8 +112,10 @@
 		"body": [
 			"const { SlashCommandBuilder } = require('@discordjs/builders');",
 			"const { CommandInteraction } = require('discord.js');",
+			"const { Client } = require('../../classes');",
 			"",
 			"module.exports = class extends SlashCommandBuilder {",
+			"  /** @param {Client} client */",
 			"  constructor(client) {",
 			"    super();",
 			"    this.client = client;",

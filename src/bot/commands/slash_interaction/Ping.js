@@ -1,7 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { CommandInteraction } = require('discord.js');
+const { Client } = require('../../classes');
 
 module.exports = class extends SlashCommandBuilder {
+	/** @param {Client} client */
 	constructor(client) {
 		super();
 		this.client = client;

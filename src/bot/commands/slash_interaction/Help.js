@@ -1,8 +1,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { AutocompleteInteraction, CommandInteraction, MessageEmbed } = require('discord.js');
+const { Client } = require('../../classes');
 const { splitSelectMenu } = require('../../methods');
 
 module.exports = class extends SlashCommandBuilder {
+	/** @param {Client} client */
   constructor(client) {
     super();
     this.client = client;

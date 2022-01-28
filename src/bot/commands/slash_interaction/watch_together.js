@@ -1,8 +1,10 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { AutocompleteInteraction, CommandInteraction } = require('discord.js');
+const { Client } = require('../../classes');
 const { DiscordTogether } = require('discord-together');
 
 module.exports = class extends SlashCommandBuilder {
+	/** @param {Client} client */
   constructor(client) {
     super();
     this.discord_together = new DiscordTogether(client);
