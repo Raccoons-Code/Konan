@@ -32,28 +32,27 @@ module.exports = class extends Command {
     if (!this.data.args.type.includes(type) || !this.data.args.reset.includes(reset))
       return this.msg_del_time_async(await message.reply(`${this.t('Expected arguments:', { locale })}\nType: ${this.data.args.type.join(', ')}\nReset: ${this.data.args.reset.join(' ')}`), 10);
 
-      const data = [];
-      const data_private = [];
-      const commands = [];
-      const { applicationCommands } = Commands;
+    const data = [];
+    const data_private = [];
+    const commands = [];
+    const { applicationCommands } = Commands;
 
-    if (reset != 'true') {
-      Object.values(applicationCommands).forEach(_commands => commands.push(_commands.toJSON()));
+    Object.values(applicationCommands).forEach(_commands => commands.push(_commands.toJSON()));
 
-      commands.flat().forEach(command => {
-        if (command.data.defaultPermission || typeof command.data.defaultPermission === 'undefined')
-          return data.push(command.data.toJSON());
+    commands.flat().forEach(command => {
+      if (command.data.defaultPermission || typeof command.data.defaultPermission === 'undefined')
+        return reset || data.push(command.data.toJSON());
 
-        const command_data = command.data.toJSON();
+      command.data.setDefaultPermission(true);
 
-        command_data.defaultPermission = true;
+      const command_data = command.data.toJSON();
 
-        data_private.push(command_data);
-      });
-    }
+      data_private.push(command_data);
+    });
 
     try {
-      await client.application.commands.set(data);
+      if (type === 'global')
+        await client.application.commands.set(data);
 
       for (let i = 0; i < guilds?.length; i++) {
         const id = guilds[i];
@@ -68,7 +67,8 @@ module.exports = class extends Command {
           await _guild.commands.set(data_private);
           continue;
         }
-        await _guild.commands.set(data);
+
+        await _guild.commands.set([...data, ...data_private]);
       }
 
       this.msg_del_time_async(await message.reply(`${this.t('Successfully reloaded application (/) commands. Type:', { locale })} ${type}`).catch(() => null), 10);

@@ -10,7 +10,7 @@ module.exports = class extends SlashCommandBuilder {
     this.t = client.t;
     this.data = this.setName('deploy')
       .setDescription('Deploy commands (Restricted for bot\'owners).')
-      .setDefaultPermission(true)
+      .setDefaultPermission(false)
       .addStringOption(option => option.setName('type')
         .setDescription('Type of deploy')
         .setChoices([['Global', 'global'], ['Guild', 'guild']])
@@ -21,6 +21,8 @@ module.exports = class extends SlashCommandBuilder {
 
   /** @param {CommandInteraction} interaction */
   async execute(interaction) {
+    await interaction.deferReply({ ephemeral: true });
+
     const { client, locale, options, user } = interaction;
 
     const guilds = GUILD_ID?.split(',');
@@ -29,30 +31,29 @@ module.exports = class extends SlashCommandBuilder {
     if (!owners?.includes(user.id)) return;
 
     const type = options.getString('type');
-    const reset = options.getString('reset');
+    const reset = options.getBoolean('reset');
 
     const data = [];
     const data_private = [];
     const commands = [];
     const { applicationCommands } = Commands;
 
-    if (!reset) {
-      Object.values(applicationCommands).forEach(_commands => commands.push(_commands.toJSON()));
+    Object.values(applicationCommands).forEach(_commands => commands.push(_commands.toJSON()));
 
-      commands.flat().forEach(command => {
-        if (command.data.defaultPermission || typeof command.data.defaultPermission === 'undefined')
-          return data.push(command.data.toJSON());
+    commands.flat().forEach(command => {
+      if (command.data.defaultPermission || typeof command.data.defaultPermission === 'undefined')
+        return reset || data.push(command.data.toJSON());
 
-        const command_data = command.data.toJSON();
+      command.data.setDefaultPermission(true);
 
-        command_data.defaultPermission = true;
+      const command_data = command.data.toJSON();
 
-        data_private.push(command_data);
-      });
-    }
+      data_private.push(command_data);
+    });
 
     try {
-      await client.application.commands.set(data);
+      if (type === 'global')
+        await client.application.commands.set(data);
 
       for (let i = 0; i < guilds?.length; i++) {
         const id = guilds[i];
@@ -67,10 +68,11 @@ module.exports = class extends SlashCommandBuilder {
           await _guild.commands.set(data_private);
           continue;
         }
-        await _guild.commands.set(data);
+
+        await _guild.commands.set([...data, ...data_private]);
       }
 
-      await interaction.reply({
+      await interaction.editReply({
         content: `${this.t('Successfully reloaded application (/) commands. Type:', { locale })} ${type}`,
         ephemeral: true,
       });
@@ -79,7 +81,7 @@ module.exports = class extends SlashCommandBuilder {
     } catch (error) {
       console.error(error);
 
-      await interaction.reply({
+      await interaction.editReply({
         content: `${this.t('Error trying to reload application commands (/). Type:', { locale })} ${type}`,
         ephemeral: true,
       }).catch(() => null);
