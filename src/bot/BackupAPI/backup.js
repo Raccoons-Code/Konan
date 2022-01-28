@@ -49,7 +49,8 @@ module.exports = class {
 
       if (options.premium) {
         if (channel.messages?.cache?.size) {
-          this.channel.messages = channel.messages.cache.map(message => message.toJSON());
+          const messages = await channel.messages.fetch();
+          this.channel.messages = messages.map(message => message.toJSON());
         }
       }
 
