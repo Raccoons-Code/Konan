@@ -30,7 +30,6 @@ module.exports = class {
 		this.prisma = client.prisma;
 		this.t = client.t;
 		this.util = client.util;
-
 	}
 
 	/**

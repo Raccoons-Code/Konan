@@ -11,7 +11,7 @@ function capitalize(string, options) {
 
 /** @param {options} object */
 function interpolate(text, object) {
-  let _text;
+  const _text = [];
   const prefix = _this.interpolation.prefix;
   const suffix = _this.interpolation.suffix;
   const matched = text.match(RegExp(`${prefix}(.*?)${suffix}`, 'g'));
@@ -22,12 +22,12 @@ function interpolate(text, object) {
 
       matched[index]?.match(RegExp(`${prefix}(.*?)${suffix}`))[1]
         .match(/(?:[^.[\]'\\]+)/g)
-        .forEach(key => _object ? (_object = _object[key] || key) : (_object = object[key] || key));
+        .forEach(key => _object = _object?.[key] || object[key]);
 
-      _text = `${_text || ''}${value || ''}${_object || ''}`;
+      _text.push(value, _object);
     });
 
-  return _text || text;
+  return _text.join('') || text;
 }
 
 class Idjsn {
