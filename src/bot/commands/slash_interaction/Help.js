@@ -6,6 +6,7 @@ module.exports = class extends SlashCommandBuilder {
   constructor(client) {
     super();
     this.client = client;
+    this.t = client.t;
     this.data = this.setName('help')
       .setDescription('Replies with Help!')
       .addStringOption(option => option.setName('command')
@@ -42,7 +43,7 @@ module.exports = class extends SlashCommandBuilder {
 
     client.commands.slash_interaction.forEach(e => {
       res.push({
-        name: e.data.name,
+        name: `${this.t(e.data.name, { capitalize: true })} | ${e.data.description}`,
         value: e.data.name,
       });
     });
