@@ -30,7 +30,7 @@ module.exports = class extends SlashCommandBuilder {
 
     const index = options.getNumber('notícia');
 
-    const game_new = this.game_news[index];
+    const game_new = this.current_news[index];
 
     if (!game_new)
       return interaction.reply({
@@ -51,10 +51,15 @@ module.exports = class extends SlashCommandBuilder {
 
     const res = [];
 
-    this.game_news.forEach((game_new, index) => res.push({
-      name: game_new.title,
-      value: index,
-    }));
+    this.current_news = this.game_news;
+
+    for (let i = 0; i < this.current_news.length; i++) {
+      const game_new = this.current_news[i];
+
+      res.push({ name: game_new.title, value: i });
+
+      if (i === 24) break;
+    }
 
     interaction.respond(res);
   }
