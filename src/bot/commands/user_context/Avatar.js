@@ -12,7 +12,7 @@ module.exports = class extends ContextMenuCommandBuilder {
 
 	/** @param {UserContextMenuInteraction} interaction */
 	async execute(interaction) {
-		const { user } = interaction.guild.members.resolve(interaction.targetId);
+		const user = interaction.options.getUser('user');
 
 		const mButton = new MessageButton()
 			.setLabel('Link')
