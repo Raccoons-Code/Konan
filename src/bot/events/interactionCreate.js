@@ -1,5 +1,5 @@
 const { Event } = require('../classes');
-const { Interaction } = require('discord.js');
+const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, MessageContextMenuInteraction, SelectMenuInteraction, UserContextMenuInteraction } = require('discord.js');
 
 module.exports = class extends Event {
 	constructor(...args) {
@@ -9,12 +9,13 @@ module.exports = class extends Event {
 		});
 	}
 
-	/** @param {Interaction} interaction */
+	/** @param {AutocompleteInteraction|ButtonInteraction|CommandInteraction|MessageContextMenuInteraction|SelectMenuInteraction|UserContextMenuInteraction} interaction */
 	async execute(interaction) {
 		this.interaction = interaction;
+
 		const { locale, targetType } = interaction;
 
-		const command = this[targetType || 'CHAT_INPUT']?.();
+		const command = this[targetType || 'CHAT_INPUT']?.(interaction);
 
 		if (!command) return;
 
@@ -22,27 +23,34 @@ module.exports = class extends Event {
 			await command.execute(interaction);
 		} catch (error) {
 			try {
-				await interaction.reply({
-					content: this.t('There was an error while executing this command!', { locale }),
-					ephemeral: true,
-				});
 				console.error(error, command.data?.name);
+
+				if (!interaction.isAutocomplete()) {
+					if (interaction.replied) {
+						await interaction.editReply({
+							content: this.t('There was an error while executing this command!', { locale }),
+							ephemeral: true,
+						});
+					} else {
+						await interaction.reply({
+							content: this.t('There was an error while executing this command!', { locale }),
+							ephemeral: true,
+						});
+					}
+				}
 			} catch { null; }
 		}
 	}
 
 	CHAT_INPUT({ client, commandName } = this.interaction) {
-		const { commands } = client;
-		return commands.slash_interaction.get(commandName);
+		return client.commands.slash_interaction.get(commandName);
 	}
 
 	MESSAGE({ client, commandName } = this.interaction) {
-		const { commands } = client;
-		return commands.message_context.get(commandName);
+		return client.commands.message_context.get(commandName);
 	}
 
 	USER({ client, commandName } = this.interaction) {
-		const { commands } = client;
-		return commands.user_context.get(commandName);
+		return client.commands.user_context.get(commandName);
 	}
 };

@@ -4,7 +4,7 @@ const { Client } = require('../../classes');
 const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = Constants.ChannelTypes;
 
 module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
+  /** @param {Client} client */
   constructor(client) {
     super();
     this.client = client;
@@ -23,7 +23,7 @@ module.exports = class extends SlashCommandBuilder {
 
   /** @param {CommandInteraction} interaction */
   async execute(interaction) {
-    await interaction.deferReply({ ephemeral: true, fetchReply: true });
+    await interaction.deferReply({ ephemeral: true });
 
     const { locale, memberPermissions, options } = interaction;
 
@@ -36,8 +36,8 @@ module.exports = class extends SlashCommandBuilder {
     const limit = options.getNumber('amount');
 
     channel.bulkDelete(limit, true).then(({ size }) =>
-      interaction.editReply(this.t(size ? '{{size}} messages successfully deleted!' : 'No deleted messages!',
-        { locale, size })))
+      interaction.editReply(this.t(size ? '{{size}} message successfully deleted!' : 'No deleted messages!',
+        { count: size, locale, size })))
       .catch(() => interaction.editReply(this.t('Error! One or more messages could not be deleted.', { locale })));
   }
 };

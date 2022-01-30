@@ -27,7 +27,7 @@ module.exports = class extends Event {
 
 		console.log(`Ready! ${client.user.tag} is on ${client.guilds.cache.size} servers.`);
 
-		this.deleteMyGuilds();
+		this.deleteMyGuilds(client);
 	}
 
 	async deleteMyGuilds(client = this.client) {

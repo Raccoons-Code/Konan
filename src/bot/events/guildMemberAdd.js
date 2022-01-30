@@ -17,9 +17,12 @@ module.exports = class extends Event {
 
     const { id } = member;
 
-    this.user = await this.prisma.user.findFirst({ where: { id }, include: { backups: true, guilds: true } });
+    const user = this.user = await this.prisma.user.findFirst({
+      where: { id },
+      include: { backups: true, guilds: true },
+    });
 
-    this.afterRestore();
+    this.afterRestore(member, user);
   }
 
   async afterRestore(member = this.member, user = this.user) {

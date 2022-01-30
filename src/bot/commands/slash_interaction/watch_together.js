@@ -4,13 +4,15 @@ const { Client } = require('../../classes');
 const { DiscordTogether } = require('discord-together');
 
 module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
+  /** @param {Client} client */
   constructor(client) {
     super();
-    this.discord_together = new DiscordTogether(client);
-    client.discord_together = this.discord_together;
+    this.discordTogether = new DiscordTogether(client);
+    this.applications = Object.keys(this.discordTogether.applications);
+    client.DiscordTogether = this.discordTogether;
     this.client = client;
     this.t = client.t;
+    this.util = client.util;
     this.data = this.setName('party')
       .setDescription('Create an activity party together')
       .addStringOption(option => option.setName('activity')
@@ -26,7 +28,9 @@ module.exports = class extends SlashCommandBuilder {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
-    const { locale, member, options } = interaction;
+    const { channel, locale, member, options } = interaction;
+
+    await channel.sendTyping();
 
     if (!member.voice.channel)
       return interaction.reply({
@@ -34,31 +38,58 @@ module.exports = class extends SlashCommandBuilder {
         ephemeral: true,
       });
 
-    this.discord_together.createTogetherCode(member.voice.channel.id, options.getString('activity'))
-      .then(async invite => this.timeout_erase(await interaction.reply(`${invite.code}`), 60))
-      .catch(() => interaction.reply({
-          content: this.t('This activity does not exist.', { locale }),
+    this.discordTogether.createTogetherCode(member.voice.channel.id, options.getString('activity'))
+      .then(async invite => this.timeout_erase(await interaction.reply({
+        content: `${invite.code}`,
+        fetchReply: true,
+      }), 60)).catch(error => {
+        if (error.name === 'SyntaxError')
+          return interaction.reply({
+            content: this.t('This activity does not exist.', { locale }),
+            ephemeral: true,
+          });
+        interaction.reply({
+          content: this.t('There was an error while executing this command!', { locale }),
           ephemeral: true,
-      }));
+        });
+      });
   }
 
   /** @param {AutocompleteInteraction} interaction */
-  async executeAutocomplete(interaction = this.interaction) {
+  async executeAutocomplete(interaction) {
     if (interaction.responded) return;
 
-    const { locale } = interaction;
+    const { locale, options } = interaction;
 
-    const res = [];
+    const pattern = options.getString('activity');
 
-    Object.keys(this.discord_together.applications).forEach(application => {
-      if (!/(dev$)/i.test(application))
-        res.push({
-          name: `${this.t(application, { locale, capitalize: true })}`,
-          value: `${application}`,
-        });
-    });
+    const regex = RegExp(`${pattern}`, 'i');
+
+    const applications = pattern ?
+      this.applications.filter(app => regex.test(app) || regex.test(this.t(app, { locale }))) :
+      this.applications;
+
+    const res = this.setChoices(applications, { locale, capitalize: true });
 
     interaction.respond(res);
+  }
+
+  setChoices(applications = this.applications, options = { locale: 'en', capitalize: false }, array = []) {
+    const { locale, capitalize } = options;
+
+    for (let i = 0; i < applications.length; i++) {
+      const application = applications[i];
+
+      if (!/(dev$)/i.test(application))
+        array.push({
+          name: `${this.t(application, { locale, capitalize })}`,
+          value: `${application}`,
+        });
+
+      if (i === 24) break;
+    }
+
+    return array;
   }
 
   /**
@@ -68,7 +99,7 @@ module.exports = class extends SlashCommandBuilder {
    */
   async timeout_erase(interaction = this.interaction, timeout = 0) {
     if (!interaction) return console.error('Unable to delete undefined interaction.');
-    await this.client.util.waitAsync(timeout * 1000);
+    await this.util.waitAsync(timeout * 1000);
     return await interaction.deleteReply().catch(() => null);
   }
 };

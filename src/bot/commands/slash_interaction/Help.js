@@ -21,11 +21,9 @@ module.exports = class extends SlashCommandBuilder {
     this.interaction = interaction;
 
     if (interaction.isAutocomplete())
-      return this.executeAutocomplete();
+      return this.executeAutocomplete(interaction);
 
     const { client, options } = interaction;
-
-    this.embeds = [new MessageEmbed().setColor('RANDOM')];
 
     const commandName = options.getString('command');
 
@@ -36,7 +34,7 @@ module.exports = class extends SlashCommandBuilder {
   }
 
   /** @param {AutocompleteInteraction} interaction */
-  async executeAutocomplete(interaction = this.interaction) {
+  async executeAutocomplete(interaction) {
     if (interaction.responded) return;
 
     const { client } = interaction;

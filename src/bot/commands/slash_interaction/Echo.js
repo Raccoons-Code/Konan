@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { CommandInteraction } = require('discord.js');
+const { CommandInteraction, Webhook } = require('discord.js');
 const { Client } = require('../../classes');
 
 module.exports = class extends SlashCommandBuilder {
@@ -24,11 +24,12 @@ module.exports = class extends SlashCommandBuilder {
 
     const avatarURL = user.displayAvatarURL();
 
+    /** @type {Webhook} */
     const webhook = await channel.fetchWebhooks().then(w => w.find(v => v.name === client.user.id)) ||
       await channel.createWebhook(client.user.id);
 
     await webhook.send({ avatarURL, content: `${message}`, username });
 
-    await interaction.reply({ content: 'Right!', ephemeral: true });
+    interaction.reply({ content: '⠀', ephemeral: true });
   }
 };

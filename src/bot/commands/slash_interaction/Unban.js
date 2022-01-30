@@ -3,7 +3,7 @@ const { AutocompleteInteraction, CommandInteraction } = require('discord.js');
 const { Client } = require('../../classes');
 
 module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
+  /** @param {Client} client */
   constructor(client) {
     super();
     this.client = client;
@@ -23,7 +23,7 @@ module.exports = class extends SlashCommandBuilder {
     this.interaction = interaction;
 
     if (interaction.isAutocomplete())
-      return this.executeAutocomplete();
+      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -46,17 +46,34 @@ module.exports = class extends SlashCommandBuilder {
   }
 
   /** @param {AutocompleteInteraction} interaction */
-  async executeAutocomplete(interaction = this.interaction, { guild } = interaction) {
+  async executeAutocomplete(interaction) {
     if (interaction.responded) return;
+
+    const { guild, options } = interaction;
 
     const res = [];
 
-    const bans = guild.bans.cache.size && guild.bans.cache || await guild.bans.fetch();
+    const pattern = options.getString('user');
 
-    bans?.forEach(ban => res.push({
-      name: `${ban.user.username} | reason: ${ban.reason}`,
-      value: ban.user.id,
-    }));
+    const regex = RegExp(pattern, 'i');
+
+    const bans_collection = guild.bans.cache.size ? guild.bans.cache : await guild.bans.fetch();
+
+    const bans_filtered = pattern ? bans_collection.filter(ban => regex.test(ban.user.username) ||
+      regex.test(ban.user.id) || regex.test(ban.reason)) : bans_collection;
+
+    const bans_array = bans_filtered.toJSON();
+
+    for (let i = 0; i < bans_array.length; i++) {
+      const ban = bans_array[i];
+
+      res.push({
+        name: `${ban.user.username}${ban.reason ? ` | Reason: ${ban.reason}` : ''}`,
+        value: ban.user.id,
+      });
+
+      if (i === 24) break;
+    }
 
     interaction.respond(res);
   }

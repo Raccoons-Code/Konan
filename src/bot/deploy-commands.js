@@ -6,7 +6,7 @@ const { env: { CLIENT_ID, DEPLOY_GLOBAL, DEPLOY_RESET, DISCORD_TOKEN, GUILD_ID }
 const Commands = require('./commands');
 
 const GLOBAL = false || DEPLOY_GLOBAL == 'true';
-const reset = true || DEPLOY_RESET == 'true';
+const reset = false || DEPLOY_RESET == 'true';
 
 const guilds = GUILD_ID?.split(',');
 
@@ -47,7 +47,7 @@ const rest = new REST({ version: '9' }).setToken(DISCORD_TOKEN);
       console.log('Successfully reloaded application (/) commands.');
     } else {
       guilds?.forEach(async id => {
-        await rest.put(Routes.applicationGuildCommands(CLIENT_ID, id), { body: [...data_private, ...data] });
+        await rest.put(Routes.applicationGuildCommands(CLIENT_ID, id), { body: [...data, ...data_private] });
 
         console.log(`Successfully reloaded application (/) commands for guild ${id}.`);
       });

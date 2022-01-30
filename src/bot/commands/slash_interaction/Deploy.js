@@ -5,7 +5,7 @@ const Commands = require('../');
 const { env: { GUILD_ID, OWNER_ID } } = process;
 
 module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
+  /** @param {Client} client */
   constructor(client) {
     super();
     this.client = client;

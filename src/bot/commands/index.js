@@ -50,13 +50,13 @@ module.exports = new class {
     const object = {};
 
     for (let i = 0; i < types.length; i++) {
-      const element = types[i];
-      const elements = element.split('_');
+      const type = types[i];
+      const elements = type.split('_');
 
       if (!object[elements[1]])
         Object.assign(object, { [elements[1]]: [] });
 
-      object[elements[1]].push(element);
+      object[elements[1]].push(type);
     }
     return this.commandTypes = object;
   }

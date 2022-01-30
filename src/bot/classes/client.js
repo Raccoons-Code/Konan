@@ -19,6 +19,7 @@ module.exports = class extends Client {
 		this.prisma = prisma;
 		this.translator = translator;
 		this.t = translator.t;
+		this.ready = true;
 	}
 
 	async login(token = this.token) {

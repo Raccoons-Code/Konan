@@ -5,7 +5,7 @@ const { backup, restore } = require('../../BackupAPI');
 const { prisma } = require('../../database');
 
 module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
+  /** @param {Client} client */
   constructor(client) {
     super();
     this.client = client;
@@ -59,6 +59,7 @@ module.exports = class extends SlashCommandBuilder {
           .setDescription('backup key')
           .setAutocomplete(true)
           .setRequired(true)));
+    this.cache = { user: {}, guild: {}, backup: {} };
   }
 
   /** @param {CommandInteraction} interaction */
@@ -70,13 +71,11 @@ module.exports = class extends SlashCommandBuilder {
     const command = options.getSubcommandGroup(false) || options.getSubcommand(false);
 
     if (interaction.isAutocomplete())
-      return this[`${command}Autocomplete`]?.();
-
-    this.embeds = [new MessageEmbed().setColor('RANDOM')];
+      return this[`${command}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true, fetchReply: true });
 
-    this[command]?.();
+    this[command]?.(interaction);
   }
 
   async create(interaction = this.interaction) {
@@ -85,7 +84,7 @@ module.exports = class extends SlashCommandBuilder {
     if (!interaction.inGuild())
       return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
 
-    const { ownerId } = guild;
+    const { id, ownerId } = guild;
 
     if (user.id != ownerId)
       return interaction.editReply(this.t('You are not the owner of the server.', { locale }));
@@ -95,13 +94,13 @@ module.exports = class extends SlashCommandBuilder {
       include: { guilds: true, backups: { where: { guildId } } },
     });
 
+    const premium = Date.now() < owner?.premium;
+
     if (!owner) {
-      const newbackup = await this.newUser(guild);
+      const newbackup = await this.newUser(guild, { premium });
 
       return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
     }
-
-    const premium = Date.now() < owner.premium;
 
     if (!owner.guilds.length || premium && !owner.guilds.some(g => g.id === guildId) && owner.guilds.length < 5) {
       const newbackup = await this.newGuild(guild, { premium });
@@ -156,33 +155,57 @@ module.exports = class extends SlashCommandBuilder {
   }
 
   /** @param {AutocompleteInteraction} interaction */
-  async deleteAutocomplete(interaction = this.interaction) {
+  async deleteAutocomplete(interaction) {
     if (interaction.responded) return;
 
     const { client, guildId, locale, options, user } = interaction;
 
+    const focused = options.getFocused(true);
+    const subcommand = options.getSubcommand();
+
     const res = [];
 
-    if (options.getFocused(true).name === 'id') {
-      const guilds = await this.prisma.guild.findMany({ where: { userId: user.id } });
+    if (focused.name === 'id') {
+      this.cache.user[user.id] ? null : this.cache.user[user.id] = {};
 
-      guilds?.forEach(_guild => {
+      const { guilds } = this.cache.user[user.id] = await this.prisma.user.findFirst({
+        where: { id: user.id },
+        include: { guilds: { include: { backups: true } } },
+      });
+
+      for (let i = 0; i < guilds.length; i++) {
+        const _guild = guilds[i];
+
+        const name = _guild.backups[0]?.data.name ||
+          client.guilds.cache.get(_guild.id)?.name ||
+          this.t('Undefined server name', { locale });
+
         res.push({
-          name: `${client.guilds.cache.get(_guild.id)?.name || this.t('Undefined server', { locale })} | ${_guild.id}`,
+          name: `${name} | ${_guild.id}${_guild.id == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
           value: `${_guild.id}`,
         });
-      });
+
+        if (i === 24) break;
+      }
     }
 
-    if (options.getFocused(true).name === 'key') {
+    if (focused.name === 'key') {
       const id = options.getString('id');
 
-      const backups = await this.prisma.backup.findMany({ where: { guildId: id } });
+      const backups = subcommand === 'server' ?
+        this.cache.user[user.id].guilds.find(g => g.id === id).backups :
+        await this.prisma.backup.findMany({ where: { guildId: id } });
 
-      backups?.forEach(_backup => res.push({
-        name: `${_backup.data.name} | ${_backup.id}${_backup.guild == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
-        value: `${_backup.id}`,
-      }));
+      for (let i = 0; i < backups.length; i++) {
+        const _backup = backups[i];
+
+        res.push({
+          name: `${_backup.data.name} | ${_backup.id}${_backup.guild == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
+          value: `${_backup.id}`,
+        });
+
+        if (i === 24) break;
+      }
     }
 
     interaction.respond(res);
@@ -196,11 +219,13 @@ module.exports = class extends SlashCommandBuilder {
     if (!backups.length)
       return interaction.editReply(this.t('You don\'t have backups in the database', { locale }));
 
+    const embeds = [new MessageEmbed().setColor('RANDOM')];
+
     backups.forEach(_backup => {
-      this.embeds[0].addField(`Server: ${_backup.data.name} | ${_backup.data.id}`, `Key: \`${_backup.id}\``);
+      embeds[0].addField(`Server: ${_backup.data.name} | ${_backup.data.id}`, `Key: \`${_backup.id}\``);
     });
 
-    interaction.editReply({ embeds: [...this.embeds] });
+    interaction.editReply({ embeds });
   }
 
   async restore(interaction = this.interaction) {
@@ -220,7 +245,8 @@ module.exports = class extends SlashCommandBuilder {
       const _team_id = process.env.TEAM?.split(',')[0];
 
       if (!_guild_id || !_channel_id || !_team_id)
-        return interaction.editReply(this.t('This command is currently offline, please try again later.', { locale }));
+        return interaction.editReply(this.t('This command is currently offline, please try again later.',
+          { locale }));
 
       const _guild = client.guilds.resolve(_guild_id) ||
         client.guilds.cache.get(_guild_id) ||
@@ -235,7 +261,8 @@ module.exports = class extends SlashCommandBuilder {
         await _guild.members.fetch(_team_id);
 
       if (!_guild || !_channel || !_team)
-        return interaction.editReply(this.t('This command is currently offline, please try again later.', { locale }));
+        return interaction.editReply(this.t('This command is currently offline, please try again later.',
+          { locale }));
 
       const filter = message => message.channel.id === _channel_id && message.author.id === _team_id;
 
@@ -268,27 +295,9 @@ module.exports = class extends SlashCommandBuilder {
     if (guild.ownerId !== user.id)
       return interaction.editReply(this.t('You are not the owner of the server.', { locale }));
 
-    const { afkChannelId,
-      afkTimeout,
-      channels,
-      defaultMessageNotifications,
-      explicitContentFilter,
-      icon,
-      roles,
-      systemChannelFlags,
-      systemChannelId,
-      verificationLevel } = restore.create(_backup);
+    const { afkChannelId, afkTimeout, channels, defaultMessageNotifications, explicitContentFilter, icon, roles, systemChannelFlags, systemChannelId, verificationLevel } = restore.create(_backup);
 
-    guild.edit({
-      afkChannel: afkChannelId,
-      afkTimeout,
-      defaultMessageNotifications,
-      explicitContentFilter,
-      icon,
-      systemChannelFlags,
-      systemChannel: systemChannelId,
-      verificationLevel,
-    });
+    guild.edit({ afkChannel: afkChannelId, afkTimeout, defaultMessageNotifications, explicitContentFilter, icon, systemChannelFlags, systemChannel: systemChannelId, verificationLevel });
 
     roles.forEach(role => {
       const id = role.id;
@@ -302,89 +311,73 @@ module.exports = class extends SlashCommandBuilder {
     });
 
     channels.forEach(channel => {
-      const { bitrate,
-        id,
-        name,
-        nsfw,
-        parentId,
-        permissionOverwrites,
-        rateLimitPerUser,
-        rtcRegion,
-        topic,
-        type,
-        userLimit } = channel;
+      const { bitrate, id, name, nsfw, parentId, permissionOverwrites, rateLimitPerUser, rtcRegion, topic, type, userLimit } = channel;
 
       delete channel.id;
       delete channel.name;
 
       const _channel = guild.channels.resolve(id);
 
-      if (!_channel) return guild.channels.create(`${name}`, {
-        bitrate,
-        nsfw,
-        parent: parentId,
-        permissionOverwrites,
-        rateLimitPerUser,
-        rtcRegion,
-        topic,
-        type,
-        userLimit,
-      });
+      if (!_channel)
+        return guild.channels.create(`${name}`,
+          { bitrate, nsfw, parent: parentId, permissionOverwrites, rateLimitPerUser, rtcRegion, topic, type, userLimit });
 
-      _channel.edit({
-        bitrate,
-        name,
-        nsfw,
-        parent: parentId,
-        permissionOverwrites,
-        rateLimitPerUser,
-        rtcRegion,
-        topic,
-        type,
-        userLimit,
-      });
+      _channel.edit({ bitrate, name, nsfw, parent: parentId, permissionOverwrites, rateLimitPerUser, rtcRegion, topic, type, userLimit });
     });
   }
 
   /** @param {AutocompleteInteraction} interaction */
-  async restoreAutocomplete(interaction = this.interaction) {
+  async restoreAutocomplete(interaction) {
     if (interaction.responded) return;
 
     const { client, guildId, locale, options, user } = interaction;
 
+    const focused = options.getFocused(true);
+    const subcommand = options.getSubcommand();
+
     const res = [];
 
-    if (options.getFocused(true).name === 'id') {
-      const guilds = await this.prisma.guild.findMany({ where: { userId: user.id } });
+    if (focused.name === 'id') {
+      this.cache.user[user.id] ? null : this.cache.user[user.id] = {};
 
-      guilds?.forEach(_guild => {
+      const { guilds } = this.cache.user[user.id] = await this.prisma.user.findFirst({
+        where: { id: user.id },
+        include: { guilds: { include: { backups: true } } },
+      });
+
+      for (let i = 0; i < guilds.length; i++) {
+        const _guild = guilds[i];
+
+        const name = _guild.backups[0]?.data.name ||
+          client.guilds.cache.get(_guild.id)?.name ||
+          this.t('Undefined server name', { locale });
+
         res.push({
-          name: `${client.guilds.cache.get(_guild.id)?.name || this.t('Undefined server', { locale })} | ${_guild.id}${_guild.id == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
+          name: `${name} | ${_guild.id}${_guild.id == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
           value: `${_guild.id}`,
         });
-      });
+
+        if (i === 24) break;
+      }
     }
 
-    if (options.getFocused(true).name === 'key') {
+    if (focused.name === 'key') {
       const id = options.getString('id');
 
-      const backups = [];
+      const backups = subcommand === 'server' ?
+        this.cache.user[user.id].guilds.find(g => g.id === id).backups :
+        await this.prisma.backup.findMany({ where: { guildId: id } });
 
-      if (options.getSubcommand() === 'server') {
-        const _backups = await this.prisma.backup.findMany({ where: { guildId: id } });
-        backups.push(..._backups);
+      for (let i = 0; i < backups.length; i++) {
+        const _backup = backups[i];
+
+        res.push({
+          name: `${_backup.data.name} | ${_backup.id}${_backup.premium ? ' | Premium' : ''}${_backup.guildId == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
+          value: `${_backup.id}`,
+        });
+
+        if (i === 24) break;
       }
-
-      if (options.getSubcommand() === 'backup') {
-        const _backups = await this.prisma.backup.findMany({ where: { userId: user.id } });
-        backups.push(..._backups);
-      }
-
-      backups.forEach(_backup => res.push({
-        name: `${_backup.data.name} | ${_backup.id}${_backup.guild == guildId ?
-          ` | ${this.t('Current server', { locale })}` : ''}`,
-        value: `${_backup.id}`,
-      }));
     }
 
     interaction.respond(res);
@@ -401,7 +394,7 @@ module.exports = class extends SlashCommandBuilder {
 
     const key = options.getString('key');
 
-    const owner = await this.prisma.user.findFirst({
+    const owner = this.cache[user.id] || await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
       include: { backups: { where: { id: key } }, guilds: { where: { id: guild.id } } },
     });
@@ -417,19 +410,28 @@ module.exports = class extends SlashCommandBuilder {
   }
 
   /** @param {AutocompleteInteraction} interaction */
-  async updateAutocomplete(interaction = this.interaction) {
+  async updateAutocomplete(interaction) {
     if (interaction.responded) return;
 
     const { guildId, user } = interaction;
 
     const res = [];
 
-    const backups = await this.prisma.backup.findMany({ where: { guildId, userId: user.id } });
+    this.cache.user[user.id] ? null : this.cache.user[user.id] = {};
 
-    backups?.forEach(_backup => res.push({
-      name: `${_backup.data.name} | ${_backup.id}`,
-      value: `${_backup.id}`,
-    }));
+    const { backups } = this.cache[user.id] =
+      await this.prisma.user.findFirst({ where: { id: user.id }, include: { backups: { where: { guildId } } } });
+
+    for (let i = 0; i < backups.length; i++) {
+      const _backup = backups[i];
+
+      res.push({
+        name: `${_backup.data.name} | ${_backup.id}${_backup.premium ? ' | Premium' : ''}`,
+        value: `${_backup.id}`,
+      });
+
+      if (i === 24) break;
+    }
 
     interaction.respond(res);
   }
@@ -441,9 +443,13 @@ module.exports = class extends SlashCommandBuilder {
 
     const data = await backup.create(guild, options);
 
-    return await this.prisma.backup.create({
-      data: { id: `${Date.now()}`, data, guildId: id, premium, userId: ownerId },
+    const key = `${Date.now()}`;
+
+    const newBackup = await this.prisma.backup.create({
+      data: { id: `${key}`, data, guildId: id, premium, userId: ownerId },
     });
+
+    return newBackup;
   }
 
   async newGuild(guild = this.interaction.guild, options) {
@@ -457,7 +463,8 @@ module.exports = class extends SlashCommandBuilder {
   async newUser(guild = this.interaction.guild, options) {
     const { id, ownerId } = guild;
 
-    await this.prisma.user.create({ data: { id: ownerId, guilds: { create: { id } } } }).catch(console.error);
+    await this.prisma.user.create({ data: { id: ownerId, guilds: { create: { id } } } })
+      .catch(console.error);
 
     return await this.newBackup(guild, options);
   }

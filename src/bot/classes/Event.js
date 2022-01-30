@@ -26,6 +26,7 @@ module.exports = class {
 		this.permissions = permissions;
 		this.prisma = client.prisma;
 		this.t = client.t;
+		this.util = client.uitl;
 	}
 
 	/** @description run event */
