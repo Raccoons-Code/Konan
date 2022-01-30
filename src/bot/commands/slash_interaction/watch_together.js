@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, CommandInteraction } = require('discord.js');
+const { AutocompleteInteraction, CommandInteraction, Message } = require('discord.js');
 const { Client } = require('../../classes');
 const { DiscordTogether } = require('discord-together');
 
@@ -43,6 +43,7 @@ module.exports = class extends SlashCommandBuilder {
         content: `${invite.code}`,
         fetchReply: true,
       }), 60)).catch(error => {
+        console.log(error);
         if (error.name === 'SyntaxError')
           return interaction.reply({
             content: this.t('This activity does not exist.', { locale }),
@@ -94,12 +95,13 @@ module.exports = class extends SlashCommandBuilder {
 
   /**
    * @description delete one interaction with async timeout delay
+   * @param {Message} message
    * @param {Seconds<Number>} timeout
    * @async
    */
-  async timeout_erase(interaction = this.interaction, timeout = 0) {
-    if (!interaction) return console.error('Unable to delete undefined interaction.');
+  async timeout_erase(message, timeout = 0) {
+    if (!message) return console.error('Unable to delete undefined interaction.');
     await this.util.waitAsync(timeout * 1000);
-    return await interaction.deleteReply().catch(() => null);
+    return await message.delete().catch(() => null);
   }
 };
