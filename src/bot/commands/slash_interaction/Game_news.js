@@ -7,7 +7,6 @@ module.exports = class extends SlashCommand {
     super(...args);
     this.data = this.setName('notícias_de_jogos')
       .setDescription('Novidades do mundo dos games.')
-      .setDefaultPermission(true)
       .addStringOption(option => option.setName('notícia')
         .setDescription('Selecione a notícia.')
         .setAutocomplete(true)

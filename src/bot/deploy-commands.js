@@ -15,19 +15,23 @@ const data_private = [];
 const commands = [];
 const { applicationCommands } = Commands;
 
-Object.values(applicationCommands).forEach(_commands => commands.push(_commands.toJSON()));
+Object.values(applicationCommands).forEach(_commands => commands.push(..._commands.toJSON()));
 
-commands.flat().forEach(command => {
-  const command_data = command.data.toJSON();
+for (let i = 0; i < commands.length; i++) {
+  const command = commands[i];
 
-  if (command.data.defaultPermission || typeof command.data.defaultPermission === 'undefined')
-    return reset || data.push(command_data);
+  if (command.data.defaultPermission === false) {
+    command.data.setDefaultPermission(true);
 
-  command_data.defaultPermission = true;
-  command_data.default_permission = true;
+    const command_data = command.data.toJSON();
 
-  data_private.push(command_data);
-});
+    data_private.push(command_data);
+
+    continue;
+  }
+
+  reset || data.push(command.data.toJSON());
+}
 
 const rest = new REST({ version: '9' }).setToken(DISCORD_TOKEN);
 

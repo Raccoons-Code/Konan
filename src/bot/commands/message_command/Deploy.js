@@ -5,6 +5,7 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: 'deploy',
+      aliases: ['d'],
       description: 'Deploy commands (Restricted for bot\'owners).',
       args: {
         type: ['global', 'guild'],
@@ -35,18 +36,23 @@ module.exports = class extends Command {
     const commands = [];
     const { applicationCommands } = Commands;
 
-    Object.values(applicationCommands).forEach(_commands => commands.push(_commands.toJSON()));
+    Object.values(applicationCommands).forEach(_commands => commands.push(..._commands.toJSON()));
 
-    commands.flat().forEach(command => {
-      if (command.data.defaultPermission || typeof command.data.defaultPermission === 'undefined')
-        return reset || data.push(command.data.toJSON());
+    for (let i = 0; i < commands.length; i++) {
+      const command = commands[i];
 
-      command.data.setDefaultPermission(true);
+      if (command.data.defaultPermission === false) {
+        command.data.setDefaultPermission(true);
 
-      const command_data = command.data.toJSON();
+        const command_data = command.data.toJSON();
 
-      data_private.push(command_data);
-    });
+        data_private.push(command_data);
+
+        continue;
+      }
+
+      reset || data.push(command.data.toJSON());
+    }
 
     try {
       if (type === 'global')
