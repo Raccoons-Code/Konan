@@ -89,7 +89,7 @@ module.exports = new class {
 
       commands[dir] = new Collection();
 
-      const { found } = new GlobSync(`${__dirname}/${dir}/*.js`, { ignore: ['**/ignore.*.js'] });
+      const { found } = new GlobSync(`${__dirname}/${dir}/*.js`, { ignore: ['**/.ignore.*'] });
 
       for (let j = 0; j < found.length; j++) {
         const commandFile = require(found[j]);
