@@ -1,5 +1,4 @@
 const { Command } = require('../../classes');
-const { Message } = require('discord.js');
 
 module.exports = class extends Command {
 	constructor(...args) {
@@ -10,8 +9,7 @@ module.exports = class extends Command {
 		});
 	}
 
-	/** @param {Message} message */
-	async execute(message) {
+	async execute(message = this.Message) {
 		message.reply('Pong!').then(sent => {
 			this.msg_del_time_async(message);
 			const ping = sent.createdTimestamp - message.createdTimestamp;

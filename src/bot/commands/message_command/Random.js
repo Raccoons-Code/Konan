@@ -1,5 +1,4 @@
 const { Command } = require('../../classes');
-const { Message } = require('discord.js');
 const fetch = require('node-fetch');
 
 module.exports = class extends Command {
@@ -12,11 +11,8 @@ module.exports = class extends Command {
     });
   }
 
-  /** @param {Message} message */
-  async execute(message) {
+  async execute(message = this.Message) {
     this.msg_del_time_async(message);
-
-    this.message = message;
 
     const { args, guild } = message;
 
@@ -28,7 +24,7 @@ module.exports = class extends Command {
     this[args[0]]?.(await message.reply(`${this.t('Fetching a random {{args[0]}}', { locale, args })}...`));
   }
 
-  async cat(message = this.message) {
+  async cat(message = this.Message) {
     const { file } = await fetch('https://aws.random.cat/meow').then(response => response.json());
     this.msg_del_time_async(await message.edit({ content: null, files: [file] }), 6000);
   }

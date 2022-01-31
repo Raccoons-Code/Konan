@@ -1,13 +1,8 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { CommandInteraction } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
 
-module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
-    this.t = client.t;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('ban')
       .setDescription('Ban user.')
       .addUserOption(option => option.setName('user')
@@ -20,15 +15,14 @@ module.exports = class extends SlashCommandBuilder {
         .setDescription('The reason for banishment, if any.'));
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
+  async execute(interaction = this.CommandInteraction) {
     await interaction.deferReply({ ephemeral: true });
 
     const { guild, locale, memberPermissions, options } = interaction;
 
     const member = options.getMember('user');
 
-    const days = options.getNumber('delete_messages');
+    const days = options.getNumber('delete_messages') || 0;
 
     const reason = options.getString('reason') || null;
 

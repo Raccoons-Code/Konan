@@ -1,30 +1,23 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, CommandInteraction, Message } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
 const { DiscordTogether } = require('discord-together');
 
-module.exports = class extends SlashCommandBuilder {
-  /** @param {Client} client */
-  constructor(client) {
-    super();
-    this.discordTogether = new DiscordTogether(client);
-    this.applications = Object.keys(this.discordTogether.applications);
-    client.DiscordTogether = this.discordTogether;
-    this.client = client;
-    this.t = client.t;
-    this.util = client.util;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('party')
       .setDescription('Create an activity party together')
       .addStringOption(option => option.setName('activity')
         .setDescription('Select activity')
         .setAutocomplete(true)
         .setRequired(true));
+    if (this.client?.ready) {
+      this.discordTogether = new DiscordTogether(this.client);
+      this.applications = Object.keys(this.discordTogether.applications);
+      this.client.discordTogether = this.discordTogether;
+    }
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
-    this.interaction = interaction;
-
+  async execute(interaction = this.CommandInteraction) {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
@@ -56,8 +49,7 @@ module.exports = class extends SlashCommandBuilder {
       });
   }
 
-  /** @param {AutocompleteInteraction} interaction */
-  async executeAutocomplete(interaction) {
+  async executeAutocomplete(interaction = this.AutocompleteInteraction) {
     if (interaction.responded) return;
 
     const { locale, options } = interaction;
@@ -91,17 +83,5 @@ module.exports = class extends SlashCommandBuilder {
     }
 
     return array;
-  }
-
-  /**
-   * @description delete one interaction with async timeout delay
-   * @param {Message} message
-   * @param {Seconds<Number>} timeout
-   * @async
-   */
-  async timeout_erase(message, timeout = 0) {
-    if (!message) return console.error('Unable to delete undefined interaction.');
-    await this.util.waitAsync(timeout * 1000);
-    return await message.delete().catch(() => null);
   }
 };

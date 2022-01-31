@@ -1,5 +1,5 @@
 const { Command } = require('../../classes');
-const { Message, MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const db = require('quick.db');
 
 module.exports = class extends Command {
@@ -11,8 +11,7 @@ module.exports = class extends Command {
 		});
 	}
 
-	/** @param {Message} message */
-	async execute(message) {
+	async execute(message = this.Message) {
 		this.msg_del_time_async(message);
 		const { args, author, client, guild, guildId } = message;
 		const locale = guild?.preferredLocale;

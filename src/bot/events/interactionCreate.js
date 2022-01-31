@@ -4,7 +4,7 @@ const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, MessageC
 module.exports = class extends Event {
 	constructor(...args) {
 		super(...args, {
-			intents: ['GUILDS', 'GUILD_VOICE_STATES'],
+			intents: ['GUILDS'],
 			name: 'interactionCreate',
 		});
 	}
@@ -13,7 +13,7 @@ module.exports = class extends Event {
 	async execute(interaction) {
 		this.interaction = interaction;
 
-		const { locale, targetType } = interaction;
+		const { locale, targetType, componentType } = interaction;
 
 		const command = this[targetType || 'CHAT_INPUT']?.(interaction);
 
@@ -25,7 +25,7 @@ module.exports = class extends Event {
 			try {
 				console.error(error, command.data?.name);
 
-				if (!interaction.isAutocomplete()) {
+				if (!interaction.isAutocomplete() && !interaction.isMessageComponent()) {
 					if (interaction.replied) {
 						await interaction.editReply({
 							content: this.t('There was an error while executing this command!', { locale }),

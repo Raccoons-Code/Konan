@@ -12,29 +12,31 @@ module.exports = class extends Client {
 		super({
 			allowedMentions: { parse: ['users'] },
 			failIfNotExists: false,
-			intents: 0,
-			partials: ['CHANNEL', 'GUILD_MEMBER', 'GUILD_SCHEDULED_EVENT', 'MESSAGE', 'REACTION', 'USER'],
+			intents: events.intents,
+			partials: events.partials,
 			...options,
 		});
 		this.prisma = prisma;
-		this.translator = translator;
 		this.t = translator.t;
+		this.util = methods;
 		this.ready = true;
 	}
 
 	async login(token = this.token) {
 		process.on('unhandledRejection', console.error);
-		this.util = methods;
 		commands.init(this);
 		events.init(this);
 		this.commands = commands.commands;
-		this.options.intents = events.intents;
 		events.loadEvents();
 		return await super.login(token);
 	}
 
-	static async login() {
-		const client = new this();
-		return await client.login();
+	/** @param {ClientOptions} [options] */
+	static async login(options) {
+		if (!options) options = {};
+		if (options.token) this.token = options.token & delete options.token;
+
+		const client = new this(options);
+		return await client.login(this.token);
 	}
 };

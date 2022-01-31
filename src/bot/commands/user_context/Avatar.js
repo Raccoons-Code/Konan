@@ -1,33 +1,29 @@
-const { ContextMenuCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageButton, MessageEmbed, UserContextMenuInteraction } = require('discord.js');
+const { UserContextMenu } = require('../../classes');
+const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 
-module.exports = class extends ContextMenuCommandBuilder {
-	/** @param {Client} client */
-	constructor(client) {
-		super();
-		this.client = client;
+module.exports = class extends UserContextMenu {
+	constructor(...args) {
+		super(...args);
 		this.data = this.setName('Get avatar')
 			.setType(2);
 	}
 
-	/** @param {UserContextMenuInteraction} interaction */
-	async execute(interaction) {
+	async execute(interaction = this.UserContextMenuInteraction) {
 		const user = interaction.options.getUser('user');
 
-		const mButton = new MessageButton()
-			.setLabel('Link')
+		const buttons = [new MessageButton()
 			.setStyle('LINK')
+			.setLabel('Link')
 			.setEmoji('🖼')
-			.setURL(user.avatarURL({ dynamic: true, format: 'png', size: 4096 }));
+			.setURL(user.avatarURL({ dynamic: true, format: 'png', size: 4096 }))];
 
-		const mRow = new MessageActionRow()
-			.setComponents(mButton);
+		const components = [new MessageActionRow().setComponents(buttons)];
 
-		const mEmbed = new MessageEmbed()
+		const embeds = [new MessageEmbed()
 			.setColor('RANDOM')
 			.setDescription(`${user}`)
-			.setImage(user.avatarURL({ dynamic: true, format: 'png', size: 512 }));
+			.setImage(user.avatarURL({ dynamic: true, format: 'png', size: 512 }))];
 
-		interaction.reply({ components: [mRow], embeds: [mEmbed] });
+		interaction.reply({ components, embeds });
 	}
 };

@@ -1,14 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, CommandInteraction, MessageEmbed } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
+const { MessageEmbed } = require('discord.js');
 const { splitSelectMenu } = require('../../methods');
 
-module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
-    this.t = client.t;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('help')
       .setDescription('Replies with Help!')
       .addStringOption(option => option.setName('command')
@@ -16,10 +12,7 @@ module.exports = class extends SlashCommandBuilder {
         .setAutocomplete(true));
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
-    this.interaction = interaction;
-
+  async execute(interaction = this.CommandInteraction) {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
@@ -33,8 +26,7 @@ module.exports = class extends SlashCommandBuilder {
     /* await interaction.deferReply({ ephemeral: true, fetchReply: true }); */
   }
 
-  /** @param {AutocompleteInteraction} interaction */
-  async executeAutocomplete(interaction) {
+  async executeAutocomplete(interaction = this.AutocompleteInteraction) {
     if (interaction.responded) return;
 
     const { client } = interaction;

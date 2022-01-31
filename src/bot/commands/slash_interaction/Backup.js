@@ -1,16 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, CommandInteraction, MessageEmbed } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
+const { MessageEmbed } = require('discord.js');
 const { backup, restore } = require('../../BackupAPI');
-const { prisma } = require('../../database');
 
-module.exports = class extends SlashCommandBuilder {
-  /** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
-    this.prisma = prisma;
-    this.t = client.t;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('backup')
       .setDescription('Make backup for your server.')
       .addSubcommand(subcommand => subcommand.setName('create')
@@ -62,10 +56,7 @@ module.exports = class extends SlashCommandBuilder {
     this.cache = { user: {}, guild: {}, backup: {} };
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
-    this.interaction = interaction;
-
+  async execute(interaction = this.CommandInteraction) {
     const { options } = interaction;
 
     const command = options.getSubcommandGroup(false) || options.getSubcommand(false);
@@ -78,7 +69,7 @@ module.exports = class extends SlashCommandBuilder {
     this[command]?.(interaction);
   }
 
-  async create(interaction = this.interaction) {
+  async create(interaction = this.CommandInteraction) {
     const { guild, guildId, locale, user } = interaction;
 
     if (!interaction.inGuild())
@@ -117,7 +108,7 @@ module.exports = class extends SlashCommandBuilder {
     return interaction.editReply(`${user}, ${this.t('you already have a backup.', { locale })}`);
   }
 
-  async delete(interaction = this.interaction) {
+  async delete(interaction = this.CommandInteraction) {
     const { locale, options, user } = interaction;
 
     const type = options.getSubcommand();
@@ -154,8 +145,7 @@ module.exports = class extends SlashCommandBuilder {
     }
   }
 
-  /** @param {AutocompleteInteraction} interaction */
-  async deleteAutocomplete(interaction) {
+  async deleteAutocomplete(interaction = this.AutocompleteInteraction) {
     if (interaction.responded) return;
 
     const { client, guildId, locale, options, user } = interaction;
@@ -211,7 +201,7 @@ module.exports = class extends SlashCommandBuilder {
     interaction.respond(res);
   }
 
-  async list(interaction = this.interaction) {
+  async list(interaction = this.CommandInteraction) {
     const { locale, user } = interaction;
 
     const backups = await this.prisma.backup.findMany({ where: { userId: user.id } });
@@ -228,7 +218,7 @@ module.exports = class extends SlashCommandBuilder {
     interaction.editReply({ embeds });
   }
 
-  async restore(interaction = this.interaction) {
+  async restore(interaction = this.CommandInteraction) {
     const { client, guild, locale, options, user } = interaction;
 
     const _type = options.getSubcommand();
@@ -326,8 +316,7 @@ module.exports = class extends SlashCommandBuilder {
     });
   }
 
-  /** @param {AutocompleteInteraction} interaction */
-  async restoreAutocomplete(interaction) {
+  async restoreAutocomplete(interaction = this.AutocompleteInteraction) {
     if (interaction.responded) return;
 
     const { client, guildId, locale, options, user } = interaction;
@@ -383,7 +372,7 @@ module.exports = class extends SlashCommandBuilder {
     interaction.respond(res);
   }
 
-  async update(interaction = this.interaction) {
+  async update(interaction = this.CommandInteraction) {
     const { guild, locale, options, user } = interaction;
 
     if (!interaction.inGuild())
@@ -409,8 +398,7 @@ module.exports = class extends SlashCommandBuilder {
     return interaction.editReply(`${this.t('backup successfully done. Your key is:', { locale })} \`${newbackup.id}\``);
   }
 
-  /** @param {AutocompleteInteraction} interaction */
-  async updateAutocomplete(interaction) {
+  async updateAutocomplete(interaction = this.AutocompleteInteraction) {
     if (interaction.responded) return;
 
     const { guildId, user } = interaction;
@@ -436,7 +424,7 @@ module.exports = class extends SlashCommandBuilder {
     interaction.respond(res);
   }
 
-  async newBackup(guild = this.interaction.guild, options) {
+  async newBackup(guild = this.CommandInteraction.guild, options) {
     const { id, ownerId } = guild;
 
     const { premium } = options;
@@ -452,7 +440,7 @@ module.exports = class extends SlashCommandBuilder {
     return newBackup;
   }
 
-  async newGuild(guild = this.interaction.guild, options) {
+  async newGuild(guild = this.CommandInteraction.guild, options) {
     const { id, ownerId } = guild;
 
     await this.prisma.guild.create({ data: { id, userId: ownerId } });
@@ -460,7 +448,7 @@ module.exports = class extends SlashCommandBuilder {
     return await this.newBackup(guild, options);
   }
 
-  async newUser(guild = this.interaction.guild, options) {
+  async newUser(guild = this.CommandInteraction.guild, options) {
     const { id, ownerId } = guild;
 
     await this.prisma.user.create({ data: { id: ownerId, guilds: { create: { id } } } })
@@ -469,7 +457,7 @@ module.exports = class extends SlashCommandBuilder {
     return await this.newBackup(guild, options);
   }
 
-  async updatebackup(guild = this.interaction.guild, key, options) {
+  async updatebackup(guild = this.CommandInteraction.guild, key, options) {
     const { id, ownerId } = guild;
 
     const { premium } = options;

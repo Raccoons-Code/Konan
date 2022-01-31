@@ -1,13 +1,9 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { CommandInteraction, MessageEmbed } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
+const { MessageEmbed } = require('discord.js');
 
-module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
-    this.t = client.t;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('info')
       .setDescription('Info')
       .addSubcommand(subCommand => subCommand.setName('server')
@@ -18,16 +14,13 @@ module.exports = class extends SlashCommandBuilder {
           .setDescription('Select user.')));
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
-    this.interaction = interaction;
-
+  async execute(interaction = this.CommandInteraction) {
     const embeds = this.embeds = [new MessageEmbed().setColor('RANDOM')];
 
     this[interaction.options.getSubcommand()]?.(interaction, embeds);
   }
 
-  async server(interaction = this.interaction, embeds = this.embeds) {
+  async server(interaction = this.CommandInteraction, embeds = this.embeds) {
     const { guild, locale } = interaction;
 
     if (!guild)
@@ -50,7 +43,7 @@ module.exports = class extends SlashCommandBuilder {
     interaction.reply({ embeds, ephemeral: true });
   }
 
-  async user(interaction = this.interaction, embeds = this.embeds) {
+  async user(interaction = this.CommandInteraction, embeds = this.embeds) {
     const { guild, locale, options } = interaction;
 
     const user = options.getUser('user') || interaction.user;

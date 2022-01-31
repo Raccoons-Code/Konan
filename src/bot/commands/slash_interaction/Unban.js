@@ -1,13 +1,8 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, CommandInteraction } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
 
-module.exports = class extends SlashCommandBuilder {
-  /** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
-    this.t = client.t;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('unban')
       .setDescription('Revokes the ban from the selected user.')
       .addStringOption(option => option.setName('user')
@@ -18,8 +13,7 @@ module.exports = class extends SlashCommandBuilder {
         .setDescription('Reason'));
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
+  async execute(interaction = this.CommandInteraction) {
     this.interaction = interaction;
 
     if (interaction.isAutocomplete())
@@ -45,8 +39,7 @@ module.exports = class extends SlashCommandBuilder {
       .catch(() => interaction.editReply(this.t('Error! Unable to unban this user.', { locale })));
   }
 
-  /** @param {AutocompleteInteraction} interaction */
-  async executeAutocomplete(interaction) {
+  async executeAutocomplete(interaction = this.AutocompleteInteraction) {
     if (interaction.responded) return;
 
     const { guild, options } = interaction;
@@ -59,7 +52,7 @@ module.exports = class extends SlashCommandBuilder {
 
     const bans_collection = guild.bans.cache.size ? guild.bans.cache : await guild.bans.fetch();
 
-    const bans_filtered = pattern ? bans_collection.filter(ban => regex.test(ban.user.username) ||
+    const bans_filtered = pattern ? bans_collection.filter(ban => regex.test(ban.user.tag) ||
       regex.test(ban.user.id) || regex.test(ban.reason)) : bans_collection;
 
     const bans_array = bans_filtered.toJSON();

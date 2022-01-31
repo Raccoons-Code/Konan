@@ -1,13 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { CommandInteraction, AutocompleteInteraction, MessageEmbed } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
+const { MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
 
-module.exports = class extends SlashCommandBuilder {
-  /** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('notícias_de_jogos')
       .setDescription('Novidades do mundo dos games.')
       .setDefaultPermission(true)
@@ -15,15 +12,12 @@ module.exports = class extends SlashCommandBuilder {
         .setDescription('Selecione a notícia.')
         .setAutocomplete(true)
         .setRequired(true));
-    if (client.ready)
+    if (this.client?.ready)
       this.fetchnews();
     this.cache = { user: {}, news: {} };
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
-    this.interaction = interaction;
-
+  async execute(interaction = this.CommandInteraction) {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
@@ -50,8 +44,7 @@ module.exports = class extends SlashCommandBuilder {
     interaction.reply({ embeds, ephemeral: true });
   }
 
-  /** @param {AutocompleteInteraction} interaction */
-  async executeAutocomplete(interaction) {
+  async executeAutocomplete(interaction = this.AutocompleteInteraction) {
     if (interaction.responded) return;
 
     const { options, user } = interaction;

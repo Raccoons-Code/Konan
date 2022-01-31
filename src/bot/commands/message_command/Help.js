@@ -1,5 +1,5 @@
 const { Command } = require('../../classes');
-const { Message, MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -11,8 +11,7 @@ module.exports = class extends Command {
     });
   }
 
-  /** @param {Message} message */
-  async execute(message) {
+  async execute(message = this.Message) {
     this.msg_del_time_async(message);
 
     const { client } = message;

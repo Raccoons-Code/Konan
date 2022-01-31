@@ -1,15 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { CommandInteraction } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
 const Commands = require('../');
 const { env: { GUILD_ID, OWNER_ID } } = process;
 
-module.exports = class extends SlashCommandBuilder {
-  /** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
-    this.t = client.t;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('deploy')
       .setDescription('Deploy commands (Restricted for bot\'owners).')
       .setDefaultPermission(false)
@@ -21,8 +16,7 @@ module.exports = class extends SlashCommandBuilder {
         .setDescription('Reset all commands.'));
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
+  async execute(interaction = this.CommandInteraction) {
     await interaction.deferReply({ ephemeral: true });
 
     const { client, locale, options, user } = interaction;

@@ -13,7 +13,13 @@ module.exports = new class {
 
   /** @type {Array<String>} */
   get applicationCommandTypes() {
-    return Object.values(this.commandTypes).flat().filter(f => !/(_(?:command))/i.test(f));
+    return this.applicationCommandTypes = Object.values(this.commandTypes).flat()
+      .filter(f => !/(_(?:command))/i.test(f));
+  }
+
+  set applicationCommandTypes(value) {
+    /** @private */
+    this._applicationCommandTypes = value;
   }
 
   get applicationCommands() {
@@ -51,13 +57,14 @@ module.exports = new class {
 
     for (let i = 0; i < types.length; i++) {
       const type = types[i];
-      const elements = type.split('_');
+      const [value, key] = type.split('_');
 
-      if (!object[elements[1]])
-        Object.assign(object, { [elements[1]]: [] });
+      if (!object[key || value])
+        Object.assign(object, { [key || value]: [] });
 
-      object[elements[1]].push(type);
+      object[key || value].push(type);
     }
+
     return this.commandTypes = object;
   }
 
@@ -66,7 +73,8 @@ module.exports = new class {
    * @private
    */
   isClass(value) {
-    return typeof value === 'function' && /^class.*{/.test(value.toString());
+    return typeof value === 'function' &&
+      /^((?:class\s*)(\s+(?!extends)\w+\s*)?(?:(?:\s+extends)(\s+\w+\s*))?){/.test(value.toString());
   }
 
   /**
@@ -74,23 +82,26 @@ module.exports = new class {
    * @private
    */
   loadCommands(commandTypes = this.commandTypes, commands = {}, client = this.client || {}) {
-    Object.values(commandTypes).flat().forEach(dir => {
-      const { found } = new GlobSync(`${__dirname}/${dir}/*.js`);
+    const dirs = Object.values(commandTypes).flat();
 
-      for (let i = 0; i < found.length; i++) {
-        const commandFile = require(found[i]);
+    for (let i = 0; i < dirs.length; i++) {
+      const dir = dirs[i];
+
+      commands[dir] = new Collection();
+
+      const { found } = new GlobSync(`${__dirname}/${dir}/*.js`, { ignore: ['**/ignore.*.js'] });
+
+      for (let j = 0; j < found.length; j++) {
+        const commandFile = require(found[j]);
 
         const command = this.isClass(commandFile) ? new commandFile(client) : commandFile;
 
         if (!command.data || !command.execute) continue;
 
-        if (!commands[dir])
-          commands[dir] = new Collection();
-
         commands[dir].set(command.data.name, command);
         command.data.aliases?.forEach(alias => commands[dir].set(alias, command));
       }
-    });
+    }
 
     return this.commands = commands;
   }

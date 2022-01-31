@@ -7,7 +7,7 @@ module.exports = class extends Event {
 		super(...args, {
 			intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'],
 			name: 'messageCreate',
-			partials: ['MESSAGE'],
+			partials: ['CHANNEL', 'MESSAGE'],
 		});
 	}
 

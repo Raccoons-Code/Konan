@@ -1,14 +1,10 @@
-const { SlashCommandBuilder, SlashCommandChannelOption } = require('@discordjs/builders');
-const { CommandInteraction, Constants } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
+const { Constants } = require('discord.js');
 const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = Constants.ChannelTypes;
 
-module.exports = class extends SlashCommandBuilder {
-  /** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
-    this.t = client.t;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('clear')
       .setDescription('Deletes up to 100 channel messages at once.')
       .addNumberOption(option => option.setName('amount')
@@ -21,8 +17,7 @@ module.exports = class extends SlashCommandBuilder {
         .addChannelTypes([GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT]));
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
+  async execute(interaction = this.CommandInteraction) {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale, memberPermissions, options } = interaction;

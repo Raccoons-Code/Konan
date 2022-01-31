@@ -25,19 +25,18 @@ module.exports = class {
 		if (!this.regexCommandName(name))
 			return console.error(`Command ${name} cannot be loaded.`);
 
-		this.client = client;
 		this.data = { aliases, args, args_help, description, emoji, name, permissions };
-		this.prisma = client.prisma;
-		this.t = client.t;
-		this.util = client.util;
+		if (client?.ready) {
+			this.client = client;
+			this.prisma = client.prisma;
+			this.t = client.t;
+			this.util = client.util;
+		}
 	}
 
-	/**
-	 * @description run command
-	 * @param {Message} message
-	 */
-	async execute(message) {
-		return console.error(message.commandName);
+	async execute() {
+		/** @type {Message} */
+		this.Message;
 	}
 
 	/**

@@ -1,12 +1,9 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { CommandInteraction, Webhook } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
+const { Webhook } = require('discord.js');
 
-module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('echo')
       .setDescription('Replies with your message!')
       .addStringOption(option => option.setName('message')
@@ -14,8 +11,7 @@ module.exports = class extends SlashCommandBuilder {
         .setRequired(true));
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
+  async execute(interaction = this.CommandInteraction) {
     const { client, channel, member, options, user } = interaction;
 
     const message = options.getString('message');

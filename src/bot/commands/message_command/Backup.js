@@ -1,5 +1,4 @@
 const { Command } = require('../../classes');
-const { Message } = require('discord.js');
 const { restore } = require('../../BackupAPI');
 
 module.exports = class extends Command {
@@ -10,11 +9,8 @@ module.exports = class extends Command {
     });
   }
 
-  /** @param {Message} message */
-  async execute(message) {
+  async execute(message = this.Message) {
     message.delete().catch(() => null);
-
-    this.message = message;
 
     const { args, author } = message;
 
@@ -23,7 +19,7 @@ module.exports = class extends Command {
     this[args.shift()]?.(message);
   }
 
-  async guilds(message = this.message) {
+  async guilds(message = this.Message) {
     const { client } = message;
 
     await this.util.waitAsync(100);
@@ -31,7 +27,7 @@ module.exports = class extends Command {
     await message.reply(`${client.guilds.cache.size}`);
   }
 
-  async restore(message = this.message) {
+  async restore(message = this.Message) {
     const { args, client, guild } = message;
 
     const [guildId, key, userId] = args;

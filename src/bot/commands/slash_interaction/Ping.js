@@ -1,30 +1,25 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { CommandInteraction } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
 
-module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
-	constructor(client) {
-		super();
-		this.client = client;
+module.exports = class extends SlashCommand {
+	constructor(...args) {
+		super(...args);
 		this.data = this.setName('ping')
 			.setDescription('Replies with Pong!');
 		this._ping = Infinity;
 		this.ping_ = 0;
 	}
 
-	/** @param {CommandInteraction} interaction */
-	async execute(interaction) {
+	async execute(interaction = this.CommandInteraction) {
 		interaction.reply({ content: 'Pong!', fetchReply: true }).then(sent => {
 			const { client } = interaction;
 
 			const ping = sent.createdTimestamp - interaction.createdTimestamp;
 
-			this._ping = this._ping > ping ? ping : this._ping;
+			this._ping > ping ? this._ping = ping : null;
 
-			this.ping_ = this.ping_ < ping ? ping : this._ping;
+			this.ping_ < ping ? this.ping_ = ping : null;
 
-			interaction.editReply(`Pong! \`API: ${client.ws.ping}ms\`, \`BOT: ${ping}ms\` | \`smaller: ${this._ping}ms\`, \`sigger: ${this.ping_}ms\``);
+			interaction.editReply(`Pong! \`API: ${client.ws.ping}ms\`, \`BOT: ${ping}ms\` | \`smaller: ${this._ping}ms\`, \`bigger: ${this.ping_}ms\``);
 
 			console.log(`Ping: ${ping}ms, Smaller: ${this._ping}ms, Bigger: ${this.ping_}ms`);
 		});

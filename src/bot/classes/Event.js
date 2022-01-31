@@ -18,19 +18,16 @@ module.exports = class {
 		partials,
 		permissions,
 	}) {
-		this.client = client;
 		this.intents = intents;
 		this.listener = listener?.match(/(on(?:ce)?)/)[1] || 'on';
 		this.name = name;
 		this.partials = partials;
 		this.permissions = permissions;
-		this.prisma = client.prisma;
-		this.t = client.t;
-		this.util = client.uitl;
-	}
-
-	/** @description run event */
-	async execute() {
-		return console.error(this.name);
+		if (client?.ready) {
+			this.client = client;
+			this.prisma = client.prisma;
+			this.t = client.t;
+			this.util = client.util;
+		}
 	}
 };

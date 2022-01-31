@@ -1,20 +1,16 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { CommandInteraction, MessageButton, MessageActionRow, MessageEmbed } = require('discord.js');
-const { Client } = require('../../classes');
+const { SlashCommand } = require('../../classes');
+const { MessageButton, MessageActionRow, MessageEmbed } = require('discord.js');
 
-module.exports = class extends SlashCommandBuilder {
-	/** @param {Client} client */
-  constructor(client) {
-    super();
-    this.client = client;
+module.exports = class extends SlashCommand {
+  constructor(...args) {
+    super(...args);
     this.data = this.setName('avatar')
       .setDescription('Replies with the user\'s profile picture.')
       .addUserOption(option => option.setName('user')
         .setDescription('Select user.'));
   }
 
-  /** @param {CommandInteraction} interaction */
-  async execute(interaction) {
+  async execute(interaction = this.CommandInteraction) {
     const user = interaction.options.getUser('user') || interaction.user;
 
     const mButton = new MessageButton()

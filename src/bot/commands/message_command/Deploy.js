@@ -1,5 +1,4 @@
 const { Command } = require('../../classes');
-const { Message } = require('discord.js');
 const Commands = require('../');
 
 module.exports = class extends Command {
@@ -14,8 +13,7 @@ module.exports = class extends Command {
     });
   }
 
-  /** @param {Message} message */
-  async execute(message) {
+  async execute(message = this.Message) {
     message.delete().catch(() => null);
 
     const { args, author, client, guild } = message;
