@@ -13,7 +13,6 @@ module.exports = class extends SlashCommand {
     this.messageURLRegex = /(?:(?:\/)?(\d+))+/;
     this.data = this.setName('button_roles')
       .setDescription('Button roles')
-      .setDefaultPermission(false)
       .addSubcommand(subcommand => subcommand.setName('new_button_role')
         .setDescription('New button role')
         .addRoleOption(option => option.setName('role')
