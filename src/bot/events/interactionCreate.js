@@ -41,6 +41,7 @@ module.exports = class extends Event {
 	}
 
 	BUTTON({ client, customId } = this.ButtonInteraction) {
+		if (!/^(?:\{)(?:(?:("\w+":("\w+"|\d+|\[.*\]|\{.*\}))(?:,|\}$))+)$/.test(customId)) return;
 		const { command } = JSON.parse(customId);
 		return client.commands.button_command?.get(command);
 	}
