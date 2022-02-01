@@ -11,7 +11,7 @@ module.exports = class extends SlashCommand {
     super(...args);
     this.textRegexp = /([^|]*)\|?(.*)/;
     this.messageURLRegex = /(?:(?:\/)?(\d+))+/;
-    this.data = this.setName('button_roles')
+    this.data = this.setName('buttonroles')
       .setDescription('Button roles')
       .addSubcommand(subcommand => subcommand.setName('new_button_role')
         .setDescription('New button role')

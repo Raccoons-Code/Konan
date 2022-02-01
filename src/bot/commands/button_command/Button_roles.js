@@ -10,7 +10,6 @@ module.exports = class extends ButtonInteraction {
   }
 
   async execute(interaction = this.ButtonInteraction) {
-
     const { customId, member } = interaction;
 
     const { roleId } = JSON.parse(customId);

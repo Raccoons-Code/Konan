@@ -10,11 +10,11 @@ module.exports = class extends Command {
   }
 
   async execute(message = this.Message) {
-    message.delete().catch(() => null);
-
     const { args, author } = message;
 
     if (!author.bot) return;
+
+    message.delete().catch(() => null);
 
     this[args.shift()]?.(message);
   }
@@ -50,26 +50,32 @@ module.exports = class extends Command {
       data: { newGuild: newGuild.id, oldGuild: guildId },
     }).catch(() => null);
 
-    const channels = newGuild.channels.cache.filter(channel => channel.type === 'GUILD_TEXT');
+    const channel = newGuild.channels.cache.find(_channel => _channel.type === 'GUILD_TEXT');
 
-    const invite = await channels.last().createInvite();
+    const invite = await channel.createInvite();
 
     await this.util.waitAsync(100);
 
     await message.reply(`${invite}`);
 
     setTimeout(async () => {
-      guild.members.resolve(userId) ||
-        guild.members.get(userId) ||
-        await guild.members.fetch(userId) ||
-        newGuild.delete().then(async () => {
-          console.log(newGuild.name, 'deleted!');
+      const member = guild.members.resolve(userId) ||
+        await guild.members.fetch(userId);
 
-          await this.prisma.user.update({
-            where: { id: userId },
-            data: { newGuild: null, oldGuild: null },
-          }).catch(() => null);
+      if (guild.available && member) {
+        await guild.setOwner(userId);
+
+        return await guild.leave();
+      }
+
+      newGuild.delete().then(async () => {
+        console.log(newGuild.name, 'deleted!');
+
+        await this.prisma.user.update({
+          where: { id: userId },
+          data: { newGuild: null, oldGuild: null },
         }).catch(() => null);
+      }).catch(() => null);
     }, 60000);
   }
 };

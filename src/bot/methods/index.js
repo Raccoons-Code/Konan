@@ -1,6 +1,4 @@
-/**
- * @description exports all functions
- */
+/** @description exports all functions */
 module.exports = {
   bytes: require('./bytes'),
   capitalize: require('./capitalize'),
@@ -8,9 +6,11 @@ module.exports = {
   hasDuplicatesInArray: require('./hasDuplicatesInArray'),
   isSameDate: require('./isSameDate'),
   isDuplicate: require('./isDuplicate'),
+  isJSON: require('./isJSON'),
   jankenpon: require('./jankenpon'),
   keyGen: require('./keyGen'),
   mathRandom: require('./mathRandom'),
+  parseJSON: require('./parseJSON'),
   removeDuplicatesInArray: require('./removeDuplicatesInArray'),
   removeFromArray: require('./removeFromArray'),
   splitArrayInGroups: require('./splitArrayInGroups'),

@@ -40,10 +40,10 @@ module.exports = class extends Event {
 		}
 	}
 
+	// if (!/^(?:\{)(?:(?:("\w+":("\w+"|\d+|\[.*\]|\{.*\}))(?:,|\}$))+)$/.test(customId)) return;
 	BUTTON({ client, customId } = this.ButtonInteraction) {
-		if (!/^(?:\{)(?:(?:("\w+":("\w+"|\d+|\[.*\]|\{.*\}))(?:,|\}$))+)$/.test(customId)) return;
-		const { command } = JSON.parse(customId);
-		return client.commands.button_command?.get(command);
+		const { command } = this.util.parseJSON(customId);
+		return client.commands.button_command.get(command);
 	}
 
 	CHAT_INPUT({ client, commandName } = this.Interaction) {

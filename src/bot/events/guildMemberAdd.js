@@ -31,5 +31,7 @@ module.exports = class extends Event {
     await guild.setOwner(member);
 
     await this.prisma.user.update({ where: { id }, data: { newGuild: null, oldGuild: null } });
+
+    await guild.leave();
   }
 };

@@ -1,6 +1,5 @@
 const { Event } = require('../classes');
 const { Permissions } = require('discord.js');
-const { env: { GUILD_ID } } = process;
 
 module.exports = class extends Event {
 	constructor(...args) {
@@ -8,8 +7,6 @@ module.exports = class extends Event {
 			listener: 'once',
 			name: 'ready',
 		});
-
-		this.GUILD_ID = GUILD_ID?.split(',') || [];
 	}
 
 	async execute(client = this.client) {
@@ -21,6 +18,7 @@ module.exports = class extends Event {
 		console.log(`Ready! ${client.user.tag} is on ${client.guilds.cache.size} servers.`);
 
 		this.deleteMyGuilds(client);
+		this.setPresence(client);
 	}
 
 	async deleteMyGuilds(client = this.client) {
@@ -59,5 +57,26 @@ module.exports = class extends Event {
 				}).catch(() => null);
 			}, ((timeout < 0 ? 0 : timeout) + (multiplier * 1000)));
 		}
+	}
+
+	async setPresence(client = this.client) {
+		const { channels, user, guilds, users } = client;
+		const ytURL = 'https://www.youtube.com/watch?v=';
+
+		user.setPresence({
+			activities: [
+				{ name: `${users.cache.size} users.`, type: 'WATCHING' },
+				{ name: 'Cat Vibing Meme', type: 'STREAMING', url: `${ytURL}NUYvbT6vTPs` },
+				{ name: `${guilds.cache.size} servers.`, type: 'PLAYING' },
+				{ name: 'Wide Putin Walking', type: 'STREAMING', url: `${ytURL}SLU3oG_ePhM` },
+				{ name: `${channels.cache.size} channels.`, type: 'LISTENING' },
+				{ name: 'Noisestorm - Crab Rave', type: 'STREAMING', url: `${ytURL}LDU_Txk06tM` },
+				{ name: 'National Anthem of USSR', type: 'STREAMING', url: `${ytURL}U06jlgpMtQs` },
+				{ name: 'Rick Astley - Never Gonna Give You Up', type: 'STREAMING', url: `${ytURL}dQw4w9WgXcQ` },
+			],
+		});
+
+		await this.util.waitAsync(10000);
+		this.setPresence(client);
 	}
 };

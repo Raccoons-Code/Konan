@@ -13,7 +13,9 @@ module.exports = class extends Command {
 
 	async execute(message = this.Message) {
 		this.timeout_erase(message);
-		const { args, author, client, guild, guildId } = message;
+
+		const { args, author, guild, guildId } = message;
+
 		const locale = guild?.preferredLocale;
 		const [arg] = args;
 		const number = parseInt(arg);
