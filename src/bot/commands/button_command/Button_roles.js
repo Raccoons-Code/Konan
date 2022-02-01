@@ -30,9 +30,14 @@ module.exports = class extends ButtonInteraction {
   setComponents(interaction = this.ButtonInteraction, boolean) {
     const { customId, component, message } = interaction;
 
-    const { command, count, date, roleId } = JSON.parse(customId);
+    const oldCustomId = JSON.parse(customId);
 
-    component.setCustomId(`${command}.${roleId}.${date}.${parseInt(count) + (boolean ? 1 : -1)}`);
+    const newCustomId = {
+      ...oldCustomId,
+      count: oldCustomId.count + (boolean ? 1 : -1),
+    };
+
+    component.setCustomId(JSON.stringify(newCustomId));
 
     const components = message.components.map(c => {
       if (c.components[0].type !== 'BUTTON') return c;

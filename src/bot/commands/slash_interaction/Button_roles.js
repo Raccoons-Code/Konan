@@ -315,13 +315,11 @@ module.exports = class extends SlashCommand {
         c.components = c.components.map(b => {
           if (b.customId !== button) return b;
 
-          const { command, count, date, roleId } = JSON.parse(b.customId);
+          const oldCustomId = JSON.parse(b.customId);
 
           const newCustomId = {
-            command: command,
-            count: count,
-            date: date,
-            roleId: role?.id || roleId,
+            ...oldCustomId,
+            roleId: role?.id || oldCustomId.roleId,
           };
 
           b.setStyle(button_style || b.style);
