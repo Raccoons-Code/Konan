@@ -15,9 +15,9 @@
   "Guess the number.": "数を推測します。",
   "ID": null,
   "Joined the server at": "でサーバーに参加しました",
-  "Members": "「メンバー」",
-  "Owner": "「所有者」",
+  "members": "「メンバー」",
+  "owner": "「所有者」",
   "Previous guesses": "「前の推測」",
-  "Role": "「位置」",
+  "role": "「位置」",
   "Server created at": "「作成されたサーバー」"
 }

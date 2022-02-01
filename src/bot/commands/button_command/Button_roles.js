@@ -13,7 +13,7 @@ module.exports = class extends ButtonInteraction {
 
     const { customId, member } = interaction;
 
-    const [commandName, roleId] = customId.split('.');
+    const { roleId } = JSON.parse(customId);
 
     if (!member.manageable)
       return interaction.deferUpdate();
@@ -30,9 +30,9 @@ module.exports = class extends ButtonInteraction {
   setComponents(interaction = this.ButtonInteraction, boolean) {
     const { customId, component, message } = interaction;
 
-    const [commandName, roleId, timestamp, count] = customId.split('.');
+    const { command, count, date, roleId } = JSON.parse(customId);
 
-    component.setCustomId(`${commandName}.${roleId}.${timestamp}.${parseInt(count) + (boolean ? 1 : -1)}`);
+    component.setCustomId(`${command}.${roleId}.${date}.${parseInt(count) + (boolean ? 1 : -1)}`);
 
     const components = message.components.map(c => {
       if (c.components[0].type !== 'BUTTON') return c;

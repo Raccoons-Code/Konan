@@ -1,4 +1,4 @@
-/** @type {options} */
+/** @type {Options} */
 const _this = {};
 
 /** @param {options} options */
@@ -9,7 +9,7 @@ function capitalize(string, options) {
   return `${string.charAt(0).toLowerCase()}${string.slice(1)}`;
 }
 
-/** @param {options} object */
+/** @param {Options} object */
 function interpolate(text, object) {
   const _text = [];
   const prefix = _this.interpolation.prefix;
@@ -31,7 +31,7 @@ function interpolate(text, object) {
 }
 
 class Idjsn {
-  /** @param {options} options */
+  /** @param {Options} options */
   init(options) {
     if (!options) return;
     if (!options.resources) return;
@@ -50,7 +50,7 @@ class Idjsn {
 
   /**
    * @param {string} key
-   * @param {options} options
+   * @param {Options} options
    */
   t(key, options) {
     if (!options) options = {};
@@ -80,17 +80,56 @@ const instance = new Idjsn();
 
 module.exports = instance;
 
-const options = {
-  capitalize: Boolean(),
-  count: Number(),
-  interpolation: {
-    prefix: String('\\{\\{'),
-    suffix: String('\\}\\}'),
-  },
-  locale: String('en'),
-  plural: {
-    pluralSuffix: String('\\_other'),
-    singularSuffix: String('\\_one'),
-  },
-  resources: require('../resources'),
-};
+class Options {
+  /**
+   * @param {boolean} [capitalize]
+   * @param {number} [count]
+   * @param {Interpolation} [interpolation]
+   * @param {string} [locale]
+   * @param {Plural} [plural]
+   * @param {object} [resources]
+   */
+  constructor(
+    capitalize,
+    count,
+    interpolation,
+    locale,
+    plural,
+    resources,
+  ) {
+    this.capitalize = capitalize;
+    this.count = count;
+    this.interpolation = interpolation;
+    this.locale = locale;
+    this.plural = plural;
+    this.resources = resources;
+  }
+}
+
+class Interpolation {
+  /**
+   * @param {string} prefix
+   * @param {string} suffix
+   */
+  constructor(
+    prefix,
+    suffix,
+  ) {
+    this.prefix = prefix;
+    this.suffix = suffix;
+  }
+}
+
+class Plural {
+  /**
+   * @param {string} pluralSuffix
+   * @param {string} singularSuffix
+   */
+  constructor(
+    pluralSuffix,
+    singularSuffix,
+  ) {
+    this.pluralSuffix = pluralSuffix;
+    this.singularSuffix = singularSuffix;
+  }
+}

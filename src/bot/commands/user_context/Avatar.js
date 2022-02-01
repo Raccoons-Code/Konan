@@ -9,20 +9,25 @@ module.exports = class extends UserContextMenu {
 	}
 
 	async execute(interaction = this.UserContextMenuInteraction) {
-		const user = interaction.options.getUser('user');
+		const { options } = interaction;
 
-		const buttons = [new MessageButton()
-			.setStyle('LINK')
-			.setLabel('Link')
-			.setEmoji('🖼')
-			.setURL(user.avatarURL({ dynamic: true, format: 'png', size: 4096 }))];
-
-		const components = [new MessageActionRow().setComponents(buttons)];
+		const user = options.getUser('user');
+		const member = options.getMember('user');
 
 		const embeds = [new MessageEmbed()
 			.setColor('RANDOM')
 			.setDescription(`${user}`)
-			.setImage(user.avatarURL({ dynamic: true, format: 'png', size: 512 }))];
+			.setImage(member?.displayAvatarURL({ dynamic: true, format: 'png', size: 512 }) ||
+				user.displayAvatarURL({ dynamic: true, format: 'png', size: 512 }))];
+
+		const button = new MessageButton()
+			.setStyle('LINK')
+			.setLabel('Link')
+			.setEmoji('🖼')
+			.setURL(member?.displayAvatarURL({ dynamic: true, format: 'png', size: 4096 }) ||
+				user.displayAvatarURL({ dynamic: true, format: 'png', size: 4096 }));
+
+		const components = [new MessageActionRow().setComponents(button)];
 
 		interaction.reply({ components, embeds });
 	}

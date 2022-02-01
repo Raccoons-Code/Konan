@@ -11,21 +11,25 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
-    const user = interaction.options.getUser('user') || interaction.user;
+    const { options } = interaction;
 
-    const mButton = new MessageButton()
+    const user = options.getUser('user') || interaction.user;
+    const member = options.getMember('user') || interaction.member;
+
+    const embeds = [new MessageEmbed()
+      .setColor('RANDOM')
+      .setDescription(`${member || user}`)
+      .setImage(member?.displayAvatarURL({ dynamic: true, format: 'png', size: 512 }) ||
+        user.displayAvatarURL({ dynamic: true, format: 'png', size: 512 }))];
+
+    const button = new MessageButton()
       .setLabel('Link')
       .setStyle('LINK')
-      .setURL(user.avatarURL({ dynamic: true, format: 'png', size: 4096 }));
+      .setURL(member?.displayAvatarURL({ dynamic: true, format: 'png', size: 4096 }) ||
+        user.displayAvatarURL({ dynamic: true, format: 'png', size: 4096 }));
 
-    const mRow = new MessageActionRow()
-      .setComponents(mButton);
+    const components = [new MessageActionRow().setComponents(button)];
 
-    const mEmbed = new MessageEmbed()
-      .setColor('RANDOM')
-      .setDescription(`${user}`)
-      .setImage(user.avatarURL({ dynamic: true, format: 'png', size: 512 }));
-
-    interaction.reply({ components: [mRow], embeds: [mEmbed] });
+    interaction.reply({ components, embeds });
   }
 };

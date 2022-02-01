@@ -15,9 +15,13 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
+    const { options } = interaction;
+
+    const subcommand = options.getSubcommand();
+
     const embeds = this.embeds = [new MessageEmbed().setColor('RANDOM')];
 
-    this[interaction.options.getSubcommand()]?.(interaction, embeds);
+    this[subcommand]?.(interaction, embeds);
   }
 
   async server(interaction = this.CommandInteraction, embeds = this.embeds) {
@@ -30,36 +34,45 @@ module.exports = class extends SlashCommand {
       });
 
     embeds[0].setAuthor({ name: `${guild.name}` })
-      .setThumbnail(`${guild.iconURL()}`)
+      .setThumbnail(guild.iconURL())
       .setFields(
         { name: this.t('ID', { locale }), value: `${guild.id}`, inline: true },
-        { name: this.t('Owner', { locale }), value: `<@${guild.ownerId}>`, inline: true },
-        { name: this.t('Members', { locale }), value: `${guild.memberCount}`, inline: true },
+        { name: this.t('owner', { locale, capitalize: true }), value: `<@${guild.ownerId}>`, inline: true },
+        { name: this.t('members', { locale, capitalize: true }), value: `${guild.memberCount}`, inline: true },
       )
       .setImage(guild.splashURL({ dynamic: true, format: 'png', size: 512 }))
       .setTimestamp(guild.createdTimestamp)
-      .setFooter(this.t('Server created at', { locale }));
+      .setFooter({ text: this.t('Server created at', { locale }) });
 
     interaction.reply({ embeds, ephemeral: true });
   }
 
   async user(interaction = this.CommandInteraction, embeds = this.embeds) {
-    const { guild, locale, options } = interaction;
+    const { locale, options } = interaction;
 
     const user = options.getUser('user') || interaction.user;
-
-    const { joinedTimestamp, roles } = guild.members.resolve(user.id);
+    const member = options.getMember('user') || interaction.member;
 
     embeds[0].setDescription(`${user}`)
-      .setThumbnail(user.avatarURL())
+      .setThumbnail(user.displayAvatarURL())
       .setFields(
         { name: this.t('Discord Tag', { locale }), value: `\`${user.tag}\``, inline: true },
         { name: this.t('Discord ID', { locale }), value: `\`${user.id}\``, inline: true },
-        { name: this.t('Role', { locale }), value: `${roles.highest}`, inline: true },
-        { name: this.t('Creation date', { locale }), value: `\`${user.createdAt}\``, inline: true },
       )
-      .setTimestamp(joinedTimestamp)
-      .setFooter(this.t('Joined the server at', { locale }));
+      .setTimestamp(member?.joinedTimestamp || user.createdAt)
+      .setFooter({ text: this.t(member ? 'Joined the server at' : 'Creation date', { locale }) });
+
+    if (member) {
+      embeds[0].addFields(
+        { name: this.t('role', { locale, capitalize: true }), value: `${member.roles.highest}`, inline: true },
+        { name: this.t('Creation date', { locale }), value: `\`${user.createdAt}\``, inline: true });
+
+      if (member.avatar)
+        embeds[0].setThumbnail(member.displayAvatarURL());
+
+      if (member.roles.color)
+        embeds[0].setColor(member.displayColor);
+    }
 
     interaction.reply({ embeds, ephemeral: true });
   }

@@ -41,8 +41,8 @@ module.exports = class extends Event {
 	}
 
 	BUTTON({ client, customId } = this.ButtonInteraction) {
-		const [commandName] = customId.split('.');
-		return client.commands.button_command?.get(commandName);
+		const { command } = JSON.parse(customId);
+		return client.commands.button_command?.get(command);
 	}
 
 	CHAT_INPUT({ client, commandName } = this.Interaction) {

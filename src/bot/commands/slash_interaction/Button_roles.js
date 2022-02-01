@@ -142,10 +142,17 @@ module.exports = class extends SlashCommand {
       await guild.emojis.fetch(button_emoji).catch(() => null) ||
       null;
 
+    const newCustomId = {
+      command: this.data.name,
+      count: 0,
+      date: Date.now(),
+      roleId: role.id,
+    };
+
     const button = new MessageButton()
       .setStyle(button_style)
       .setLabel(button_name)
-      .setCustomId(`${this.data.name}.${role.id}.${Date.now()}.0`)
+      .setCustomId(JSON.stringify(newCustomId))
       .setEmoji(emoji)
       .setDisabled(button_disabled);
 
@@ -187,10 +194,17 @@ module.exports = class extends SlashCommand {
       await guild.emojis.fetch(button_emoji).catch(() => null) ||
       null;
 
+    const newCustomId = {
+      command: this.data.name,
+      count: 0,
+      date: Date.now(),
+      roleId: role.id,
+    };
+
     const button = new MessageButton()
       .setStyle(button_style)
       .setLabel(button_name)
-      .setCustomId(`${this.data.name}.${role.id}.${Date.now()}.0`)
+      .setCustomId(JSON.stringify(newCustomId))
       .setEmoji(emoji)
       .setDisabled(button_disabled);
 
@@ -301,13 +315,20 @@ module.exports = class extends SlashCommand {
         c.components = c.components.map(b => {
           if (b.customId !== button) return b;
 
-          const [commandName, roleId, timestamp, count] = b.customId.split('.');
+          const { command, count, date, roleId } = JSON.parse(b.customId);
+
+          const newCustomId = {
+            command: command,
+            count: count,
+            date: date,
+            roleId: role?.id || roleId,
+          };
 
           b.setStyle(button_style || b.style);
           b.setDisabled(typeof button_disabled === 'boolean' ? button_disabled : b.disabled);
           b.setEmoji(emoji || b.emoji);
           b.setLabel(button_name || b.label);
-          b.setCustomId(`${commandName}.${role?.id || roleId}.${timestamp}.${count}`);
+          b.setCustomId(JSON.stringify(newCustomId));
 
           return b;
         });
@@ -316,8 +337,8 @@ module.exports = class extends SlashCommand {
       });
 
       return message.edit({ components }).then(() =>
-      interaction.editReply('Button role successfully edited.')).catch(() =>
-        interaction.editReply('Error! Unable to edit a button from Button role.'));;
+        interaction.editReply('Button role successfully edited.')).catch(() =>
+          interaction.editReply('Error! Unable to edit a button from Button role.'));
     }
   }
 
@@ -389,7 +410,7 @@ module.exports = class extends SlashCommand {
 
           const { customId, label } = element;
 
-          const [, roleId] = customId.split('.');
+          const { roleId } = JSON.parse(customId);
 
           const role = guild.roles.resolve(roleId) || await guild.roles.fetch(roleId);
 
@@ -496,7 +517,7 @@ module.exports = class extends SlashCommand {
       guild.roles.cache.size || await guild.roles.fetch();
 
       const components_filtered = components.filter(b => {
-        const [, roleId] = b.customId.split('.');
+        const { roleId } = JSON.parse(b.customId);
 
         const role = guild.roles.resolve(roleId);
 
@@ -506,7 +527,7 @@ module.exports = class extends SlashCommand {
       for (let i = 0; i < components_filtered.length; i++) {
         const { customId } = components_filtered[i];
 
-        const [, roleId] = customId.split('.');
+        const { roleId } = JSON.parse(customId);
 
         const role = guild.roles.resolve(roleId) || await guild.roles.fetch(roleId);
 
