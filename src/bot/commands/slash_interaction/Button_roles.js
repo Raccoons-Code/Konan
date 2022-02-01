@@ -19,7 +19,7 @@ module.exports = class extends SlashCommand {
           .setDescription('Role')
           .setRequired(true))
         .addStringOption(option => option.setName('text')
-          .setDescription('Text: Title|Description'))
+          .setDescription('Text: Title | Description'))
         .addStringOption(option => option.setName('button_name')
           .setDescription('Button name'))
         .addStringOption(option => option.setName('button_style')
@@ -45,7 +45,7 @@ module.exports = class extends SlashCommand {
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('text')
-            .setDescription('Text: Title|Description')
+            .setDescription('Text: Title | Description')
             .setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName('button')
           .setDescription('Edit a button in a button role')
@@ -113,7 +113,11 @@ module.exports = class extends SlashCommand {
   async execute(interaction = this.CommandInteraction) {
     const { memberPermissions, options } = interaction;
 
-    if (!memberPermissions.has('ADMINISTRATOR')) return;
+    if (!memberPermissions.has('ADMINISTRATOR')) {
+      if (interaction.isAutocomplete()) return interaction.respond([]);
+
+      return interaction.reply('You are not allowed to run this command.');
+    }
 
     const command = options.getSubcommandGroup(false) || options.getSubcommand();
 
@@ -234,11 +238,9 @@ module.exports = class extends SlashCommand {
 
       const messages = channel.messages.cache.size ? channel.messages.cache : await channel.messages.fetch();
 
-      const messages_filtered = messages.filter(m => m.author.id === client.user.id &&
-        m.embeds.length &&
-        m.components[0].components[0].type === 'BUTTON' ?
-        focused.value.length && regex.test(m.embeds[0]?.title) ||
-        regex.test(m.embeds[0]?.description) : false);
+      const messages_filtered = messages.filter(m => m.author.id === client.user.id && m.embeds.length &&
+        m.components.some(c => c.components[0].type === 'BUTTON') ? focused.value.length &&
+        regex.test(m.embeds[0]?.title) || regex.test(m.embeds[0]?.description) : false);
 
       const messages_array = messages_filtered.toJSON();
 
@@ -358,7 +360,7 @@ module.exports = class extends SlashCommand {
       const messages = channel.messages.cache.size ? channel.messages.cache : await channel.messages.fetch();
 
       const messages_filtered = messages.filter(m => m.author.id === client.user.id &&
-        m.embeds.length && m.components[0].components[0].type === 'BUTTON' ?
+        m.embeds.length && m.components.some(c => c.components[0].type === 'BUTTON') ?
         focused.value.length && regex.test(m.id) || regex.test(m.embeds[0]?.title) ||
         regex.test(m.embeds[0]?.description) : false);
 
@@ -471,10 +473,8 @@ module.exports = class extends SlashCommand {
     if (focused.name === 'message_id') {
       const messages = channel.messages.cache.size ? channel.messages.cache : await channel.messages.fetch();
 
-      const messages_filtered = messages.filter(m => m.author.id === client.user.id &&
-        m.embeds.length ?
-        focused.value.length && regex.test(m.embeds[0]?.title) ||
-        regex.test(m.embeds[0]?.description) : false);
+      const messages_filtered = messages.filter(m => m.author.id === client.user.id && m.embeds.length ?
+        focused.value.length && regex.test(m.embeds[0]?.title) || regex.test(m.embeds[0]?.description) : false);
 
       const messages_array = messages_filtered.toJSON();
 
@@ -510,11 +510,13 @@ module.exports = class extends SlashCommand {
 
       if (!message.editable) return interaction.respond([]);
 
-      const { components } = message.components.filter(c => c.components[0].type === 'BUTTON')[0];
+      const component = message.components.find(c => c.components[0].type === 'BUTTON');
+
+      const { components } = component || {};
 
       guild.roles.cache.size || await guild.roles.fetch();
 
-      const components_filtered = components.filter(b => {
+      const components_filtered = components?.filter(b => {
         const { roleId } = JSON.parse(b.customId);
 
         const role = guild.roles.resolve(roleId);
@@ -522,7 +524,7 @@ module.exports = class extends SlashCommand {
         return regex.test(roleId) || regex.test(role.name);
       });
 
-      for (let i = 0; i < components_filtered.length; i++) {
+      for (let i = 0; i < components_filtered?.length; i++) {
         const { customId } = components_filtered[i];
 
         const { roleId } = JSON.parse(customId);

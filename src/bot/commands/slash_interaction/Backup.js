@@ -57,7 +57,13 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
-    const { options } = interaction;
+    const { memberPermissions, options } = interaction;
+
+    if (!memberPermissions.has('ADMINISTRATOR')) {
+      if (interaction.isAutocomplete()) return interaction.respond([]);
+
+      return interaction.reply('You are not allowed to run this command.');
+    }
 
     const command = options.getSubcommandGroup(false) || options.getSubcommand();
 

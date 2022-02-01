@@ -14,8 +14,6 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
-    this.interaction = interaction;
-
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
@@ -27,9 +25,9 @@ module.exports = class extends SlashCommand {
       return interaction.editReply(this.t('You are not allowed to unban members from the server.', { locale }));
 
     const id = options.getString('user');
-    const reason = options.getString('reason') || null;
+    const reason = options.getString('reason');
 
-    const ban = guild.bans.cache.get(id) || await guild.bans.fetch(id);
+    const ban = guild.bans.resolve(id) || await guild.bans.fetch(id);
 
     if (!ban)
       return interaction.editReply(this.t('This user is not banned!', { locale }));

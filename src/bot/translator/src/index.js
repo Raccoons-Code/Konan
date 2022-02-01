@@ -61,7 +61,7 @@ class Idjsn {
     const singularSuffix = _this.plural.singularSuffix;
     const pluralKey = options.count === 1 ? `${key}${singularSuffix}` : `${key}${pluralSuffix}`;
 
-    const resources = _this.resources[locale] || _this.resources[locale.split(/_|-/)[0]];
+    const resources = _this.resources[locale] || _this.resources[locale.split(/_|-/)[0]] || _this.resources.en;
 
     const translation = resources?.translation;
 

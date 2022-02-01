@@ -60,7 +60,6 @@ module.exports = class extends SlashCommand {
         const id = guilds[i];
 
         const _guild = client.guilds.resolve(id) ||
-          client.guilds.cache.get(id) ||
           await client.guilds.fetch(id);
 
         if (!_guild) continue;

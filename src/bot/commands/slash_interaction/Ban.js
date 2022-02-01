@@ -24,7 +24,7 @@ module.exports = class extends SlashCommand {
 
     const days = options.getNumber('delete_messages') || 0;
 
-    const reason = options.getString('reason') || null;
+    const reason = options.getString('reason');
 
     if (!memberPermissions.has('BAN_MEMBERS'))
       return interaction.editReply(this.t('You are not allowed to ban members from the server.', { locale }));

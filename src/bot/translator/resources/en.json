@@ -1,4 +1,5 @@
 {
-  "{{size}} message successfully deleted!_one":"{{size}} message successfully deleted!",
-  "{{size}} message successfully deleted!_other":"{{size}} messages successfully deleted!"
+  "{{size}} message successfully deleted!_one": "{{size}} message successfully deleted!",
+  "{{size}} message successfully deleted!_other": "{{size}} messages successfully deleted!",
+  "help text": "Hello {{user}}, my name is Konan, a bot for Discord.\n\nTo see my commands, press the `/` key on your keyboard.\n\nIf you're looking for more details about my commands, type `/help` and press `tab` to see the list of commands and access more information about them.\n\nIf you want to add me to your server, click the link button below.\n\nMy website will be ready soon."
 }
