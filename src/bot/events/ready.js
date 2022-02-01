@@ -65,11 +65,11 @@ module.exports = class extends Event {
 
 		user.setPresence({
 			activities: [
-				{ name: `${users.cache.size} users.`, type: 'WATCHING' },
+				{ name: `${users.cache.size} users`, type: 'WATCHING' },
 				{ name: 'Cat Vibing Meme', type: 'STREAMING', url: `${ytURL}NUYvbT6vTPs` },
-				{ name: `${guilds.cache.size} servers.`, type: 'PLAYING' },
+				{ name: `${guilds.cache.size} servers`, type: 'PLAYING' },
 				{ name: 'Wide Putin Walking', type: 'STREAMING', url: `${ytURL}SLU3oG_ePhM` },
-				{ name: `${channels.cache.size} channels.`, type: 'LISTENING' },
+				{ name: `${channels.cache.size} channels`, type: 'LISTENING' },
 				{ name: 'Noisestorm - Crab Rave', type: 'STREAMING', url: `${ytURL}LDU_Txk06tM` },
 				{ name: 'National Anthem of USSR', type: 'STREAMING', url: `${ytURL}U06jlgpMtQs` },
 				{ name: 'Rick Astley - Never Gonna Give You Up', type: 'STREAMING', url: `${ytURL}dQw4w9WgXcQ` },
