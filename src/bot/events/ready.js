@@ -1,5 +1,6 @@
-const { Client, Event } = require('../classes');
+const { Event } = require('../classes');
 const { Permissions } = require('discord.js');
+const { env: { GUILD_ID } } = process;
 
 module.exports = class extends Event {
 	constructor(...args) {
@@ -7,19 +8,11 @@ module.exports = class extends Event {
 			listener: 'once',
 			name: 'ready',
 		});
-		this.deploySettings = {
-			activate: false,
-			global: false,
-			reset: false,
-		};
+
+		this.GUILD_ID = GUILD_ID?.split(',') || [];
 	}
 
-	get GUILD_ID() {
-		return process.env.GUILD_ID?.split(',') || [];
-	}
-
-	/** @param {Client} client */
-	async execute(client) {
+	async execute(client = this.client) {
 		client.invite = client.generateInvite({
 			scopes: ['applications.commands', 'bot'],
 			permissions: [Permissions.ALL],
@@ -31,7 +24,7 @@ module.exports = class extends Event {
 	}
 
 	async deleteMyGuilds(client = this.client) {
-		const guilds = client.guilds.cache.filter(g => g.ownerId === this.client.user.id);
+		const guilds = client.guilds.cache.filter(g => g.ownerId === client.user.id);
 
 		const users = await this.prisma.user.findMany({ where: { newGuild: { not: null } } });
 
@@ -43,18 +36,17 @@ module.exports = class extends Event {
 			multiplier++;
 
 			setTimeout(async () => {
-				const user = users.filter(_user => _user.newGuild == guild.id)[0];
+				const user = users.find(_user => _user.newGuild == guild.id);
 
-				if (!user) return;
+				if (user) {
+					const member = guild.members.resolve(user.id) ||
+						await guild.members.fetch(user.id);
 
-				const member = guild.members.resolve(user.id) ||
-					guild.members.cache.get(user.id) ||
-					await guild.members.fetch(user.id);
+					if (member) {
+						await guild.setOwner(user.id);
 
-				if (member) {
-					await guild.setOwner(user.id);
-
-					return await guild.leave();
+						return await guild.leave();
+					}
 				}
 
 				await guild.delete().then(async () => {
@@ -65,7 +57,6 @@ module.exports = class extends Event {
 						data: { newGuild: null, oldGuild: null },
 					});
 				}).catch(() => null);
-
 			}, ((timeout < 0 ? 0 : timeout) + (multiplier * 1000)));
 		}
 	}

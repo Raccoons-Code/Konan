@@ -1,6 +1,6 @@
 /**
  * @param {Array} array
- * @param {Number} [length]
+ * @param {number} [length]
  * @return {Array<Array>}
  */
 module.exports = (array, length = 10) => {

@@ -1,7 +1,7 @@
 /**
- * @param {Number} amount
- * @param {Number} limit
- * @return {Array<Number>}
+ * @param {number} amount
+ * @param {number} [limit=100]
+ * @return {Array<number>}
  */
 module.exports = (amount, limit = 100) => {
 	const array = [];

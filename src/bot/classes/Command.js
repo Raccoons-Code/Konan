@@ -6,26 +6,26 @@ module.exports = class {
 	 * @param {Client} client
 	 * @param {object} data
 	 * @param {Array} [data.aliases]
-	 * @param {any|Array} [data.args]
-	 * @param {String|Array} [data.args_help]
+	 * @param {Array} [data.args]
+	 * @param {Array<PermissionString>} [data.clientPermissions]
 	 * @param {String} data.description
 	 * @param {String} [data.emoji]
 	 * @param {String} data.name
-	 * @param {Array<PermissionString>} [data.permissions]
+	 * @param {Array<PermissionString>} [data.userPermissions]
 	 */
 	constructor(client, {
 		aliases,
 		args,
-		args_help,
+		clientPermissions,
 		description,
 		emoji,
 		name,
-		permissions,
+		userPermissions,
 	}) {
 		if (!this.regexCommandName(name))
 			return console.error(`Command ${name} cannot be loaded.`);
 
-		this.data = { aliases, args, args_help, description, emoji, name, permissions };
+		this.data = { aliases, args, clientPermissions, description, emoji, name, userPermissions };
 		if (client?.ready) {
 			this.client = client;
 			this.prisma = client.prisma;
@@ -44,20 +44,10 @@ module.exports = class {
 	 * @param {Seconds<Number>} timeout
 	 * @async
 	 */
-	async msg_del_time_async(message, timeout = 0) {
+	async timeout_erase(message, timeout = 0) {
 		if (!message) return console.error('Unable to delete undefined message.');
 		await this.util.waitAsync(timeout * 1000);
 		return await message.delete().catch(() => null);
-	}
-
-	/**
-	 * @description delete one message with timeout delay
-	 * @param {Seconds<Number>} timeout
-	 */
-	msg_del_time_sync(message, timeout = 0) {
-		if (!message) return console.error('Unable to delete undefined message.');
-		this.util.waitSync(timeout * 1000);
-		return message.delete().catch(() => null);
 	}
 
 	/**

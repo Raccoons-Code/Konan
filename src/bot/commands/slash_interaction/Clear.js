@@ -1,6 +1,7 @@
 const { SlashCommand } = require('../../classes');
 const { Constants } = require('discord.js');
-const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = Constants.ChannelTypes;
+const { ChannelTypes } = Constants;
+const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = ChannelTypes;
 
 module.exports = class extends SlashCommand {
   constructor(...args) {

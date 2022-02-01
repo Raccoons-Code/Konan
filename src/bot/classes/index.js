@@ -1,4 +1,5 @@
 module.exports = {
+  ButtonInteraction: require('./ButtonInteraction'),
   Client: require('./client'),
   Command: require('./Command'),
   Event: require('./Event'),

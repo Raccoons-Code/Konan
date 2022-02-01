@@ -35,6 +35,28 @@
     "prefix": "class event",
     "scope": "javascript,typescript"
   },
+  "Class button command": {
+    "body": [
+      "const { ButtonInteraction } = require('../../classes');",
+      "",
+      "module.exports = class extends ButtonInteraction {",
+      "  constructor(...args) {",
+      "    super(...args);",
+      "    this.data = {",
+      "      name: '${1:name}',",
+      "      description: '${2:description}',",
+      "    };",
+      "  }",
+      "",
+      "  async execute(interaction = this.ButtonInteraction) {",
+      "    $0",
+      "  }",
+      "};"
+    ],
+    "description": "class to button command snippet",
+    "prefix": "class button command",
+    "scope": "javascript,typescript"
+  },
   "Class menu message command": {
     "body": [
       "const { MessageContextMenu } = require('../../classes');",

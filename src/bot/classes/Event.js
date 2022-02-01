@@ -1,4 +1,4 @@
-const { ClientEvents, IntentsString, PartialTypes, PermissionString } = require('discord.js');
+const { AutocompleteInteraction, ButtonInteraction, ClientEvents, CommandInteraction, DMChannel, Guild, GuildBan, GuildChannel, GuildEmoji, GuildMember, GuildScheduledEvent, IntentsString, Interaction, Invite, Message, MessageContextMenuInteraction, MessageReaction, NewsChannel, PartialTypes, PermissionString, Presence, RateLimitData, Role, SelectMenuInteraction, StageInstance, Sticker, ThreadChannel, Typing, User, UserContextMenuInteraction, VoiceState } = require('discord.js');
 const Client = require('./client');
 
 module.exports = class {
@@ -29,5 +29,62 @@ module.exports = class {
 			this.t = client.t;
 			this.util = client.util;
 		}
+	}
+
+	async execute() {
+		/** @type {AutocompleteInteraction} */
+		this.AutocompleteInteraction;
+		/** @type {ButtonInteraction} */
+		this.ButtonInteraction;
+		/** @type {CommandInteraction} */
+		this.CommandInteraction;
+		/** @type {DMChannel} */
+		this.DMChannel;
+		/** @type {Guild} */
+		this.Guild;
+		/** @type {GuildBan} */
+		this.GuildBan;
+		/** @type {GuildChannel} */
+		this.GuildChannel;
+		/** @type {GuildEmoji} */
+		this.GuildEmoji;
+		/** @type {GuildMember} */
+		this.GuildMember;
+		/** @type {GuildScheduledEvent} */
+		this.GuildScheduledEvent;
+		/** @type {Interaction} */
+		this.Interaction;
+		/** @type {Invite} */
+		this.Invite;
+		/** @type {Message} */
+		this.Message;
+		/** @type {MessageContextMenuInteraction} */
+		this.MessageContextMenuInteraction;
+		/** @type {MessageReaction} */
+		this.MessageReaction;
+		/** @type {NewsChannel} */
+		this.NewsChannel;
+		/** @type {Presence} */
+		this.Presence;
+		/** @type {RateLimitData} */
+		this.RateLimitData;
+		/** @type {Role} */
+		this.Role;
+		/** @type {SelectMenuInteraction} */
+		this.SelectMenuInteraction;
+		/** @type {StageInstance} */
+		this.StageInstance;
+		/** @type {Sticker} */
+		this.Sticker;
+		/** @type {ThreadChannel} */
+		this.ThreadChannel;
+		/** @type {Typing} */
+		this.Typing;
+		/** @type {User} */
+		this.User;
+		/** @type {UserContextMenuInteraction} */
+		this.UserContextMenuInteraction;
+		/** @type {VoiceState} */
+		this.VoiceState;
 	}
 };

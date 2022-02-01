@@ -1,5 +1,4 @@
 const { Event } = require('../classes');
-const { Message } = require('discord.js');
 const { env: { TEAM } } = process;
 
 module.exports = class extends Event {
@@ -11,27 +10,28 @@ module.exports = class extends Event {
 		});
 	}
 
-	/** @param {Message} message */
-	async execute(message) {
+	async execute(message = this.Message) {
 		const { author, channel, client, content, guild } = message;
 
 		if (author.bot && !TEAM?.split(',').includes(author.id)) return;
 
-		const { commands, commandTypes, user } = client;
+		const { commands, user } = client;
 		const botRole = guild?.me.roles.botRole || user.id;
 		const regexp = RegExp(`^\\s*(?:<@!?&?(?:${user.id}|${botRole.id})>)(.*)$`);
 		const matched = content.match(regexp);
 
 		if (!matched) return;
 
-		message.args = matched[1]?.trim().split(/\s+/g);
-		const commandName = message.commandName = message.args?.shift().toLowerCase() || 'help';
+		message.args = matched[1].trim().split(/\s+/g);
+		const commandName = message.commandName = message.args.shift().toLowerCase() || 'help';
 
-		const command = commands[commandTypes.command.filter(v => commands[v].has(commandName))[0]]?.get(commandName);
+		const command = commands.message_command.get(commandName);
 
 		if (!command) return;
 
-		if (!/(backup)/i.test(commandName))
+		if (channel.permissionsFor(guild.me).missing(command.data?.clientPermissions).length) return;
+
+		if (!/(backup)/.test(commandName))
 			await channel.sendTyping();
 
 		try {

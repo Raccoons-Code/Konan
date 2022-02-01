@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, CommandInteraction } = require('discord.js');
+const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, Guild } = require('discord.js');
 const Client = require('./client');
 
 module.exports = class extends SlashCommandBuilder {
@@ -15,10 +15,14 @@ module.exports = class extends SlashCommandBuilder {
   }
 
   async execute() {
-    /** @type {CommandInteraction} */
-    this.CommandInteraction;
     /** @type {AutocompleteInteraction} */
     this.AutocompleteInteraction;
+    /** @type {ButtonInteraction} */
+    this.ButtonInteraction;
+    /** @type {CommandInteraction} */
+    this.CommandInteraction;
+    /** @type {Guild} */
+    this.Guild;
   }
 
   /**

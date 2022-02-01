@@ -59,7 +59,7 @@ module.exports = class extends SlashCommand {
   async execute(interaction = this.CommandInteraction) {
     const { options } = interaction;
 
-    const command = options.getSubcommandGroup(false) || options.getSubcommand(false);
+    const command = options.getSubcommandGroup(false) || options.getSubcommand();
 
     if (interaction.isAutocomplete())
       return this[`${command}Autocomplete`]?.(interaction);
@@ -75,14 +75,14 @@ module.exports = class extends SlashCommand {
     if (!interaction.inGuild())
       return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
 
-    const { id, ownerId } = guild;
+    const { ownerId } = guild;
 
     if (user.id != ownerId)
       return interaction.editReply(this.t('You are not the owner of the server.', { locale }));
 
     const owner = await this.prisma.user.findFirst({
       where: { id: ownerId },
-      include: { guilds: true, backups: { where: { guildId } } },
+      include: { guilds: { include: { backups: true } }, backups: { where: guildId } },
     });
 
     const premium = Date.now() < owner?.premium;
@@ -93,7 +93,9 @@ module.exports = class extends SlashCommand {
       return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
     }
 
-    if (!owner.guilds.length || premium && !owner.guilds.some(g => g.id === guildId) && owner.guilds.length < 5) {
+    const guilds = owner.guilds.filter(g => g.backups.length);
+
+    if (!guilds.length || premium && guilds.length < 5) {
       const newbackup = await this.newGuild(guild, { premium });
 
       return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
@@ -130,7 +132,7 @@ module.exports = class extends SlashCommand {
       if (!_user.guilds.length)
         return await interaction.editReply(this.t('Could not find this server.', { locale }));
 
-      await this.prisma.guild.delete({ where: { id } });
+      await this.prisma.backup.deleteMany({ where: { guildId: id } });
 
       return await interaction.editReply(this.t('Server backup successfully deleted.', { locale }));
     }
@@ -167,7 +169,7 @@ module.exports = class extends SlashCommand {
         const _guild = guilds[i];
 
         const name = _guild.backups[0]?.data.name ||
-          client.guilds.cache.get(_guild.id)?.name ||
+          client.guilds.resolve(_guild.id)?.name ||
           this.t('Undefined server name', { locale });
 
         res.push({
@@ -239,15 +241,12 @@ module.exports = class extends SlashCommand {
           { locale }));
 
       const _guild = client.guilds.resolve(_guild_id) ||
-        client.guilds.cache.get(_guild_id) ||
         await client.guilds.fetch(_guild_id);
 
       const _channel = _guild.channels.resolve(_channel_id) ||
-        _guild.channels.cache.get(_channel_id) ||
         await client.channels.fetch(_channel_id);
 
       const _team = _guild.members.resolve(_team_id) ||
-        _guild.members.cache.get(_team_id) ||
         await _guild.members.fetch(_team_id);
 
       if (!_guild || !_channel || !_team)
@@ -338,7 +337,7 @@ module.exports = class extends SlashCommand {
         const _guild = guilds[i];
 
         const name = _guild.backups[0]?.data.name ||
-          client.guilds.cache.get(_guild.id)?.name ||
+          client.guilds.resolve(_guild.id)?.name ||
           this.t('Undefined server name', { locale });
 
         res.push({
@@ -424,7 +423,7 @@ module.exports = class extends SlashCommand {
     interaction.respond(res);
   }
 
-  async newBackup(guild = this.CommandInteraction.guild, options) {
+  async newBackup(guild = this.Guild, options) {
     const { id, ownerId } = guild;
 
     const { premium } = options;
@@ -440,7 +439,7 @@ module.exports = class extends SlashCommand {
     return newBackup;
   }
 
-  async newGuild(guild = this.CommandInteraction.guild, options) {
+  async newGuild(guild = this.Guild, options) {
     const { id, ownerId } = guild;
 
     await this.prisma.guild.create({ data: { id, userId: ownerId } });
@@ -448,7 +447,7 @@ module.exports = class extends SlashCommand {
     return await this.newBackup(guild, options);
   }
 
-  async newUser(guild = this.CommandInteraction.guild, options) {
+  async newUser(guild = this.Guild, options) {
     const { id, ownerId } = guild;
 
     await this.prisma.user.create({ data: { id: ownerId, guilds: { create: { id } } } })
@@ -457,7 +456,7 @@ module.exports = class extends SlashCommand {
     return await this.newBackup(guild, options);
   }
 
-  async updatebackup(guild = this.CommandInteraction.guild, key, options) {
+  async updatebackup(guild = this.Guild, key, options) {
     const { id, ownerId } = guild;
 
     const { premium } = options;

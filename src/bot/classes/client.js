@@ -1,5 +1,4 @@
 const { Client, ClientOptions } = require('discord.js');
-const { DiscordTogether } = require('discord-together');
 const { prisma } = require('../database');
 const commands = require('../commands');
 const events = require('../events');
@@ -31,12 +30,8 @@ module.exports = class extends Client {
 		return await super.login(token);
 	}
 
-	/** @param {ClientOptions} [options] */
-	static async login(options) {
-		if (!options) options = {};
-		if (options.token) this.token = options.token & delete options.token;
-
-		const client = new this(options);
-		return await client.login(this.token);
+	static async login(token = this.token) {
+		const client = new this();
+		return await client.login(token);
 	}
 };

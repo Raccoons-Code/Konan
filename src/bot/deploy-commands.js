@@ -1,4 +1,5 @@
-require('dotenv').config();
+if (!process.env.DISCORD_TOKEN)
+  require('dotenv').config();
 
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
@@ -7,6 +8,9 @@ const Commands = require('./commands');
 
 const GLOBAL = false || DEPLOY_GLOBAL == 'true';
 const reset = false || DEPLOY_RESET == 'true';
+
+if (!CLIENT_ID || !DISCORD_TOKEN)
+  return console.error(`Missing required params:${CLIENT_ID ? '' : ' CLIENT_ID'}${DISCORD_TOKEN ? '' : ' DISCORD_TOKEN'}`);
 
 const guilds = GUILD_ID?.split(',');
 
@@ -50,11 +54,13 @@ const rest = new REST({ version: '9' }).setToken(DISCORD_TOKEN);
 
       console.log('Successfully reloaded application (/) commands.');
     } else {
-      guilds?.forEach(async id => {
+      for (let i = 0; i < guilds?.length; i++) {
+        const id = guilds[i];
+
         await rest.put(Routes.applicationGuildCommands(CLIENT_ID, id), { body: [...data, ...data_private] });
 
         console.log(`Successfully reloaded application (/) commands for guild ${id}.`);
-      });
+      }
     }
   } catch (error) {
     console.error(error);

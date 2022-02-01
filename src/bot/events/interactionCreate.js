@@ -11,11 +11,9 @@ module.exports = class extends Event {
 
 	/** @param {AutocompleteInteraction|ButtonInteraction|CommandInteraction|MessageContextMenuInteraction|SelectMenuInteraction|UserContextMenuInteraction} interaction */
 	async execute(interaction) {
-		this.interaction = interaction;
-
 		const { locale, targetType, componentType } = interaction;
 
-		const command = this[targetType || 'CHAT_INPUT']?.(interaction);
+		const command = this[targetType || componentType || 'CHAT_INPUT']?.(interaction);
 
 		if (!command) return;
 
@@ -42,15 +40,20 @@ module.exports = class extends Event {
 		}
 	}
 
-	CHAT_INPUT({ client, commandName } = this.interaction) {
+	BUTTON({ client, customId } = this.ButtonInteraction) {
+		const [commandName] = customId.split('.');
+		return client.commands.button_command?.get(commandName);
+	}
+
+	CHAT_INPUT({ client, commandName } = this.Interaction) {
 		return client.commands.slash_interaction.get(commandName);
 	}
 
-	MESSAGE({ client, commandName } = this.interaction) {
+	MESSAGE({ client, commandName } = this.Interaction) {
 		return client.commands.message_context.get(commandName);
 	}
 
-	USER({ client, commandName } = this.interaction) {
+	USER({ client, commandName } = this.Interaction) {
 		return client.commands.user_context.get(commandName);
 	}
 };

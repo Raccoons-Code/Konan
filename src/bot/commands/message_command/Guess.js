@@ -12,7 +12,7 @@ module.exports = class extends Command {
 	}
 
 	async execute(message = this.Message) {
-		this.msg_del_time_async(message);
+		this.timeout_erase(message);
 		const { args, author, client, guild, guildId } = message;
 		const locale = guild?.preferredLocale;
 		const [arg] = args;
@@ -24,7 +24,7 @@ module.exports = class extends Command {
 
 		if (!number || number > 100) {
 			embeds[0].setDescription(this.t('{{author}}, enter an integer from 1 to 100.', { locale, author }));
-			return this.msg_del_time_async(await message.reply({ embeds }), 10);
+			return this.timeout_erase(await message.reply({ embeds }), 10);
 		}
 
 		if (!db.has(`${guildId}.${author.id}.guess`))
@@ -40,7 +40,7 @@ module.exports = class extends Command {
 				});
 
 			db.delete(`${guildId}.${author.id}.guess`);
-			return this.msg_del_time_async(await message.reply({ embeds }), 10);
+			return this.timeout_erase(await message.reply({ embeds }), 10);
 		}
 
 		if (this.util.isDuplicate(user, number)) {
@@ -54,7 +54,7 @@ module.exports = class extends Command {
 				name: `${this.t('Previous guesses', { locale })} ${user?.length}/10`,
 				value: `${user?.join(' ') || '-'}`,
 			});
-			return this.msg_del_time_async(await message.reply({ embeds }), 10);
+			return this.timeout_erase(await message.reply({ embeds }), 10);
 		}
 
 		if (user?.length === 9) {
@@ -64,7 +64,7 @@ module.exports = class extends Command {
 					value: `${user.join(' ')}`,
 				});
 			db.delete(`${guildId}.${author.id}.guess`);
-			return this.msg_del_time_async(await message.reply({ embeds }), 10);
+			return this.timeout_erase(await message.reply({ embeds }), 10);
 		}
 
 		if (number < value)
@@ -83,6 +83,6 @@ module.exports = class extends Command {
 
 		user.push(number);
 		db.set(`${guildId}.${author.id}.guess.user`, user);
-		this.msg_del_time_async(await message.reply({ embeds }), 10);
+		this.timeout_erase(await message.reply({ embeds }), 10);
 	}
 };

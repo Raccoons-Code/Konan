@@ -1,5 +1,5 @@
 /**
  * @param {Array} array
- * @return {Boolean}
+ * @return {boolean}
  */
-module.exports = (array) => (new Set(array)).size !== array.length;
+module.exports = (array) => new Set(array).size !== array.length;

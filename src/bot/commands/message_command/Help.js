@@ -7,12 +7,12 @@ module.exports = class extends Command {
       name: 'help',
       aliases: ['h'],
       description: 'Help!',
-      permissions: ['EMBED_LINKS'],
+      clientPermissions: ['EMBED_LINKS'],
     });
   }
 
   async execute(message = this.Message) {
-    this.msg_del_time_async(message);
+    this.timeout_erase(message);
 
     const { client } = message;
 
@@ -28,6 +28,6 @@ module.exports = class extends Command {
       .setColor('RANDOM')
       .setDescription('Hi!')];
 
-    this.msg_del_time_async(await message.reply({ embeds, components }), 60);
+    this.timeout_erase(await message.reply({ embeds, components }), 60);
   }
 };

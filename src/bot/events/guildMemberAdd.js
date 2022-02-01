@@ -1,5 +1,4 @@
 const { Event } = require('../classes');
-const { GuildMember } = require('discord.js');
 const { restore } = require('../BackupAPI');
 
 module.exports = class extends Event {
@@ -11,10 +10,7 @@ module.exports = class extends Event {
     });
   }
 
-  /** @param {GuildMember} member */
-  async execute(member) {
-    this.member = member;
-
+  async execute(member = this.GuildMember) {
     const { id } = member;
 
     const user = this.user = await this.prisma.user.findFirst({
@@ -25,7 +21,7 @@ module.exports = class extends Event {
     this.afterRestore(member, user);
   }
 
-  async afterRestore(member = this.member, user = this.user) {
+  async afterRestore(member = this.GuildMember, user = this.user) {
     const { guild, id } = member;
 
     if (!user) return;

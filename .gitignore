@@ -1,5 +1,8 @@
 # Ignored by developer
 
+# test files
+test*.js
+
 # ignore average files with this pattern
 **/.ignore.*
 
