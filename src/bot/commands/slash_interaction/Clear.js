@@ -43,11 +43,11 @@ module.exports = class extends SlashCommand {
 
     const limit = number > 100 ? 100 : number;
 
-    const { size } = await channel.bulkDelete(limit, boolean);
+    const { size } = await channel.bulkDelete(limit, boolean).catch(() => null);
 
-    await this.util.waitAsync(1000);
+    size && await this.util.waitAsync(1000);
 
-    count = await this.bulkDelete(channel, (number - limit), boolean, (count + size));
+    count = size ? await this.bulkDelete(channel, (number - limit), boolean, (count + size)) : count;
 
     return count;
   }
