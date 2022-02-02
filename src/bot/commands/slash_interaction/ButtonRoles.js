@@ -13,7 +13,7 @@ module.exports = class extends SlashCommand {
     this.messageURLRegex = /(?:(?:\/)?(\d+))+/;
     this.data = this.setName('buttonroles')
       .setDescription('Button roles')
-      .addSubcommand(subcommand => subcommand.setName('new_button_role')
+      .addSubcommand(subcommand => subcommand.setName('setup')
         .setDescription('New button role')
         .addRoleOption(option => option.setName('role')
           .setDescription('Role')
@@ -32,7 +32,7 @@ module.exports = class extends SlashCommand {
         .addChannelOption(option => option.setName('channel')
           .setDescription('Channel')
           .addChannelTypes(GuildTextChannelTypes)))
-      .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('edit_button_role')
+      .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('edit')
         .setDescription('Edit button role')
         .addSubcommand(subcommand => subcommand.setName('message')
           .setDescription('Message')
@@ -129,7 +129,7 @@ module.exports = class extends SlashCommand {
     this[command]?.(interaction);
   }
 
-  async new_button_role(interaction = this.CommandInteraction) {
+  async setup(interaction = this.CommandInteraction) {
     const { client, guild, options } = interaction;
 
     const role = options.getRole('role');
@@ -268,7 +268,7 @@ module.exports = class extends SlashCommand {
     interaction.respond(res);
   }
 
-  async edit_button_role(interaction = this.CommandInteraction) {
+  async edit(interaction = this.CommandInteraction) {
     const { client, guild, options } = interaction;
 
     const subcommand = options.getSubcommand();
@@ -342,7 +342,7 @@ module.exports = class extends SlashCommand {
     }
   }
 
-  async edit_button_roleAutocomplete(interaction = this.AutocompleteInteraction) {
+  async editAutocomplete(interaction = this.AutocompleteInteraction) {
     if (interaction.responded) return;
 
     const { client, guild, options } = interaction;

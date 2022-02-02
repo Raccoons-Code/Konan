@@ -61,13 +61,15 @@ class Idjsn {
     const singularSuffix = _this.plural.singularSuffix;
     const pluralKey = options.count === 1 ? `${key}${singularSuffix}` : `${key}${pluralSuffix}`;
 
-    const resources = _this.resources[locale] || _this.resources[locale.split(/_|-/)[0]] || _this.resources.en;
+    const resources = _this.resources[locale] || _this.resources[locale.split(/_|-/)[0]];
+
+    const en = _this.resources.en?.translation;
 
     const translation = resources?.translation;
 
     let text = typeof options.count === 'number' ?
-      translation?.[pluralKey] || translation?.[key] || key :
-      translation?.[key] || key;
+      translation?.[pluralKey] || translation?.[key] || en[key] || key :
+      translation?.[key] || en[key] || key;
 
     if (typeof options.capitalize === 'boolean' || typeof _this.capitalize === 'boolean')
       text = capitalize(text, options);

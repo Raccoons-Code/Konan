@@ -71,7 +71,7 @@ module.exports = class extends SlashCommand {
   setChoices(applications = this.applications, options = { locale: 'en', capitalize: false }, array = []) {
     const { locale, capitalize } = options;
 
-    applications = applications.filter(app => !/(dev$)/i.test(app));
+    applications = applications.filter(app => !/(puttparty|dev$)/i.test(app));
 
     for (let i = 0; i < applications.length; i++) {
       const application = applications[i];
