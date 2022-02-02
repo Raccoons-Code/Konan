@@ -88,7 +88,7 @@ module.exports = class extends SlashCommand {
 
     const owner = await this.prisma.user.findFirst({
       where: { id: ownerId },
-      include: { guilds: { include: { backups: true } }, backups: { where: guildId } },
+      include: { guilds: { include: { backups: true } }, backups: { where: { guildId } } },
     });
 
     const premium = Date.now() < owner?.premium;
