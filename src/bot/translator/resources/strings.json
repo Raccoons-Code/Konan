@@ -17,6 +17,7 @@
   "Creation date",
   "Discord ID",
   "Discord Tag",
+  "do you mean {{string}}?",
   "Error trying to reload application commands (/). Type:",
   "Error! One or more messages could not be deleted.",
   "Error! This command can only be used on one server.",

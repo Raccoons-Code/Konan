@@ -117,7 +117,7 @@ module.exports = class extends SlashCommand {
       return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
     }
 
-    return interaction.editReply(`${user}, ${this.t('you already have a backup.', { locale })}`);
+    return interaction.editReply(`${user}, ${this.t('you already have a backup.', { locale })} ${this.t('do you mean `{{string}}`?', { locale, string: 'update', capitalize: true })}`);
   }
 
   async delete(interaction = this.CommandInteraction) {
@@ -224,7 +224,7 @@ module.exports = class extends SlashCommand {
     const embeds = [new MessageEmbed().setColor('RANDOM')];
 
     backups.forEach(_backup => {
-      embeds[0].addField(`Server: ${_backup.data.name} | ${_backup.data.id}`, `Key: \`${_backup.id}\``);
+      embeds[0].addField(`Server: ${_backup.data.name} | ${_backup.data.id}`, `Key: \`${_backup.id}\`${_backup.premium ? ' - `Premium`' : ''}`);
     });
 
     interaction.editReply({ embeds });
