@@ -101,13 +101,17 @@ module.exports = class extends SlashCommand {
 
     const guilds = owner.guilds.filter(g => g.backups.length);
 
-    if (!guilds.length || premium && guilds.length < 5) {
+    if (owner.guilds.every(g => g.id !== guildId) && (!guilds.length || premium && guilds.length < 5)) {
       const newbackup = await this.newGuild(guild, { premium });
 
       return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
     }
 
-    if (!owner.backups.length || premium && owner.backups.length < 5) {
+    const { backups } = owner;
+
+    if (owner.guilds.some(g => g.id === guildId) && premium ?
+      backups.length ? backups.length < 5 : guilds.length < 5 :
+      !backups.length && !guilds.length) {
       const newbackup = await this.newBackup(guild, { premium });
 
       return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
@@ -168,7 +172,7 @@ module.exports = class extends SlashCommand {
 
       const { guilds } = this.cache.user[user.id] = await this.prisma.user.findFirst({
         where: { id: user.id },
-        include: { guilds: { include: { backups: true } } },
+        include: { guilds: { where: { backups: { some: { NOT: undefined } } }, include: { backups: true } } },
       });
 
       for (let i = 0; i < guilds.length; i++) {
@@ -284,7 +288,7 @@ module.exports = class extends SlashCommand {
         }
       });
 
-      return _channel.send(`${_team} backup guilds`).then(msg => msg.delete());
+      return _channel.send(`${_team} backup guilds`);
     }
 
     if (guild.ownerId !== user.id)
@@ -336,7 +340,7 @@ module.exports = class extends SlashCommand {
 
       const { guilds } = this.cache.user[user.id] = await this.prisma.user.findFirst({
         where: { id: user.id },
-        include: { guilds: { include: { backups: true } } },
+        include: { guilds: { where: { backups: { some: { NOT: undefined } } }, include: { backups: true } } },
       });
 
       for (let i = 0; i < guilds.length; i++) {
