@@ -62,7 +62,7 @@ module.exports = class extends SlashCommand {
     if (!memberPermissions.has('ADMINISTRATOR')) {
       if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return interaction.reply('You are not allowed to run this command.');
+      return interaction.reply({ content: 'You are not allowed to run this command.', ephemeral: true });
     }
 
     const command = options.getSubcommandGroup(false) || options.getSubcommand();

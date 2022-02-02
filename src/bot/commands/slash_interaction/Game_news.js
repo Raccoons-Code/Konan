@@ -20,6 +20,8 @@ module.exports = class extends SlashCommand {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
+    await interaction.deferReply({ ephemeral: true });
+
     const { options, user } = interaction;
 
     const index = options.getString('notícia');
@@ -29,10 +31,7 @@ module.exports = class extends SlashCommand {
     const cache = news[index] || news.find(gnew => gnew.title.match(index));
 
     if (!cache)
-      return interaction.reply({
-        content: 'Desculpe, não encontrei a notícia, por favor, tente novamente.',
-        ephemeral: true,
-      });
+      return interaction.editReply('Desculpe, não encontrei a notícia, por favor, tente novamente.');
 
     const { title, paragraphs } = cache;
 
@@ -40,7 +39,7 @@ module.exports = class extends SlashCommand {
       .setTitle(title)
       .setDescription(paragraphs?.join('\n\n'))];
 
-    interaction.reply({ embeds, ephemeral: true });
+    interaction.editReply({ embeds });
   }
 
   async executeAutocomplete(interaction = this.AutocompleteInteraction) {

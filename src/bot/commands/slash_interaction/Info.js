@@ -15,6 +15,8 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
+    await interaction.deferReply({ ephemeral: true });
+
     const { options } = interaction;
 
     const subcommand = options.getSubcommand();
@@ -28,10 +30,7 @@ module.exports = class extends SlashCommand {
     const { guild, locale } = interaction;
 
     if (!guild)
-      return interaction.reply({
-        content: this.t('Error! This command can only be used on one server.', { locale }),
-        ephemeral: true,
-      });
+      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
 
     embeds[0].setAuthor({ name: `${guild.name}` })
       .setThumbnail(guild.iconURL())
@@ -44,7 +43,7 @@ module.exports = class extends SlashCommand {
       .setTimestamp(guild.createdTimestamp)
       .setFooter({ text: this.t('Server created at', { locale }) });
 
-    interaction.reply({ embeds, ephemeral: true });
+    interaction.editReply({ embeds });
   }
 
   async user(interaction = this.CommandInteraction, embeds = this.embeds) {
@@ -74,6 +73,6 @@ module.exports = class extends SlashCommand {
         embeds[0].setColor(member.displayColor);
     }
 
-    interaction.reply({ embeds, ephemeral: true });
+    interaction.editReply({ embeds });
   }
 };

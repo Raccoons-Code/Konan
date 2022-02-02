@@ -42,6 +42,7 @@ module.exports = class extends SlashCommand {
             content: this.t('This activity does not exist.', { locale }),
             ephemeral: true,
           });
+        console.log(error);
         interaction.reply({
           content: this.t('There was an error while executing this command!', { locale }),
           ephemeral: true,
@@ -70,14 +71,15 @@ module.exports = class extends SlashCommand {
   setChoices(applications = this.applications, options = { locale: 'en', capitalize: false }, array = []) {
     const { locale, capitalize } = options;
 
+    applications = applications.filter(app => !/(dev$)/i.test(app));
+
     for (let i = 0; i < applications.length; i++) {
       const application = applications[i];
 
-      if (!/(dev$)/i.test(application))
-        array.push({
-          name: `${this.t(application, { locale, capitalize })}`,
-          value: `${application}`,
-        });
+      array.push({
+        name: `${this.t(application, { locale, capitalize })}`,
+        value: `${application}`,
+      });
 
       if (i === 24) break;
     }
