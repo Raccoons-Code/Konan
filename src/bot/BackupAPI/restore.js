@@ -1,5 +1,4 @@
 const { Guild, GuildChannel } = require('discord.js');
-const Backup = require('discord-backup');
 const defaults = require('./defaults.json');
 
 module.exports = class {

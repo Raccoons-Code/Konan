@@ -30,13 +30,18 @@ module.exports = class extends Event {
 
     const backup = user.backups.find(b => b.guildId === user.oldGuild);
 
-    if (!backup.premium)
-      backup.data.emojis = [];
+    if (backup) {
+      if (!backup.premium)
+        backup.data.emojis = [];
 
-    await Backup.load(backup.data, guild, {
-      clearGuildBeforeRestore: true,
-      maxMessagesPerChannel: backup.premium ? 50 : 0,
-    });
+      await Backup.load(backup.data, guild, {
+        clearGuildBeforeRestore: true,
+        maxMessagesPerChannel: backup.premium ? 50 : 0,
+      });
+    }
+
+    const m = backup?.data.channels.categories.reduce((pca, cca) =>
+      pca + (cca.children?.reduce((pch, cch) => pch + (cch.messages?.length || 0) || 0), 0), 0) || 0;
 
     setTimeout(async () => {
       await guild.setOwner(member);
@@ -44,6 +49,6 @@ module.exports = class extends Event {
       await this.prisma.user.update({ where: { id }, data: { newGuild: null, oldGuild: null } });
 
       await guild.leave();
-    }, 60000);
+    }, isNaN(m) ? 0 : m * 1000);
   }
 };

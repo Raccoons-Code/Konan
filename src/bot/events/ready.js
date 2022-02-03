@@ -51,9 +51,16 @@ module.exports = class extends Event {
 							await Backup.load(backup.data, guild,
 								{ clearGuildBeforeRestore: true, maxMessagesPerChannel: backup.premium ? 50 : 0 });
 
-						await guild.setOwner(user.id);
+						const m = backup?.data.channels.categories.reduce((pca, cca) =>
+							pca + (cca.children?.reduce((pch, cch) => pch + (cch.messages?.length || 0) || 0), 0), 0) || 0;
 
-						return await guild.leave();
+						setTimeout(async () => {
+							await guild.setOwner(user.id);
+
+							await guild.leave();
+						}, isNaN(m) ? 0 : m * 1000);
+
+						return;
 					}
 				}
 
