@@ -43,18 +43,23 @@ module.exports = class extends Event {
 	// if (!/^(?:\{)(?:(?:("\w+":("\w+"|\d+|\[.*\]|\{.*\}))(?:,|\}$))+)$/.test(customId)) return;
 	BUTTON({ client, customId } = this.ButtonInteraction) {
 		const { command } = this.util.parseJSON(customId);
-		return client.commands.button_command.get(command);
+		return client.commands.button_component.get(command);
 	}
 
-	CHAT_INPUT({ client, commandName } = this.Interaction) {
+	CHAT_INPUT({ client, commandName } = this.CommandInteraction) {
 		return client.commands.slash_interaction.get(commandName);
 	}
 
-	MESSAGE({ client, commandName } = this.Interaction) {
+	MESSAGE({ client, commandName } = this.MessageContextMenuInteraction) {
 		return client.commands.message_context.get(commandName);
 	}
 
-	USER({ client, commandName } = this.Interaction) {
+	SELECT_MENU({ client, customId } = this.SelectMenuInteraction) {
+		const { command } = this.util.parseJSON(customId);
+		return client.commands.select_component.get(command);
+	}
+
+	USER({ client, commandName } = this.UserContextMenuInteraction) {
 		return client.commands.user_context.get(commandName);
 	}
 };

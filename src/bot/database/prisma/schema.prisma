@@ -12,13 +12,14 @@ datasource db {
 }
 
 model User {
-  ObjectId String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  id       String   @unique
-  premium  Int?     @db.Long
-  oldGuild String?
-  newGuild String?
-  guilds   Guild[]
-  backups  Backup[]
+  ObjectId    String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id          String   @unique
+  premium     Int?     @db.Long
+  usedPremium Json?
+  oldGuild    String?
+  newGuild    String?
+  guilds      Guild[]
+  backups     Backup[]
 }
 
 model Guild {
@@ -30,12 +31,12 @@ model Guild {
 }
 
 model Backup {
-  ObjectId String @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  id       String @unique
+  ObjectId String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id       String   @unique
   data     Json
   premium  Boolean?
-  Guild    Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  Guild    Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   guildId  String
-  User     User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  User     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId   String
 }

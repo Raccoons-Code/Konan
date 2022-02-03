@@ -35,7 +35,7 @@
     "prefix": "class event",
     "scope": "javascript,typescript"
   },
-  "Class button command": {
+  "Class button component": {
     "body": [
       "const { ButtonInteraction } = require('../../classes');",
       "",
@@ -53,11 +53,11 @@
       "  }",
       "};"
     ],
-    "description": "class to button command snippet",
-    "prefix": "class button command",
+    "description": "class to button component snippet",
+    "prefix": "class button component",
     "scope": "javascript,typescript"
   },
-  "Class menu message command": {
+  "Class menu message context": {
     "body": [
       "const { MessageContextMenu } = require('../../classes');",
       "",
@@ -73,11 +73,11 @@
       "  }",
       "};"
     ],
-    "description": "class to menu command snippet",
-    "prefix": "class menu message command",
+    "description": "class to menu context snippet",
+    "prefix": "class menu message context",
     "scope": "javascript,typescript"
   },
-  "Class menu user command": {
+  "Class menu user context": {
     "body": [
       "const { UserContextMenu } = require('../../classes');",
       "",
@@ -93,8 +93,8 @@
       "  }",
       "};"
     ],
-    "description": "class to menu command snippet",
-    "prefix": "class menu user command",
+    "description": "class to menu context snippet",
+    "prefix": "class menu user context",
     "scope": "javascript,typescript"
   },
   "Class message command": {
@@ -121,6 +121,28 @@
     ],
     "description": "class to message command snippet",
     "prefix": "class message command",
+    "scope": "javascript,typescript"
+  },
+  "Class select component": {
+    "body": [
+      "const { SelectMenuInteraction } = require('../../classes');",
+      "",
+      "module.exports = class extends SelectMenuInteraction {",
+      "  constructor(...args) {",
+      "    super(...args);",
+      "    this.data = {",
+      "      name: '${1:name}',",
+      "      description: '${2:description}',",
+      "    };",
+      "  }",
+      "",
+      "  async execute(interaction = this.SelectMenuInteraction) {",
+      "    $0",
+      "  }",
+      "};"
+    ],
+    "description": "class to select component snippet",
+    "prefix": "class select component",
     "scope": "javascript,typescript"
   },
   "Class slash command": {

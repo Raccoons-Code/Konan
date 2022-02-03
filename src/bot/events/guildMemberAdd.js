@@ -1,5 +1,5 @@
 const { Event } = require('../classes');
-const { restore } = require('../BackupAPI');
+const { Restore } = require('../BackupAPI');
 
 module.exports = class extends Event {
   constructor(...args) {

@@ -22,13 +22,13 @@ module.exports = class extends SlashCommand {
           .setDescription('Text: Title | Description'))
         .addStringOption(option => option.setName('button_name')
           .setDescription('Button name'))
-        .addStringOption(option => option.setName('button_style')
-          .setDescription('Button style')
-          .setChoices(ButtonStyleChoices))
         .addStringOption(option => option.setName('button_emoji')
           .setDescription('Button emoji'))
         .addBooleanOption(option => option.setName('button_disabled')
           .setDescription('Set disabled'))
+        .addStringOption(option => option.setName('button_style')
+          .setDescription('Button style')
+          .setChoices(ButtonStyleChoices))
         .addChannelOption(option => option.setName('channel')
           .setDescription('Channel')
           .addChannelTypes(GuildTextChannelTypes)))
@@ -154,11 +154,11 @@ module.exports = class extends SlashCommand {
     };
 
     const button = new MessageButton()
-      .setStyle(button_style)
-      .setLabel(button_name)
       .setCustomId(JSON.stringify(newCustomId))
+      .setDisabled(button_disabled)
       .setEmoji(emoji)
-      .setDisabled(button_disabled);
+      .setLabel(button_name)
+      .setStyle(button_style);
 
     const components = [new MessageActionRow().setComponents([button])];
 
@@ -206,11 +206,11 @@ module.exports = class extends SlashCommand {
     };
 
     const button = new MessageButton()
-      .setStyle(button_style)
-      .setLabel(button_name)
       .setCustomId(JSON.stringify(newCustomId))
+      .setDisabled(button_disabled)
       .setEmoji(emoji)
-      .setDisabled(button_disabled);
+      .setLabel(button_name)
+      .setStyle(button_style);
 
     message.components[0].addComponents([button]);
 
@@ -300,10 +300,10 @@ module.exports = class extends SlashCommand {
     if (subcommand === 'button') {
       const button = options.getString('button');
       const role = options.getRole('role');
-      const button_name = options.getString('button_name') || role.name;
-      const button_style = options.getString('button_style') || 'PRIMARY';
+      const button_name = options.getString('button_name');
+      const button_style = options.getString('button_style');
       const button_disabled = options.getBoolean('button_disabled');
-      const button_emoji = options.getString('button_emoji') || null;
+      const button_emoji = options.getString('button_emoji');
 
       const emoji = client.emojis.resolveIdentifier(button_emoji) ||
         client.emojis.resolve(button_emoji) ||
@@ -324,11 +324,11 @@ module.exports = class extends SlashCommand {
             roleId: role?.id || oldCustomId.roleId,
           };
 
-          b.setStyle(button_style || b.style);
+          b.setCustomId(JSON.stringify(newCustomId));
           b.setDisabled(typeof button_disabled === 'boolean' ? button_disabled : b.disabled);
           b.setEmoji(emoji || b.emoji);
           b.setLabel(button_name || b.label);
-          b.setCustomId(JSON.stringify(newCustomId));
+          b.setStyle(button_style || b.style);
 
           return b;
         });

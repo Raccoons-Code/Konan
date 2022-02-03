@@ -1,6 +1,7 @@
 const { SlashCommand } = require('../../classes');
 const { MessageEmbed } = require('discord.js');
-const { backup, restore } = require('../../BackupAPI');
+const Backup = require('discord-backup');
+const { env: { GUILD_ID, TEAM, TEAM_CHANNEL } } = process;
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
@@ -46,7 +47,9 @@ module.exports = class extends SlashCommand {
           .addStringOption(option => option.setName('key')
             .setDescription('backup key')
             .setAutocomplete(true)
-            .setRequired(true))))
+            .setRequired(true))
+          .addBooleanOption(option => option.setName('clear_server')
+            .setDescription('Clear server before restore?'))))
       .addSubcommand(subcommand => subcommand.setName('update')
         .setDescription('Update a backup of server.')
         .addStringOption(option => option.setName('key')
@@ -199,11 +202,11 @@ module.exports = class extends SlashCommand {
         await this.prisma.backup.findMany({ where: { guildId: id } });
 
       for (let i = 0; i < backups.length; i++) {
-        const _backup = backups[i];
+        const backup = backups[i];
 
         res.push({
-          name: `${_backup.data.name} | ${_backup.id}${_backup.guild == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
-          value: `${_backup.id}`,
+          name: `${backup.data.name} | ${backup.id}${backup.guild == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
+          value: `${backup.id}`,
         });
 
         if (i === 24) break;
@@ -223,8 +226,8 @@ module.exports = class extends SlashCommand {
 
     const embeds = [new MessageEmbed().setColor('RANDOM')];
 
-    backups.forEach(_backup => {
-      embeds[0].addField(`Server: ${_backup.data.name} | ${_backup.data.id}`, `Key: \`${_backup.id}\`${_backup.premium ? ' - `Premium`' : ''}`);
+    backups.forEach(backup => {
+      embeds[0].addField(`Server: ${backup.data.name} | ${backup.data.id}`, `Key: \`${backup.id}\`${backup.premium ? ' - `Premium`' : ''}`);
     });
 
     interaction.editReply({ embeds });
@@ -234,17 +237,18 @@ module.exports = class extends SlashCommand {
     const { client, guild, locale, options, user } = interaction;
 
     const _type = options.getSubcommand();
-    const guild_id = options.getString('id');
+    const guildId = options.getString('id');
     const key = options.getString('key');
+    const clear = options.getBoolean('clear_server');
 
-    const _backup = await this.prisma.backup.findFirst({ where: { id: key } });
+    const backup = await this.prisma.backup.findFirst({ where: { id: key } });
 
-    if (!_backup) return;
+    if (!backup) return;
 
     if (_type === 'server') {
-      const _guild_id = process.env.GUILD_ID?.split(',')[0];
-      const _channel_id = process.env.TEAM_CHANNEL;
-      const _team_id = process.env.TEAM?.split(',')[0];
+      const _guild_id = GUILD_ID?.split(',')[0];
+      const _channel_id = TEAM_CHANNEL;
+      const _team_id = TEAM?.split(',')[0];
 
       if (!_guild_id || !_channel_id || !_team_id)
         return interaction.editReply(this.t('This command is currently offline, please try again later.',
@@ -271,7 +275,9 @@ module.exports = class extends SlashCommand {
         message.delete().catch(() => null);
 
         if (parseInt(message.content) < 10) {
-          return message.reply(`${_team} backup restore ${guild_id} ${key} ${user.id}`);
+          const params = { guildId, key, userId: user.id };
+
+          return message.reply(`${_team} backup restore ${JSON.stringify(params)}`);
         }
 
         if (parseInt(message.content) > 9) {
@@ -294,35 +300,14 @@ module.exports = class extends SlashCommand {
     if (guild.ownerId !== user.id)
       return interaction.editReply(this.t('You are not the owner of the server.', { locale }));
 
-    const { afkChannelId, afkTimeout, channels, defaultMessageNotifications, explicitContentFilter, icon, roles, systemChannelFlags, systemChannelId, verificationLevel } = restore.create(_backup);
+    const { premium } = backup;
 
-    guild.edit({ afkChannel: afkChannelId, afkTimeout, defaultMessageNotifications, explicitContentFilter, icon, systemChannelFlags, systemChannel: systemChannelId, verificationLevel });
+    interaction.editReply('Restoring...').catch(() => null);
 
-    roles.forEach(role => {
-      const id = role.id;
-
-      delete role.id;
-
-      if (guild.roles.resolveId(id))
-        return guild.roles.edit(id, role);
-
-      guild.roles.create(role);
-    });
-
-    channels.forEach(channel => {
-      const { bitrate, id, name, nsfw, parentId, permissionOverwrites, rateLimitPerUser, rtcRegion, topic, type, userLimit } = channel;
-
-      delete channel.id;
-      delete channel.name;
-
-      const _channel = guild.channels.resolve(id);
-
-      if (!_channel)
-        return guild.channels.create(`${name}`,
-          { bitrate, nsfw, parent: parentId, permissionOverwrites, rateLimitPerUser, rtcRegion, topic, type, userLimit });
-
-      _channel.edit({ bitrate, name, nsfw, parent: parentId, permissionOverwrites, rateLimitPerUser, rtcRegion, topic, type, userLimit });
-    });
+    Backup.load(backup.data, guild,
+      { maxMessagesPerChannel: premium ? 50 : 0, clearGuildBeforeRestore: clear }).then(() =>
+        interaction.editReply('Success!').catch(() => null)).catch(() =>
+          interaction.editReply('Error! Restore take error...').catch(() => null));
   }
 
   async restoreAutocomplete(interaction = this.AutocompleteInteraction) {
@@ -360,18 +345,18 @@ module.exports = class extends SlashCommand {
     }
 
     if (focused.name === 'key') {
-      const id = options.getString('id');
+      const id = options.getString('id') || guildId;
 
       const backups = subcommand === 'server' ?
         this.cache.user[user.id].guilds.find(g => g.id === id).backups :
         await this.prisma.backup.findMany({ where: { guildId: id } });
 
       for (let i = 0; i < backups.length; i++) {
-        const _backup = backups[i];
+        const backup = backups[i];
 
         res.push({
-          name: `${_backup.data.name} | ${_backup.id}${_backup.premium ? ' | Premium' : ''}${_backup.guildId == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
-          value: `${_backup.id}`,
+          name: `${backup.data.name} | ${backup.id}${backup.premium ? ' | Premium' : ''}${backup.guildId == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
+          value: `${backup.id}`,
         });
 
         if (i === 24) break;
@@ -420,11 +405,11 @@ module.exports = class extends SlashCommand {
       await this.prisma.user.findFirst({ where: { id: user.id }, include: { backups: { where: { guildId } } } });
 
     for (let i = 0; i < backups.length; i++) {
-      const _backup = backups[i];
+      const backup = backups[i];
 
       res.push({
-        name: `${_backup.data.name} | ${_backup.id}${_backup.premium ? ' | Premium' : ''}`,
-        value: `${_backup.id}`,
+        name: `${backup.data.name} | ${backup.id}${backup.premium ? ' | Premium' : ''}`,
+        value: `${backup.id}`,
       });
 
       if (i === 24) break;
@@ -438,7 +423,8 @@ module.exports = class extends SlashCommand {
 
     const { premium } = options;
 
-    const data = await backup.create(guild, options);
+    const data = await Backup.create(guild,
+      { jsonBeautify: false, jsonSave: false, maxMessagesPerChannel: premium ? 50 : 0 });
 
     const key = `${Date.now()}`;
 
@@ -471,7 +457,7 @@ module.exports = class extends SlashCommand {
 
     const { premium } = options;
 
-    const data = await backup.create(guild, options);
+    const data = await Backup.create(guild, options);
 
     return await this.prisma.backup.update({
       where: { id: key },

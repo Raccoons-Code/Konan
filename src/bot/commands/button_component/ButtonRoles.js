@@ -4,7 +4,7 @@ module.exports = class extends ButtonInteraction {
   constructor(...args) {
     super(...args);
     this.data = {
-      name: 'button_roles',
+      name: 'buttonroles',
       description: 'Button roles',
     };
   }
@@ -12,12 +12,12 @@ module.exports = class extends ButtonInteraction {
   async execute(interaction = this.ButtonInteraction) {
     const { customId, member } = interaction;
 
-    const { roleId } = JSON.parse(customId);
+    const { roleId, onlyAdd } = JSON.parse(customId);
 
     if (!member.manageable)
       return interaction.deferUpdate();
 
-    member.roles.resolve(roleId) ?
+    member.roles.resolve(roleId) ? onlyAdd ? interaction.deferUpdate() :
       member.roles.remove(roleId)
         .then(() => this.setComponents(interaction, false))
         .catch(() => null) :
@@ -37,6 +37,12 @@ module.exports = class extends ButtonInteraction {
     };
 
     component.setCustomId(JSON.stringify(newCustomId));
+
+    const { label } = component;
+
+    const name = label.replace(RegExp(`\\s${oldCustomId.count}$`), `${newCustomId.count}`);
+
+    component.setLabel(`${name}`);
 
     const components = message.components.map(c => {
       if (c.components[0].type !== 'BUTTON') return c;

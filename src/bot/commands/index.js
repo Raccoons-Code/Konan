@@ -14,7 +14,7 @@ module.exports = new class {
   /** @type {Array<String>} */
   get applicationCommandTypes() {
     return this.applicationCommandTypes = Object.values(this.commandTypes).flat()
-      .filter(f => !/(_(?:command))/i.test(f));
+      .filter(f => !/(_(?:command|component))/i.test(f));
   }
 
   set applicationCommandTypes(value) {

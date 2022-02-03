@@ -19,10 +19,10 @@ module.exports = class extends SlashCommandBuilder {
     this.AutocompleteInteraction;
     /** @type {ButtonInteraction} */
     this.ButtonInteraction;
-    /** @type {GuildChannel} */
-    this.GuildChannel;
     /** @type {CommandInteraction} */
     this.CommandInteraction;
+    /** @type {GuildChannel} */
+    this.GuildChannel;
     /** @type {Guild} */
     this.Guild;
   }

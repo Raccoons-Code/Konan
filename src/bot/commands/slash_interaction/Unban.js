@@ -25,12 +25,13 @@ module.exports = class extends SlashCommand {
       return interaction.editReply(this.t('You are not allowed to unban members from the server.', { locale }));
 
     const id = options.getString('user');
-    const reason = options.getString('reason');
 
     const ban = guild.bans.resolve(id) || await guild.bans.fetch(id);
 
     if (!ban)
       return interaction.editReply(this.t('This user is not banned!', { locale }));
+
+    const reason = options.getString('reason');
 
     guild.members.unban(id, reason)
       .then(() => interaction.editReply(this.t('User successfully unbanned!', { locale })))

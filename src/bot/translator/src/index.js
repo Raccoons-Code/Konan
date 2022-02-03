@@ -82,56 +82,24 @@ const instance = new Idjsn();
 
 module.exports = instance;
 
-class Options {
-  /**
-   * @param {boolean} [capitalize]
-   * @param {number} [count]
-   * @param {Interpolation} [interpolation]
-   * @param {string} [locale]
-   * @param {Plural} [plural]
-   * @param {object} [resources]
-   */
-  constructor(
-    capitalize,
-    count,
-    interpolation,
-    locale,
-    plural,
-    resources,
-  ) {
-    this.capitalize = capitalize;
-    this.count = count;
-    this.interpolation = interpolation;
-    this.locale = locale;
-    this.plural = plural;
-    this.resources = resources;
-  }
-}
+/**
+ * @typedef Options
+ * @property {boolean} [capitalize]
+ * @property {number} [count]
+ * @property {Interpolation} [interpolation]
+ * @property {string} [locale]
+ * @property {Plural} [plural]
+ * @property {object} [resources]
+ */
 
-class Interpolation {
-  /**
-   * @param {string} prefix
-   * @param {string} suffix
-   */
-  constructor(
-    prefix,
-    suffix,
-  ) {
-    this.prefix = prefix;
-    this.suffix = suffix;
-  }
-}
+/**
+ * @typedef Interpolation
+ * @property {string} prefix
+ * @property {string} suffix
+ */
 
-class Plural {
-  /**
-   * @param {string} pluralSuffix
-   * @param {string} singularSuffix
-   */
-  constructor(
-    pluralSuffix,
-    singularSuffix,
-  ) {
-    this.pluralSuffix = pluralSuffix;
-    this.singularSuffix = singularSuffix;
-  }
-}
+/**
+ * @typedef Plural
+ * @property {string} pluralSuffix
+ * @property {string} singularSuffix
+ */

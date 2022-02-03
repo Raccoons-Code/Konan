@@ -1,5 +1,6 @@
 const { Event } = require('../classes');
 const { Permissions } = require('discord.js');
+const Backup = require('discord-backup');
 
 module.exports = class extends Event {
 	constructor(...args) {
@@ -24,7 +25,10 @@ module.exports = class extends Event {
 	async deleteMyGuilds(client = this.client) {
 		const guilds = client.guilds.cache.filter(g => g.ownerId === client.user.id);
 
-		const users = await this.prisma.user.findMany({ where: { newGuild: { not: null } } });
+		const users = await this.prisma.user.findMany({
+			where: { newGuild: { not: null } },
+			include: { backups: true },
+		});
 
 		let multiplier = 0;
 
@@ -41,6 +45,12 @@ module.exports = class extends Event {
 						await guild.members.fetch(user.id);
 
 					if (member) {
+						const backup = user.backups.find(b => b.userId === user.id);
+
+						if (backup)
+							await Backup.load(backup.data, guild,
+								{ clearGuildBeforeRestore: true, maxMessagesPerChannel: backup.premium ? 50 : 0 });
+
 						await guild.setOwner(user.id);
 
 						return await guild.leave();

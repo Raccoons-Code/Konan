@@ -1,45 +1,26 @@
+const { Guild, GuildChannel } = require('discord.js');
+const Backup = require('discord-backup');
 const defaults = require('./defaults.json');
 
 module.exports = class {
   constructor(backup, options) {
-    this.backup = backup;
+    this.backup = backup?.data || backup;
     this.options = options;
   }
 
   /** @private */
   create(backup = this.backup) {
-    this.data = backup.data;
+    this.data = backup;
     this.data.channels = this.channelsDefaults();
     this.data.roles = this.rolesDefaults();
     this.data = this.guildDefaults();
-    return this.data;
+    return this;
   }
 
   channelsDefaults(backup = this.backup) {
-    this.channels_filtered = [];
+    const { type, name } = backup.channels.categories[0].children[0];
 
-    backup.channels.forEach(channel => {
-      const _channel_filtered = {};
-
-      defaults.channels.forEach(key => {
-        const _permissions = [];
-
-        if (typeof channel[key] !== 'undefined')
-          Object.assign(_channel_filtered, { [key]: channel[key] });
-
-        if (key === 'permissionOverwrites')
-          defaults.permissionOverwrites.forEach(_key => {
-            if (typeof channel[key][_key] !== 'undefined')
-              _permissions.push({ [_key]: channel[key][key] });
-          });
-
-        _channel_filtered.permissionOverwrites = _permissions;
-      });
-
-      this.channels_filtered.push(_channel_filtered);
-    });
-
-    return this.channels_filtered;
+    return [{ name, type }];
   }
 
   rolesDefaults(backup = this.backup) {
@@ -73,6 +54,6 @@ module.exports = class {
   static create(backup, options) {
     const restore = new this(backup, options);
     restore.create();
-    return restore.data;
+    return restore;
   }
 };

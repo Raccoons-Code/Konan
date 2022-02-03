@@ -20,17 +20,17 @@ module.exports = class extends SlashCommand {
 
     const { guild, locale, memberPermissions, options } = interaction;
 
+    if (!memberPermissions.has('BAN_MEMBERS'))
+      return interaction.editReply(this.t('You are not allowed to ban members from the server.', { locale }));
+
     const member = options.getMember('user');
+
+    if (!member.bannable)
+      return interaction.editReply(this.t('You cannot ban members equal or superior to me or you.', { locale }));
 
     const days = options.getNumber('delete_messages') || 0;
 
     const reason = options.getString('reason');
-
-    if (!memberPermissions.has('BAN_MEMBERS'))
-      return interaction.editReply(this.t('You are not allowed to ban members from the server.', { locale }));
-
-    if (!member.bannable)
-      return interaction.editReply(this.t('You cannot ban members equal or superior to me or you.', { locale }));
 
     guild.members.ban(member, { days, reason })
       .then(() => interaction.editReply(this.t('User successfully banned!', { locale })))

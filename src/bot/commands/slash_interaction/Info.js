@@ -5,7 +5,7 @@ module.exports = class extends SlashCommand {
   constructor(...args) {
     super(...args);
     this.data = this.setName('info')
-      .setDescription('Info')
+      .setDescription('Server or user info')
       .addSubcommand(subCommand => subCommand.setName('server')
         .setDescription('Server info'))
       .addSubcommand(subCommand => subCommand.setName('user')

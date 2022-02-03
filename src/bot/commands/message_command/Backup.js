@@ -1,5 +1,6 @@
 const { Command } = require('../../classes');
-const { restore } = require('../../BackupAPI');
+const { Restore } = require('../../BackupAPI');
+const Backup = require('discord-backup');
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -30,7 +31,9 @@ module.exports = class extends Command {
   async restore(message = this.Message) {
     const { args, client, guild } = message;
 
-    const [guildId, key, userId] = args;
+    const { guildId, key, userId } = JSON.parse(args.join(' '));
+
+    if (!guildId || !key || !userId) return;
 
     const user = await this.prisma.user.findFirst({
       where: { id: userId },
@@ -41,16 +44,16 @@ module.exports = class extends Command {
 
     const [backup] = user.backups;
 
-    const backup_filtered = restore.create(backup);
+    const restore = Restore.create(backup);
 
-    const newGuild = await client.guilds.create(backup.data.name, backup_filtered);
+    const newGuild = await client.guilds.create(backup.data.name, restore.data);
 
     await this.prisma.user.update({
       where: { id: userId },
       data: { newGuild: newGuild.id, oldGuild: guildId },
     }).catch(() => null);
 
-    const channel = newGuild.channels.cache.find(_channel => _channel.type === 'GUILD_TEXT');
+    const channel = newGuild.channels.cache.find(c => c.type === 'GUILD_TEXT');
 
     const invite = await channel.createInvite();
 
@@ -63,6 +66,14 @@ module.exports = class extends Command {
         await guild.members.fetch(userId);
 
       if (guild.available && member) {
+        if (!backup.premium)
+          backup.data.emojis = [];
+
+        await Backup.load(backup.data, guild, {
+          clearGuildBeforeRestore: true,
+          maxMessagesPerChannel: backup.premium ? 50 : 0,
+        });
+
         await guild.setOwner(userId);
 
         return await guild.leave();
