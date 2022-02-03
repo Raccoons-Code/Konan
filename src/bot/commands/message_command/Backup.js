@@ -65,19 +65,7 @@ module.exports = class extends Command {
       const member = guild.members.resolve(userId) ||
         await guild.members.fetch(userId);
 
-      if (guild.available && member) {
-        if (!backup.premium)
-          backup.data.emojis = [];
-
-        await Backup.load(backup.data, guild, {
-          clearGuildBeforeRestore: true,
-          maxMessagesPerChannel: backup.premium ? 50 : 0,
-        });
-
-        await guild.setOwner(userId);
-
-        return await guild.leave();
-      }
+      if (guild.available && member) return;
 
       newGuild.delete().then(async () => {
         console.log(newGuild.name, 'deleted!');

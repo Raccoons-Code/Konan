@@ -1,5 +1,5 @@
 const { Event } = require('../classes');
-const { Restore } = require('../BackupAPI');
+const Backup = require('discord-backup');
 
 module.exports = class extends Event {
   constructor(...args) {
@@ -27,6 +27,16 @@ module.exports = class extends Event {
     if (!user) return;
 
     if (user.newGuild != guild.id) return;
+
+    const backup = user.backups.find(b => b.guildId === user.oldGuild);
+
+    if (!backup.premium)
+      backup.data.emojis = [];
+
+    await Backup.load(backup.data, guild, {
+      clearGuildBeforeRestore: true,
+      maxMessagesPerChannel: backup.premium ? 50 : 0,
+    });
 
     await guild.setOwner(member);
 
