@@ -239,7 +239,6 @@ module.exports = class extends SlashCommand {
     const _type = options.getSubcommand();
     const guildId = options.getString('id');
     const key = options.getString('key');
-    const clear = options.getBoolean('clear_server');
 
     const backup = await this.prisma.backup.findFirst({ where: { id: key } });
 
@@ -299,6 +298,8 @@ module.exports = class extends SlashCommand {
 
     if (guild.ownerId !== user.id)
       return interaction.editReply(this.t('You are not the owner of the server.', { locale }));
+
+    const clear = options.getBoolean('clear_server');
 
     const { premium } = backup;
 

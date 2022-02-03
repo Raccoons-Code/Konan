@@ -12,8 +12,9 @@ module.exports = class {
   create(backup = this.backup) {
     this.data = backup;
     this.data.channels = this.channelsDefaults();
-    this.data.roles = this.rolesDefaults();
     this.data = this.guildDefaults();
+
+    delete this.data.roles;
     return this;
   }
 
@@ -53,7 +54,9 @@ module.exports = class {
 
   static create(backup, options) {
     const restore = new this(backup, options);
+
     restore.create();
+
     return restore;
   }
 };
