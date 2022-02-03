@@ -62,10 +62,10 @@ module.exports = class extends Command {
     await message.reply(`${invite}`);
 
     setTimeout(async () => {
-      const member = guild.members.resolve(userId) ||
-        await guild.members.fetch(userId);
+      const member = newGuild.members.resolve(userId) ||
+        await newGuild.members.fetch(userId);
 
-      if (guild.available && member) return;
+      if (newGuild.available && member) return;
 
       newGuild.delete().then(async () => {
         console.log(newGuild.name, 'deleted!');
