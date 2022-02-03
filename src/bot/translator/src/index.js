@@ -32,7 +32,7 @@ function interpolate(text, object) {
 
 class Idjsn {
   /** @param {Options} options */
-  init(options) {
+  constructor(options) {
     if (!options) return;
     if (!options.resources) return;
     if (!options.interpolation) options.interpolation = {};
@@ -45,7 +45,11 @@ class Idjsn {
     _this.resources = options.resources;
     _this.interpolation = options.interpolation;
     _this.plural = options.plural;
-    return this;
+  }
+
+  /** @param {Options} options */
+  init(options) {
+    return new Idjsn(options);
   }
 
   /**

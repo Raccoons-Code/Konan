@@ -12,11 +12,14 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
-    const { client, channel, member, options, user } = interaction;
+    const { client, channel, locale, member, options, user } = interaction;
+
+    if (!interaction.inGuild())
+      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
 
     const message = options.getString('message');
 
-    const username = member.nickname || user.username;
+    const username = member?.nickname || user.username;
 
     const avatarURL = user.displayAvatarURL();
 

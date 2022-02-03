@@ -22,6 +22,18 @@ module.exports = class extends Event {
 		this.setPresence(client);
 	}
 
+	async deleteGuild(guild, user) {
+		await guild.delete().then(async () => {
+			console.log(guild.name, 'deleted!');
+
+			if (user)
+				await this.prisma.user.update({
+					where: { id: user.id },
+					data: { newGuild: null, oldGuild: null },
+				});
+		}).catch(() => null);
+	}
+
 	async deleteMyGuilds(client = this.client) {
 		const guilds = client.guilds.cache.filter(g => g.ownerId === client.user.id);
 
@@ -35,55 +47,56 @@ module.exports = class extends Event {
 		for (const [, guild] of guilds) {
 			const timeout = 60000 - (Date.now() - guild.createdTimestamp);
 
+			const user = users.find(_user => _user.newGuild == guild.id);
+
+			if (!user) return this.deleteGuild(guild);
+
+			let member = guild.members.resolve(user.id) ||
+				await guild.members.fetch(user.id);
+
+			if (member)
+				return this.restoreGuild(guild, member, user);
+
 			multiplier++;
 
 			setTimeout(async () => {
-				const user = users.find(_user => _user.newGuild == guild.id);
+				member = guild.members.resolve(user.id);
 
-				if (user) {
-					const member = guild.members.resolve(user.id) ||
-						await guild.members.fetch(user.id);
+				if (member)
+					return this.restoreGuild(guild, member, user);
 
-					if (member) {
-						const backup = user.backups.find(b => b.userId === user.id);
-
-						if (backup)
-							await Backup.load(backup.data, guild,
-								{ clearGuildBeforeRestore: true, maxMessagesPerChannel: backup.premium ? 50 : 0 });
-
-						const m = backup?.data.channels.categories.reduce((pca, cca) =>
-							pca + (cca.children?.reduce((pch, cch) => pch + (cch.messages?.length || 0) || 0), 0), 0) || 0;
-
-						setTimeout(async () => {
-							await guild.setOwner(user.id);
-
-							await guild.leave();
-						}, isNaN(m) ? 0 : m * 1000);
-
-						return;
-					}
-				}
-
-				await guild.delete().then(async () => {
-					console.log(guild.name, 'deleted!');
-
-					await this.prisma.user.update({
-						where: { id: user.id },
-						data: { newGuild: null, oldGuild: null },
-					});
-				}).catch(() => null);
+				this.deleteGuild(guild, user);
 			}, ((timeout < 0 ? 0 : timeout) + (multiplier * 1000)));
 		}
 	}
 
+	async restoreGuild(guild, member, user) {
+		const backup = user.backups.find(b => b.userId === user.id);
+
+		if (backup)
+			await Backup.load(backup.data, guild,
+				{ clearGuildBeforeRestore: true, maxMessagesPerChannel: backup.premium ? 20 : 0 });
+
+		const m = backup?.data.channels.categories.reduce((pca, cca) =>
+			pca + (cca.children?.reduce((pch, cch) => pch + (cch.messages?.length || 0) || 0), 0), 0) || 0;
+
+		setTimeout(async () => {
+			await guild.setOwner(member.id);
+
+			await this.prisma.user.update({ where: { id: member.id }, data: { newGuild: null, oldGuild: null } });
+
+			await guild.leave();
+		}, isNaN(m) ? 1000 : m * 1000);
+	}
+
 	async setPresence(client = this.client) {
-		const { user } = client;
+		const { shard, user } = client;
 		const ytURL = 'https://www.youtube.com/watch?v=';
 
 		const promises = [
-			client.shard.fetchClientValues('guilds.cache.size'),
-			client.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
-			client.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.channels.cache.size, 0)),
+			shard.fetchClientValues('guilds.cache.size'),
+			shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
+			shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.channels.cache.size, 0)),
 		];
 
 		Promise.all(promises)
@@ -107,7 +120,7 @@ module.exports = class extends Event {
 			],
 		});
 
-		await this.util.waitAsync(10000);
+		await this.util.waitAsync(10000 * this.util.mathRandom(6, 1));
 		this.setPresence(client);
 	}
 };

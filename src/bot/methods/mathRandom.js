@@ -1,12 +1,6 @@
 /**
- * @param {number} [max]
- * @param {number} [min]
+ * @param {number} max
+ * @param {number} [min=1] [min=1]
  * @return {number}
  */
-module.exports = (max = 0, min = 0) => {
-    const mathRandom = Math.floor((max * Math.random()) + min);
-
-    if (mathRandom > max) return max;
-
-    return mathRandom;
-};
+module.exports = (max, min = 1) => Math.min(Math.floor((max * Math.random()) + min), max);

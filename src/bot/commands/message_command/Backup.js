@@ -1,6 +1,5 @@
 const { Command } = require('../../classes');
 const { Restore } = require('../../BackupAPI');
-const Backup = require('discord-backup');
 
 module.exports = class extends Command {
   constructor(...args) {
@@ -25,11 +24,13 @@ module.exports = class extends Command {
 
     await this.util.waitAsync(100);
 
-    await message.reply(`${client.guilds.cache.size}`);
+    const { size } = client.guilds.cache;
+
+    await message.reply(`${JSON.stringify({ size })}`);
   }
 
   async restore(message = this.Message) {
-    const { args, client, guild } = message;
+    const { args, client } = message;
 
     const { guildId, key, userId } = JSON.parse(args.join(' '));
 
@@ -62,12 +63,14 @@ module.exports = class extends Command {
     await message.reply(`${invite}`);
 
     setTimeout(async () => {
-      const member = newGuild.members.resolve(userId) ||
-        await newGuild.members.fetch(userId);
+      if (newGuild.available) {
+        const member = newGuild.members.resolve(userId) ||
+          await newGuild.members.fetch(userId);
 
-      if (newGuild.available && member) return;
+        if (member) return;
+      }
 
-      newGuild.delete().then(async () => {
+      await newGuild.delete().then(async () => {
         console.log(newGuild.name, 'deleted!');
 
         await this.prisma.user.update({

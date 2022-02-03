@@ -9,7 +9,7 @@ const ButtonStyleChoices = [['PRIMARY', 'PRIMARY'], ['SECONDARY', 'SECONDARY'], 
 module.exports = class extends SlashCommand {
   constructor(...args) {
     super(...args);
-    this.textRegexp = /([^|]*)\|?(.*)/;
+    this.textRegexp = /(?:(?:([^|]{0,256}))(?:\|?(.{0,4096})))/;
     this.messageURLRegex = /(?:(?:\/)?(\d+))+/;
     this.data = this.setName('buttonroles')
       .setDescription('Button roles')
@@ -19,18 +19,18 @@ module.exports = class extends SlashCommand {
           .setDescription('Role')
           .setRequired(true))
         .addStringOption(option => option.setName('text')
-          .setDescription('Text: Title | Description'))
+          .setDescription('Text: Title {0,256} | Description {0,4096}'))
         .addStringOption(option => option.setName('button_name')
-          .setDescription('Button name'))
+          .setDescription('Button name - default: role name'))
         .addStringOption(option => option.setName('button_emoji')
           .setDescription('Button emoji'))
         .addBooleanOption(option => option.setName('button_disabled')
-          .setDescription('Set disabled'))
+          .setDescription('Set disabled - default: false'))
         .addStringOption(option => option.setName('button_style')
-          .setDescription('Button style')
+          .setDescription('Button style - default: PRIMARY')
           .setChoices(ButtonStyleChoices))
         .addChannelOption(option => option.setName('channel')
-          .setDescription('Channel')
+          .setDescription('Channel - default: current')
           .addChannelTypes(GuildTextChannelTypes)))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('edit')
         .setDescription('Edit button role')
@@ -45,7 +45,7 @@ module.exports = class extends SlashCommand {
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('text')
-            .setDescription('Text: Title | Description')
+            .setDescription('Text: Title {0,256} | Description {0,4096}')
             .setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName('button')
           .setDescription('Edit a button in a button role')
@@ -111,7 +111,13 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
-    const { memberPermissions, options } = interaction;
+    const { locale, memberPermissions, options } = interaction;
+
+    if (!interaction.inGuild())
+      return interaction.reply({
+        content: this.t('Error! This command can only be used on one server.', { locale }),
+        ephemeral: true,
+      });
 
     if (!memberPermissions.has('ADMINISTRATOR')) {
       if (interaction.isAutocomplete()) return interaction.respond([]);
@@ -164,7 +170,7 @@ module.exports = class extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setTitle(title || 'Roles')
+      .setTitle(title || description ? '' : 'ButtonRoles')
       .setDescription(description || '')];
 
     channel.send({ embeds, components }).then(() =>
@@ -289,7 +295,7 @@ module.exports = class extends SlashCommand {
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
-        .setTitle(title || 'Roles')
+        .setTitle(title || '')
         .setDescription(description || '')];
 
       return message.edit({ embeds }).then(() =>

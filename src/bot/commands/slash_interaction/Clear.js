@@ -24,7 +24,7 @@ module.exports = class extends SlashCommand {
 
     const { locale, memberPermissions, options } = interaction;
 
-    if (!memberPermissions.has('MANAGE_MESSAGES'))
+    if (interaction.inGuild() && !memberPermissions.has('MANAGE_MESSAGES'))
       return interaction.editReply(this.t('You do not have permission to manage messages from the server.',
         { locale }));
 

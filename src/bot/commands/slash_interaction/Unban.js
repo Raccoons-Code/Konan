@@ -14,6 +14,12 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
+    if (!interaction.inGuild()) {
+      if (interaction.isAutocomplete()) return interaction.respond([]);
+
+      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
+    }
+
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 

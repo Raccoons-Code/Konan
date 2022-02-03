@@ -111,45 +111,19 @@ module.exports = class extends SlashCommand {
   }
 };
 
-class DataOptions {
-  /**
-   * @param {string} name
-   * @param {string} description
-   * @param {DataOptions[]|Options[]} options
-   */
-  constructor(
-    name,
-    description,
-    options,
-  ) {
-    this.name = name;
-    this.description = description;
-    this.options = options;
-  }
-}
+/**
+ * @typedef DataOptions
+ * @property {string} name
+ * @property {string} description
+ * @property {DataOptions[]|Options[]} options
+ */
 
-class Options {
-  /**
-   * @param {Array[]} choices
-   * @param {boolean} autocomplete
-   * @param {number} type
-   * @param {string} name
-   * @param {string} description
-   * @param {boolean} required
-   */
-  constructor(
-    choices,
-    autocomplete,
-    type,
-    name,
-    description,
-    required,
-  ) {
-    this.choices = choices;
-    this.autocomplete = autocomplete;
-    this.type = type;
-    this.name = name;
-    this.description = description;
-    this.required = required;
-  }
-}
+/**
+ * @typedef Options
+ * @property {Array[]} choices
+ * @property {boolean} autocomplete
+ * @property {number} type
+ * @property {string} name
+ * @property {string} description
+ * @property {boolean} required
+ */

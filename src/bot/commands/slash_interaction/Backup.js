@@ -244,6 +244,8 @@ module.exports = class extends SlashCommand {
 
     if (!backup) return;
 
+    const { premium } = backup;
+
     if (_type === 'server') {
       const _guild_id = GUILD_ID?.split(',')[0];
       const _channel_id = TEAM_CHANNEL;
@@ -273,14 +275,18 @@ module.exports = class extends SlashCommand {
       collector.on('collect', async message => {
         message.delete().catch(() => null);
 
-        if (parseInt(message.content) < 10) {
-          const params = { guildId, key, userId: user.id };
+        const { size } = this.util.parseJSON(message.content);
 
-          return message.reply(`${_team} backup restore ${JSON.stringify(params)}`);
-        }
+        if (size) {
+          if (size < 10) {
+            const params = { guildId, key, userId: user.id };
 
-        if (parseInt(message.content) > 9) {
-          return interaction.editReply(this.t('There are too many requests for this command at the moment. Please try again in 1 minute.', { locale }));
+            return message.reply(`${_team} backup restore ${JSON.stringify(params)}`);
+          }
+
+          if (size > 9) {
+            return interaction.editReply(this.t('There are too many requests for this command at the moment. Please try again in 1 minute.', { locale }));
+          }
         }
 
         await interaction.editReply({ content: `${message.content}` });
@@ -296,17 +302,18 @@ module.exports = class extends SlashCommand {
       return _channel.send(`${_team} backup guilds`);
     }
 
+    if (!interaction.inGuild())
+      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
+
     if (guild.ownerId !== user.id)
       return interaction.editReply(this.t('You are not the owner of the server.', { locale }));
 
     const clear = options.getBoolean('clear_server');
 
-    const { premium } = backup;
-
     interaction.editReply('Restoring...').catch(() => null);
 
     Backup.load(backup.data, guild,
-      { maxMessagesPerChannel: premium ? 50 : 0, clearGuildBeforeRestore: clear }).then(() =>
+      { maxMessagesPerChannel: premium ? 20 : 0, clearGuildBeforeRestore: clear }).then(() =>
         interaction.editReply('Success!').catch(() => null)).catch(() =>
           interaction.editReply('Error! Restore take error...').catch(() => null));
   }
@@ -349,8 +356,8 @@ module.exports = class extends SlashCommand {
       const id = options.getString('id') || guildId;
 
       const backups = subcommand === 'server' ?
-        this.cache.user[user.id].guilds.find(g => g.id === id).backups :
-        await this.prisma.backup.findMany({ where: { guildId: id } });
+        this.cache.user[user.id].guilds.find(g => g.id === id).backups : interaction.inGuild() ?
+          await this.prisma.backup.findMany({ where: { guildId: id } }) : interaction.respond([]);
 
       for (let i = 0; i < backups.length; i++) {
         const backup = backups[i];
@@ -396,6 +403,8 @@ module.exports = class extends SlashCommand {
   async updateAutocomplete(interaction = this.AutocompleteInteraction) {
     if (interaction.responded) return;
 
+    if (!interaction.inGuild()) return interaction.respond([]);
+
     const { guildId, user } = interaction;
 
     const res = [];
@@ -425,7 +434,7 @@ module.exports = class extends SlashCommand {
     const { premium } = options;
 
     const data = await Backup.create(guild,
-      { jsonBeautify: false, jsonSave: false, maxMessagesPerChannel: premium ? 50 : 0 });
+      { jsonBeautify: false, jsonSave: false, maxMessagesPerChannel: premium ? 20 : 0 });
 
     const key = `${Date.now()}`;
 
@@ -458,7 +467,8 @@ module.exports = class extends SlashCommand {
 
     const { premium } = options;
 
-    const data = await Backup.create(guild, options);
+    const data = await Backup.create(guild,
+      { jsonBeautify: false, jsonSave: false, maxMessagesPerChannel: premium ? 20 : 0 });
 
     return await this.prisma.backup.update({
       where: { id: key },

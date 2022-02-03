@@ -18,6 +18,9 @@ module.exports = class extends SlashCommand {
   async execute(interaction = this.CommandInteraction) {
     await interaction.deferReply({ ephemeral: true });
 
+    if (!interaction.inGuild())
+      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
+
     const { guild, locale, memberPermissions, options } = interaction;
 
     if (!memberPermissions.has('BAN_MEMBERS'))

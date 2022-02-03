@@ -36,7 +36,7 @@ module.exports = class extends Event {
 
       await Backup.load(backup.data, guild, {
         clearGuildBeforeRestore: true,
-        maxMessagesPerChannel: backup.premium ? 50 : 0,
+        maxMessagesPerChannel: backup.premium ? 20 : 0,
       });
     }
 
@@ -49,6 +49,6 @@ module.exports = class extends Event {
       await this.prisma.user.update({ where: { id }, data: { newGuild: null, oldGuild: null } });
 
       await guild.leave();
-    }, isNaN(m) ? 0 : m * 1000);
+    }, isNaN(m) ? 1000 : m * 1000);
   }
 };
