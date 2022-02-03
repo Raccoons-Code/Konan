@@ -38,10 +38,12 @@ module.exports = class extends Event {
       maxMessagesPerChannel: backup.premium ? 50 : 0,
     });
 
-    await guild.setOwner(member);
+    setTimeout(async () => {
+      await guild.setOwner(member);
 
-    await this.prisma.user.update({ where: { id }, data: { newGuild: null, oldGuild: null } });
+      await this.prisma.user.update({ where: { id }, data: { newGuild: null, oldGuild: null } });
 
-    await guild.leave();
+      await guild.leave();
+    }, 60000);
   }
 };
