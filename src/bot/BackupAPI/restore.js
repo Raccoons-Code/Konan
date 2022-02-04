@@ -1,4 +1,5 @@
 const { Guild, GuildChannel } = require('discord.js');
+const { filterObjectByKeys } = require('../methods');
 const defaults = require('./defaults.json');
 
 module.exports = class {
@@ -24,37 +25,25 @@ module.exports = class {
   }
 
   rolesDefaults(backup = this.backup) {
-    this.roles_filtered = [];
-
-    backup.roles.forEach(role => {
-      const role_filtered = {};
-
-      defaults.roles.forEach(key => {
-        if (typeof role[key] !== 'undefined')
-          Object.assign(role_filtered, { [key]: role[key] });
-      });
-
-      this.roles_filtered.push(role_filtered);
-    });
-
-    return this.roles_filtered;
+    return backup.roles.map(role => filterObjectByKeys(role, defaults.roles));
   }
 
   guildDefaults(backup = this.backup) {
-    this.guild_filtered = {};
-
-    defaults.guild.forEach(value => {
-      if (typeof backup[value] !== 'undefined')
-        Object.assign(this.guild_filtered, { [value]: backup[value] });
-    });
-
-    return this.guild_filtered;
+    return filterObjectByKeys(backup, defaults.guild);
   }
 
   static create(backup, options) {
     const restore = new this(backup, options);
 
     restore.create();
+
+    return restore;
+  }
+
+  static filter(backup, options) {
+    const restore = new this(backup, options);
+
+    restore.guildDefaults();
 
     return restore;
   }

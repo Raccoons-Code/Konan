@@ -2,6 +2,7 @@
 module.exports = {
   bytes: require('./bytes'),
   capitalize: require('./capitalize'),
+  filterObjectByKeys: require('./filterObjectByKeys'),
   findDuplicatesInArray: require('./findDuplicatesInArray'),
   hasDuplicatesInArray: require('./hasDuplicatesInArray'),
   isSameDate: require('./isSameDate'),

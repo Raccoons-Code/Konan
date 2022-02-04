@@ -20,13 +20,15 @@ module.exports = class extends Command {
   }
 
   async guilds(message = this.Message) {
-    const { client } = message;
+    const { args, client } = message;
 
     await this.util.waitAsync(100);
 
     const { size } = client.guilds.cache;
 
-    await message.reply(`${JSON.stringify({ size })}`);
+    const { userId } = this.util.parseJSON(args.join(' '));
+
+    await message.reply(`${JSON.stringify({ size, userId })}`);
   }
 
   async restore(message = this.Message) {
@@ -60,7 +62,7 @@ module.exports = class extends Command {
 
     await this.util.waitAsync(100);
 
-    await message.reply(`${invite}`);
+    await message.reply(JSON.stringify({ guildId, invite, key, userId }));
 
     setTimeout(async () => {
       if (newGuild.available) {

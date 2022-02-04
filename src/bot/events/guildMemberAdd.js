@@ -1,4 +1,5 @@
 const { Event } = require('../classes');
+const { Restore } = require('../BackupAPI');
 const Backup = require('discord-backup');
 
 module.exports = class extends Event {
@@ -31,10 +32,8 @@ module.exports = class extends Event {
     const backup = user.backups.find(b => b.guildId === user.oldGuild);
 
     if (backup) {
-      if (!backup.premium) {
-        backup.data.bans = [];
-        backup.data.emojis = [];
-      }
+      if (!backup.premium)
+        backup.data = Restore.filter(backup).data;
 
       await Backup.load(backup.data, guild, {
         clearGuildBeforeRestore: true,

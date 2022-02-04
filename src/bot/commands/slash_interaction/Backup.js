@@ -268,14 +268,16 @@ module.exports = class extends SlashCommand {
         return interaction.editReply(this.t('This command is currently offline, please try again later.',
           { locale }));
 
-      const filter = message => message.channel.id === _channel_id && message.author.id === _team_id;
+      const filter = message => message.channel.id === _channel_id &&
+        message.author.id === _team_id &&
+        this.util.parseJSON(message.content).userId === user.id;
 
       const collector = _channel.createMessageCollector({ filter, max: 2, time: 10000, errors: ['time'] });
 
       collector.on('collect', async message => {
         message.delete().catch(() => null);
 
-        const { size } = this.util.parseJSON(message.content);
+        const { invite, size } = this.util.parseJSON(message.content);
 
         if (size) {
           if (size < 10) {
@@ -289,7 +291,7 @@ module.exports = class extends SlashCommand {
           }
         }
 
-        await interaction.editReply({ content: `${message.content}` });
+        await interaction.editReply({ content: `${invite}` });
       });
 
       collector.on('end', async (message, reason) => {
@@ -299,7 +301,7 @@ module.exports = class extends SlashCommand {
         }
       });
 
-      return _channel.send(`${_team} backup guilds`);
+      return _channel.send(`${_team} backup guilds ${JSON.stringify({ userId: user.id })}`);
     }
 
     if (!interaction.inGuild())
