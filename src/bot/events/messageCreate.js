@@ -31,7 +31,7 @@ module.exports = class extends Event {
 
 		if (channel.permissionsFor(guild.me).missing(command.data?.clientPermissions).length) return;
 
-		if (!/(backup)/.test(commandName))
+		if (!/(backup|deploy|throw)/.test(commandName))
 			await channel.sendTyping();
 
 		try {

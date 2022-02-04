@@ -15,6 +15,6 @@ module.exports = class extends Command {
 
     if (!OWNER_ID?.split(',').includes(author.id)) return;
 
-    throw Error(args.join(' '));
+    this.client.sendError({ name: 'Command', message: this.data.name, stack: args.join(' ') });
   }
 };
