@@ -37,7 +37,7 @@ module.exports = class extends Event {
 		try {
 			await command.execute(message);
 		} catch (error) {
-			console.error(error, command.data?.name);
+			this.client.sendError(error);
 		}
 	}
 };

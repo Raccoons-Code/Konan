@@ -20,9 +20,8 @@ module.exports = class extends Event {
 		try {
 			await command.execute(interaction);
 		} catch (error) {
+			this.client.sendError(error);
 			try {
-				console.error(error, command.data?.name);
-
 				if (!interaction.isAutocomplete() && !interaction.isMessageComponent()) {
 					if (interaction.replied) {
 						await interaction.editReply({
