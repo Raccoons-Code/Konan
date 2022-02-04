@@ -10,32 +10,66 @@ module.exports = class extends SelectMenuInteraction {
   }
 
   async execute(interaction = this.SelectMenuInteraction) {
-    const { customId, member } = interaction;
-
-    const { roleId, onlyAdd } = JSON.parse(customId);
+    const { member, values } = interaction;
 
     if (!member.manageable)
       return interaction.deferUpdate();
 
-    member.roles.resolve(roleId) ? onlyAdd ? interaction.deferUpdate() :
-      member.roles.remove(roleId)
-        .then(() => this.setComponents(interaction, false))
-        .catch(() => null) :
-      member.roles.add(roleId)
-        .then(() => this.setComponents(interaction, true))
-        .catch(() => null);
+    const roles = { add: [], remove: [] };
+
+    for (let i = 0; i < values.length; i++) {
+      const value = values[i];
+
+      const { roleId } = JSON.parse(value);
+
+      const role = await member.roles.resolve(roleId);
+
+      role ? roles.remove.push(role.id) : roles.add.push(roleId);
+    }
+
+    await member.roles.add(roles.add).catch(() => roles.add = []);
+    await member.roles.remove(roles.remove).catch(() => roles.remove = []);
+
+    this.setComponents(interaction, roles);
   }
 
-  setComponents(interaction = this.ButtonInteraction, boolean) {
-    const { customId, component } = interaction;
+  setComponents(interaction = this.SelectMenuInteraction, roles) {
+    const { customId, component, message, values } = interaction;
 
     const oldCustomId = JSON.parse(customId);
 
+    const { add, remove } = roles;
+
     const newCustomId = {
       ...oldCustomId,
-      count: oldCustomId.count + (boolean ? 1 : -1),
+      count: oldCustomId.count + (add.length - remove.length),
     };
 
+    const { options } = component;
+
+    for (let i = 0; i < options.length; i++) {
+      const option = options[i];
+
+      if (!values.includes(option.value)) return;
+
+      const oldvalue = JSON.parse(option.value);
+
+      const add1 = add.includes(oldvalue.roleId) ? 1 : 0;
+      const rem1 = remove.includes(oldvalue.roleId) ? -1 : 0;
+
+      const newValue = {
+        ...oldvalue,
+        count: oldvalue.count + (add1 + rem1),
+      };
+
+      option.value = JSON.stringify(newValue);
+    }
+
     component.setCustomId(JSON.stringify(newCustomId));
+    component.setOptions(options);
+
+    const { components } = message;
+
+    interaction.update({ components });
   }
 };

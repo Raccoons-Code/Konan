@@ -141,16 +141,15 @@ module.exports = class extends SlashCommand {
     const role = options.getRole('role');
     const button_name = options.getString('button_name') || role.name;
     const button_style = options.getString('button_style') || 'PRIMARY';
-    const button_emoji = options.getString('button_emoji') || null;
+    const button_emoji = options.getString('button_emoji');
     const button_disabled = options.getBoolean('button_disabled');
     const [, title, description] = options.getString('text')?.match(this.textRegexp) || [];
     const channel = options.getChannel('channel') || interaction.channel;
 
-    const emoji = client.emojis.resolveIdentifier(button_emoji) ||
+    const emoji = button_emoji ? client.emojis.resolveIdentifier(button_emoji) ||
       client.emojis.resolve(button_emoji) ||
       guild.emojis.resolve(button_emoji) ||
-      await guild.emojis.fetch(button_emoji).catch(() => null) ||
-      null;
+      await guild.emojis.fetch(button_emoji).catch(() => null) : null;
 
     const newCustomId = {
       command: this.data.name,
@@ -163,7 +162,7 @@ module.exports = class extends SlashCommand {
       .setCustomId(JSON.stringify(newCustomId))
       .setDisabled(button_disabled)
       .setEmoji(emoji)
-      .setLabel(button_name)
+      .setLabel(`${button_name} 0`)
       .setStyle(button_style);
 
     const components = [new MessageActionRow().setComponents([button])];
@@ -195,14 +194,13 @@ module.exports = class extends SlashCommand {
     const role = options.getRole('role');
     const button_name = options.getString('button_name') || role.name;
     const button_style = options.getString('button_style') || 'PRIMARY';
-    const button_emoji = options.getString('button_emoji') || null;
+    const button_emoji = options.getString('button_emoji');
     const button_disabled = options.getBoolean('button_disabled');
 
-    const emoji = client.emojis.resolveIdentifier(button_emoji) ||
+    const emoji = button_emoji ? client.emojis.resolveIdentifier(button_emoji) ||
       client.emojis.resolve(button_emoji) ||
       guild.emojis.resolve(button_emoji) ||
-      await guild.emojis.fetch(button_emoji).catch(() => null) ||
-      null;
+      await guild.emojis.fetch(button_emoji).catch(() => null) : null;
 
     const newCustomId = {
       command: this.data.name,
@@ -215,7 +213,7 @@ module.exports = class extends SlashCommand {
       .setCustomId(JSON.stringify(newCustomId))
       .setDisabled(button_disabled)
       .setEmoji(emoji)
-      .setLabel(button_name)
+      .setLabel(`${button_name} 0`)
       .setStyle(button_style);
 
     message.components[0].addComponents([button]);
@@ -311,11 +309,10 @@ module.exports = class extends SlashCommand {
       const button_disabled = options.getBoolean('button_disabled');
       const button_emoji = options.getString('button_emoji');
 
-      const emoji = client.emojis.resolveIdentifier(button_emoji) ||
+      const emoji = button_emoji ? client.emojis.resolveIdentifier(button_emoji) ||
         client.emojis.resolve(button_emoji) ||
         guild.emojis.resolve(button_emoji) ||
-        await guild.emojis.fetch(button_emoji).catch(() => null) ||
-        null;
+        await guild.emojis.fetch(button_emoji).catch(() => null) : null;
 
       const components = message.components.map(c => {
         if (c.components[0].type !== 'BUTTON') return c;
@@ -333,7 +330,7 @@ module.exports = class extends SlashCommand {
           b.setCustomId(JSON.stringify(newCustomId));
           b.setDisabled(typeof button_disabled === 'boolean' ? button_disabled : b.disabled);
           b.setEmoji(emoji || b.emoji);
-          b.setLabel(button_name || b.label);
+          b.setLabel(`${button_name || b.label} ${oldCustomId.count}`);
           b.setStyle(button_style || b.style);
 
           return b;

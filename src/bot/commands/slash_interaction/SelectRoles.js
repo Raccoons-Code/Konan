@@ -7,6 +7,8 @@ const GuildTextChannelTypes = [GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THRE
 module.exports = class extends SlashCommand {
   constructor(...args) {
     super(...args);
+    this.textRegexp = /(?:(?:([^|]{0,256}))(?:\|?(.{0,4096})))/;
+    this.messageURLRegex = /(?:(?:\/)?(\d+))+/;
     this.data = this.setName('selectroles')
       .setDescription('Select menu roles')
       .setDefaultPermission(false)
@@ -25,6 +27,8 @@ module.exports = class extends SlashCommand {
           .setDescription('Item emoji'))
         .addBooleanOption(option => option.setName('menu_disabled')
           .setDescription('Set menu disabled'))
+        .addStringOption(option => option.setName('menu_place_holder')
+          .setDescription('Menu place holder'))
         .addStringOption(option => option.setName('text')
           .setDescription('Text: Title | Description'))
         .addChannelOption(option => option.setName('channel')
@@ -38,17 +42,37 @@ module.exports = class extends SlashCommand {
             .setDescription('Channel')
             .setRequired(true)
             .addChannelTypes(GuildTextChannelTypes))
-          .addStringOption(option => option.setName('id')
+          .addStringOption(option => option.setName('message_id')
             .setDescription('Autocomplete | Message id | Message URL')
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('text')
             .setDescription('Text: Title | Description')
-            .setRequired(true))));
+            .setRequired(true)))
+        .addSubcommand(subcommand => subcommand.setName('menu')
+          .setDescription('Edit select menu')
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Channel')
+            .setRequired(true)
+            .addChannelTypes(GuildTextChannelTypes))
+          .addStringOption(option => option.setName('message_id')
+            .setDescription('Autocomplete | Message id | Message URL')
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addBooleanOption(option => option.setName('menu_disabled')
+            .setDescription('Set menu disabled'))
+          .addStringOption(option => option.setName('menu_place_holder')
+            .setDescription('Menu place holder'))));
   }
 
   async execute(interaction = this.CommandInteraction) {
-    const { memberPermissions, options } = interaction;
+    const { locale, memberPermissions, options } = interaction;
+
+    if (!interaction.inGuild())
+      return interaction.reply({
+        content: this.t('Error! This command can only be used on one server.', { locale }),
+        ephemeral: true,
+      });
 
     if (!memberPermissions.has('ADMINISTRATOR')) {
       if (interaction.isAutocomplete()) return interaction.respond([]);
@@ -70,10 +94,14 @@ module.exports = class extends SlashCommand {
     const { client, guild, options } = interaction;
 
     const role = options.getRole('role');
-    const label = options.getString('item_name');
+    const label = options.getString('item_name') || role.name;
     const description = options.getString('item_description');
-    const _default = options.getString('item_default');
+    const _default = options.getBoolean('item_default');
     const item_emoji = options.getString('item_emoji');
+    const menu_disabled = options.getBoolean('menu_disabled');
+    const menu_place_holder = options.getString('menu_place_holder') || '';
+    const [, title, embed_desc] = options.getString('text')?.match(this.textRegexp) || [];
+    const channel = options.getChannel('channel') || interaction.channel;
 
     const emoji = client.emojis.resolveIdentifier(item_emoji) ||
       client.emojis.resolve(item_emoji) ||
@@ -81,16 +109,36 @@ module.exports = class extends SlashCommand {
       await guild.emojis.fetch(item_emoji).catch(() => null) ||
       null;
 
-    const select = new MessageSelectMenu()
-      .setCustomId()
-      .setDisabled()
+    const newCustomId = {
+      command: this.data.name,
+      count: 0,
+      date: Date.now(),
+    };
+
+    const value = JSON.stringify({
+      count: 0,
+      date: Date.now(),
+      roleId: role.id,
+    });
+
+    const selectMenu = new MessageSelectMenu()
+      .setCustomId(JSON.stringify(newCustomId))
+      .setDisabled(menu_disabled)
       .setOptions([{
-        label,
+        label: `${label} 0`,
         value,
         description,
         default: _default,
         emoji,
       }])
-      .setPlaceholder();
+      .setPlaceholder(menu_place_holder);
+
+    const components = [new MessageActionRow().setComponents(selectMenu)];
+
+    const embeds = [new MessageEmbed().setColor('RANDOM')
+      .setTitle(title || embed_desc ? '' : 'SelectRoles')
+      .setDescription(embed_desc || '')];
+
+    channel.send({ components, embeds });
   }
 };

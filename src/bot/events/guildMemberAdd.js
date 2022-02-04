@@ -31,8 +31,10 @@ module.exports = class extends Event {
     const backup = user.backups.find(b => b.guildId === user.oldGuild);
 
     if (backup) {
-      if (!backup.premium)
+      if (!backup.premium) {
+        backup.data.bans = [];
         backup.data.emojis = [];
+      }
 
       await Backup.load(backup.data, guild, {
         clearGuildBeforeRestore: true,

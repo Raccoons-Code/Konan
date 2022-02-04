@@ -40,17 +40,11 @@ module.exports = class extends ButtonInteraction {
 
     const { label } = component;
 
-    const name = label.replace(RegExp(`\\s${oldCustomId.count}$`), `${newCustomId.count}`);
+    const name = label.replace(RegExp(`\\s${oldCustomId.count}$`), ` ${newCustomId.count}`);
 
     component.setLabel(`${name}`);
 
-    const components = message.components.map(c => {
-      if (c.components[0].type !== 'BUTTON') return c;
-
-      c.components = c.components.map(b => b.customId === customId ? component : b);
-
-      return c;
-    });
+    const { components } = message;
 
     interaction.update({ components });
   }

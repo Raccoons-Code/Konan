@@ -56,7 +56,7 @@ module.exports = class extends Event {
 
 	SELECT_MENU({ client, customId } = this.SelectMenuInteraction) {
 		const { command } = this.util.parseJSON(customId);
-		return client.commands.select_component.get(command);
+		return client.commands.selectmenu_component.get(command);
 	}
 
 	USER({ client, commandName } = this.UserContextMenuInteraction) {

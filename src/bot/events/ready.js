@@ -73,10 +73,15 @@ module.exports = class extends Event {
 	async restoreGuild(guild, member, user) {
 		const backup = user.backups.find(b => b.userId === user.id);
 
-		if (backup)
+		if (backup) {
+			if (!backup.premium) {
+				backup.data.bans = [];
+				backup.data.emojis = [];
+			}
+
 			await Backup.load(backup.data, guild,
 				{ clearGuildBeforeRestore: true, maxMessagesPerChannel: backup.premium ? 20 : 0 });
-
+		}
 		const m = backup?.data.channels.categories.reduce((pca, cca) =>
 			pca + (cca.children?.reduce((pch, cch) => pch + (cch.messages?.length || 0) || 0), 0), 0) || 0;
 
