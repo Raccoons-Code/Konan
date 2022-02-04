@@ -218,7 +218,7 @@ module.exports = class extends SlashCommand {
 
     message.components[0].addComponents([button]);
 
-    const components = message.components;
+    const { components } = message;
 
     message.edit({ components }).then(() =>
       interaction.editReply('Button successfully added to Button role.')).catch(() =>
@@ -243,7 +243,7 @@ module.exports = class extends SlashCommand {
       const messages = channel.messages.cache.size ? channel.messages.cache : await channel.messages.fetch();
 
       const messages_filtered = messages.filter(m => m.author.id === client.user.id && m.embeds.length &&
-        m.components.some(c => c.components[0].type === 'BUTTON') ? focused.value.length &&
+        m.components.some(row => row.components[0].type === 'BUTTON') ? focused.value.length &&
         regex.test(m.embeds[0]?.title) || regex.test(m.embeds[0]?.description) : false);
 
       const messages_array = messages_filtered.toJSON();
@@ -302,7 +302,7 @@ module.exports = class extends SlashCommand {
     }
 
     if (subcommand === 'button') {
-      const button = options.getString('button');
+      const buttonId = options.getString('button');
       const role = options.getRole('role');
       const button_name = options.getString('button_name');
       const button_style = options.getString('button_style');
@@ -314,29 +314,29 @@ module.exports = class extends SlashCommand {
         guild.emojis.resolve(button_emoji) ||
         await guild.emojis.fetch(button_emoji).catch(() => null) : null;
 
-      const components = message.components.map(c => {
-        if (c.components[0].type !== 'BUTTON') return c;
+      const components = message.components.map(row => {
+        if (row.components[0].type !== 'BUTTON') return row;
 
-        c.components = c.components.map(b => {
-          if (b.customId !== button) return b;
+        row.components = row.components.map(button => {
+          if (button.customId !== buttonId) return button;
 
-          const oldCustomId = JSON.parse(b.customId);
+          const oldCustomId = JSON.parse(button.customId);
 
           const newCustomId = {
             ...oldCustomId,
             roleId: role?.id || oldCustomId.roleId,
           };
 
-          b.setCustomId(JSON.stringify(newCustomId));
-          b.setDisabled(typeof button_disabled === 'boolean' ? button_disabled : b.disabled);
-          b.setEmoji(emoji || b.emoji);
-          b.setLabel(`${button_name || b.label} ${oldCustomId.count}`);
-          b.setStyle(button_style || b.style);
+          button.setCustomId(JSON.stringify(newCustomId));
+          button.setDisabled(typeof button_disabled === 'boolean' ? button_disabled : button.disabled);
+          button.setEmoji(emoji || button.emoji);
+          button.setLabel(`${button_name || button.label} ${oldCustomId.count}`);
+          button.setStyle(button_style || button.style);
 
-          return b;
+          return button;
         });
 
-        return c;
+        return row;
       });
 
       return message.edit({ components }).then(() =>
@@ -434,7 +434,7 @@ module.exports = class extends SlashCommand {
 
     const channel = options.getChannel('channel');
     const message_id = options.getString('message_id')?.match(this.messageURLRegex)[1];
-    const button = options.getString('button');
+    const buttonId = options.getString('button');
 
     /** @type {Message} */
     const message = channel.messages.resolve(message_id) ||
@@ -444,15 +444,15 @@ module.exports = class extends SlashCommand {
 
     if (!message.editable) return interaction.editReply('Message not editable.');
 
-    const components = message.components.map(c => {
-      if (c.components[0].type !== 'BUTTON') return c;
+    const components = message.components.map(row => {
+      if (row.components[0].type !== 'BUTTON') return row;
 
-      c.components = c.components.filter(b => b.customId !== button);
+      row.components = row.components.filter(button => button.customId !== buttonId);
 
-      return c;
+      return row;
     });
 
-    const boolean = components.some(c => c.components.length);
+    const boolean = components.some(row => row.components.length);
 
     message.edit({ components: boolean ? components : [] }).then(() =>
       interaction.editReply('button successfully removed.')).catch(() =>
@@ -513,14 +513,14 @@ module.exports = class extends SlashCommand {
 
       if (!message.editable) return interaction.respond([]);
 
-      const component = message.components.find(c => c.components[0].type === 'BUTTON');
+      const component = message.components.find(row => row.components[0].type === 'BUTTON');
 
       const { components } = component || {};
 
       guild.roles.cache.size || await guild.roles.fetch();
 
-      const components_filtered = components?.filter(b => {
-        const { roleId } = JSON.parse(b.customId);
+      const components_filtered = components?.filter(button => {
+        const { roleId } = JSON.parse(button.customId);
 
         const role = guild.roles.resolve(roleId);
 

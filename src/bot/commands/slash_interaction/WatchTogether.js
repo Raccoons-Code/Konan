@@ -36,13 +36,12 @@ module.exports = class extends SlashCommand {
         content: `${invite.code}`,
         fetchReply: true,
       }), 60)).catch(error => {
-        console.log(error);
         if (error.name === 'SyntaxError')
           return interaction.reply({
             content: this.t('This activity does not exist.', { locale }),
             ephemeral: true,
           });
-        console.log(error);
+        this.client.sendError(error);
         interaction.reply({
           content: this.t('There was an error while executing this command!', { locale }),
           ephemeral: true,
