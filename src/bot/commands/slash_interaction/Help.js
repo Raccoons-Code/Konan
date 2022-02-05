@@ -44,9 +44,9 @@ module.exports = class extends SlashCommand {
   async executeCommand(interaction = this.CommandInteraction, commandName) {
     const { client } = interaction;
 
-    const commands = client.commands.slash_interaction;
+    const { slash_interaction } = client.commands;
 
-    const command = commands.get(commandName);
+    const command = slash_interaction.get(commandName);
 
     if (!command)
       return interaction.editReply('Error! command not found.');
@@ -70,8 +70,7 @@ module.exports = class extends SlashCommand {
 
     const { slash_interaction } = client.commands;
 
-    const filtered = commandName ?
-      slash_interaction.filter(c => regex.test(c.name) || regex.test(c.description)) : slash_interaction;
+    const filtered = slash_interaction.filter(c => c.defaultPermission !== false && (regex.test(c.name) || regex.test(c.description)));
 
     const slashcommands = filtered.toJSON();
 
@@ -92,7 +91,7 @@ module.exports = class extends SlashCommand {
   /**
    * @param {Array<DataOptions|Options>} dataOptions
    * @param {string} [text='']
-   * @param {number} [index='']
+   * @param {string} [index='']
    */
   convertOptionsToString(dataOptions, text = '', index = '') {
     for (let i = 0; i < dataOptions.length; i++) {
