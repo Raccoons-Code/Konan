@@ -26,6 +26,7 @@ module.exports = class extends Command {
 
 		if (!number || number > 100) {
 			embeds[0].setDescription(this.t('{{author}}, enter an integer from 1 to 100.', { locale, author }));
+
 			return this.timeout_erase(await message.reply({ embeds }), 10);
 		}
 
@@ -35,37 +36,45 @@ module.exports = class extends Command {
 		const { value, user = [] } = db.get(`${guildId}.${author.id}.guess`);
 
 		if (number === value) {
-			embeds[0].setDescription(this.t('{{author}}, {{number}} is correct, congratulations!', { locale, author, number }))
+			embeds[0]
+				.setDescription(this.t('{{author}}, {{number}} is correct, congratulations!', { locale, author, number }))
 				.addFields({
 					name: `${this.t('Previous guesses', { locale })} ${user?.length + 1}/10`,
 					value: `${user?.join(' ') || '-'}`,
 				});
 
 			db.delete(`${guildId}.${author.id}.guess`);
+
 			return this.timeout_erase(await message.reply({ embeds }), 10);
 		}
 
 		if (this.util.isDuplicate(user, number)) {
 			if (number < value)
-				embeds[0].setDescription(this.t('{{author}}, you have already tried {{number}}!\n:arrow_down_small: This is minor!', { locale, author, number }));
+				embeds[0]
+					.setDescription(this.t('{{author}}, you have already tried {{number}}!\n:arrow_down_small: This is minor!', { locale, author, number }));
 
 			if (number > value)
-				embeds[0].setDescription(this.t('{{author}}, you have already tried {{number}}!\n:arrow_up_small: This is greater!', { locale, author, number }));
+				embeds[0]
+					.setDescription(this.t('{{author}}, you have already tried {{number}}!\n:arrow_up_small: This is greater!', { locale, author, number }));
 
 			embeds[0].addFields({
 				name: `${this.t('Previous guesses', { locale })} ${user?.length}/10`,
 				value: `${user?.join(' ') || '-'}`,
 			});
+
 			return this.timeout_erase(await message.reply({ embeds }), 10);
 		}
 
 		if (user?.length === 9) {
-			embeds[0].setDescription(this.t('{{author}}, {{number}} is incorrect, game over!', { locale, author, number }))
+			embeds[0]
+				.setDescription(this.t('{{author}}, {{number}} is incorrect, game over!', { locale, author, number }))
 				.addFields({
 					name: `${this.t('Previous guesses', { locale })} ${user.length + 1}/10`,
 					value: `${user.join(' ')}`,
 				});
+
 			db.delete(`${guildId}.${author.id}.guess`);
+
 			return this.timeout_erase(await message.reply({ embeds }), 10);
 		}
 
@@ -84,7 +93,9 @@ module.exports = class extends Command {
 				});
 
 		user.push(number);
+
 		db.set(`${guildId}.${author.id}.guess.user`, user);
+
 		this.timeout_erase(await message.reply({ embeds }), 10);
 	}
 };
