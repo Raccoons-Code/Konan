@@ -1,4 +1,5 @@
 const { ButtonInteraction } = require('../../classes');
+const db = require('quick.db');
 
 module.exports = class extends ButtonInteraction {
   constructor(...args) {
@@ -10,63 +11,53 @@ module.exports = class extends ButtonInteraction {
   }
 
   async execute(interaction = this.ButtonInteraction) {
-    const { customId, member } = interaction;
+    const { customId, message, user } = interaction;
 
-    const parsedCustomId = JSON.parse(customId);
+    /** @type {customId} */
+    const parsedCustomId = this.util.parseJSON(customId);
 
-    if (!RegExp(member.id).test(customId)) return;
+    const { c, p, v } = parsedCustomId;
 
-    const players = [1, 2].reduce((acc, key, i) => {
-      if (parsedCustomId[key][member.id] >= 0) {
-        acc.player1 = member.id;
+    const players = p.reduce((acc, value, i) => {
+      if (value === user.id) {
+        acc.player1 = user.id;
         acc.changed = i;
 
         return acc;
       }
 
-      acc.player2 = Object.keys(parsedCustomId[key])[0];
+      acc.player2 = p[i];
 
       return acc;
     }, {});
 
-    const { changed, player2 } = players;
+    if (!db.has(`${message.id}`))
+      db.set(`${message.id}`, { [user.id]: v, p });
 
-    if (parsedCustomId[changed ? 1 : 2][player2] > 0)
-      return this.mathPoint(interaction, parsedCustomId, players);
+    const { player2 } = players;
 
-    this.setComponents(interaction, parsedCustomId, players);
-  }
+    if (db.get(`${message.id}.${player2}`))
+      return db.set(`${message.id}.${user.id}`, v) && this.mathPoint(interaction, parsedCustomId, players);
 
-  setComponents(interaction = this.ButtonInteraction, parsedCustomId, players) {
-    const { message } = interaction;
+    db.set(`${message.id}.${user.id}`, v);
 
-    const components = message.components.map((component = this.MessageActionRow) => {
-      component.components = component.components.map(button => {
-        const oldCustomId = JSON.parse(button.customId);
-
-        const { changed, player1 } = players;
-
-        oldCustomId[changed ? 2 : 1][player1] = parsedCustomId.v;
-
-        button.customId = JSON.stringify(oldCustomId);
-
-        return button;
-      });
-
-      return component;
-    });
-
-    interaction.update({ components });
+    interaction.deferUpdate();
   }
 
   async mathPoint(interaction = this.ButtonInteraction, parsedCustomId, players) {
     const { message } = interaction;
 
+    const { p } = parsedCustomId;
+
     const { changed, player1, player2 } = players;
 
-    const value1 = parsedCustomId.v;
-    const value2 = parsedCustomId[changed ? 1 : 2][player2];
+    const values = db.get(`${message.id}`);
+
+    const value1 = values[player1];
+    const value2 = values[player2];
     const result = this.util.jankenpon.spock(value1, value2);
+
+    console.log(result, value1, value2, changed);
 
     const embeds = message.embeds.map((embed = this.MessageEmbed) => {
       embed.fields = embed.fields.map((field, i) => {
@@ -78,13 +69,13 @@ module.exports = class extends ButtonInteraction {
           return field;
         }
 
-        if (result.result === 'Won' ? changed ? i === 2 : i === 0 : false) {
+        if (result.res === 1 ? changed ? i === 2 : i === 0 : false) {
           field.value = `${parseInt(value) + 1}`;
 
           return field;
         }
 
-        if (result.result === 'Lost' ? changed ? i === 0 : i === 2 : false) {
+        if (result.res === 2 ? changed ? i === 0 : i === 2 : false) {
           field.value = `${parseInt(value) + 1}`;
 
           return field;
@@ -98,21 +89,15 @@ module.exports = class extends ButtonInteraction {
       return embed;
     });
 
-    const components = message.components.map((component = this.MessageActionRow) => {
-      component.components = component.components.map(button => {
-        const oldCustomId = JSON.parse(button.customId);
+    db.delete(`${message.id}`);
 
-        oldCustomId[changed ? 2 : 1][player1] = 0;
-        oldCustomId[changed ? 1 : 2][player2] = 0;
-
-        button.customId = JSON.stringify(oldCustomId);
-
-        return button;
-      });
-
-      return component;
-    });
-
-    interaction.update({ components, embeds });
+    interaction.update({ embeds });
   }
 };
+
+/**
+ * @typedef customId
+ * @property {string} c command
+ * @property {array} p players id
+ * @property {number} v value
+ */

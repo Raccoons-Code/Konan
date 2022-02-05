@@ -38,17 +38,24 @@ module.exports = new class Jankenpon {
      * @param {number|string} [player2]
      */
     game(player1 = this.machine, player2 = this.machine) {
-        if (typeof player1 === 'number')
+        if (typeof player1 === 'number') {
+            const res = this.rules[this.index[player1]][this.index[player2]];
+
             return {
                 player1,
                 player2,
-                result: this.result[this.rules[this.index[player1]][this.index[player2]]],
+                result: this.result[res],
+                res,
             };
+        }
+
+        const res = this.rules[[player1][player2]];
 
         return {
             player1,
             player2,
             result: this.result[this.rules[player1][player2]],
+            res,
         };
     }
 
@@ -57,17 +64,24 @@ module.exports = new class Jankenpon {
      * @param {number|string} [player2]
      */
     spock(player1 = this.machine, player2 = this.machine) {
-        if (typeof player1 === 'number')
+        if (typeof player1 === 'number') {
+            const res = this.rulesSpock[this.index[player1]][this.index[player2]];
+
             return {
                 player1,
                 player2,
-                result: this.result[this.rulesSpock[this.index[player1]][this.index[player2]]],
+                result: this.result[res],
+                res,
             };
+        }
+
+        const res = this.rulesSpock[[player1][player2]];
 
         return {
             player1,
             player2,
-            result: this.result[this.rulesSpock[player1][player2]],
+            result: this.result[res],
+            res,
         };
     }
 };

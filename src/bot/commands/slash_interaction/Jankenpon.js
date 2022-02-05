@@ -72,17 +72,17 @@ module.exports = class extends SlashCommand {
 
       const player2 = options.getMember('user');
 
-      embeds[0].setDescription(`${user} - \`${user.id}\`\n\n${player2} - \`${player2.id}\``)
-        .addFields([{ name: `${user.id}`, value: '0', inline: true },
+      embeds[0].setDescription(`${user} - ${player2}`)
+        .addFields([{ name: `${name}`, value: '0', inline: true },
         { name: 'Result', value: '-', inline: true },
-        { name: `${player2.id}`, value: '0', inline: true }]);
+        { name: `${player2.nickname || player2.user.username}`, value: '0', inline: true }]);
 
       const buttons = [new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, 1: { [user.id]: 0 }, 2: { [player2.id]: 0 }, v: 1 })),
+        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
       new MessageButton().setLabel('Paper').setEmoji('✋').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, 1: { [user.id]: 0 }, 2: { [player2.id]: 0 }, v: 2 })),
+        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 2 })),
       new MessageButton().setLabel('Scissors').setEmoji('✌️').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, 1: { [user.id]: 0 }, 2: { [player2.id]: 0 }, v: 3 }))];
+        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 3 }))];
 
       const components = [new MessageActionRow().setComponents(buttons)];
 
@@ -120,21 +120,21 @@ module.exports = class extends SlashCommand {
 
       const player2 = options.getMember('user');
 
-      embeds[0].setDescription(`${user} - \`${user.id}\`\n\n${player2} - \`${player2.id}\``)
-        .addFields([{ name: `${user.id}`, value: '0', inline: true },
+      embeds[0].setDescription(`${user} - ${player2}`)
+        .addFields([{ name: `${name}`, value: '0', inline: true },
         { name: 'Result', value: '-', inline: true },
-        { name: `${player2.id}`, value: '0', inline: true }]);
+        { name: `${player2.nickname || player2.user.username}`, value: '0', inline: true }]);
 
       const buttons = [new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, 1: { [user.id]: 0 }, 2: { [player2.id]: 0 }, v: 1 })),
+        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
       new MessageButton().setLabel('Paper').setEmoji('✋').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, 1: { [user.id]: 0 }, 2: { [player2.id]: 0 }, v: 2 })),
+        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 2 })),
       new MessageButton().setLabel('Scissors').setEmoji('✌️').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, 1: { [user.id]: 0 }, 2: { [player2.id]: 0 }, v: 3 })),
+        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 3 })),
       new MessageButton().setLabel('Lizard').setEmoji('🦎').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, 1: { [user.id]: 0 }, 2: { [player2.id]: 0 }, v: 4 })),
+        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 4 })),
       new MessageButton().setLabel('Spock').setEmoji('🖖').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, 1: { [user.id]: 0 }, 2: { [player2.id]: 0 }, v: 5 }))];
+        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 5 }))];
 
       const components = [new MessageActionRow().setComponents(buttons)];
 
