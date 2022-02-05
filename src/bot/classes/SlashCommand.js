@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, Guild, GuildChannel } = require('discord.js');
+const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, DMChannel, Guild, GuildChannel, Message } = require('discord.js');
 const Client = require('./client');
 
 module.exports = class extends SlashCommandBuilder {
@@ -14,6 +14,14 @@ module.exports = class extends SlashCommandBuilder {
     }
   }
 
+  get buttonStyles() {
+    return ['DANGER', 'PRIMARY', 'SECONDARY', 'SUCCESS'];
+  }
+
+  get randomButtonStyle() {
+    return this.buttonStyles[this.util.mathRandom(3, 0)];
+  }
+
   async execute() {
     /** @type {AutocompleteInteraction} */
     this.AutocompleteInteraction;
@@ -21,10 +29,14 @@ module.exports = class extends SlashCommandBuilder {
     this.ButtonInteraction;
     /** @type {CommandInteraction} */
     this.CommandInteraction;
+    /** @type {DMChannel} */
+    this.DMChannel;
     /** @type {GuildChannel} */
     this.GuildChannel;
     /** @type {Guild} */
     this.Guild;
+    /** @type {Message} */
+    this.Message;
   }
 
   /**
@@ -36,5 +48,14 @@ module.exports = class extends SlashCommandBuilder {
     if (!message) return console.error('Unable to delete undefined message.');
     await this.util.waitAsync(timeout * 1000);
     return await message.delete().catch(() => null);
+  }
+
+  /**
+   * @param {GuildChannel} channel
+   * @param {string} id
+   * @return {Promise<Message>}
+   */
+  async getMessageById(channel, id) {
+    return channel.messages.resolve(id) || await channel.messages.fetch(id);
   }
 };

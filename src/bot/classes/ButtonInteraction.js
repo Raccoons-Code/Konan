@@ -1,4 +1,4 @@
-const { ButtonInteraction } = require('discord.js');
+const { ButtonInteraction, MessageActionRow, MessageEmbed } = require('discord.js');
 const Client = require('./client');
 
 module.exports = class {
@@ -15,5 +15,9 @@ module.exports = class {
   async execute() {
     /** @type {ButtonInteraction} */
     this.ButtonInteraction;
+    /** @type {MessageActionRow} */
+    this.MessageActionRow;
+    /** @type {MessageEmbed} */
+    this.MessageEmbed;
   }
 };

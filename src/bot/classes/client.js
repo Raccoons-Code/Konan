@@ -10,7 +10,6 @@ module.exports = class extends Client {
 	/** @param {ClientOptions} [options] */
 	constructor(options = {}) {
 		super({
-			allowedMentions: { parse: ['users'] },
 			failIfNotExists: false,
 			intents: events.intents,
 			partials: events.partials,
@@ -23,7 +22,7 @@ module.exports = class extends Client {
 	}
 
 	async login(token = this.token) {
-		process.on('unhandledRejection', (reason, promise) => this.sendError(reason));
+		process.on('unhandledRejection', (...args) => this.sendError(...args));
 		commands.init(this);
 		events.init(this);
 		this.commands = commands.commands;
@@ -42,13 +41,13 @@ module.exports = class extends Client {
 		const guildId = GUILD_ID.split(',')[0];
 		const channelId = ERROR_CHANNEL.split(',')[0];
 
-		const guild = this.clientGuild ? this.clientGuild :
-			this.clientGuild = this.guilds.resolve(guildId) || await this.guilds.fetch(guildId);
+		const guild = this.supportGuild ? this.supportGuild :
+			this.supportGuild = this.guilds.resolve(guildId) || await this.guilds.fetch(guildId);
 
 		if (!guild) return console.error(reason);
 
-		const channel = this.clientChannel ? this.clientChannel :
-			this.clientChannel = guild.channels.resolve(channelId) || await guild.channels.fetch(channelId);
+		const channel = this.supportErrorChannel ? this.supportErrorChannel :
+			this.supportErrorChannel = guild.channels.resolve(channelId) || await guild.channels.fetch(channelId);
 
 		if (!channel || !channel.viewable) return console.error(reason);
 

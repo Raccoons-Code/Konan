@@ -183,9 +183,7 @@ module.exports = class extends SlashCommand {
     const channel = options.getChannel('channel');
     const message_id = options.getString('message_id')?.match(this.messageURLRegex)[1];
 
-    /** @type {Message} */
-    const message = channel.messages.resolve(message_id) ||
-      await channel.messages.fetch(message_id);
+    const message = await this.getMessageById(channel, message_id);
 
     if (!message) return interaction.editReply('Message not found.');
 
@@ -237,8 +235,8 @@ module.exports = class extends SlashCommand {
 
     if (focused.name === 'message_id') {
       const channelId = options.get('channel').value;
-      const channel = guild.channels.resolve(channelId) ||
-        await guild.channels.fetch(channelId);
+
+      const channel = guild.channels.resolve(channelId) || await guild.channels.fetch(channelId);
 
       const messages = channel.messages.cache.size ? channel.messages.cache : await channel.messages.fetch();
 
@@ -261,11 +259,11 @@ module.exports = class extends SlashCommand {
 
         if (title || description)
           res.push({
-            name: `${title || description} | ${id}`,
+            name: `${id}`,
             value: `${id}`,
           });
 
-        if (i === 24) break;
+        if (res.length === 25) break;
       }
     }
 
@@ -280,9 +278,7 @@ module.exports = class extends SlashCommand {
     const channel = options.getChannel('channel');
     const message_id = options.getString('message_id').match(this.messageURLRegex)[1];
 
-    /** @type {Message} */
-    const message = channel.messages.resolve(message_id) ||
-      await channel.messages.fetch(message_id);
+    const message = await this.getMessageById(channel, message_id);
 
     if (!message) return interaction.editReply('Message not found.');
 
@@ -382,7 +378,7 @@ module.exports = class extends SlashCommand {
 
         if (title || description)
           res.push({
-            name: `${title}${description ? ` | ${description}` : ''} | ${id}`,
+            name: `${id}`,
             value: `${id}`,
           });
 
@@ -393,9 +389,7 @@ module.exports = class extends SlashCommand {
     if (focused.name === 'button') {
       const message_id = options.getString('message_id');
 
-      /** @type {Message} */
-      const message = channel.messages.resolve(message_id) ||
-        await channel.messages.fetch(message_id);
+      const message = await this.getMessageById(channel, message_id);
 
       if (!message) return interaction.respond([]);
 
@@ -436,9 +430,7 @@ module.exports = class extends SlashCommand {
     const message_id = options.getString('message_id')?.match(this.messageURLRegex)[1];
     const buttonId = options.getString('button');
 
-    /** @type {Message} */
-    const message = channel.messages.resolve(message_id) ||
-      await channel.messages.fetch(message_id);
+    const message = await this.getMessageById(channel, message_id);
 
     if (!message) return interaction.editReply('Message not found.');
 
@@ -494,7 +486,7 @@ module.exports = class extends SlashCommand {
 
         if (title || description)
           res.push({
-            name: `${title || description} | ${id}`,
+            name: `${id}`,
             value: `${id}`,
           });
 
@@ -505,9 +497,7 @@ module.exports = class extends SlashCommand {
     if (focused.name === 'button') {
       const message_id = options.getString('message_id')?.match(this.messageURLRegex)[1];
 
-      /** @type {Message} */
-      const message = channel.messages.resolve(message_id) ||
-        await channel.messages.fetch(message_id);
+      const message = await this.getMessageById(channel, message_id);
 
       if (!message) return interaction.respond([]);
 
@@ -516,8 +506,6 @@ module.exports = class extends SlashCommand {
       const component = message.components.find(row => row.components[0].type === 'BUTTON');
 
       const { components } = component || {};
-
-      guild.roles.cache.size || await guild.roles.fetch();
 
       const components_filtered = components?.filter(button => {
         const { roleId } = JSON.parse(button.customId);

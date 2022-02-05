@@ -3,6 +3,7 @@ const mathRandom = require('./mathRandom');
 /** @description rules of "rock, paper, scissors" game. */
 module.exports = new class Jankenpon {
     constructor() {
+        this.index = [null, 'rock', 'paper', 'scissors', 'lizard', 'spock'];
         this.rules = {
             rock: { rock: 0, scissors: 1, paper: 2 },
             paper: { paper: 0, rock: 1, scissors: 2 },
@@ -33,10 +34,17 @@ module.exports = new class Jankenpon {
     }
 
     /**
-     * @param {string} [player1]
-     * @param {string} [player2]
+     * @param {number|string} [player1]
+     * @param {number|string} [player2]
      */
     game(player1 = this.machine, player2 = this.machine) {
+        if (typeof player1 === 'number')
+            return {
+                player1,
+                player2,
+                result: this.result[this.rules[this.index[player1]][this.index[player2]]],
+            };
+
         return {
             player1,
             player2,
@@ -44,7 +52,18 @@ module.exports = new class Jankenpon {
         };
     }
 
+    /**
+     * @param {number|string} [player1]
+     * @param {number|string} [player2]
+     */
     spock(player1 = this.machine, player2 = this.machine) {
+        if (typeof player1 === 'number')
+            return {
+                player1,
+                player2,
+                result: this.result[this.rulesSpock[this.index[player1]][this.index[player2]]],
+            };
+
         return {
             player1,
             player2,

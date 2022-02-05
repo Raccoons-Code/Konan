@@ -41,8 +41,8 @@ module.exports = class extends Event {
 
 	// if (!/^(?:\{)(?:(?:("\w+":("\w+"|\d+|\[.*\]|\{.*\}))(?:,|\}$))+)$/.test(customId)) return;
 	BUTTON({ client, customId } = this.ButtonInteraction) {
-		const { command } = this.util.parseJSON(customId);
-		return client.commands.button_component.get(command);
+		const { c, command } = this.util.parseJSON(customId);
+		return client.commands.button_component.get(c || command);
 	}
 
 	CHAT_INPUT({ client, commandName } = this.CommandInteraction) {
@@ -54,8 +54,8 @@ module.exports = class extends Event {
 	}
 
 	SELECT_MENU({ client, customId } = this.SelectMenuInteraction) {
-		const { command } = this.util.parseJSON(customId);
-		return client.commands.selectmenu_component.get(command);
+		const { c, command } = this.util.parseJSON(customId);
+		return client.commands.selectmenu_component.get(c || command);
 	}
 
 	USER({ client, commandName } = this.UserContextMenuInteraction) {
