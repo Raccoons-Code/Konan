@@ -1,4 +1,4 @@
-const { ButtonInteraction, MessageActionRow, MessageEmbed } = require('discord.js');
+const { ButtonInteraction, MessageActionRow, MessageEmbed, MessageSelectOptionData } = require('discord.js');
 const Client = require('./client');
 
 module.exports = class {
@@ -19,5 +19,7 @@ module.exports = class {
     this.MessageActionRow;
     /** @type {MessageEmbed} */
     this.MessageEmbed;
+    /** @type {MessageSelectOptionData} */
+    this.MessageSelectOptionData;
   }
 };

@@ -1,11 +1,15 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, DMChannel, Guild, GuildChannel, Message } = require('discord.js');
+const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, DMChannel, Guild, GuildChannel, Message, MessageActionRow, MessageSelectOptionData } = require('discord.js');
 const Client = require('./client');
 
 module.exports = class extends SlashCommandBuilder {
   /** @param {Client} client */
   constructor(client) {
     super();
+    this.labelRegex = /(.{1,90})/;
+    this.limitRegex = /(.{1,100})/;
+    this.messageURLRegex = /(?:(?:\/)?(\d+))+/;
+    this.textRegexp = /(?:(?:([^|]{0,256}))(?:\|?(.{0,4096})))/;
     if (client?.ready) {
       this.client = client;
       this.prisma = client.prisma;
@@ -37,6 +41,10 @@ module.exports = class extends SlashCommandBuilder {
     this.Guild;
     /** @type {Message} */
     this.Message;
+    /** @type {MessageActionRow} */
+    this.MessageActionRow;
+    /** @type {MessageSelectOptionData} */
+    this.MessageSelectOptionData;
   }
 
   /**

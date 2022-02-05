@@ -20,6 +20,7 @@ module.exports = class extends SelectMenuInteraction {
     for (let i = 0; i < values.length; i++) {
       const value = values[i];
 
+      /** @type {optionValue} */
       const { roleId } = JSON.parse(value);
 
       const role = await member.roles.resolve(roleId);
@@ -36,6 +37,7 @@ module.exports = class extends SelectMenuInteraction {
   setComponents(interaction = this.SelectMenuInteraction, roles) {
     const { customId, component, message, values } = interaction;
 
+    /** @type {customId} */
     const oldCustomId = JSON.parse(customId);
 
     const { add, remove } = roles;
@@ -50,7 +52,7 @@ module.exports = class extends SelectMenuInteraction {
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
 
-      if (!values.includes(option.value)) return;
+      if (!values.includes(option.value)) continue;
 
       const oldvalue = JSON.parse(option.value);
 
@@ -61,6 +63,10 @@ module.exports = class extends SelectMenuInteraction {
         ...oldvalue,
         count: oldvalue.count + (add1 + rem1),
       };
+
+      const [, label] = option.label.match(/(?:(.+)?\s(\d+))+/);
+
+      option.label = `${label} ${newValue.count}`;
 
       option.value = JSON.stringify(newValue);
     }
@@ -73,3 +79,17 @@ module.exports = class extends SelectMenuInteraction {
     interaction.update({ components });
   }
 };
+
+/**
+ * @typedef customId
+ * @property {string} command
+ * @property {number} count
+ * @property {number} date
+ */
+
+/**
+ * @typedef optionValue
+ * @property {number} count
+ * @property {number} date
+ * @property {string} roleId
+ */

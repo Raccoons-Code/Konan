@@ -7,11 +7,8 @@ const GuildTextChannelTypes = [GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THRE
 module.exports = class extends SlashCommand {
   constructor(...args) {
     super(...args);
-    this.textRegexp = /(?:(?:([^|]{0,256}))(?:\|?(.{0,4096})))/;
-    this.messageURLRegex = /(?:(?:\/)?(\d+))+/;
     this.data = this.setName('selectroles')
       .setDescription('Select menu roles')
-      .setDefaultPermission(false)
       .addSubcommand(subcommand => subcommand.setName('setup')
         .setDescription('New select menu role')
         .addRoleOption(option => option.setName('role')
@@ -74,7 +71,7 @@ module.exports = class extends SlashCommand {
             .setRequired(true)
             .addChannelTypes(GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
-            .setDescription('Autocomplete | Message id | Message URL')
+            .setDescription('Message id | Message URL')
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('menu')
@@ -85,6 +82,8 @@ module.exports = class extends SlashCommand {
             .setDescription('Menu item')
             .setAutocomplete(true)
             .setRequired(true))
+          .addRoleOption(option => option.setName('role')
+            .setDescription('Role'))
           .addStringOption(option => option.setName('item_name')
             .setDescription('Item name'))
           .addStringOption(option => option.setName('item_description')
@@ -92,7 +91,54 @@ module.exports = class extends SlashCommand {
           .addBooleanOption(option => option.setName('item_default')
             .setDescription('Set item default'))
           .addStringOption(option => option.setName('item_emoji')
-            .setDescription('Item emoji'))));
+            .setDescription('Item emoji'))))
+      .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('add')
+        .setDescription('Add roles')
+        .addSubcommand(subcommand => subcommand.setName('item')
+          .setDescription('Edit selete menu item')
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Channel')
+            .setRequired(true)
+            .addChannelTypes(GuildTextChannelTypes))
+          .addStringOption(option => option.setName('message_id')
+            .setDescription('Message id | Message URL')
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addStringOption(option => option.setName('menu')
+            .setDescription('Menu')
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addRoleOption(option => option.setName('role')
+            .setDescription('Role')
+            .setRequired(true))
+          .addStringOption(option => option.setName('item_name')
+            .setDescription('Item name'))
+          .addStringOption(option => option.setName('item_description')
+            .setDescription('Item description'))
+          .addBooleanOption(option => option.setName('item_default')
+            .setDescription('Set item default'))
+          .addStringOption(option => option.setName('item_emoji')
+            .setDescription('Item emoji'))))
+      .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('remove')
+        .setDescription('Remove roles')
+        .addSubcommand(subcommand => subcommand.setName('item')
+          .setDescription('Edit selete menu item')
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Channel')
+            .setRequired(true)
+            .addChannelTypes(GuildTextChannelTypes))
+          .addStringOption(option => option.setName('message_id')
+            .setDescription('Message id | Message URL')
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addStringOption(option => option.setName('menu')
+            .setDescription('Menu')
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addStringOption(option => option.setName('item')
+            .setDescription('Menu item')
+            .setAutocomplete(true)
+            .setRequired(true))));
   }
 
   async execute(interaction = this.CommandInteraction) {
@@ -123,15 +169,15 @@ module.exports = class extends SlashCommand {
   async setup(interaction = this.CommandInteraction) {
     const { client, guild, options } = interaction;
 
-    const channel = options.getChannel('channel') || interaction.channel;
     const [, title, embed_desc] = options.getString('text')?.match(this.textRegexp) || [];
-    const menu_place_holder = options.getString('menu_place_holder')?.match(/(.{1,100})/)[1] || '';
-    const menu_disabled = options.getBoolean('menu_disabled');
-    const role = options.getRole('role');
-    const label = options.getString('item_name') || role.name;
-    const description = options.getString('item_description')?.match(/(.{1,100})/)[1];
     const _default = options.getBoolean('item_default');
+    const channel = options.getChannel('channel') || interaction.channel;
+    const description = options.getString('item_description')?.match(this.limitRegex)[1];
+    const menu_place_holder = options.getString('menu_place_holder')?.match(this.limitRegex)[1] || '';
+    const menu_disabled = options.getBoolean('menu_disabled');
     const item_emoji = options.getString('item_emoji');
+    const role = options.getRole('role');
+    const label = options.getString('item_name')?.match(this.labelRegex)[1] || role.name;
 
     const emoji = client.emojis.resolveIdentifier(item_emoji) ||
       client.emojis.resolve(item_emoji) ||
@@ -160,7 +206,8 @@ module.exports = class extends SlashCommand {
         default: _default,
         emoji,
       }])
-      .setPlaceholder(menu_place_holder);
+      .setPlaceholder(menu_place_holder)
+      .setMaxValues(1);
 
     const components = [new MessageActionRow().setComponents(selectMenu)];
 
@@ -169,6 +216,203 @@ module.exports = class extends SlashCommand {
       .setDescription(embed_desc || '')];
 
     channel.send({ components, embeds });
+  }
+
+  async edit(interaction = this.CommandInteraction) {
+    const { client, guild, options } = interaction;
+
+    const subcommand = options.getSubcommand();
+    const channel = options.getChannel('channel');
+    const message_id = options.getString('message_id');
+
+    const message = await this.getMessageById(channel, message_id);
+
+    if (!message) return interaction.editReply('Message not found');
+
+    if (!message.editable) return interaction.respond('Message not editable');
+
+    if (subcommand === 'message') {
+      const [, title, description] = options.getString('text').match(this.textRegexp);
+
+      const embeds = [new MessageEmbed().setColor('RANDOM')
+        .setTitle(title)
+        .setDescription(description)];
+
+      message.edit({ embeds });
+
+      return interaction.editReply('Success!');
+    }
+
+    const menu = options.getString('menu');
+
+    if (subcommand === 'menu') {
+      const menu_place_holder = options.getString('menu_place_holder')?.match(this.limitRegex)[1] || '';
+      const menu_disabled = options.getBoolean('menu_disabled');
+
+      const components = message.components.map(row => {
+        if (row.components[0].type !== 'SELECT_MENU') return row;
+
+        row.components.map(selectmenu => {
+          if (selectmenu.customId !== menu) return selectmenu;
+
+          selectmenu.setPlaceholder(menu_place_holder);
+
+          selectmenu.setDisabled(menu_disabled);
+
+          return selectmenu;
+        });
+
+        return row;
+      });
+
+      message.edit({ components });
+
+      return interaction.editReply('Success!');
+    }
+
+    const item = options.getString('item');
+
+    if (subcommand === 'item') {
+      const role = options.getRole('role');
+      const label = options.getString('item_name')?.match(this.labelRegex)[1];
+      const description = options.getString('item_description')?.match(this.limitRegex)[1];
+      const _default = options.getBoolean('item_default');
+      const item_emoji = options.getString('item_emoji');
+
+      const emoji = item_emoji ? client.emojis.resolveIdentifier(item_emoji) ||
+        client.emojis.resolve(item_emoji) ||
+        guild.emojis.resolve(item_emoji) ||
+        await guild.emojis.fetch(item_emoji).catch(() => null) || null : null;
+
+      const components = message.components.map(row => {
+        if (row.components[0].type !== 'SELECT_MENU') return row;
+
+        row.components.map(selectmenu => {
+          if (selectmenu.customId !== menu) return selectmenu;
+
+          selectmenu.options.map((option = this.MessageSelectOptionData) => {
+            if (option.value !== item) return option;
+
+            /** @type {optionValue} */
+            const { count, date } = this.util.parseJSON(option.value);
+
+            option.default = typeof _default === 'boolean' ? _default : option.default;
+            option.description = description ? description : option.description;
+            option.emoji = emoji ? `${emoji}` : option.emoji;
+            option.label = label ? `${label} ${count}` : option.label;
+            option.value = role ? JSON.stringify({ count, date, roleId: role.id }) : option.value;
+
+            return option;
+          });
+
+          return selectmenu;
+        });
+
+        return row;
+      });
+
+      message.edit({ components });
+
+      return interaction.editReply('Success!');
+    }
+  }
+
+  async add(interaction = this.CommandInteraction) {
+    const { client, guild, options } = interaction;
+
+    const channel = options.getChannel('channel');
+    const menu = options.getString('menu');
+    const message_id = options.getString('message_id');
+    const subcommand = options.getSubcommand();
+
+    const message = await this.getMessageById(channel, message_id);
+
+    if (!message) return interaction.editReply('Message not found');
+
+    if (!message.editable) return interaction.respond('Message not editable');
+
+    if (subcommand === 'item') {
+      const role = options.getRole('role');
+      const label = options.getString('item_name')?.match(this.labelRegex)[1] || role.name;
+      const description = options.getString('item_description')?.match(this.limitRegex)[1];
+      const _default = options.getBoolean('item_default');
+      const item_emoji = options.getString('item_emoji');
+
+      const emoji = client.emojis.resolveIdentifier(item_emoji) ||
+        client.emojis.resolve(item_emoji) ||
+        guild.emojis.resolve(item_emoji) ||
+        await guild.emojis.fetch(item_emoji).catch(() => null) || null;
+
+      const value = JSON.stringify({
+        count: 0,
+        date: Date.now(),
+        roleId: role.id,
+      });
+
+      const components = message.components.map(row => {
+        if (row.components[0].type !== 'SELECT_MENU') return row;
+
+        row.components.map(selectmenu => {
+          if (selectmenu.customId !== menu) return selectmenu;
+
+          selectmenu.addOptions([{
+            label: `${label} 0`,
+            value,
+            description,
+            default: _default,
+            emoji,
+          }]);
+
+          selectmenu.setMaxValues(selectmenu.options.length);
+
+          return selectmenu;
+        });
+
+        return row;
+      });
+
+      message.edit({ components });
+
+      return interaction.editReply('Success!');
+    }
+  }
+
+  async remove(interaction = this.CommandInteraction) {
+    const { options } = interaction;
+
+    const channel = options.getChannel('channel');
+    const item = options.getString('item');
+    const menu = options.getString('menu');
+    const message_id = options.getString('message_id');
+    const subcommand = options.getSubcommand();
+
+    const message = await this.getMessageById(channel, message_id);
+
+    if (!message) return interaction.editReply('Message not found');
+
+    if (!message.editable) return interaction.respond('Message not editable');
+
+    if (subcommand === 'item') {
+      const components = message.components.map((row = this.MessageActionRow) => {
+        if (row.components[0].type !== 'SELECT_MENU') return row;
+
+        row.components.map(selectmenu => {
+          if (selectmenu.customId !== menu) return selectmenu;
+
+          selectmenu.options = selectmenu.options.filter(option => option.value !== item);
+
+          selectmenu.setMaxValues(selectmenu.options.length);
+
+          return selectmenu;
+        });
+
+        return row;
+      });
+
+      message.edit({ components });
+
+      return interaction.editReply('Success!');
+    }
   }
 
   async editAutocomplete(interaction = this.AutocompleteInteraction) {
@@ -237,16 +481,13 @@ module.exports = class extends SlashCommand {
 
           const { customId, placeholder } = element;
 
-          const { rolesId } = JSON.parse(customId);
+          const menuName = `${placeholder ? placeholder : `Menu ${i2 + 1}`}`;
 
-          const roles = rolesId.map(roleId => guild.roles.resolve(roleId).name);
-
-          const menuName = `${placeholder ? placeholder : `Menu ${i2 + 1}`} | Roles: ${roles.join(' - ')}`;
-
-          res.push({
-            name: menuName.match(/(.{1,100})/)[1],
-            value: customId,
-          });
+          if (regex.test(menuName))
+            res.push({
+              name: menuName.match(this.limitRegex)[1],
+              value: customId,
+            });
         }
       }
     }
@@ -280,15 +521,16 @@ module.exports = class extends SlashCommand {
 
             const { default: _default, description, emoji, label, value } = option;
 
+            /** @type {optionValue} */
             const { roleId } = this.util.parseJSON(value);
 
             const role = guild.roles.resolve(roleId);
 
-            const optionName = `${emoji ? `${emoji} ` : ''}${label} | ${role.id}${_default ? ' | default' : ''}${description ? ` | ${description}` : ''}`;
+            const optionName = `${emoji ? `${emoji} ` : ''}${label} | ${role.name} | ${role.id}${_default ? ' | default' : ''}${description ? ` | ${description}` : ''}`;
 
             res.push({
-              name: optionName.match(/(.{1,100})/)[1],
-              value: value,
+              name: optionName.match(this.limitRegex)[1],
+              value,
             });
           }
         }
@@ -297,4 +539,26 @@ module.exports = class extends SlashCommand {
 
     interaction.respond(res);
   }
+
+  async addAutocomplete(interaction = this.AutocompleteInteraction) {
+    this.editAutocomplete(interaction);
+  }
+
+  async removeAutocomplete(interaction = this.AutocompleteInteraction) {
+    this.editAutocomplete(interaction);
+  }
 };
+
+/**
+ * @typedef customId
+ * @property {string} command
+ * @property {number} count
+ * @property {number} date
+ */
+
+/**
+ * @typedef optionValue
+ * @property {number} count
+ * @property {number} date
+ * @property {string} roleId
+ */
