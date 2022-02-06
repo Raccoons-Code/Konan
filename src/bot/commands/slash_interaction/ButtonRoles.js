@@ -231,11 +231,11 @@ module.exports = class extends SlashCommand {
             roleId: role?.id || oldCustomId.roleId,
           };
 
-          button.setCustomId(JSON.stringify(newCustomId));
-          button.setDisabled(typeof button_disabled === 'boolean' ? button_disabled : button.disabled);
-          button.setEmoji(emoji || button.emoji);
-          button.setLabel(`${button_name || button.label} ${oldCustomId.count}`);
-          button.setStyle(button_style || button.style);
+          button.setCustomId(JSON.stringify(newCustomId))
+            .setDisabled(typeof button_disabled === 'boolean' ? button_disabled : button.disabled)
+            .setEmoji(emoji || button.emoji)
+            .setLabel(`${button_name || button.label} ${oldCustomId.count}`)
+            .setStyle(button_style || button.style);
 
           return button;
         });

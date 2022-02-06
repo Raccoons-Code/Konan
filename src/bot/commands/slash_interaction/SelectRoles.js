@@ -255,9 +255,8 @@ module.exports = class extends SlashCommand {
         row.components.map(selectmenu => {
           if (selectmenu.customId !== menu) return selectmenu;
 
-          selectmenu.setPlaceholder(menu_place_holder);
-
-          selectmenu.setDisabled(menu_disabled);
+          selectmenu.setDisabled(menu_disabled)
+            .setPlaceholder(menu_place_holder);
 
           return selectmenu;
         });
@@ -361,9 +360,8 @@ module.exports = class extends SlashCommand {
             description,
             default: _default,
             emoji,
-          }]);
-
-          selectmenu.setMaxValues(selectmenu.options.length);
+          }])
+            .setMaxValues(selectmenu.options.length);
 
           return selectmenu;
         });

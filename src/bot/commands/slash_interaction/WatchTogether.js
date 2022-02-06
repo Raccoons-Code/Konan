@@ -35,7 +35,7 @@ module.exports = class extends SlashCommand {
 
     if (missingPermissions.length)
       return interaction.reply({
-        content: `${member}, ${this.t('missingChannelPermissions', { locale, permissions: missingPermissions })}`,
+        content: `${member}, ${this.t('missingChannelPermission', { locale, permissions: missingPermissions })}`,
         ephemeral: true,
       });
 
