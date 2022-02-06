@@ -24,7 +24,13 @@ module.exports = class extends SlashCommand {
 
     const { locale, memberPermissions, options } = interaction;
 
-    if (interaction.inGuild() && !memberPermissions.has('MANAGE_MESSAGES'))
+    if (!interaction.inGuild())
+      return interaction.editReply({
+        content: this.t('Error! This command can only be used on one server.', { locale }),
+        ephemeral: true,
+      });
+
+    if (!memberPermissions.has('MANAGE_MESSAGES'))
       return interaction.editReply(this.t('You do not have permission to manage messages from the server.',
         { locale }));
 
@@ -47,7 +53,7 @@ module.exports = class extends SlashCommand {
 
     size && await this.util.waitAsync(1000);
 
-    count = size ? await this.bulkDelete(channel, (number - limit), boolean, (count + size)) : count;
+    count = size ? await this.bulkDelete(channel, (number - size), boolean, (count + size)) : count;
 
     return count;
   }
