@@ -36,8 +36,8 @@ module.exports = class extends SlashCommand {
     const { title, paragraphs } = cache;
 
     const embeds = [new MessageEmbed().setColor('RANDOM')
-      .setTitle(title)
-      .setDescription(paragraphs?.join('\n\n'))];
+      .setTitle(title.match(/([\w\W]{0,256})/))
+      .setDescription(paragraphs.join('\n\n')).match(/([\w\W]{0,4096})/)];
 
     interaction.editReply({ embeds });
   }

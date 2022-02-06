@@ -12,6 +12,7 @@ function capitalize(string, options) {
 /** @param {Options} object */
 function interpolate(text, object) {
   const _text = [];
+  const { locale } = object;
   const prefix = _this.interpolation.prefix;
   const suffix = _this.interpolation.suffix;
   const matched = text.match(RegExp(`${prefix}(.*?)${suffix}`, 'g'));
@@ -22,7 +23,16 @@ function interpolate(text, object) {
 
       matched[index]?.match(RegExp(`${prefix}(.*?)${suffix}`))[1]
         .match(/(?:[^.[\]'\\]+)/g)
-        .forEach(key => _object = _object?.[key] || object[key]);
+        .forEach(key => {
+          if (Array.isArray(object[key]))
+            for (let i = 0; i < object[key].length; i++) {
+              const v = object[key][i];
+
+              object[key][i] = interpolate(`{{${v}}}`, instance.t(`${key}`, { locale }));
+            }
+
+          return _object = _object?.[key] || object[key] || key;
+        });
 
       _text.push(value, _object);
     });
@@ -32,8 +42,7 @@ function interpolate(text, object) {
 
 class Idjsn {
   /** @param {Options} options */
-  constructor(options) {
-    if (!options) return;
+  constructor(options = {}) {
     if (!options.resources) return;
     if (!options.interpolation) options.interpolation = {};
     if (!options.interpolation.prefix) options.interpolation.prefix = '\\{\\{';
@@ -56,9 +65,7 @@ class Idjsn {
    * @param {string} key
    * @param {Options} options
    */
-  t(key, options) {
-    if (!options) options = {};
-
+  t(key, options = {}) {
     const locale = options.locale || 'en';
 
     const pluralSuffix = _this.plural.pluralSuffix;
@@ -78,7 +85,10 @@ class Idjsn {
     if (typeof options.capitalize === 'boolean' || typeof _this.capitalize === 'boolean')
       text = capitalize(text, options);
 
-    return interpolate(text, options);
+    if (typeof text === 'string')
+      return interpolate(text, options);
+
+    return text;
   }
 }
 

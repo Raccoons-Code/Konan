@@ -6,26 +6,18 @@ module.exports = class {
 	 * @param {Client} client
 	 * @param {object} data
 	 * @param {Array} [data.aliases]
-	 * @param {Array} [data.args]
+	 * @param {any} [data.args]
 	 * @param {Array<PermissionString>} [data.clientPermissions]
 	 * @param {String} data.description
 	 * @param {String} [data.emoji]
 	 * @param {String} data.name
 	 * @param {Array<PermissionString>} [data.userPermissions]
 	 */
-	constructor(client, {
-		aliases,
-		args,
-		clientPermissions,
-		description,
-		emoji,
-		name,
-		userPermissions,
-	}) {
-		if (!this.regexCommandName(name))
-			return console.error(`Command ${name} cannot be loaded.`);
+	constructor(client, data) {
+		if (!this.regexCommandName(data.name))
+			return console.error(`Command ${data.name} cannot be loaded.`);
 
-		this.data = { aliases, args, clientPermissions, description, emoji, name, userPermissions };
+		this.data = data;
 		if (client?.ready) {
 			this.client = client;
 			this.prisma = client.prisma;

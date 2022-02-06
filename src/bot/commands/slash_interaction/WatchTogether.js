@@ -21,27 +21,35 @@ module.exports = class extends SlashCommand {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
-    const { channel, locale, member, options } = interaction;
+    const { client, locale, member, options } = interaction;
 
-    await channel.sendTyping();
+    const { channel } = member.voice;
 
-    if (!member.voice.channel)
+    if (!channel)
       return interaction.reply({
         content: `${member}, ${this.t('you must be on a voice channel.', { locale })}`,
         ephemeral: true,
       });
 
-    this.discordTogether.createTogetherCode(member.voice.channel.id, options.getString('activity'))
-      .then(async invite => this.timeout_erase(await interaction.reply({
-        content: `${invite.code}`,
-        fetchReply: true,
-      }), 60)).catch(error => {
+    const missingPermissions = channel.permissionsFor(client.user.id).missing(['CREATE_INSTANT_INVITE']);
+
+    if (missingPermissions.length)
+      return interaction.reply({
+        content: `${member}, ${this.t('missingChannelPermissions', { locale, permissions: missingPermissions })}`,
+        ephemeral: true,
+      });
+
+    this.discordTogether.createTogetherCode(channel.id, options.getString('activity')).then(async invite =>
+      this.timeout_erase(await interaction.reply({ content: `${invite.code}`, fetchReply: true }), 60))
+      .catch(error => {
         if (error.name === 'SyntaxError')
           return interaction.reply({
             content: this.t('This activity does not exist.', { locale }),
             ephemeral: true,
           });
+
         this.client.sendError(error);
+
         interaction.reply({
           content: this.t('There was an error while executing this command!', { locale }),
           ephemeral: true,

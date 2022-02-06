@@ -17,11 +17,11 @@ module.exports = class extends Event {
     const { user } = client;
     const botRole = guild?.me.roles.botRole || user.id;
     const regexp = RegExp(`^\\s*(?:<@!?&?(?:${user.id}|${botRole.id})>)(.*)$`);
-    const matched = content.match(regexp);
+    const matched = content?.match(regexp);
 
     if (!matched) return;
 
-    const reply = channel.messages.cache.find(msg => msg.reference?.messageId === id && msg.author.id === user.id);
+    const reply = channel.messages.cache.find(m => m.reference?.messageId === id && m.author.id === user.id);
 
     if (reply?.deletable)
       reply.delete();

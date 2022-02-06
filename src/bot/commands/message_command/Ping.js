@@ -11,8 +11,6 @@ module.exports = class extends Command {
 
 	async execute(message = this.Message) {
 		message.reply('Pong!').then(sent => {
-			this.timeout_erase(message);
-
 			const ping = sent.createdTimestamp - message.createdTimestamp;
 
 			sent.edit(`Pong! \`API: ${message.client.ws.ping}ms\`, \`BOT: ${ping}ms\``);

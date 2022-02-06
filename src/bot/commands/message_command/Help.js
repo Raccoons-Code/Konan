@@ -13,8 +13,6 @@ module.exports = class extends Command {
   }
 
   async execute(message = this.Message) {
-    this.timeout_erase(message);
-
     const { author: user, client, guild } = message;
 
     const locale = guild?.preferredLocale;

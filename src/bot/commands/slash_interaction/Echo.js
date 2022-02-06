@@ -1,5 +1,5 @@
 const { SlashCommand } = require('../../classes');
-const { Webhook } = require('discord.js');
+const { Webhook, MessageEmbed } = require('discord.js');
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
@@ -19,9 +19,20 @@ module.exports = class extends SlashCommand {
 
     const message = options.getString('message');
 
+    const avatarURL = member.displayAvatarURL() || user.displayAvatarURL();
+
     const username = member?.nickname || user.username;
 
-    const avatarURL = user.displayAvatarURL();
+    if (!channel.permissionsFor(client.user.id).has('MANAGE_WEBHOOKS')) {
+      const [, title, description] = message.match(this.textRegexp);
+
+      const embeds = [new MessageEmbed().setColor(member.displayColor)
+        .setAuthor({ name: username, iconURL: avatarURL })
+        .setTitle(title || '')
+        .setDescription(description || '')];
+
+      return interaction.reply({ embeds, ephemeral: true });
+    }
 
     /** @type {Webhook} */
     const webhook = await channel.fetchWebhooks().then(w => w.find(v => v.name === client.user.id)) ||
@@ -29,6 +40,6 @@ module.exports = class extends SlashCommand {
 
     await webhook.send({ avatarURL, content: `${message}`, username });
 
-    interaction.reply({ content: '⠀', ephemeral: true });
+    interaction.reply({ content: ':heavy_check_mark:⠀', ephemeral: true });
   }
 };

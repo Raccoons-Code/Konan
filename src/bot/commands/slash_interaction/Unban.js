@@ -28,7 +28,10 @@ module.exports = class extends SlashCommand {
     const { guild, locale, memberPermissions, options } = interaction;
 
     if (!memberPermissions.has('BAN_MEMBERS'))
-      return interaction.editReply(this.t('You are not allowed to unban members from the server.', { locale }));
+      return interaction.editReply(this.t('missingUserPermissions', { locale, permissions: ['BAN_MEMBERS'] }));
+
+    if (!guild.me.permissions.has('BAN_MEMBERS'))
+      return interaction.editReply(this.t('missingPermissions', { locale, permissions: ['BAN_MEMBER'] }));
 
     const id = options.getString('user');
 

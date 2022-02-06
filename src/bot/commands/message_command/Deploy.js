@@ -5,7 +5,6 @@ module.exports = class extends Command {
   constructor(...args) {
     super(...args, {
       name: 'deploy',
-      aliases: ['d'],
       description: 'Deploy commands (Restricted for bot\'owners).',
       args: {
         type: ['global', 'guild'],

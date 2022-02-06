@@ -1,5 +1,5 @@
 module.exports = {
-  en: { translation: require('./en') },
+  en: { translation: require('./en.min.json') },
   ja: { translation: require('./ja') },
-  pt: { translation: require('./pt') },
+  pt: { translation: require('./pt.min.json') },
 };
