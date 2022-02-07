@@ -34,12 +34,12 @@ module.exports = class extends SlashCommand {
 
     const { channels, guilds, uptime, users, ws } = client;
 
-    const uptimeDate = new Date(Date.now() - uptime)
+    const uptimeDate = new Date(Date.now() - uptime);
 
     const stats = stripIndents(`
-      Servers  : ${guilds.cache.size}
-      Channels : ${channels.cache.size}
-      Users    : ${users.cache.size}
+      Servers  : ${client.totalGuilds || guilds.cache.size}
+      Channels : ${client.totalChannels || channels.cache.size}
+      Users    : ${client.totalMembers || users.cache.size}
       Ping     : ${ws.ping}
       Uptime   : ${uptimeDate.toDateString()} ${uptimeDate.getHours()}:${uptimeDate.getMinutes()}
       `);

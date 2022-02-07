@@ -57,4 +57,20 @@ module.exports = class extends Client {
 
 		channel.send({ embeds }).catch(() => console.error(reason));
 	}
+
+	async fetchStats() {
+		const promises = [
+			this.shard.fetchClientValues('guilds.cache.size'),
+			this.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
+			this.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.channels.cache.size, 0)),
+		];
+
+		return await Promise.all(promises)
+			.then(results => {
+				this.totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
+				this.totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
+				this.totalChannels = results[2].reduce((acc, channelsCount) => acc + channelsCount, 0);
+			})
+			.catch(console.error);
+	}
 };

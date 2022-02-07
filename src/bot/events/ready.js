@@ -94,30 +94,18 @@ module.exports = class extends Event {
 	}
 
 	async setPresence(client = this.client) {
-		const { shard, user } = client;
+		const { user } = client;
 		const ytURL = 'https://www.youtube.com/watch?v=';
 
-		const promises = [
-			shard.fetchClientValues('guilds.cache.size'),
-			shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
-			shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.channels.cache.size, 0)),
-		];
-
-		Promise.all(promises)
-			.then(results => {
-				this.totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
-				this.totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
-				this.totalChannels = results[2].reduce((acc, channelsCount) => acc + channelsCount, 0);
-			})
-			.catch(console.error);
+		client.fetchStats();
 
 		user.setPresence({
 			activities: [
-				{ name: `${this.totalMembers || 'Fetching'} users`, type: 'WATCHING' },
+				{ name: `${client.totalMembers || 'Fetching'} users`, type: 'WATCHING' },
 				{ name: 'Cat Vibing Meme', type: 'STREAMING', url: `${ytURL}NUYvbT6vTPs` },
-				{ name: `${this.totalGuilds || 'Fetching'} servers`, type: 'PLAYING' },
+				{ name: `${client.totalGuilds || 'Fetching'} servers`, type: 'PLAYING' },
 				{ name: 'Wide Putin Walking', type: 'STREAMING', url: `${ytURL}SLU3oG_ePhM` },
-				{ name: `${this.totalChannels || 'Fetching'} channels`, type: 'LISTENING' },
+				{ name: `${client.totalChannels || 'Fetching'} channels`, type: 'LISTENING' },
 				{ name: 'Noisestorm - Crab Rave', type: 'STREAMING', url: `${ytURL}LDU_Txk06tM` },
 				{ name: 'National Anthem of USSR', type: 'STREAMING', url: `${ytURL}U06jlgpMtQs` },
 				{ name: 'Rick Astley - Never Gonna Give You Up', type: 'STREAMING', url: `${ytURL}dQw4w9WgXcQ` },
