@@ -19,6 +19,7 @@
   "Discord ID": "ID do discord",
   "Discord Tag": "Tag do discord",
   "do you mean `{{string}}`?": "você quis dizer `{{string}}`?",
+  "donate": "doação",
   "Error trying to reload application commands (/). Type:": "Erro ao tentar recarregar comandos de aplicativo (/). Tipo:",
   "Error! One or more messages could not be deleted.": "Erro! Uma ou mais mensagens não puderam ser excluídas.",
   "Error! This command can only be used on one server.": "Erro! Este comando só pode ser usado em um servidor.",

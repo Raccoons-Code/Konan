@@ -1,6 +1,6 @@
 const { SlashCommand } = require('../../classes');
 const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
-const { env: { GUILD_INVITE } } = process;
+const { env: { DONATE_LINK, GUILD_INVITE } } = process;
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
@@ -31,10 +31,17 @@ module.exports = class extends SlashCommand {
 
     const buttons = [new MessageButton().setStyle('LINK')
       .setLabel(this.t('Invite Link', { locale }))
-      .setURL(client.invite),
-    new MessageButton().setStyle('LINK')
-      .setLabel(this.t('Server for support', { locale }))
-      .setURL(`${client.options.http.invite}/${GUILD_INVITE}`)];
+      .setURL(client.invite)];
+
+    if (GUILD_INVITE)
+      buttons.push(new MessageButton().setStyle('LINK')
+        .setLabel(this.t('Server for support', { locale }))
+        .setURL(`${client.options.http.invite}/${GUILD_INVITE}`));
+
+    if (DONATE_LINK)
+      buttons.push(new MessageButton().setStyle('LINK')
+        .setLabel(this.t('donate', { locale, capitalize: true }))
+        .setURL(`${DONATE_LINK}`));
 
     const components = [new MessageActionRow().setComponents(buttons)];
 

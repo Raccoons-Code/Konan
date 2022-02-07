@@ -4,7 +4,7 @@ const commands = require('../commands');
 const events = require('../events');
 const methods = require('../methods');
 const translator = require('../translator');
-const { env: { GUILD_ID, ERROR_CHANNEL } } = process;
+const { env: { GUILD_ID, ERROR_CHANNEL, DONATE_LINK } } = process;
 
 module.exports = class extends Client {
 	/** @param {ClientOptions} [options] */
@@ -19,6 +19,12 @@ module.exports = class extends Client {
 		this.t = translator.t;
 		this.util = methods;
 		this.ready = true;
+	}
+
+	get donate() {
+		return {
+			paypal: DONATE_LINK,
+		};
 	}
 
 	async login(token = this.token) {
