@@ -65,13 +65,11 @@ module.exports = class extends Client {
 	}
 
 	async fetchStats() {
-		const promises = [
+		Promise.all([
 			this.shard.fetchClientValues('guilds.cache.size'),
-			this.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
-			this.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.channels.cache.size, 0)),
-		];
-
-		return await Promise.all(promises)
+			this.shard.broadcastEval(client => client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
+			this.shard.fetchClientValues('channels.cache.size'),
+		])
 			.then(results => {
 				this.totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
 				this.totalMembers = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
