@@ -31,8 +31,7 @@ module.exports = class extends SlashCommand {
       });
 
     if (!memberPermissions.has('MANAGE_MESSAGES'))
-      return interaction.editReply(this.t('You do not have permission to manage messages from the server.',
-        { locale }));
+      return interaction.editReply(this.t('missingUserPermission', { locale, PERMISSIONS: ['MANAGE_MESSAGES'] }));
 
     const channel = options.getChannel('channel') || interaction.channel;
 
