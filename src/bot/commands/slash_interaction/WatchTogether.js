@@ -35,7 +35,7 @@ module.exports = class extends SlashCommand {
 
     if (missingPermissions.length)
       return interaction.reply({
-        content: `${member}, ${this.t('missingChannelPermission', { locale, permissions: missingPermissions })}`,
+        content: `${member}, ${this.t('missingChannelPermission', { locale, PERMISSIONS: missingPermissions })}`,
         ephemeral: true,
       });
 
@@ -78,7 +78,7 @@ module.exports = class extends SlashCommand {
   setChoices(applications = this.applications, options = { locale: 'en', capitalize: false }, array = []) {
     const { locale, capitalize } = options;
 
-    applications = applications.filter(app => !/(puttparty|dev$)/i.test(app));
+    applications = applications.filter(app => !/(awkword|lettertile|puttparty|dev$)/i.test(app));
 
     for (let i = 0; i < applications.length; i++) {
       const application = applications[i];

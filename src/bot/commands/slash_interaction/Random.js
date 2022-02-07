@@ -42,7 +42,7 @@ module.exports = class extends SlashCommand {
 
     if (missingPermissions.length)
       return interaction.reply({
-        content: this.t('missingChannelPermission', { locale, permissions: missingPermissions }),
+        content: this.t('missingChannelPermission', { locale, PERMISSIONS: missingPermissions }),
         ephemeral: true,
       });
 

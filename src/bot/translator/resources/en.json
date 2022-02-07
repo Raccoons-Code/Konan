@@ -4,10 +4,12 @@
   "doodlecrew": "Doodle Crew (old)",
   "help text": "Hello {{user}}, my name is Konan, a bot for Discord.\n\nTo see my commands, press the `/` key on your keyboard.\n\nIf you're looking for more details about my commands, type `/help` and press `tab` to see the list of commands and access more information about them.\n\nIf you want to add me to your server, click the link button below.\n\nMy website will be ready soon.",
   "lettertile": "Letter League",
-  "missingPermission": "I don't have permission to `{{permissions[0]}}` on this server.",
-  "missingChannelPermission": "I don't have permission to `{{permissions[0]}}` on this channel.",
-  "missingUserPermission": "You are not allowed to `{{permissions[0]}}` on this server.",
-  "permissions": {
+  "missingPermission": "I don't have permission to `{{PERMISSIONS[0]}}` on this server.",
+  "missingChannelPermission": "I don't have permission to `{{PERMISSIONS[0]}}` on this channel.",
+  "missingUserPermission": "You are not allowed to `{{PERMISSIONS[0]}}` on this server.",
+  "PERMISSION": "{{PERMISSIONS[0]}}",
+  "permissions": "permissions",
+  "PERMISSIONS": {
     "ADD_REACTIONS": "Add Reactions",
     "ADMINISTRATOR": "Administrator",
     "ATTACH_FILES": "Attach Files",
@@ -52,6 +54,7 @@
     "VIEW_CHANNEL": "View Channel",
     "VIEW_GUILD_INSIGHTS": "View Server Insights"
   },
+  "roles": "roles",
   "spellcast": "SpellCast",
   "wordsnack": "Word Snacks"
 }
