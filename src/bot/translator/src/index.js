@@ -11,33 +11,34 @@ function capitalize(string, options) {
 
 /** @param {Options} object */
 function interpolate(text, object) {
-  const _text = [];
   const { locale } = object;
   const prefix = _this.interpolation.prefix;
   const suffix = _this.interpolation.suffix;
   const matched = text.match(RegExp(`${prefix}(.*?)${suffix}`, 'g'));
 
   if (matched)
-    text.split(RegExp(`${prefix}.*?${suffix}`, 'g')).forEach((value, index) => {
-      let _object;
+    text = text.split(RegExp(`${prefix}.*?${suffix}`, 'g')).reduce((acc, value, index) => {
+      const m = matched[index]?.match(RegExp(`${prefix}(.*?)${suffix}`))[1]
+        .match(/(?:[^.[\]'\\]+)/g).reduce((pv, cv) => {
+          if (Array.isArray(object[cv])) {
+            const ca = instance.t(`${cv}`, { locale });
 
-      matched[index]?.match(RegExp(`${prefix}(.*?)${suffix}`))[1]
-        .match(/(?:[^.[\]'\\]+)/g)
-        .forEach(key => {
-          if (Array.isArray(object[key]))
-            for (let i = 0; i < object[key].length; i++) {
-              const v = object[key][i];
+            for (let i = 0; i < object[cv].length; i++) {
+              const v = object[cv][i];
 
-              object[key][i] = interpolate(`{{${v}}}`, instance.t(`${key}`, { locale }));
+              object[cv][i] = ca[v] || instance.t(`${cv}`)[v];
             }
 
-          return _object = _object?.[key] || object[key] || key;
-        });
+            return [...pv, ...object[cv]];
+          }
 
-      _text.push(value, _object);
-    });
+          return object[cv] || pv[cv] || cv || [...pv, cv];
+        }, []) || [];
 
-  return _text.join('') || text;
+      return [...acc, value, m];
+    }, []);
+
+  return text.join?.('') || text;
 }
 
 class Idjsn {

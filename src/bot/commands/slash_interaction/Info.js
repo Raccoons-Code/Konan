@@ -1,6 +1,8 @@
 const { SlashCommand } = require('../../classes');
+const { codeBlock, inlineCode, userMention } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const { stripIndents } = require('common-tags');
+const moment = require('moment');
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
@@ -30,22 +32,20 @@ module.exports = class extends SlashCommand {
   }
 
   async application(interaction = this.CommandInteraction, embeds = this.embeds) {
-    const { client } = interaction;
+    const { client, locale } = interaction;
 
-    const { channels, guilds, uptime, users, ws } = client;
-
-    const uptimeDate = new Date(Date.now() - uptime);
+    const { channels, guilds, readyAt, users, ws } = client;
 
     const stats = stripIndents(`
       Servers  : ${client.totalGuilds || guilds.cache.size}
       Channels : ${client.totalChannels || channels.cache.size}
       Users    : ${client.totalMembers || users.cache.size}
-      Ping     : ${ws.ping}
-      Uptime   : ${uptimeDate.toDateString()} ${uptimeDate.getHours()}:${uptimeDate.getMinutes()}
+      Ping     : ${ws.ping} ms
+      Uptime   : ${moment(readyAt).locale(locale).calendar()}
       `);
 
     embeds[0].setAuthor({ name: `${client.user.username}`, iconURL: `${client.user.displayAvatarURL()}` })
-      .setFields([{ name: 'Stats', value: `\`\`\`asciidoc\n${stats}\`\`\`` }]);
+      .setFields([{ name: 'Stats', value: `${codeBlock('properties', stats)}` }]);
 
     interaction.editReply({ embeds });
   }
@@ -56,11 +56,11 @@ module.exports = class extends SlashCommand {
     if (!guild)
       return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
 
-    embeds[0].setAuthor({ name: `${guild.name}`, iconURL: `${guild.iconURL()}` })
+    embeds[0].setAuthor({ name: guild.name, iconURL: guild.iconURL() })
       .setThumbnail(guild.iconURL())
       .setFields(
-        { name: this.t('ID', { locale }), value: `${guild.id}`, inline: true },
-        { name: this.t('owner', { locale, capitalize: true }), value: `<@${guild.ownerId}>`, inline: true },
+        { name: this.t('ID', { locale }), value: inlineCode(guild.id), inline: true },
+        { name: this.t('owner', { locale, capitalize: true }), value: userMention(guild.ownerId), inline: true },
         { name: this.t('members', { locale, capitalize: true }), value: `${guild.memberCount}`, inline: true },
       )
       .setImage(guild.splashURL({ dynamic: true, format: 'png', size: 512 }))
@@ -79,8 +79,8 @@ module.exports = class extends SlashCommand {
     embeds[0].setDescription(`${user}`)
       .setThumbnail(user.displayAvatarURL())
       .setFields(
-        { name: this.t('Discord Tag', { locale }), value: `\`${user.tag}\``, inline: true },
-        { name: this.t('Discord ID', { locale }), value: `\`${user.id}\``, inline: true },
+        { name: this.t('Discord Tag', { locale }), value: inlineCode(user.tag), inline: true },
+        { name: this.t('Discord ID', { locale }), value: inlineCode(user.id), inline: true },
       )
       .setTimestamp(member?.joinedTimestamp || user.createdAt)
       .setFooter({ text: this.t(member ? 'Joined the server at' : 'Creation date', { locale }) });
@@ -89,14 +89,15 @@ module.exports = class extends SlashCommand {
       const { permissions, roles } = member;
 
       const textRoles = roles.cache.reduce((acc, role) => `${acc}${role.name}\n`, '');
-      const permsArray = permissions.toArray();
-      const textPerms = permsArray.reduce((acc, permission, i, a) => `${acc}${this.t('PERMISSION', { locale, PERMISSIONS: [permission] })}${i + 1 === a.length ? '.' : ', '}`, '');
+      const perms = permissions.toArray();
+      const stringPerms = perms.map((permission) => this.t('PERMISSION', { locale, PERMISSIONS: [permission] }));
+      const textPerms = `${stringPerms.join(', ')}.`;
 
       embeds[0].addFields(
         { name: this.t('role', { locale, capitalize: true }), value: `${member.roles.highest}`, inline: true },
-        { name: this.t('roles', { locale, capitalize: true }), value: `\`\`\`${textRoles}\`\`\`` },
-        { name: this.t('permissions', { locale, capitalize: true }), value: `\`\`\`${textPerms}\`\`\`` },
-        { name: this.t('Creation date', { locale }), value: `\`\`\`${user.createdAt}\`\`\`` });
+        { name: this.t('roles', { locale, capitalize: true }), value: codeBlock('md', textRoles) },
+        { name: this.t('permissions', { locale, capitalize: true }), value: codeBlock('md', textPerms) },
+        { name: this.t('Creation date', { locale }), value: codeBlock('md', moment(user.createdAt).locale(locale).format('llll')) });
 
       if (member.avatar)
         embeds[0].setThumbnail(member.displayAvatarURL());

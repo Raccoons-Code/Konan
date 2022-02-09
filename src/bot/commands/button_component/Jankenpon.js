@@ -1,4 +1,5 @@
 const { ButtonInteraction } = require('../../classes');
+const { userMention } = require('@discordjs/builders');
 const db = require('quick.db');
 
 module.exports = class extends ButtonInteraction {
@@ -64,7 +65,7 @@ module.exports = class extends ButtonInteraction {
         const { name, value } = field;
 
         if (name === 'Result') {
-          field.value = `<@${player1}> ${result.result}`;
+          field.value = `${userMention(player1)} ${result.result}`;
 
           return field;
         }

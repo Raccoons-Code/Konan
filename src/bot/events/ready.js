@@ -94,12 +94,11 @@ module.exports = class extends Event {
 	}
 
 	async setPresence(client = this.client) {
-		const { user } = client;
 		const ytURL = 'https://www.youtube.com/watch?v=';
 
 		client.fetchStats();
 
-		user.setPresence({
+		client.user.setPresence({
 			activities: [
 				{ name: `${client.totalMembers || 'Fetching'} users`, type: 'WATCHING' },
 				{ name: 'Cat Vibing Meme', type: 'STREAMING', url: `${ytURL}NUYvbT6vTPs` },
