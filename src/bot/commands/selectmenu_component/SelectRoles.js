@@ -64,7 +64,7 @@ module.exports = class extends SelectMenuInteraction {
         count: oldvalue.count + (add1 + rem1),
       };
 
-      const [, label] = option.label.match(/(?:(.+)?\s(\d+))+/);
+      const [, label] = option.label.match(/(.+?)(?:\s(\d+))?/) || [];
 
       option.label = `${label} ${newValue.count}`;
 
