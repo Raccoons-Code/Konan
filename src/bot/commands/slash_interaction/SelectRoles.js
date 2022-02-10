@@ -6,7 +6,10 @@ const GuildTextChannelTypes = [GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THRE
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
-    super(...args);
+    super(...args, {
+      clientPermissions: ['EMBED_LINKS', 'MANAGE_ROLES', 'SEND_MESSAGES'],
+      userPermissions: ['MANAGE_ROLES'],
+    });
     this.data = this.setName('selectroles')
       .setDescription('Select menu roles')
       .addSubcommand(subcommand => subcommand.setName('setup')
@@ -150,10 +153,15 @@ module.exports = class extends SlashCommand {
         ephemeral: true,
       });
 
-    if (!memberPermissions.has('ADMINISTRATOR')) {
+    const userPermissions = memberPermissions.missing(this.props.userPermissions);
+
+    if (userPermissions.length) {
       if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return interaction.reply({ content: 'You are not allowed to run this command.', ephemeral: true });
+      return interaction.reply({
+        content: this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }),
+        ephemeral: true,
+      });
     }
 
     const command = options.getSubcommandGroup(false) || options.getSubcommand();
@@ -413,7 +421,7 @@ module.exports = class extends SlashCommand {
     }
   }
 
-  async editAutocomplete(interaction = this.AutocompleteInteraction) {
+  async editAutocomplete(interaction = this.AutocompleteInteraction, res = []) {
     if (interaction.responded) return;
 
     const { client, guild, options } = interaction;
@@ -424,8 +432,6 @@ module.exports = class extends SlashCommand {
 
     const focused = options.getFocused(true);
     const regex = RegExp(focused.value, 'i');
-
-    const res = [];
 
     if (focused.name === 'message_id') {
       const messages = channel.messages.cache.size ? channel.messages.cache : await channel.messages.fetch();

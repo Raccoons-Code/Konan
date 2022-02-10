@@ -1,15 +1,23 @@
 const { SlashCommand } = require('../../classes');
 const { DiscordTogether } = require('discord-together');
+const { Constants } = require('discord.js');
+const { ChannelTypes } = Constants;
+const { GUILD_VOICE } = ChannelTypes;
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
-    super(...args);
+    super(...args, {
+      clientPermissions: ['CREATE_INSTANT_INVITE'],
+    });
     this.data = this.setName('party')
       .setDescription('Create an activity party together')
       .addStringOption(option => option.setName('activity')
         .setDescription('Select activity')
         .setAutocomplete(true)
-        .setRequired(true));
+        .setRequired(true))
+      .addChannelOption(option => option.setName('channel')
+        .setDescription('Select a voice channel')
+        .addChannelTypes([GUILD_VOICE]));
     if (this.client?.ready) {
       this.discordTogether = new DiscordTogether(this.client);
       this.applications = Object.keys(this.discordTogether.applications);
@@ -23,7 +31,7 @@ module.exports = class extends SlashCommand {
 
     const { client, locale, member, options } = interaction;
 
-    const { channel } = member.voice;
+    const channel = options.getChannel('channel') || member.voice.channel;
 
     if (!channel)
       return interaction.reply({
@@ -31,15 +39,17 @@ module.exports = class extends SlashCommand {
         ephemeral: true,
       });
 
-    const missingPermissions = channel.permissionsFor(client.user.id).missing(['CREATE_INSTANT_INVITE']);
+    const clientPermissions = channel.permissionsFor(client.user.id).missing(this.props.clientPermissions);
 
-    if (missingPermissions.length)
+    if (clientPermissions.length)
       return interaction.reply({
-        content: `${member}, ${this.t('missingChannelPermission', { locale, PERMISSIONS: missingPermissions })}`,
+        content: `${member}, ${this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions })}`,
         ephemeral: true,
       });
 
-    this.discordTogether.createTogetherCode(channel.id, options.getString('activity')).then(async invite =>
+    const activity = options.getString('activity');
+
+    this.discordTogether.createTogetherCode(channel.id, activity).then(async invite =>
       this.timeout_erase(await interaction.reply({ content: `${invite.code}`, fetchReply: true }), 60))
       .catch(error => {
         if (error.name === 'SyntaxError')

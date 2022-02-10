@@ -3,7 +3,9 @@ const { Webhook, MessageEmbed } = require('discord.js');
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
-    super(...args);
+    super(...args, {
+      clientPermissions: ['MANAGE_WEBHOOKS'],
+    });
     this.data = this.setName('echo')
       .setDescription('Replies with your message!')
       .addStringOption(option => option.setName('message')
@@ -23,7 +25,7 @@ module.exports = class extends SlashCommand {
 
     const username = member?.nickname || user.username;
 
-    if (!channel.permissionsFor(client.user.id).has('MANAGE_WEBHOOKS')) {
+    if (!channel.permissionsFor(client.user.id).has(this.props.clientPermissions)) {
       const [, title, description] = message.match(this.textRegexp);
 
       const embeds = [new MessageEmbed().setColor(member.displayColor)

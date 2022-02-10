@@ -100,15 +100,13 @@ module.exports = class extends SlashCommand {
     interaction.editReply({ embeds });
   }
 
-  async executeAutocomplete(interaction = this.AutocompleteInteraction) {
+  async executeAutocomplete(interaction = this.AutocompleteInteraction, res = []) {
     if (interaction.responded) return;
 
     const { guildId, options, user } = interaction;
 
     const value = options.getFocused();
     const regex = RegExp(value);
-
-    const res = [];
 
     const guess = db.get(`${guildId}.${user.id}.guess`);
 

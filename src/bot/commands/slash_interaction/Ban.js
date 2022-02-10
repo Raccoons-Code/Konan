@@ -2,7 +2,10 @@ const { SlashCommand } = require('../../classes');
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
-    super(...args);
+    super(...args, {
+      clientPermissions: ['BAN_MEMBERS'],
+      userPermissions: ['BAN_MEMBERS'],
+    });
     this.data = this.setName('ban')
       .setDescription('Ban user.')
       .addUserOption(option => option.setName('user')
@@ -23,11 +26,15 @@ module.exports = class extends SlashCommand {
 
     const { guild, locale, memberPermissions, options } = interaction;
 
-    if (!memberPermissions.has('BAN_MEMBERS'))
-      return interaction.editReply(this.t('missingUserPermissions', { locale, PERMISSIONS: ['BAN_MEMBER'] }));
+    const userPermissions = memberPermissions.missing(this.props.userPermissions);
 
-    if (!guild.me.permissions.has('BAN_MEMBERS'))
-      return interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: ['BAN_MEMBER'] }));
+    if (userPermissions.length)
+      return interaction.editReply(this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }));
+
+    const clientPermissions = guild.me.permissions.missing(this.props.clientPermissions);
+
+    if (clientPermissions.length)
+      return interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
 
     const member = options.getMember('user');
 

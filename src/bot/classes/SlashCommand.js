@@ -1,11 +1,17 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, DMChannel, Guild, GuildChannel, Message, MessageActionRow, MessageSelectOptionData } = require('discord.js');
+const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, DMChannel, Guild, GuildChannel, Message, MessageActionRow, MessageSelectOptionData, PermissionString } = require('discord.js');
 const Client = require('./client');
 
 module.exports = class extends SlashCommandBuilder {
-  /** @param {Client} client */
-  constructor(client) {
+  /**
+   * @param {Client} client
+   * @param {object} props
+   * @param {Array<PermissionString>} [props.clientPermissions]
+   * @param {Array<PermissionString>} [props.userPermissions]
+   */
+  constructor(client, props) {
     super();
+    this.props = props;
     this.labelRegex = /(.{1,90})/;
     this.limitRegex = /(.{1,100})/;
     this.messageURLRegex = /(?:(?:\/)?(\d+))+/;

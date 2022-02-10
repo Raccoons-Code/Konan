@@ -27,7 +27,9 @@ const Choices = new class {
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
-    super(...args);
+    super(...args, {
+      clientPermissions: ['ATTACH_FILES'],
+    });
     this.data = this.setName('random')
       .setDescription('Replies with random imagens.')
       .addStringOption(option => option.setName('type')
@@ -38,11 +40,11 @@ module.exports = class extends SlashCommand {
   async execute(interaction = this.CommandInteraction) {
     const { channel, client, locale, options } = interaction;
 
-    const missingPermissions = channel.permissionsFor(client.user.id).missing(['ATTACH_FILES']);
+    const clientPermissions = channel.permissionsFor(client.user.id).missing(this.props.clientPermissions);
 
-    if (missingPermissions.length)
+    if (clientPermissions.length)
       return interaction.reply({
-        content: this.t('missingChannelPermission', { locale, PERMISSIONS: missingPermissions }),
+        content: this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions }),
         ephemeral: true,
       });
 

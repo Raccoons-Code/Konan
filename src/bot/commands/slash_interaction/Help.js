@@ -65,15 +65,13 @@ module.exports = class extends SlashCommand {
     interaction.editReply({ embeds });
   }
 
-  async executeAutocomplete(interaction = this.AutocompleteInteraction) {
+  async executeAutocomplete(interaction = this.AutocompleteInteraction, res = []) {
     if (interaction.responded) return;
 
     const { client, options } = interaction;
 
     const commandName = options.getString('command');
     const regex = RegExp(commandName, 'i');
-
-    const res = [];
 
     const { slash_interaction } = client.commands;
 

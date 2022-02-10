@@ -2,7 +2,10 @@ const { SlashCommand } = require('../../classes');
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
-    super(...args);
+    super(...args, {
+      clientPermissions: ['BAN_MEMBERS'],
+      userPermissions: ['BAN_MEMBERS'],
+    });
     this.data = this.setName('unban')
       .setDescription('Revokes the ban from the selected user.')
       .addStringOption(option => option.setName('user')
@@ -14,6 +17,8 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
+    const { guild, locale, memberPermissions, options } = interaction;
+
     if (!interaction.inGuild()) {
       if (interaction.isAutocomplete()) return interaction.respond([]);
 
@@ -25,13 +30,15 @@ module.exports = class extends SlashCommand {
 
     await interaction.deferReply({ ephemeral: true });
 
-    const { guild, locale, memberPermissions, options } = interaction;
+    const userPermissions = memberPermissions.missing(this.props.userPermissions);
 
-    if (!memberPermissions.has('BAN_MEMBERS'))
-      return interaction.editReply(this.t('missingUserPermissions', { locale, PERMISSIONS: ['BAN_MEMBERS'] }));
+    if (userPermissions.length)
+      return interaction.editReply(this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }));
 
-    if (!guild.me.permissions.has('BAN_MEMBERS'))
-      return interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: ['BAN_MEMBER'] }));
+    const clientPermissions = guild.me.permissions.missing(this.props.clientPermissions);
+
+    if (clientPermissions.length)
+      return interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
 
     const id = options.getString('user');
 

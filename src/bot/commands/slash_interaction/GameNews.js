@@ -42,7 +42,7 @@ module.exports = class extends SlashCommand {
     interaction.editReply({ embeds });
   }
 
-  async executeAutocomplete(interaction = this.AutocompleteInteraction) {
+  async executeAutocomplete(interaction = this.AutocompleteInteraction, res = []) {
     if (interaction.responded) return;
 
     const { options, user } = interaction;
@@ -50,8 +50,6 @@ module.exports = class extends SlashCommand {
     const pattern = this.cache.user[user.id] = options.getFocused();
 
     const regex = RegExp(pattern, 'i');
-
-    const res = [];
 
     const game_news = this.cache.news[pattern] = pattern ?
       this.game_news?.filter(gnew => regex.test(gnew.title)) : this.game_news;
@@ -71,8 +69,7 @@ module.exports = class extends SlashCommand {
     try {
       fetch('https://game-news-api.herokuapp.com/all')
         .then(async response => this.game_news = await response.json());
-
-    } catch (error) {
+    } catch {
       console.error('game-news-api error.');
     }
 

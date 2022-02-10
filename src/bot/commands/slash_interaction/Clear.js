@@ -6,7 +6,10 @@ const GuildTextChannelTypes = [GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THRE
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
-    super(...args);
+    super(...args, {
+      clientPermissions: ['MANAGE_MESSAGES', 'READ_MESSAGE_HISTORY'],
+      userPermissions: ['MANAGE_MESSAGES'],
+    });
     this.data = this.setName('clear')
       .setDescription('Deletes up to 1000 channel messages at once.')
       .addNumberOption(option => option.setName('amount')
@@ -22,7 +25,7 @@ module.exports = class extends SlashCommand {
   async execute(interaction = this.CommandInteraction) {
     await interaction.deferReply({ ephemeral: true });
 
-    const { locale, memberPermissions, options } = interaction;
+    const { client, locale, member, options } = interaction;
 
     if (!interaction.inGuild())
       return interaction.editReply({
@@ -30,10 +33,18 @@ module.exports = class extends SlashCommand {
         ephemeral: true,
       });
 
-    if (!memberPermissions.has('MANAGE_MESSAGES'))
-      return interaction.editReply(this.t('missingUserPermission', { locale, PERMISSIONS: ['MANAGE_MESSAGES'] }));
-
     const channel = options.getChannel('channel') || interaction.channel;
+
+    const userPermissions = channel.permissionsFor(member).missing(this.props.userPermissions);
+
+    if (userPermissions.length)
+      return interaction.editReply(this.t('missingUserChannelPermission',
+        { locale, PERMISSIONS: userPermissions }));
+
+    const clientPermissions = channel.permissionsFor(client.user.id).missing(this.props.clientPermissions);
+
+    if (clientPermissions.length)
+      return interaction.editReply(this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions }));
 
     const limit = options.getNumber('amount');
 
