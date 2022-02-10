@@ -38,11 +38,11 @@ module.exports = class extends ButtonInteraction {
 
     component.setCustomId(JSON.stringify(newCustomId));
 
-    const { label } = component;
+    const [, label] = component.label.match(/(.+?)(?:\s(\d+))?/) || [];
 
-    const name = label.replace(RegExp(`\\s${oldCustomId.count}$`), ` ${newCustomId.count}`);
+    const name = `${label} ${newCustomId.count}`;
 
-    component.setLabel(`${name}`);
+    component.setLabel(name);
 
     const { components } = message;
 
