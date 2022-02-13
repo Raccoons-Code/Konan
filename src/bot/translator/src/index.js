@@ -21,12 +21,12 @@ function interpolate(text, object) {
       const m = matched[index]?.match(RegExp(`${prefix}(.*?)${suffix}`))[1]
         .match(/(?:[^.[\]'\\]+)/g).reduce((pv, cv) => {
           if (Array.isArray(object[cv])) {
-            const ca = instance.t(`${cv}`, { locale });
+            const ca = idjsn.t(`${cv}`, { locale });
 
             for (let i = 0; i < object[cv].length; i++) {
               const v = object[cv][i];
 
-              object[cv][i] = ca[v] || instance.t(`${cv}`)[v];
+              object[cv][i] = ca[v] || idjsn.t(`${cv}`)[v] || v;
             }
 
             return [...pv, ...object[cv]];
@@ -53,20 +53,24 @@ class Idjsn {
     if (!options.plural.singularSuffix) options.plural.singularSuffix = '_one';
 
     _this.resources = options.resources;
+    _this.capitalize = options.capitalize;
     _this.interpolation = options.interpolation;
     _this.plural = options.plural;
   }
 
   /** @param {Options} options */
-  init(options) {
+  async init(options) {
     return new Idjsn(options);
   }
 
   /**
-   * @param {string} key
+   * @param {string|Array} key
    * @param {Options} options
    */
   t(key, options = {}) {
+    if (typeof key === 'object')
+      return idjsn.tArray(key, options);
+
     const locale = options.locale || 'en';
 
     const pluralSuffix = _this.plural.pluralSuffix;
@@ -83,7 +87,8 @@ class Idjsn {
       translation?.[pluralKey] || translation?.[key] || en[key] || key :
       translation?.[key] || en[key] || key;
 
-    if (typeof options.capitalize === 'boolean' || typeof _this.capitalize === 'boolean')
+    if (typeof text === 'string' &&
+      (typeof options.capitalize === 'boolean' || typeof _this.capitalize === 'boolean'))
       text = capitalize(text, options);
 
     if (typeof text === 'string')
@@ -91,11 +96,22 @@ class Idjsn {
 
     return text;
   }
+
+  /**
+   * @param {Array} array
+   * @param {Options} options
+   * @private
+   */
+  tArray(array, options) {
+    array = array.reduce((acc, key) => [...acc, idjsn.t(key, options)], []);
+
+    return array.join(' ');
+  }
 }
 
-const instance = new Idjsn();
+const idjsn = new Idjsn();
 
-module.exports = instance;
+module.exports = idjsn;
 
 /**
  * @typedef Options

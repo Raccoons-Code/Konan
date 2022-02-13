@@ -22,36 +22,45 @@ module.exports = class extends SlashCommand {
     if (!interaction.inGuild()) {
       if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
     }
+
+    const userPermissions = memberPermissions.missing(this.props.userPermissions);
+
+    if (userPermissions.length)
+      return interaction.reply({
+        content: this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }),
+        ephemeral: true,
+      });
+
+    const clientPermissions = guild.me.permissions.missing(this.props.clientPermissions);
+
+    if (clientPermissions.length)
+      return interaction.reply({
+        content: this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }),
+        ephemeral: true,
+      });
 
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
-    const userPermissions = memberPermissions.missing(this.props.userPermissions);
-
-    if (userPermissions.length)
-      return interaction.editReply(this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }));
-
-    const clientPermissions = guild.me.permissions.missing(this.props.clientPermissions);
-
-    if (clientPermissions.length)
-      return interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
-
     const id = options.getString('user');
 
     const ban = guild.bans.resolve(id) || await guild.bans.fetch(id);
 
     if (!ban)
-      return interaction.editReply(this.t('This user is not banned!', { locale }));
+      return interaction.editReply(this.t('ban404', { locale }));
 
     const reason = options.getString('reason');
 
-    guild.members.unban(id, reason)
-      .then(() => interaction.editReply(this.t('User successfully unbanned!', { locale })))
-      .catch(() => interaction.editReply(this.t('Error! Unable to unban this user.', { locale })));
+    try {
+      await guild.members.unban(id, reason);
+      interaction.editReply(this.t('userBanned', { locale }))
+    } catch {
+      interaction.editReply(this.t('banError', { locale }))
+    }
   }
 
   async executeAutocomplete(interaction = this.AutocompleteInteraction) {

@@ -2,6 +2,8 @@
 
 # Konan
 
+[![Crowdin](https://badges.crowdin.net/konan/localized.svg)](https://crowdin.com/project/konan)
+
 Olá, eu me chamo Konan! Fui desenvolvido para ser útil e eficiente em tudo o que faço.
 
 Para usar meus comandos aperte a tecla <kbd>/</kbd> do seu teclado.

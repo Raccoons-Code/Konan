@@ -28,7 +28,7 @@ module.exports = class extends Command {
     const [type, reset] = args;
 
     if (!this.data.args.type.includes(type) || !this.data.args.reset.includes(reset))
-      return this.timeout_erase(await message.reply(`${this.t('Expected arguments:', { locale })}\nType: ${this.data.args.type.join(', ')}\nReset: ${this.data.args.reset.join(' ')}`), 10);
+      return this.timeout_erase(await message.reply(`${this.t('expectedArguments', { locale })}\nType: ${this.data.args.type.join(', ')}\nReset: ${this.data.args.reset.join(' ')}`), 10);
 
     const data = [];
     const data_private = [];
@@ -73,13 +73,13 @@ module.exports = class extends Command {
         await _guild.commands.set([...data, ...data_private]);
       }
 
-      this.timeout_erase(await message.reply(`${this.t('Successfully reloaded application (/) commands. Type:', { locale })} ${type}`).catch(() => null), 10);
+      this.timeout_erase(await message.reply(`${this.t(['reloadedAppCommands', 'type'], { locale })} ${type}`).catch(() => null), 10);
 
       console.log('Successfully reloaded application (/) commands.');
     } catch (error) {
       console.error(error);
 
-      this.timeout_erase(await message.reply(`${this.t('Error trying to reload application commands (/). Type:', { locale })} ${type}`).catch(() => null), 10);
+      this.timeout_erase(await message.reply(`${this.t(['reloadAppCommandsError', 'type'], { locale })} ${type}`).catch(() => null), 10);
     }
   }
 };

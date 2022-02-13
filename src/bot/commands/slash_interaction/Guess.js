@@ -27,7 +27,7 @@ module.exports = class extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setTitle(this.t('Guess the number.', { locale }))];
+      .setTitle(this.t('guessNumber', { locale }))];
 
     if (!db.has(`${guildId}.${author.id}.guess`))
       db.set(`${guildId}.${author.id}.guess`, { value: this.util.mathRandom(100, 1) });
@@ -36,9 +36,9 @@ module.exports = class extends SlashCommand {
 
     if (number === value) {
       embeds[0]
-        .setDescription(this.t('{{author}}, {{number}} is correct, congratulations!', { locale, author, number }))
+        .setDescription(this.t('numberCorrect', { locale, author, number }))
         .addFields({
-          name: `${this.t('Previous guesses', { locale })} ${user?.length + 1}/10`,
+          name: `${this.t('previousGuesses', { locale })} ${user?.length + 1}/10`,
           value: `${user?.join(' ') || '-'}`,
         });
 
@@ -50,14 +50,14 @@ module.exports = class extends SlashCommand {
     if (this.util.isDuplicate(user, number)) {
       if (number < value)
         embeds[0]
-          .setDescription(this.t('{{author}}, you have already tried {{number}}!\n:arrow_down_small: This is minor!', { locale, author, number }));
+          .setDescription(this.t('numberRepeatSmaller', { locale, author, number }));
 
       if (number > value)
         embeds[0]
-          .setDescription(this.t('{{author}}, you have already tried {{number}}!\n:arrow_up_small: This is greater!', { locale, author, number }));
+          .setDescription(this.t('numberRepeatGreater', { locale, author, number }));
 
       embeds[0].addFields({
-        name: `${this.t('Previous guesses', { locale })} ${user?.length}/10`,
+        name: `${this.t('previousGuesses', { locale })} ${user?.length}/10`,
         value: `${user?.join(' ') || '-'}`,
       });
 
@@ -66,9 +66,9 @@ module.exports = class extends SlashCommand {
 
     if (user?.length === 9) {
       embeds[0]
-        .setDescription(this.t('{{author}}, {{number}} is incorrect, game over!', { locale, author, number }))
+        .setDescription(this.t('numberGameover', { locale, author, number }))
         .addFields({
-          name: `${this.t('Previous guesses', { locale })} ${user.length + 1}/10`,
+          name: `${this.t('previousGuesses', { locale })} ${user.length + 1}/10`,
           value: `${user.join(' ')}`,
         });
 
@@ -79,17 +79,17 @@ module.exports = class extends SlashCommand {
 
     if (number < value)
       embeds[0]
-        .setDescription(`${this.t('{{author}}, {{number}} is minor!', { locale, author, number })} :arrow_down_small:`)
+        .setDescription(`${this.t('numberSmaller', { locale, author, number })} :arrow_down_small:`)
         .addFields({
-          name: `${this.t('Previous guesses', { locale })} ${user?.length + 1}/10`,
+          name: `${this.t('previousGuesses', { locale })} ${user?.length + 1}/10`,
           value: `${user?.join(' ') || '-'}`,
         });
 
     if (number > value)
       embeds[0]
-        .setDescription(`${this.t('{{author}}, {{number}} is greater!', { locale, author, number })} :arrow_up_small:`)
+        .setDescription(`${this.t('numberGreater', { locale, author, number })} :arrow_up_small:`)
         .addFields({
-          name: `${this.t('Previous guesses', { locale })} ${user?.length + 1}/10`,
+          name: `${this.t('previousGuesses', { locale })} ${user?.length + 1}/10`,
           value: `${user?.join(' ') || '-'}`,
         });
 

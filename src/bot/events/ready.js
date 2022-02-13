@@ -100,7 +100,7 @@ module.exports = class extends Event {
 
 		client.user.setPresence({
 			activities: [
-				{ name: `${client.totalMembers || 'Fetching'} users`, type: 'WATCHING' },
+				{ name: `${client.totalMembers || 'Fetching'} members`, type: 'WATCHING' },
 				{ name: 'Cat Vibing Meme', type: 'STREAMING', url: `${ytURL}NUYvbT6vTPs` },
 				{ name: `${client.totalGuilds || 'Fetching'} servers`, type: 'PLAYING' },
 				{ name: 'Wide Putin Walking', type: 'STREAMING', url: `${ytURL}SLU3oG_ePhM` },

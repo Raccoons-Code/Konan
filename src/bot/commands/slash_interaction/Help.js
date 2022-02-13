@@ -25,22 +25,22 @@ module.exports = class extends SlashCommand {
     if (commandName) return this.executeCommand(interaction, commandName);
 
     const embeds = [new MessageEmbed().setColor('RANDOM')
-      .setTitle(this.t('Konan\'s support', { locale }))
+      .setTitle(this.t('konanSupport', { locale }))
       .setThumbnail(guild?.me.displayAvatarURL() || client.user.displayAvatarURL())
-      .setDescription(this.t('help text', { locale, user }))];
+      .setDescription(this.t('helpText', { locale, user }))];
 
     const buttons = [new MessageButton().setStyle('LINK')
-      .setLabel(this.t('Invite Link', { locale }))
+      .setLabel(this.t('inviteLink', { locale }))
       .setURL(client.invite)];
 
     if (GUILD_INVITE)
       buttons.push(new MessageButton().setStyle('LINK')
-        .setLabel(this.t('Server for support', { locale }))
+        .setLabel(this.t('serverForSupport', { locale }))
         .setURL(`${client.options.http.invite}/${GUILD_INVITE}`));
 
     if (DONATE_LINK)
       buttons.push(new MessageButton().setStyle('LINK')
-        .setLabel(this.t('donate', { locale, capitalize: true }))
+        .setLabel(this.t('donate', { locale }))
         .setURL(`${DONATE_LINK}`));
 
     const components = [new MessageActionRow().setComponents(buttons)];
@@ -49,14 +49,14 @@ module.exports = class extends SlashCommand {
   }
 
   async executeCommand(interaction = this.CommandInteraction, commandName) {
-    const { client } = interaction;
+    const { client, locale } = interaction;
 
     const { slash_interaction } = client.commands;
 
     const command = slash_interaction.get(commandName);
 
     if (!command)
-      return interaction.editReply('Error! command not found.');
+      return interaction.editReply(this.t('command404', { locale }));
 
     const embeds = [new MessageEmbed().setColor('RANDOM')
       .setTitle(`${command.data.name} - ${command.data.description}`)
@@ -83,7 +83,7 @@ module.exports = class extends SlashCommand {
       const command = slashcommands[i];
 
       res.push({
-        name: `${this.t(command.data.name, { capitalize: true })} | ${command.data.description}`,
+        name: `${this.t(command.data.name)} | ${command.data.description}`,
         value: command.data.name,
       });
 

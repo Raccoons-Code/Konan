@@ -3,11 +3,10 @@ const { userMention } = require('@discordjs/builders');
 
 module.exports = class extends ButtonInteraction {
   constructor(...args) {
-    super(...args);
-    this.data = {
+    super(...args, {
       name: 'oldjankenpon',
       description: 'Jankenpon',
-    };
+    });
   }
 
   async execute(interaction = this.ButtonInteraction) {

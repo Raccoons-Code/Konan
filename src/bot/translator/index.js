@@ -1,6 +1,6 @@
 const Translator = require('./src');
 const resources = require('./resources');
 
-const translator = Translator.init({ resources });
+Translator.init({ resources, capitalize: true });
 
-module.exports = translator;
+module.exports = Translator;

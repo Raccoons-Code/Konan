@@ -2,11 +2,11 @@ const { SelectMenuInteraction } = require('../../classes');
 
 module.exports = class extends SelectMenuInteraction {
   constructor(...args) {
-    super(...args);
-    this.data = {
+    super(...args, {
       name: 'selectroles',
       description: 'Select Roles',
-    };
+      clientPermissions: ['MANAGE_ROLES'],
+    });
   }
 
   async execute(interaction = this.SelectMenuInteraction) {

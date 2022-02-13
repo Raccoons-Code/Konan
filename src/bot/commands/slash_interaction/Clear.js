@@ -29,7 +29,7 @@ module.exports = class extends SlashCommand {
 
     if (!interaction.inGuild())
       return interaction.editReply({
-        content: this.t('Error! This command can only be used on one server.', { locale }),
+        content: this.t('onlyOnServer', { locale }),
         ephemeral: true,
       });
 
@@ -48,10 +48,12 @@ module.exports = class extends SlashCommand {
 
     const limit = options.getNumber('amount');
 
-    this.bulkDelete(channel, limit, true).then(size =>
-      interaction.editReply(this.t(size ? '{{size}} message successfully deleted!' : 'No deleted messages!',
-        { count: size, locale, size }))).catch(() =>
-          interaction.editReply(this.t('Error! One or more messages could not be deleted.', { locale })));
+    try {
+      const size = await this.bulkDelete(channel, limit, true);
+      interaction.editReply(this.t(size ? 'messageDeleted' : 'noDeletedMessages', { count: size, locale, size }));
+    } catch {
+      interaction.editReply(this.t('messageDeleteError', { locale }));
+    }
   }
 
   async bulkDelete(channel = this.GuildChannel, number = 0, boolean = false, count = 0) {
@@ -63,7 +65,9 @@ module.exports = class extends SlashCommand {
 
     size && await this.util.waitAsync(1000);
 
-    count = size ? await this.bulkDelete(channel, (number - size), boolean, (count + size)) : count;
+    const go = size && (number - size);
+
+    count = go ? await this.bulkDelete(channel, (number - size), boolean, (count + size)) : count;
 
     return count;
   }

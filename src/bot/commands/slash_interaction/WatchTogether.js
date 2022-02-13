@@ -31,11 +31,13 @@ module.exports = class extends SlashCommand {
 
     const { client, locale, member, options } = interaction;
 
-    const channel = options.getChannel('channel') || member.voice.channel;
+    let choose;
 
-    if (!channel)
+    const channel = choose = options.getChannel('channel') || member.voice.channel;
+
+    if (!channel || channel.createStageInstance)
       return interaction.reply({
-        content: `${member}, ${this.t('you must be on a voice channel.', { locale })}`,
+        content: `${member}, ${this.t(choose ? 'userMustChooseVoiceChannel' : 'userMustBeOnVoiceChannel', { locale })}`,
         ephemeral: true,
       });
 
@@ -49,22 +51,24 @@ module.exports = class extends SlashCommand {
 
     const activity = options.getString('activity');
 
-    this.discordTogether.createTogetherCode(channel.id, activity).then(async invite =>
-      this.timeout_erase(await interaction.reply({ content: `${invite.code}`, fetchReply: true }), 60))
-      .catch(error => {
-        if (error.name === 'SyntaxError')
-          return interaction.reply({
-            content: this.t('This activity does not exist.', { locale }),
-            ephemeral: true,
-          });
+    try {
+      const invite = await this.discordTogether.createTogetherCode(channel.id, activity);
 
-        this.client.sendError(error);
-
-        interaction.reply({
-          content: this.t('There was an error while executing this command!', { locale }),
+      this.timeout_erase(await interaction.reply({ content: `${invite.code}`, fetchReply: true }), 60);
+    } catch (error) {
+      if (error.name === 'SyntaxError')
+        return interaction.reply({
+          content: this.t('activity404', { locale }),
           ephemeral: true,
         });
+
+      this.client.sendError(error);
+
+      interaction.reply({
+        content: this.t('There was an error while executing this command!', { locale }),
+        ephemeral: true,
       });
+    }
   }
 
   async executeAutocomplete(interaction = this.AutocompleteInteraction) {
@@ -80,7 +84,7 @@ module.exports = class extends SlashCommand {
       this.applications.filter(app => regex.test(app) || regex.test(this.t(app, { locale }))) :
       this.applications;
 
-    const res = this.setChoices(applications, { locale, capitalize: true });
+    const res = this.setChoices(applications, { locale });
 
     interaction.respond(res);
   }
@@ -88,7 +92,7 @@ module.exports = class extends SlashCommand {
   setChoices(applications = this.applications, options = { locale: 'en', capitalize: false }, array = []) {
     const { locale, capitalize } = options;
 
-    applications = applications.filter(app => !/(awkword|lettertile|puttparty|dev$)/i.test(app));
+    applications = applications.filter(app => !/(awkword|doodlecrew|lettertile|puttparty|dev$)/i.test(app));
 
     for (let i = 0; i < applications.length; i++) {
       const application = applications[i];

@@ -1,7 +1,7 @@
+const { env: { GUILD_ID, TEAM, TEAM_CHANNEL } } = process;
 const { SlashCommand } = require('../../classes');
 const { MessageEmbed } = require('discord.js');
 const Backup = require('discord-backup');
-const { env: { GUILD_ID, TEAM, TEAM_CHANNEL } } = process;
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
@@ -90,7 +90,7 @@ module.exports = class extends SlashCommand {
     const { guild, guildId, locale, user } = interaction;
 
     if (!interaction.inGuild())
-      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const owner = await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
@@ -102,7 +102,7 @@ module.exports = class extends SlashCommand {
     if (!owner) {
       const newbackup = await this.newUser(guild, { premium });
 
-      return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
+      return interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
     }
 
     const guilds = owner.guilds.filter(g => g.backups.length);
@@ -110,7 +110,7 @@ module.exports = class extends SlashCommand {
     if (owner.guilds.every(g => g.id !== guildId) && (!guilds.length || premium && guilds.length < 5)) {
       const newbackup = await this.newGuild(guild, { premium });
 
-      return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
+      return interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
     }
 
     const { backups } = owner;
@@ -120,10 +120,10 @@ module.exports = class extends SlashCommand {
       !backups.length && !guilds.length) {
       const newbackup = await this.newBackup(guild, { premium });
 
-      return interaction.editReply(`backup successfully done. Your key is: \`${newbackup.id}\``);
+      return interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
     }
 
-    return interaction.editReply(`${user}, ${this.t('you already have a backup.', { locale })} ${this.t('do you mean `{{string}}`?', { locale, string: 'update', capitalize: true })}`);
+    return interaction.editReply(`${user}, ${this.t('alreadyHaveABackup', { locale })} ${this.t('doYouMean??', { locale, string: 'update' })}`);
   }
 
   async delete(interaction = this.CommandInteraction) {
@@ -144,24 +144,24 @@ module.exports = class extends SlashCommand {
     });
 
     if (!_user)
-      return await interaction.editReply(this.t('Could not find this information.', { locale }));
+      return await interaction.editReply(this.t('information404', { locale }));
 
     if (type === 'server') {
       if (!_user.guilds.length)
-        return await interaction.editReply(this.t('Could not find this server.', { locale }));
+        return await interaction.editReply(this.t('server404', { locale }));
 
       await this.prisma.backup.deleteMany({ where: { guildId: id } });
 
-      return await interaction.editReply(this.t('Server backup successfully deleted.', { locale }));
+      return await interaction.editReply(this.t('backupDeleted', { locale }));
     }
 
     if (type === 'backup') {
       if (!_user.backups.length)
-        return await interaction.editReply(this.t('Could not find this backup.', { locale }));
+        return await interaction.editReply(this.t('backup404', { locale }));
 
       await this.prisma.backup.delete({ where: { id: key } });
 
-      return interaction.editReply(this.t('backup successfully deleted.', { locale }));
+      return interaction.editReply(this.t('backupDeleted', { locale }));
     }
   }
 
@@ -188,10 +188,10 @@ module.exports = class extends SlashCommand {
 
         const name = _guild.backups[0]?.data.name ||
           client.guilds.resolve(_guild.id)?.name ||
-          this.t('Undefined server name', { locale });
+          this.t('undefinedServerName', { locale });
 
         res.push({
-          name: `${name} | ${_guild.id}${_guild.id == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
+          name: `${name} | ${_guild.id}${_guild.id == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
           value: `${_guild.id}`,
         });
 
@@ -210,7 +210,7 @@ module.exports = class extends SlashCommand {
         const backup = backups[i];
 
         res.push({
-          name: `${backup.data.name} | ${backup.id}${backup.guild == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
+          name: `${backup.data.name} | ${backup.id}${backup.guild == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
           value: `${backup.id}`,
         });
 
@@ -265,8 +265,7 @@ module.exports = class extends SlashCommand {
       const _team_id = TEAM?.split(',')[0];
 
       if (!_guild_id || !_channel_id || !_team_id)
-        return interaction.editReply(this.t('This command is currently offline, please try again later.',
-          { locale }));
+        return interaction.editReply(this.t('commandOfflineTryLater', { locale }));
 
       const _guild = client.guilds.resolve(_guild_id) ||
         await client.guilds.fetch(_guild_id);
@@ -278,8 +277,7 @@ module.exports = class extends SlashCommand {
         await _guild.members.fetch(_team_id);
 
       if (!_guild || !_channel || !_team)
-        return interaction.editReply(this.t('This command is currently offline, please try again later.',
-          { locale }));
+        return interaction.editReply(this.t('commandOfflineTryLater', { locale }));
 
       const filter = message => message.channel.id === _channel_id &&
         message.author.id === _team_id &&
@@ -300,7 +298,7 @@ module.exports = class extends SlashCommand {
           }
 
           if (size > 9) {
-            return interaction.editReply(this.t('There are too many requests for this command at the moment. Please try again in 1 minute.', { locale }));
+            return interaction.editReply(this.t(['commandTooManyRequests', 'tryAgain1Min'], { locale }));
           }
         }
 
@@ -310,7 +308,7 @@ module.exports = class extends SlashCommand {
       collector.on('end', async (message, reason) => {
         if (reason === 'time') {
           collector.stop;
-          return interaction.editReply(this.t('This command is currently offline, please try again later.', { locale }));
+          return interaction.editReply(this.t('commandOfflineTryLater', { locale }));
         }
       });
 
@@ -318,16 +316,19 @@ module.exports = class extends SlashCommand {
     }
 
     if (!interaction.inGuild())
-      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const clear = options.getBoolean('clear_server');
 
-    interaction.editReply('Restoring...').catch(() => null);
+    interaction.editReply(`${this.t('restoring'), { locale }}...`).catch(() => null);
 
-    Backup.load(backup.data, guild,
-      { maxMessagesPerChannel: premium ? 20 : 0, clearGuildBeforeRestore: clear }).then(() =>
-        interaction.editReply('Success!').catch(() => null)).catch(() =>
-          interaction.editReply('Error! Restore take error...').catch(() => null));
+    try {
+      await Backup.load(backup.data, guild,
+        { maxMessagesPerChannel: premium ? 20 : 0, clearGuildBeforeRestore: clear });
+      interaction.editReply(':heavy_check_mark:⠀').catch(() => null);
+    } catch {
+      interaction.editReply(`${this.t('restoreError', { locale })}`).catch(() => null);
+    }
   }
 
   async restoreAutocomplete(interaction = this.AutocompleteInteraction, res = []) {
@@ -353,10 +354,10 @@ module.exports = class extends SlashCommand {
 
         const name = _guild.backups[0]?.data.name ||
           client.guilds.resolve(_guild.id)?.name ||
-          this.t('Undefined server name', { locale });
+          this.t('undefinedServerName', { locale });
 
         res.push({
-          name: `${name} | ${_guild.id}${_guild.id == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
+          name: `${name} | ${_guild.id}${_guild.id == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
           value: `${_guild.id}`,
         });
 
@@ -375,7 +376,7 @@ module.exports = class extends SlashCommand {
         const backup = backups[i];
 
         res.push({
-          name: `${backup.data.name} | ${backup.id}${backup.premium ? ' | Premium' : ''}${backup.guildId == guildId ? ` | ${this.t('Current server', { locale })}` : ''}`,
+          name: `${backup.data.name} | ${backup.id}${backup.premium ? ' | Premium' : ''}${backup.guildId == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
           value: `${backup.id}`,
         });
 
@@ -390,7 +391,7 @@ module.exports = class extends SlashCommand {
     const { guild, guildId, locale, options } = interaction;
 
     if (!interaction.inGuild())
-      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const key = options.getString('key');
 
@@ -400,13 +401,13 @@ module.exports = class extends SlashCommand {
     });
 
     if (!owner || !owner.backups.length)
-      return interaction.editReply(this.t('Could not find this backup.', { locale }));
+      return interaction.editReply(this.t('backup404', { locale }));
 
     const premium = Date.now() < owner.premium;
 
     const newbackup = await this.updatebackup(guild, key, { premium });
 
-    return interaction.editReply(`${this.t('backup successfully done. Your key is:', { locale })} \`${newbackup.id}\``);
+    return interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
   }
 
   async updateAutocomplete(interaction = this.AutocompleteInteraction, res = []) {

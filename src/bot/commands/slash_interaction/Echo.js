@@ -17,7 +17,7 @@ module.exports = class extends SlashCommand {
     const { client, channel, locale, member, options, user } = interaction;
 
     if (!interaction.inGuild())
-      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const message = options.getString('message');
 

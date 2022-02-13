@@ -50,8 +50,7 @@ module.exports = class extends SlashCommand {
     const subcommand = options.getSubcommand();
     const jankenpon = options.getString('jankenpon');
 
-    const embeds = [new MessageEmbed().setColor('RANDOM')
-      .setTitle('Jankenpon')];
+    const embeds = [new MessageEmbed().setColor('RANDOM').setTitle('Jankenpon')];
 
     if (subcommand === 'single') {
       const result = this.util.jankenpon.game(jankenpon);
@@ -66,7 +65,7 @@ module.exports = class extends SlashCommand {
     if (subcommand === 'multiplayer') {
       if (!interaction.inGuild())
         return interaction.reply({
-          content: this.t('Error! This command can only be used on one server.', { locale }),
+          content: this.t('onlyOnServer', { locale }),
           ephemeral: true,
         });
 
@@ -114,7 +113,7 @@ module.exports = class extends SlashCommand {
     if (subcommand === 'multiplayer') {
       if (!interaction.inGuild())
         return interaction.reply({
-          content: this.t('Error! This command can only be used on one server.', { locale }),
+          content: this.t('onlyOnServer', { locale }),
           ephemeral: true,
         });
 

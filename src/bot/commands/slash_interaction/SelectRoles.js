@@ -149,7 +149,7 @@ module.exports = class extends SlashCommand {
 
     if (!interaction.inGuild())
       return interaction.reply({
-        content: this.t('Error! This command can only be used on one server.', { locale }),
+        content: this.t('onlyOnServer', { locale }),
         ephemeral: true,
       });
 
@@ -175,7 +175,7 @@ module.exports = class extends SlashCommand {
   }
 
   async setup(interaction = this.CommandInteraction) {
-    const { client, guild, options } = interaction;
+    const { client, guild, locale, options } = interaction;
 
     const [, title, embed_desc] = options.getString('text')?.match(this.textRegexp) || [];
     const _default = options.getBoolean('item_default');
@@ -223,11 +223,16 @@ module.exports = class extends SlashCommand {
       .setTitle(title ? title : embed_desc ? '' : 'SelectRoles')
       .setDescription(embed_desc || '')];
 
-    channel.send({ components, embeds });
+    try {
+      await channel.send({ components, embeds });
+      interaction.editReply(this.t('?created', { locale, string: 'Select Role' }));
+    } catch {
+      interaction.editReply(this.t('createError', { locale, string: 'Select Role' }));
+    }
   }
 
   async edit(interaction = this.CommandInteraction) {
-    const { client, guild, options } = interaction;
+    const { client, guild, locale, options } = interaction;
 
     const subcommand = options.getSubcommand();
     const channel = options.getChannel('channel');
@@ -235,9 +240,9 @@ module.exports = class extends SlashCommand {
 
     const message = await this.getMessageById(channel, message_id);
 
-    if (!message) return interaction.editReply('Message not found');
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.respond('Message not editable');
+    if (!message.editable) return interaction.respond(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'message') {
       const [, title, description] = options.getString('text').match(this.textRegexp);
@@ -246,9 +251,12 @@ module.exports = class extends SlashCommand {
         .setTitle(title)
         .setDescription(description)];
 
-      message.edit({ embeds });
-
-      return interaction.editReply('Success!');
+      try {
+        await message.edit({ embeds });
+        return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
+      } catch {
+        return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
+      }
     }
 
     const menu = options.getString('menu');
@@ -272,9 +280,12 @@ module.exports = class extends SlashCommand {
         return row;
       });
 
-      message.edit({ components });
-
-      return interaction.editReply('Success!');
+      try {
+        await message.edit({ components });
+        return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
+      } catch {
+        return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
+      }
     }
 
     const item = options.getString('item');
@@ -318,14 +329,17 @@ module.exports = class extends SlashCommand {
         return row;
       });
 
-      message.edit({ components });
-
-      return interaction.editReply('Success!');
+      try {
+        await message.edit({ components });
+        return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
+      } catch {
+        return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
+      }
     }
   }
 
   async add(interaction = this.CommandInteraction) {
-    const { client, guild, options } = interaction;
+    const { client, guild, locale, options } = interaction;
 
     const channel = options.getChannel('channel');
     const menu = options.getString('menu');
@@ -334,9 +348,9 @@ module.exports = class extends SlashCommand {
 
     const message = await this.getMessageById(channel, message_id);
 
-    if (!message) return interaction.editReply('Message not found');
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.respond('Message not editable');
+    if (!message.editable) return interaction.respond(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'item') {
       const role = options.getRole('role');
@@ -377,14 +391,17 @@ module.exports = class extends SlashCommand {
         return row;
       });
 
-      message.edit({ components });
-
-      return interaction.editReply('Success!');
+      try {
+        await message.edit({ components });
+        return interaction.editReply(this.t('itemAdded', { locale }));
+      } catch {
+        return interaction.editReply(this.t('itemAddError', { locale }));
+      }
     }
   }
 
   async remove(interaction = this.CommandInteraction) {
-    const { options } = interaction;
+    const { locale, options } = interaction;
 
     const channel = options.getChannel('channel');
     const item = options.getString('item');
@@ -394,9 +411,9 @@ module.exports = class extends SlashCommand {
 
     const message = await this.getMessageById(channel, message_id);
 
-    if (!message) return interaction.editReply('Message not found');
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.respond('Message not editable');
+    if (!message.editable) return interaction.respond(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'item') {
       const components = message.components.map((row = this.MessageActionRow) => {
@@ -415,9 +432,12 @@ module.exports = class extends SlashCommand {
         return row;
       });
 
-      message.edit({ components });
-
-      return interaction.editReply('Success!');
+      try {
+        await message.edit({ components });
+        return interaction.editReply(this.t('itemRemoved', { locale }));
+      } catch {
+        return interaction.editReply(this.t('itemRemoveError', { locale }));
+      }
     }
   }
 

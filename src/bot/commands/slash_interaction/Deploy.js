@@ -17,14 +17,14 @@ module.exports = class extends SlashCommand {
   }
 
   async execute(interaction = this.CommandInteraction) {
-    await interaction.deferReply({ ephemeral: true });
-
     const { client, locale, options, user } = interaction;
 
     const guilds = GUILD_ID?.split(',');
     const owners = OWNER_ID?.split(',');
 
     if (!owners?.includes(user.id)) return;
+
+    await interaction.deferReply({ ephemeral: true });
 
     const type = options.getString('type');
     const reset = options.getBoolean('reset');
@@ -73,7 +73,7 @@ module.exports = class extends SlashCommand {
       }
 
       await interaction.editReply({
-        content: `${this.t('Successfully reloaded application (/) commands. Type:', { locale })} ${type}`,
+        content: `${this.t(['reloadedAppCommands', 'type'], { locale })} ${type}`,
         ephemeral: true,
       });
 
@@ -82,7 +82,7 @@ module.exports = class extends SlashCommand {
       console.error(error);
 
       await interaction.editReply({
-        content: `${this.t('Error trying to reload application commands (/). Type:', { locale })} ${type}`,
+        content: `${this.t(['reloadAppCommandsError', 'type'], { locale })} ${type}`,
         ephemeral: true,
       }).catch(() => null);
     }

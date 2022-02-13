@@ -4,11 +4,10 @@ const db = require('quick.db');
 
 module.exports = class extends ButtonInteraction {
   constructor(...args) {
-    super(...args);
-    this.data = {
+    super(...args, {
       name: 'jankenpon',
       description: 'Jankenpon',
-    };
+    });
   }
 
   async execute(interaction = this.ButtonInteraction) {

@@ -2,11 +2,11 @@ const { ButtonInteraction } = require('../../classes');
 
 module.exports = class extends ButtonInteraction {
   constructor(...args) {
-    super(...args);
-    this.data = {
+    super(...args, {
       name: 'buttonroles',
       description: 'Button roles',
-    };
+      clientPermissions: ['MANAGE_ROLES'],
+    });
   }
 
   async execute(interaction = this.ButtonInteraction) {

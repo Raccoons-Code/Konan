@@ -120,7 +120,7 @@ module.exports = class extends SlashCommand {
 
     if (!interaction.inGuild())
       return interaction.reply({
-        content: this.t('Error! This command can only be used on one server.', { locale }),
+        content: this.t('onlyOnServer', { locale }),
         ephemeral: true,
       });
 
@@ -146,7 +146,7 @@ module.exports = class extends SlashCommand {
   }
 
   async setup(interaction = this.CommandInteraction) {
-    const { client, guild, options } = interaction;
+    const { client, guild, locale, options } = interaction;
 
     const [, title, description] = options.getString('text')?.match(this.textRegexp) || [];
     const button_style = options.getString('button_style') || 'PRIMARY';
@@ -182,13 +182,16 @@ module.exports = class extends SlashCommand {
       .setTitle(title || description ? '' : 'ButtonRoles')
       .setDescription(description || '')];
 
-    channel.send({ embeds, components }).then(() =>
-      interaction.editReply('Button role successfully sended.')).catch(() =>
-        interaction.editReply('Error! Unable to send Button role!'));
+    try {
+      await channel.send({ embeds, components });
+      interaction.editReply(this.t('?created', { locale, string: 'Button Role' }));
+    } catch {
+      interaction.editReply(this.t('createError', { locale, string: 'Button Role' }));
+    }
   }
 
   async edit(interaction = this.CommandInteraction) {
-    const { client, guild, options } = interaction;
+    const { client, guild, locale, options } = interaction;
 
     const channel = options.getChannel('channel');
     const message_id = options.getString('message_id').match(this.messageURLRegex)[1];
@@ -196,9 +199,9 @@ module.exports = class extends SlashCommand {
 
     const message = await this.getMessageById(channel, message_id);
 
-    if (!message) return interaction.editReply('Message not found.');
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.editReply('Message not editable.');
+    if (!message.editable) return interaction.respond(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'message') {
       const [, title, description] = options.getString('text').match(this.textRegexp);
@@ -208,9 +211,12 @@ module.exports = class extends SlashCommand {
         .setTitle(title || '')
         .setDescription(description || '')];
 
-      return message.edit({ embeds }).then(() =>
-        interaction.editReply('Button role text successfully edited.')).catch(() =>
-          interaction.editReply('Error! Unable to edit text from Button role.'));
+      try {
+        await message.edit({ embeds });
+        return interaction.editReply(this.t('?edited', { locale, string: 'Button Role' }));
+      } catch {
+        return interaction.editReply(this.t('editError', { locale, string: 'Button Role' }));
+      }
     }
 
     if (subcommand === 'button') {
@@ -251,14 +257,17 @@ module.exports = class extends SlashCommand {
         return row;
       });
 
-      return message.edit({ components }).then(() =>
-        interaction.editReply('Button role successfully edited.')).catch(() =>
-          interaction.editReply('Error! Unable to edit a button from Button role.'));
+      try {
+        await message.edit({ components });
+        return interaction.editReply(this.t('?edited', { locale, string: 'Button Role' }));
+      } catch {
+        return interaction.editReply(this.t('editError', { locale, string: 'Button Role' }));
+      }
     }
   }
 
   async add(interaction = this.CommandInteraction) {
-    const { client, guild, options } = interaction;
+    const { client, guild, locale, options } = interaction;
 
     const channel = options.getChannel('channel');
     const message_id = options.getString('message_id').match(this.messageURLRegex)[1];
@@ -266,9 +275,9 @@ module.exports = class extends SlashCommand {
 
     const message = await this.getMessageById(channel, message_id);
 
-    if (!message) return interaction.editReply('Message not found.');
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.editReply('Message not editable.');
+    if (!message.editable) return interaction.respond(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'button') {
       const button_style = options.getString('button_style') || 'PRIMARY';
@@ -303,15 +312,17 @@ module.exports = class extends SlashCommand {
 
         return row;
       });
-
-      message.edit({ components });
-
-      return interaction.editReply('Success!');
+      try {
+        await message.edit({ components });
+        return interaction.editReply(this.t('buttonAdded', { locale }));
+      } catch {
+        return interaction.editReply(this.t('buttonAddError', { locale }));
+      }
     }
   }
 
   async remove(interaction = this.CommandInteraction) {
-    const { client, guild, options } = interaction;
+    const { locale, options } = interaction;
 
     const channel = options.getChannel('channel');
     const message_id = options.getString('message_id').match(this.messageURLRegex)[1];
@@ -319,9 +330,9 @@ module.exports = class extends SlashCommand {
 
     const message = await this.getMessageById(channel, message_id);
 
-    if (!message) return interaction.editReply('Message not found.');
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.editReply('Message not editable.');
+    if (!message.editable) return interaction.respond(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'button') {
       const buttonId = options.getString('button');
@@ -334,9 +345,12 @@ module.exports = class extends SlashCommand {
         return row;
       });
 
-      message.edit({ components });
-
-      return interaction.editReply('Success!');
+      try {
+        await message.edit({ components });
+        return interaction.editReply(this.t('buttonRemoved', { locale }));
+      } catch {
+        return interaction.editReply(this.t('buttonRemoveError', { locale }));
+      }
     }
   }
 

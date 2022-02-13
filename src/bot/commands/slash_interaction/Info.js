@@ -1,11 +1,12 @@
 const { SlashCommand } = require('../../classes');
-const { codeBlock, inlineCode, userMention } = require('@discordjs/builders');
+const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const { stripIndents } = require('common-tags');
 const { version } = require(require.main.path + '/../../package.json');
 const { DateTimeFormat } = Intl;
+const ms = require('ms');
 const dateOptions = { dateStyle: 'medium', timeStyle: 'long' };
-const capitalize = true;
+const inline = true;
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
@@ -14,6 +15,10 @@ module.exports = class extends SlashCommand {
       .setDescription('Server or user info')
       .addSubcommand(subCommand => subCommand.setName('application')
         .setDescription('Bot info'))
+      .addSubcommand(subcommand => subcommand.setName('channel')
+        .setDescription('Channel info')
+        .addChannelOption(option => option.setName('channel')
+          .setDescription('Channel')))
       .addSubcommand(subCommand => subCommand.setName('server')
         .setDescription('Server info'))
       .addSubcommand(subCommand => subCommand.setName('user')
@@ -42,14 +47,65 @@ module.exports = class extends SlashCommand {
     const stats = stripIndents(`
       Servers  : ${client.totalGuilds || guilds.cache.size}
       Channels : ${client.totalChannels || channels.cache.size}
-      Users    : ${client.totalMembers || users.cache.size}
+      Members  : ${client.totalMembers || users.cache.size}
       Ping     : ${ws.ping} ms
       Uptime   : ${new DateTimeFormat(locale, dateOptions).format(readyAt)}
       Version  : ${version}
       `);
 
-    embeds[0].setAuthor({ name: `${client.user.username}`, iconURL: `${client.user.displayAvatarURL()}` })
-      .setFields([{ name: 'Stats', value: `${codeBlock('properties', stats)}` }]);
+    embeds[0].setAuthor({ name: client.user.username, iconURL: client.user.displayAvatarURL() })
+      .setFields([{ name: 'Stats', value: codeBlock('properties', stats) }]);
+
+    interaction.editReply({ embeds });
+  }
+
+  async channel(interaction = this.CommandInteraction, embeds = this.embeds) {
+    const { locale, options } = interaction;
+
+    const channel = options.getChannel('channel') || interaction.channel;
+
+    const { bitrate, children, createdAt, full, memberCount, messageCount, name, parent, rateLimitPerUser, rtcRegion, topic, userLimit, type } = channel;
+
+    const typ = type.split('_');
+
+    const t = typ[typ.length - 1];
+
+    if (interaction.inGuild()) {
+      embeds[0].setFields([{ name: this.t('type', { locale }), value: this.t(t, { locale }), inline }]);
+
+      if (type === 'GUILD_CATEGORY')
+        embeds[0].addFields([
+          { name: this.t('channels', { locale }), value: children.map(child => child).join(' ') || '-', inline }]);
+
+      if (parent)
+        embeds[0].addField(this.t('category', { locale }), `${parent}`, true);
+
+      if (['GUILD_STAGE_VOICE', 'GUILD_VOICE'].includes(type))
+        embeds[0].addFields([
+          { name: this.t('bitrate', { locale }), value: `${bitrate / 1000}kbps`, inline },
+          { name: this.t('rtcRegion', { locale }), value: rtcRegion || this.t('automatic', { locale }), inline },
+          { name: this.t('userLimit', { locale }), value: `${userLimit || ':infinity:'}`, inline },
+          { name: this.t('full', { locale }), value: this.t(full, { locale }), inline }]);
+
+      if (['GUILD_NEWS', 'GUILD_STORE', 'GUILD_TEXT'].includes(type))
+        embeds[0].addFields([
+          { name: this.t('slowmode', { locale }), value: ms(rateLimitPerUser * 1000), inline },
+          { name: 'NSFW', value: this.t(channel.nsfw, { locale }), inline }]);
+
+      if (['GUILD_NEWS_THREAD', 'GUILD_PRIVATE_THREAD', 'GUILD_PUBLIC_THREAD'].includes(type))
+        embeds[0].addFields([
+          { name: this.t('slowmode', { locale }), value: ms(rateLimitPerUser * 1000), inline },
+          { name: this.t('memberCount', { locale }), value: `${memberCount}`, inline },
+          { name: this.t('messageCount', { locale }), value: `${messageCount}`, inline }]);
+    }
+
+    embeds[0].setTitle(name)
+      .addFields([
+        { name: this.t('creationDate', { locale }), value: `${time(createdAt)} ${time(createdAt, 'R')}` },
+      ]);
+
+    if (topic)
+      embeds[0].addField(this.t('topic', { locale }), topic, true);
 
     interaction.editReply({ embeds });
   }
@@ -58,18 +114,18 @@ module.exports = class extends SlashCommand {
     const { guild, locale } = interaction;
 
     if (!guild)
-      return interaction.editReply(this.t('Error! This command can only be used on one server.', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     embeds[0].setAuthor({ name: guild.name, iconURL: guild.iconURL() })
-      .setThumbnail(guild.iconURL())
       .setFields(
-        { name: this.t('ID', { locale }), value: inlineCode(guild.id), inline: true },
-        { name: this.t('owner', { locale, capitalize }), value: userMention(guild.ownerId), inline: true },
-        { name: this.t('members', { locale, capitalize }), value: `${guild.memberCount}`, inline: true },
+        { name: this.t('id', { locale }), value: inlineCode(guild.id), inline: true },
+        { name: this.t('owner', { locale }), value: userMention(guild.ownerId), inline: true },
+        { name: this.t('members', { locale }), value: `${guild.memberCount}`, inline: true },
       )
-      .setImage(guild.splashURL({ dynamic: true, format: 'png', size: 512 }))
-      .setTimestamp(guild.createdTimestamp)
-      .setFooter({ text: this.t('Server created at', { locale }) });
+      .setFooter({ text: this.t('serverCreatedAt', { locale }) })
+      .setImage(guild.splashURL({ dynamic: true, size: 512 }))
+      .setThumbnail(guild.iconURL())
+      .setTimestamp(guild.createdTimestamp);
 
     interaction.editReply({ embeds });
   }
@@ -80,37 +136,36 @@ module.exports = class extends SlashCommand {
     const user = options.getUser('user') || interaction.user;
     const member = options.getMember('user') || interaction.member;
 
+    const { createdAt, id, tag } = user;
+
     embeds[0].setDescription(`${user}`)
-      .setThumbnail(user.displayAvatarURL())
       .setFields(
-        { name: this.t('Discord Tag', { locale }), value: inlineCode(user.tag), inline: true },
-        { name: this.t('Discord ID', { locale }), value: inlineCode(user.id), inline: true },
+        { name: this.t('discordTag', { locale }), value: inlineCode(tag), inline: true },
+        { name: this.t('discordId', { locale }), value: inlineCode(id), inline: true },
       )
-      .setTimestamp(member?.joinedTimestamp || user.createdAt)
-      .setFooter({ text: this.t(member ? 'Joined the server at' : 'Creation date', { locale }) });
+      .setFooter({ text: this.t(member ? 'joinedTheServerAt' : 'creationDate', { locale }) })
+      .setThumbnail(user.displayAvatarURL())
+      .setTimestamp(member?.joinedTimestamp || createdAt);
 
     if (member) {
-      const { permissions, roles } = member;
+      const { avatar, displayColor, permissions, roles } = member;
 
-      const textRoles = roles.cache.reduce((acc, role) => `${acc}${role.name}\n`, '');
+      const textRoles = roles.cache.map(role => role).join(' ').replace('@everyone', '') || '-';
       const perms = permissions.toArray();
       const arrayPerms = perms.map((permission) => this.t('PERMISSION', { locale, PERMISSIONS: [permission] }));
       const textPerms = `${arrayPerms.join(', ')}.`;
 
       embeds[0].addFields(
-        { name: this.t('role', { locale, capitalize }), value: `${member.roles.highest}`, inline: true },
-        { name: this.t('roles', { locale, capitalize }), value: codeBlock('md', textRoles) },
-        { name: this.t('permissions', { locale, capitalize }), value: codeBlock('md', textPerms) },
-        {
-          name: this.t('Creation date', { locale }),
-          value: codeBlock('md', new DateTimeFormat(locale, dateOptions).format(user.createdAt)),
-        });
+        { name: this.t('role', { locale }), value: `${roles.highest}`, inline: true },
+        { name: this.t('roles', { locale }), value: textRoles },
+        { name: this.t('permissions', { locale }), value: codeBlock('md', textPerms) },
+        { name: this.t('creationDate', { locale }), value: `${time(createdAt)} ${time(createdAt, 'R')}` });
 
-      if (member.avatar)
+      if (roles.color)
+        embeds[0].setColor(displayColor);
+
+      if (avatar)
         embeds[0].setThumbnail(member.displayAvatarURL());
-
-      if (member.roles.color)
-        embeds[0].setColor(member.displayColor);
     }
 
     interaction.editReply({ embeds });

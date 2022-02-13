@@ -19,14 +19,14 @@ module.exports = class extends SlashCommand {
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
       .setDescription(`${member || user}`)
-      .setImage(member?.displayAvatarURL({ dynamic: true, format: 'png', size: 512 }) ||
-        user.displayAvatarURL({ dynamic: true, format: 'png', size: 512 }))];
+      .setImage(member?.displayAvatarURL({ dynamic: true, size: 512 }) ||
+        user.displayAvatarURL({ dynamic: true, size: 512 }))];
 
     const button = new MessageButton()
       .setLabel('Link')
       .setStyle('LINK')
-      .setURL(member?.displayAvatarURL({ dynamic: true, format: 'png', size: 4096 }) ||
-        user.displayAvatarURL({ dynamic: true, format: 'png', size: 4096 }));
+      .setURL(member?.displayAvatarURL({ dynamic: true, size: 4096 }) ||
+        user.displayAvatarURL({ dynamic: true, size: 4096 }));
 
     const components = [new MessageActionRow().setComponents(button)];
 
