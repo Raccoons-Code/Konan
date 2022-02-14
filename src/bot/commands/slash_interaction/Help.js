@@ -25,9 +25,9 @@ module.exports = class extends SlashCommand {
     if (commandName) return this.executeCommand(interaction, commandName);
 
     const embeds = [new MessageEmbed().setColor('RANDOM')
-      .setTitle(this.t('konanSupport', { locale }))
+      .setDescription(this.t('helpText', { locale, user }))
       .setThumbnail(guild?.me.displayAvatarURL() || client.user.displayAvatarURL())
-      .setDescription(this.t('helpText', { locale, user }))];
+      .setTitle(this.t('konanSupport', { locale }))];
 
     const buttons = [new MessageButton().setStyle('LINK')
       .setLabel(this.t('inviteLink', { locale }))

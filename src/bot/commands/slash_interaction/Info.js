@@ -19,6 +19,11 @@ module.exports = class extends SlashCommand {
         .setDescription('Channel info')
         .addChannelOption(option => option.setName('channel')
           .setDescription('Channel')))
+      .addSubcommand(subcommand => subcommand.setName('role')
+        .setDescription('Role info')
+        .addRoleOption(option => option.setName('role')
+          .setDescription('Role')
+          .setRequired(true)))
       .addSubcommand(subCommand => subCommand.setName('server')
         .setDescription('Server info'))
       .addSubcommand(subCommand => subCommand.setName('user')
@@ -73,10 +78,6 @@ module.exports = class extends SlashCommand {
     if (interaction.inGuild()) {
       embeds[0].setFields([{ name: this.t('type', { locale }), value: this.t(t, { locale }), inline }]);
 
-      if (type === 'GUILD_CATEGORY')
-        embeds[0].addFields([
-          { name: this.t('channels', { locale }), value: children.map(child => child).join(' ') || '-', inline }]);
-
       if (parent)
         embeds[0].addField(this.t('category', { locale }), `${parent}`, true);
 
@@ -97,6 +98,10 @@ module.exports = class extends SlashCommand {
           { name: this.t('slowmode', { locale }), value: ms(rateLimitPerUser * 1000), inline },
           { name: this.t('memberCount', { locale }), value: `${memberCount}`, inline },
           { name: this.t('messageCount', { locale }), value: `${messageCount}`, inline }]);
+
+      if (type === 'GUILD_CATEGORY')
+        embeds[0].addFields([
+          { name: this.t('channels', { locale }), value: children.map(child => child).join(' ') || '-' }]);
     }
 
     embeds[0].setTitle(name)
@@ -106,6 +111,25 @@ module.exports = class extends SlashCommand {
 
     if (topic)
       embeds[0].addField(this.t('topic', { locale }), topic, true);
+
+    interaction.editReply({ embeds });
+  }
+
+  async role(interaction = this.CommandInteraction, embeds = this.embeds) {
+    const { locale, options } = interaction;
+
+    const role = options.getRole('role');
+
+    const { color, mentionable, permissions, icon, name, tags } = role;
+
+    const perms = permissions.toArray();
+    const arrayPerms = perms.map((permission) => this.t('PERMISSION', { locale, PERMISSIONS: [permission] }));
+    const textPerms = `${arrayPerms.join(', ')}.`;
+
+    embeds[0].setColor(color || 'RANDOM')
+      .setAuthor({ name, iconURL: role.iconURL() })
+      .addFields([{ name: this.t('mentionable', { locale }), value: this.t(mentionable, { locale }) },
+      { name: this.t('permissions', { locale }), value: codeBlock('md', textPerms) }]);
 
     interaction.editReply({ embeds });
   }
@@ -153,7 +177,7 @@ module.exports = class extends SlashCommand {
       const textRoles = roles.cache.map(role => role).join(' ').replace('@everyone', '') || '-';
       const perms = permissions.toArray();
       const arrayPerms = perms.map((permission) => this.t('PERMISSION', { locale, PERMISSIONS: [permission] }));
-      const textPerms = `${arrayPerms.join(', ')}.`;
+      const textPerms = arrayPerms.join(', ') || '-';
 
       embeds[0].addFields(
         { name: this.t('role', { locale }), value: `${roles.highest}`, inline: true },

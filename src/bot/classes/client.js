@@ -69,12 +69,10 @@ module.exports = class extends Client {
 			this.shard.fetchClientValues('guilds.cache.size'),
 			this.shard.fetchClientValues('channels.cache.size'),
 			this.shard.broadcastEval(client => client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
-		])
-			.then(results => {
-				this.totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
-				this.totalChannels = results[1].reduce((acc, channelsCount) => acc + channelsCount, 0);
-				this.totalMembers = results[2].reduce((acc, memberCount) => acc + memberCount, 0);
-			})
-			.catch(console.error);
+		]).then(results => {
+			this.totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
+			this.totalChannels = results[1].reduce((acc, channelsCount) => acc + channelsCount, 0);
+			this.totalMembers = results[2].reduce((acc, memberCount) => acc + memberCount, 0);
+		}).catch(console.error);
 	}
 };

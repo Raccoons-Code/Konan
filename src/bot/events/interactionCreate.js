@@ -1,5 +1,7 @@
 const { Event } = require('../classes');
-const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, MessageContextMenuInteraction, SelectMenuInteraction, UserContextMenuInteraction } = require('discord.js');
+const { codeBlock } = require('@discordjs/builders');
+const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageContextMenuInteraction, MessageEmbed, SelectMenuInteraction, UserContextMenuInteraction } = require('discord.js');
+const { env: { GUILD_INVITE } } = process;
 
 module.exports = class extends Event {
 	constructor(...args) {
@@ -11,7 +13,7 @@ module.exports = class extends Event {
 
 	/** @param {AutocompleteInteraction|ButtonInteraction|CommandInteraction|MessageContextMenuInteraction|SelectMenuInteraction|UserContextMenuInteraction} interaction */
 	async execute(interaction) {
-		const { locale, targetType, componentType } = interaction;
+		const { client, locale, targetType, componentType } = interaction;
 
 		const command = this[targetType || componentType || 'CHAT_INPUT']?.(interaction);
 
@@ -21,18 +23,28 @@ module.exports = class extends Event {
 			await command.execute(interaction);
 		} catch (error) {
 			this.client.sendError(error);
+
+			const embeds = [new MessageEmbed().setColor('DARK_RED')
+				.setTitle(this.t('There was an error while executing this command!', { locale }))
+				.setDescription(codeBlock('properties', `${error.name}: ${error.message}`))
+				.setFooter({ text: command.data?.name })
+				.setTimestamp(Date.now())];
+
+			const components = [];
+
+			if (GUILD_INVITE)
+				components.push(new MessageActionRow().setComponents(new MessageButton().setStyle('LINK')
+					.setLabel(this.t('serverForSupport', { locale }))
+					.setURL(`${client.options.http.invite}/${GUILD_INVITE}`)));
+
+			const ephemeral = true;
+
 			try {
 				if (!interaction.isAutocomplete() && !interaction.isMessageComponent()) {
 					if (interaction.replied) {
-						await interaction.editReply({
-							content: this.t('There was an error while executing this command!', { locale }),
-							ephemeral: true,
-						});
+						await interaction.editReply({ components, embeds, ephemeral });
 					} else {
-						await interaction.reply({
-							content: this.t('There was an error while executing this command!', { locale }),
-							ephemeral: true,
-						});
+						await interaction.reply({ components, embeds, ephemeral });
 					}
 				}
 			} catch { null; }

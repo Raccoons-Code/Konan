@@ -19,8 +19,6 @@ module.exports = class extends SlashCommand {
 
     const error = options.getString('error');
 
-    this.client.sendError({ name: 'Command', message: this.data.name, stack: error }).then(() =>
-      interaction.reply({ content: 'Successfully sended.', ephemeral: true })).catch(() =>
-        interaction.reply({ content: 'Unable to send.', ephemeral: true }));
+    throw Error(error);
   }
 };
