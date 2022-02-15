@@ -10,13 +10,11 @@ module.exports = new class {
       const { found } = new GlobSync(`${__dirname}/${lang}/translation*.json`);
 
       this[lang] = found.reduce((acc, value) => {
-        const [, matched] = value.match(RegExp(`(?:${lang}/(.+)\\.json)`));
+        const [, matched] = value.match(RegExp(`(?:(?!${lang})/${lang}/(.+)\\.json)$`));
 
-        const splitted = matched.split('.');
+        const key = matched.split('.').pop();
 
-        const key = splitted[splitted.length - 1];
-
-        if (key === 'translation')
+        if (!acc.translation && key === 'translation')
           return { translation: require(value) };
 
         return acc.translation[key] = require(value);

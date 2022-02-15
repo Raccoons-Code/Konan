@@ -6,7 +6,7 @@ module.exports = class extends SlashCommand {
 		this.data = this.setName('ping')
 			.setDescription('Replies with Pong!');
 		this._ping = Infinity;
-		this.ping_ = 0;
+		this.ping_ = -Infinity;
 	}
 
 	async execute(interaction = this.CommandInteraction) {

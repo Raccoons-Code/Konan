@@ -22,19 +22,19 @@ module.exports = class extends Event {
 		try {
 			await command.execute(interaction);
 		} catch (error) {
-			this.client.sendError(error);
+			client.sendError(error);
 
 			const embeds = [new MessageEmbed().setColor('DARK_RED')
 				.setTitle(this.t('There was an error while executing this command!', { locale }))
 				.setDescription(codeBlock('properties', `${error.name}: ${error.message}`))
-				.setFooter({ text: command.data?.name })
+				.setFooter({ text: command.data?.name || '-' })
 				.setTimestamp(Date.now())];
 
 			const components = [];
 
 			if (GUILD_INVITE)
 				components.push(new MessageActionRow().setComponents(new MessageButton().setStyle('LINK')
-					.setLabel(this.t('serverForSupport', { locale }))
+					.setLabel(this.t('supportServer', { locale }))
 					.setURL(`${client.options.http.invite}/${GUILD_INVITE}`)));
 
 			const ephemeral = true;

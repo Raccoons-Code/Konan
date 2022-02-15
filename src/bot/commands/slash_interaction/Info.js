@@ -69,11 +69,9 @@ module.exports = class extends SlashCommand {
 
     const channel = options.getChannel('channel') || interaction.channel;
 
-    const { bitrate, children, createdAt, full, memberCount, messageCount, name, parent, rateLimitPerUser, rtcRegion, topic, userLimit, type } = channel;
+    const { bitrate, children, createdAt, full, memberCount, messageCount, name, parent, rateLimitPerUser, rtcRegion, topic, userLimit, threads, type } = channel;
 
-    const typ = type.split('_');
-
-    const t = typ[typ.length - 1];
+    const t = type.split('_').pop();
 
     if (interaction.inGuild()) {
       embeds[0].setFields([{ name: this.t('type', { locale }), value: this.t(t, { locale }), inline }]);
@@ -91,7 +89,8 @@ module.exports = class extends SlashCommand {
       if (['GUILD_NEWS', 'GUILD_STORE', 'GUILD_TEXT'].includes(type))
         embeds[0].addFields([
           { name: this.t('slowmode', { locale }), value: ms(rateLimitPerUser * 1000), inline },
-          { name: 'NSFW', value: this.t(channel.nsfw, { locale }), inline }]);
+          { name: 'NSFW', value: this.t(channel.nsfw, { locale }), inline },
+          { name: this.t('threads', { locale }), value: threads.cache.map(thread => thread).join(' ') || '-' }]);
 
       if (['GUILD_NEWS_THREAD', 'GUILD_PRIVATE_THREAD', 'GUILD_PUBLIC_THREAD'].includes(type))
         embeds[0].addFields([

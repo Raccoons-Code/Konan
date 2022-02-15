@@ -27,7 +27,7 @@ module.exports = class extends Command {
 
     if (GUILD_INVITE)
       buttons.push(new MessageButton().setStyle('LINK')
-        .setLabel(this.t('serverForSupport', { locale }))
+        .setLabel(this.t('supportServer', { locale }))
         .setURL(`${client.options.http.invite}/${GUILD_INVITE}`));
 
     if (DONATE_LINK)

@@ -29,15 +29,13 @@ module.exports = class extends Event {
 
 		if (!command) return;
 
-		if (channel.permissionsFor(guild.me).missing(command.data?.clientPermissions).length) return;
-
 		if (!/(backup|deploy|throw)/.test(commandName))
 			await channel.sendTyping();
 
 		try {
 			await command.execute(message);
 		} catch (error) {
-			this.client.sendError(error);
+			client.sendError(error);
 		}
 	}
 };
