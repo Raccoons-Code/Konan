@@ -5,10 +5,10 @@ module.exports = class extends SlashCommand {
   constructor(...args) {
     super(...args);
     this.data = this.setName('throw')
-      .setDescription('Throw new error')
+      .setDescription('Throw new error (Restricted for bot\'owners).')
       .setDefaultPermission(false)
       .addStringOption(option => option.setName('error')
-        .setDescription('Error message')
+        .setDescription('Error message.')
         .setRequired(true));
   }
 

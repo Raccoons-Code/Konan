@@ -5,7 +5,7 @@ module.exports = class extends SlashCommand {
   constructor(...args) {
     super(...args);
     this.data = this.setName('respawn')
-      .setDescription('Respawn application')
+      .setDescription('Respawn application (Restricted for bot\'owners).')
       .setDefaultPermission(false);
   }
 

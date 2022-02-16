@@ -7,8 +7,8 @@ module.exports = class extends SlashCommand {
     super(...args);
     this.data = this.setName('guess')
       .setDescription('You have 10 chances to guess the number from 1 to 100 that the bot set.')
-      .addNumberOption(option => option.setName('number')
-        .setDescription('Number')
+      .addIntegerOption(option => option.setName('number')
+        .setDescription('Integer')
         .setMinValue(1)
         .setMaxValue(100)
         .setAutocomplete(true)
@@ -23,7 +23,7 @@ module.exports = class extends SlashCommand {
 
     const { guildId, locale, options, user: author } = interaction;
 
-    const number = options.getNumber('number');
+    const number = options.getInteger('number');
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')

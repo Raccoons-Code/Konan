@@ -12,7 +12,7 @@ module.exports = class extends SlashCommand {
         .setDescription('The user to be banned.')
         .setRequired(true))
       .addNumberOption(option => option.setName('delete_messages')
-        .setDescription('How much of that person\'s message history should be deleted')
+        .setDescription('How much of that person\'s message history should be deleted.')
         .setChoices([['Last 24 hours', 1], ['Last 7 days', 7]]))
       .addStringOption(option => option.setName('reason')
         .setDescription('The reason for banishment, if any.'));

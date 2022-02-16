@@ -12,51 +12,51 @@ module.exports = class extends SlashCommand {
     this.data = this.setName('backup')
       .setDescription('Make backup for your server.')
       .addSubcommand(subcommand => subcommand.setName('create')
-        .setDescription('Create a new backup.'))
+        .setDescription('Create a new backup. Only on server!'))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('delete')
-        .setDescription('Delete your backup or server')
+        .setDescription('If you are on a server, you will manage server backups.')
         .addSubcommand(subcommand => subcommand.setName('server')
-          .setDescription('Delete server')
+          .setDescription('Delete backups from a server')
           .addStringOption(option => option.setName('id')
-            .setDescription('Server id')
+            .setDescription('Server ID')
             .setAutocomplete(true)
             .setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName('backup')
           .setDescription('Delete backup')
           .addStringOption(option => option.setName('id')
-            .setDescription('Server id')
+            .setDescription('Server ID')
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('key')
-            .setDescription('backup key')
+            .setDescription('Backup key')
             .setAutocomplete(true)
             .setRequired(true))))
       .addSubcommand(subcommand => subcommand.setName('list')
-        .setDescription('List your backups.'))
+        .setDescription('If you are on a server, this shows the backups for that server.'))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('restore')
-        .setDescription('restore')
+        .setDescription('If you are on a server, you will manage server backups.')
         .addSubcommand(subcommand => subcommand.setName('server')
-          .setDescription('restore server')
+          .setDescription('Restore server')
           .addStringOption(option => option.setName('id')
-            .setDescription('Server id')
+            .setDescription('Server ID')
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('key')
-            .setDescription('backup key')
+            .setDescription('Backup key')
             .setAutocomplete(true)
             .setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName('backup')
-          .setDescription('restore server')
+          .setDescription('Restore server')
           .addStringOption(option => option.setName('key')
-            .setDescription('backup key')
+            .setDescription('Backup key')
             .setAutocomplete(true)
             .setRequired(true))
           .addBooleanOption(option => option.setName('clear_server')
             .setDescription('Clear server before restore?'))))
       .addSubcommand(subcommand => subcommand.setName('update')
-        .setDescription('Update a backup of server.')
+        .setDescription('Update a backup of server. Only on server!')
         .addStringOption(option => option.setName('key')
-          .setDescription('backup key')
+          .setDescription('Backup key')
           .setAutocomplete(true)
           .setRequired(true)));
     this.cache = { user: {}, guild: {}, backup: {} };
@@ -65,7 +65,7 @@ module.exports = class extends SlashCommand {
   async execute(interaction = this.CommandInteraction) {
     const { locale, memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props.userPermissions);
+    const userPermissions = memberPermissions?.missing(this.props.userPermissions) || [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return interaction.respond([]);
@@ -210,7 +210,7 @@ module.exports = class extends SlashCommand {
         const backup = backups[i];
 
         res.push({
-          name: `${backup.data.name} | ${backup.id}${backup.guild == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
+          name: `${backup.data.name} | ${backup.id}${backup.guildId == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
           value: `${backup.id}`,
         });
 

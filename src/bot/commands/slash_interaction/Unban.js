@@ -9,7 +9,7 @@ module.exports = class extends SlashCommand {
     this.data = this.setName('unban')
       .setDescription('Revokes the ban from the selected user.')
       .addStringOption(option => option.setName('user')
-        .setDescription('User id')
+        .setDescription('User ID')
         .setAutocomplete(true)
         .setRequired(true))
       .addStringOption(option => option.setName('reason')
@@ -57,9 +57,9 @@ module.exports = class extends SlashCommand {
 
     try {
       await guild.members.unban(id, reason);
-      interaction.editReply(this.t('userBanned', { locale }))
+      interaction.editReply(this.t('userBanned', { locale }));
     } catch {
-      interaction.editReply(this.t('banError', { locale }))
+      interaction.editReply(this.t('banError', { locale }));
     }
   }
 

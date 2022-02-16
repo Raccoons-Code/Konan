@@ -10,13 +10,13 @@ module.exports = class extends SlashCommand {
       clientPermissions: ['CREATE_INSTANT_INVITE'],
     });
     this.data = this.setName('party')
-      .setDescription('Create an activity party together')
+      .setDescription('Create an activity party together.')
       .addStringOption(option => option.setName('activity')
-        .setDescription('Select activity')
+        .setDescription('Select activity.')
         .setAutocomplete(true)
         .setRequired(true))
       .addChannelOption(option => option.setName('channel')
-        .setDescription('Select a voice channel')
+        .setDescription('Select a voice channel.')
         .addChannelTypes([GUILD_VOICE]));
     if (this.client?.ready) {
       this.discordTogether = new DiscordTogether(this.client);

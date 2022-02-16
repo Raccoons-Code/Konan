@@ -5,9 +5,9 @@ module.exports = class extends SlashCommand {
   constructor(...args) {
     super(...args);
     this.data = this.setName('number_is_prime')
-      .setDescription('Verify if number is prime')
+      .setDescription('Verify if number is prime.')
       .addIntegerOption(option => option.setName('number')
-        .setDescription('Write a integer')
+        .setDescription('Write a integer.')
         .setMaxValue(999999999999999)
         .setMinValue(2)
         .setRequired(true));
