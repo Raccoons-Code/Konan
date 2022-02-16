@@ -47,13 +47,11 @@ module.exports = class extends Client {
 		const guildId = GUILD_ID.split(',')[0];
 		const channelId = ERROR_CHANNEL.split(',')[0];
 
-		const guild = this.supportGuild ? this.supportGuild :
-			this.supportGuild = this.guilds.resolve(guildId) || await this.guilds.fetch(guildId);
+		const guild = await this.guilds.fetch(guildId);
 
 		if (!guild) return console.error(reason);
 
-		const channel = this.supportErrorChannel ? this.supportErrorChannel :
-			this.supportErrorChannel = guild.channels.resolve(channelId) || await guild.channels.fetch(channelId);
+		const channel = await guild.channels.fetch(channelId);
 
 		if (!channel || !channel.viewable) return console.error(reason);
 

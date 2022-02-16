@@ -267,14 +267,11 @@ module.exports = class extends SlashCommand {
       if (!_guild_id || !_channel_id || !_team_id)
         return interaction.editReply(this.t('commandOfflineTryLater', { locale }));
 
-      const _guild = client.guilds.resolve(_guild_id) ||
-        await client.guilds.fetch(_guild_id);
+      const _guild = await client.guilds.fetch(_guild_id);
 
-      const _channel = _guild.channels.resolve(_channel_id) ||
-        await client.channels.fetch(_channel_id);
+      const _channel = await _guild.channels.fetch(_channel_id);
 
-      const _team = _guild.members.resolve(_team_id) ||
-        await _guild.members.fetch(_team_id);
+      const _team = await _guild.members.fetch(_team_id);
 
       if (!_guild || !_channel || !_team)
         return interaction.editReply(this.t('commandOfflineTryLater', { locale }));

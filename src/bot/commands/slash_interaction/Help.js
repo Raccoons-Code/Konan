@@ -1,5 +1,5 @@
 const { SlashCommand } = require('../../classes');
-const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const { env: { DONATE_LINK, GUILD_INVITE } } = process;
 
 module.exports = class extends SlashCommand {
@@ -43,7 +43,15 @@ module.exports = class extends SlashCommand {
         .setLabel(this.t('donate', { locale }))
         .setURL(`${DONATE_LINK}`));
 
-    const components = [new MessageActionRow().setComponents(buttons)];
+    const menus = [new MessageSelectMenu()
+      .setCustomId(JSON.stringify({ c: this.data.name }))
+      .setOptions([
+        { label: 'Home', value: 'home', default: true },
+        { label: 'Languages', value: 'localization' },
+      ])];
+
+    const components = [new MessageActionRow().setComponents(buttons),
+    new MessageActionRow().setComponents(menus)];
 
     interaction.editReply({ components, embeds });
   }

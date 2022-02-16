@@ -66,8 +66,7 @@ module.exports = class extends Command {
 
     setTimeout(async () => {
       if (newGuild.available) {
-        const member = newGuild.members.resolve(userId) ||
-          await newGuild.members.fetch(userId);
+        const member = await newGuild.members.fetch(userId);
 
         if (member) return;
       }

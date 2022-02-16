@@ -12,9 +12,6 @@ module.exports = class extends SelectMenuInteraction {
   async execute(interaction = this.SelectMenuInteraction) {
     const { member, values } = interaction;
 
-    if (!member.manageable)
-      return interaction.deferUpdate();
-
     const roles = { add: [], remove: [] };
 
     for (let i = 0; i < values.length; i++) {
@@ -64,7 +61,7 @@ module.exports = class extends SelectMenuInteraction {
         count: oldvalue.count + (add1 + rem1),
       };
 
-      const [, label] = option.label.match(/(.+?)(?:\s(\d+))?/) || [];
+      const [, label] = option.label.match(/(.+?)(?:\s(\d+))+?/) || [];
 
       option.label = `${label} ${newValue.count}`;
 

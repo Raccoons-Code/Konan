@@ -31,13 +31,11 @@ module.exports = class extends SlashCommand {
 
     const { client, locale, member, options } = interaction;
 
-    let choose;
+    const channel = options.getChannel('channel') || member.voice.channel;
 
-    const channel = choose = options.getChannel('channel') || member.voice.channel;
-
-    if (!channel || channel.createStageInstance)
+    if (!channel || channel.type !== 'GUILD_VOICE')
       return interaction.reply({
-        content: `${member}, ${this.t(choose ? 'userMustChooseVoiceChannel' : 'userMustBeOnVoiceChannel', { locale })}`,
+        content: `${member}, ${this.t('userMustBeOnVoiceChannel', { locale })}`,
         ephemeral: true,
       });
 

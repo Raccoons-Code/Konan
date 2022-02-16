@@ -70,6 +70,6 @@ module.exports = class extends SlashCommandBuilder {
    * @return {Promise<Message>}
    */
   async getMessageById(channel, id) {
-    return channel.messages.resolve(id) || await channel.messages.fetch(id);
+    return await channel.messages.fetch(id);
   }
 };

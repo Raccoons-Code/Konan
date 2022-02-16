@@ -52,8 +52,7 @@ module.exports = class extends Event {
 
 			if (!user) return this.deleteGuild(guild);
 
-			let member = guild.members.resolve(user.id) ||
-				await guild.members.fetch(user.id);
+			let member = await guild.members.fetch(user.id);
 
 			if (member)
 				return this.restoreGuild(guild, member, user);
@@ -61,7 +60,7 @@ module.exports = class extends Event {
 			multiplier++;
 
 			setTimeout(async () => {
-				member = guild.members.resolve(user.id);
+				member = await guild.members.fetch(user.id);
 
 				if (member)
 					return this.restoreGuild(guild, member, user);

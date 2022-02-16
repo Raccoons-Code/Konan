@@ -20,6 +20,7 @@
   "checkers": "checkers",
   "chess": "chess",
   "chessdev": "chessdev",
+  "clickToOpen": "Click here to open",
   "command404": "Command not found!",
   "commandOfflineTryLater": "This command is temporarily offline, please try again later.",
   "commandTooManyRequests": "There are too many requests for this command at the moment.",

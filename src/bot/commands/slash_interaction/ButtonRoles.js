@@ -361,7 +361,7 @@ module.exports = class extends SlashCommand {
 
     const channelId = options.get('channel').value;
 
-    const channel = guild.channels.resolve(channelId) || await guild.channels.fetch(channelId);
+    const channel = await guild.channels.fetch(channelId);
 
     const focused = options.getFocused(true);
     const regex = RegExp(focused.value, 'i');
@@ -420,7 +420,7 @@ module.exports = class extends SlashCommand {
 
           const { roleId } = JSON.parse(customId);
 
-          const role = guild.roles.resolve(roleId) || await guild.roles.fetch(roleId);
+          const role = await guild.roles.fetch(roleId);
 
           const buttonName = `${label ? label : `Button ${i2 + 1}`} | ${role.name} | ${roleId}`;
 

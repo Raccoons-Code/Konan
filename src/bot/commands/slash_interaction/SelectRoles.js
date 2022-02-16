@@ -448,7 +448,7 @@ module.exports = class extends SlashCommand {
 
     const channelId = options.get('channel').value;
 
-    const channel = guild.channels.resolve(channelId) || await guild.channels.fetch(channelId);
+    const channel = await guild.channels.fetch(channelId);
 
     const focused = options.getFocused(true);
     const regex = RegExp(focused.value, 'i');

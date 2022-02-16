@@ -60,8 +60,7 @@ module.exports = class extends Command {
       for (let i = 0; i < guilds?.length; i++) {
         const id = guilds[i];
 
-        const _guild = client.guilds.resolve(id) ||
-          await client.guilds.fetch(id);
+        const _guild = await client.guilds.fetch(id);
 
         if (!_guild) continue;
 

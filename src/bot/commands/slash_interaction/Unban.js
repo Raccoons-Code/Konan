@@ -48,7 +48,7 @@ module.exports = class extends SlashCommand {
 
     const id = options.getString('user');
 
-    const ban = guild.bans.resolve(id) || await guild.bans.fetch(id);
+    const ban = await guild.bans.fetch(id);
 
     if (!ban)
       return interaction.editReply(this.t('ban404', { locale }));

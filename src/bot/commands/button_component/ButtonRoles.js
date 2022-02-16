@@ -14,16 +14,13 @@ module.exports = class extends ButtonInteraction {
 
     const { roleId, onlyAdd } = JSON.parse(customId);
 
-    if (!member.manageable)
-      return interaction.deferUpdate();
-
     member.roles.resolve(roleId) ? onlyAdd ? interaction.deferUpdate() :
       member.roles.remove(roleId)
         .then(() => this.setComponents(interaction, false))
-        .catch(() => null) :
+        .catch(() => interaction.deferUpdate()) :
       member.roles.add(roleId)
         .then(() => this.setComponents(interaction, true))
-        .catch(() => null);
+        .catch(() => interaction.deferUpdate());
   }
 
   setComponents(interaction = this.ButtonInteraction, boolean) {
@@ -38,7 +35,7 @@ module.exports = class extends ButtonInteraction {
 
     component.setCustomId(JSON.stringify(newCustomId));
 
-    const [, label] = component.label.match(/(.+?)(?:\s(\d+))?/) || [];
+    const [, label] = component.label.match(/(.+?)(?:\s(\d+))+?/) || [];
 
     const name = `${label} ${newCustomId.count}`;
 
