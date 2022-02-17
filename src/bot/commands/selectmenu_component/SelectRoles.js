@@ -35,13 +35,14 @@ module.exports = class extends SelectMenuInteraction {
     const { customId, component, message, values } = interaction;
 
     /** @type {customId} */
-    const oldCustomId = this.util.parseJSON(customId);
+    const { c, command, count, d, date } = this.util.parseJSON(customId);
 
     const { add, remove } = roles;
 
     const newCustomId = {
-      ...oldCustomId,
-      count: oldCustomId.count + (add.length - remove.length),
+      c: c || command,
+      count: count + (add.length - remove.length),
+      d: date,
     };
 
     const { options } = component;
@@ -51,14 +52,16 @@ module.exports = class extends SelectMenuInteraction {
 
       if (!values.includes(option.value)) continue;
 
-      const oldvalue = this.util.parseJSON(option.value);
+      /** @type {optionValue} */
+      const { count: count2, d2, date2, roleId } = this.util.parseJSON(option.value);
 
-      const add1 = add.includes(oldvalue.roleId) ? 1 : 0;
-      const rem1 = remove.includes(oldvalue.roleId) ? -1 : 0;
+      const add1 = add.includes(roleId) ? 1 : 0;
+      const rem1 = remove.includes(roleId) ? -1 : 0;
 
       const newValue = {
-        ...oldvalue,
-        count: oldvalue.count + (add1 + rem1),
+        count: count2 + (add1 + rem1),
+        d: d2 || date2,
+        roleId,
       };
 
       const [, label] = option.label.match(/(.+?)(?:\s(\d+))+?/) || [];
@@ -79,14 +82,14 @@ module.exports = class extends SelectMenuInteraction {
 
 /**
  * @typedef customId
- * @property {string} command
+ * @property {string} c
  * @property {number} count
- * @property {number} date
+ * @property {number} d
  */
 
 /**
  * @typedef optionValue
  * @property {number} count
- * @property {number} date
+ * @property {number} d
  * @property {string} roleId
  */

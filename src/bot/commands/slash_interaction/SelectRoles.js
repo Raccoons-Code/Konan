@@ -186,14 +186,14 @@ module.exports = class extends SlashCommand {
       await guild.emojis.fetch(item_emoji).catch(() => null) || null;
 
     const newCustomId = {
-      command: this.data.name,
+      c: this.data.name,
       count: 0,
-      date: Date.now(),
+      d: Date.now(),
     };
 
     const value = JSON.stringify({
       count: 0,
-      date: Date.now(),
+      d: Date.now(),
       roleId: role.id,
     });
 
@@ -303,12 +303,12 @@ module.exports = class extends SlashCommand {
             if (option.value !== item) return option;
 
             /** @type {optionValue} */
-            const { count, date } = this.util.parseJSON(option.value);
+            const { count, d, date } = this.util.parseJSON(option.value);
 
             option.description = description ? description : option.description;
             option.emoji = emoji ? `${emoji}` : option.emoji;
             option.label = label ? `${label} ${count}` : option.label;
-            option.value = role ? JSON.stringify({ count, date, roleId: role.id }) : option.value;
+            option.value = role ? JSON.stringify({ count, d: d || date, roleId: role.id }) : option.value;
 
             return option;
           });
@@ -355,7 +355,7 @@ module.exports = class extends SlashCommand {
 
       const value = JSON.stringify({
         count: 0,
-        date: Date.now(),
+        d: Date.now(),
         roleId: role.id,
       });
 
