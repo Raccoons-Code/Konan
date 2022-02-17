@@ -21,8 +21,6 @@ module.exports = class extends SlashCommand {
           .setDescription('Item name {0,90} - default: <role>'))
         .addStringOption(option => option.setName('item_description')
           .setDescription('Item description {0,100}'))
-        .addBooleanOption(option => option.setName('item_default')
-          .setDescription('Set item default - default: false'))
         .addStringOption(option => option.setName('item_emoji')
           .setDescription('Item emoji'))
         .addBooleanOption(option => option.setName('menu_disabled')
@@ -91,8 +89,6 @@ module.exports = class extends SlashCommand {
             .setDescription('Item name {0,90}'))
           .addStringOption(option => option.setName('item_description')
             .setDescription('Item description {0,100}'))
-          .addBooleanOption(option => option.setName('item_default')
-            .setDescription('Set item default'))
           .addStringOption(option => option.setName('item_emoji')
             .setDescription('Item emoji'))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('add')
@@ -118,8 +114,6 @@ module.exports = class extends SlashCommand {
             .setDescription('Item name {1,90} - default: <role>'))
           .addStringOption(option => option.setName('item_description')
             .setDescription('Item description {1,100}'))
-          .addBooleanOption(option => option.setName('item_default')
-            .setDescription('Set item default - default: false'))
           .addStringOption(option => option.setName('item_emoji')
             .setDescription('Item emoji'))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('remove')
@@ -178,7 +172,6 @@ module.exports = class extends SlashCommand {
     const { client, guild, locale, options } = interaction;
 
     const [, title, embed_desc] = options.getString('text')?.match(this.textRegexp) || [];
-    const _default = options.getBoolean('item_default');
     const channel = options.getChannel('channel') || interaction.channel;
     const description = options.getString('item_description')?.match(this.limitRegex)[1];
     const menu_place_holder = options.getString('menu_place_holder')?.match(this.limitRegex)[1] || '';
@@ -211,7 +204,6 @@ module.exports = class extends SlashCommand {
         label: `${label} 0`,
         value,
         description,
-        default: _default,
         emoji,
       }])
       .setPlaceholder(menu_place_holder)
@@ -294,7 +286,6 @@ module.exports = class extends SlashCommand {
       const role = options.getRole('role');
       const label = options.getString('item_name')?.match(this.labelRegex)[1];
       const description = options.getString('item_description')?.match(this.limitRegex)[1];
-      const _default = options.getBoolean('item_default');
       const item_emoji = options.getString('item_emoji');
 
       const emoji = item_emoji ? client.emojis.resolveIdentifier(item_emoji) ||
@@ -314,7 +305,6 @@ module.exports = class extends SlashCommand {
             /** @type {optionValue} */
             const { count, date } = this.util.parseJSON(option.value);
 
-            option.default = typeof _default === 'boolean' ? _default : option.default;
             option.description = description ? description : option.description;
             option.emoji = emoji ? `${emoji}` : option.emoji;
             option.label = label ? `${label} ${count}` : option.label;
@@ -356,7 +346,6 @@ module.exports = class extends SlashCommand {
       const role = options.getRole('role');
       const label = options.getString('item_name')?.match(this.labelRegex)[1] || role.name;
       const description = options.getString('item_description')?.match(this.limitRegex)[1];
-      const _default = options.getBoolean('item_default');
       const item_emoji = options.getString('item_emoji');
 
       const emoji = client.emojis.resolveIdentifier(item_emoji) ||
@@ -380,7 +369,6 @@ module.exports = class extends SlashCommand {
             label: `${label} 0`,
             value,
             description,
-            default: _default,
             emoji,
           }])
             .setMaxValues(selectmenu.options.length);
@@ -543,14 +531,14 @@ module.exports = class extends SlashCommand {
           for (let i3 = 0; i3 < menuOptions.length; i3++) {
             const option = menuOptions[i3];
 
-            const { default: _default, description, emoji, label, value } = option;
+            const { description, emoji, label, value } = option;
 
             /** @type {optionValue} */
             const { roleId } = this.util.parseJSON(value);
 
             const role = guild.roles.resolve(roleId);
 
-            const optionName = `${emoji ? `${emoji} ` : ''}${label} | ${role.name} | ${role.id}${_default ? ' | default' : ''}${description ? ` | ${description}` : ''}`;
+            const optionName = `${emoji ? `${emoji} ` : ''}${label} | ${role?.name} | ${roleId}${description ? ` | ${description}` : ''}`;
 
             res.push({
               name: optionName.match(this.limitRegex)[1],

@@ -31,8 +31,8 @@ module.exports = class extends ButtonInteraction {
 
     const newCustomId = {
       c: c || command,
-      d: date,
       count: count + (boolean ? 1 : -1),
+      d: date,
       roleId,
     };
 

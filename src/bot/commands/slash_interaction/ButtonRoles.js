@@ -418,7 +418,7 @@ module.exports = class extends SlashCommand {
 
           const role = await guild.roles.fetch(roleId);
 
-          const buttonName = `${label ? label : `Button ${i2 + 1}`} | ${role.name} | ${roleId}`;
+          const buttonName = `${label ? label : `Button ${i2 + 1}`} | ${role?.name} | ${roleId}`;
 
           if (regex.test(buttonName))
             res.push({
