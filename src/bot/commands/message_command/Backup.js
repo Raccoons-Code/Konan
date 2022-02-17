@@ -34,7 +34,7 @@ module.exports = class extends Command {
   async restore(message = this.Message) {
     const { args, client } = message;
 
-    const { guildId, key, userId } = JSON.parse(args.join(' '));
+    const { guildId, key, userId } = this.util.parseJSON(args.join(' '));
 
     if (!guildId || !key || !userId) return;
 

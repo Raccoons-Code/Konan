@@ -18,7 +18,7 @@ module.exports = class extends SelectMenuInteraction {
       const value = values[i];
 
       /** @type {optionValue} */
-      const { roleId } = JSON.parse(value);
+      const { roleId } = this.util.parseJSON(value);
 
       const role = await member.roles.resolve(roleId);
 
@@ -35,7 +35,7 @@ module.exports = class extends SelectMenuInteraction {
     const { customId, component, message, values } = interaction;
 
     /** @type {customId} */
-    const oldCustomId = JSON.parse(customId);
+    const oldCustomId = this.util.parseJSON(customId);
 
     const { add, remove } = roles;
 
@@ -51,7 +51,7 @@ module.exports = class extends SelectMenuInteraction {
 
       if (!values.includes(option.value)) continue;
 
-      const oldvalue = JSON.parse(option.value);
+      const oldvalue = this.util.parseJSON(option.value);
 
       const add1 = add.includes(oldvalue.roleId) ? 1 : 0;
       const rem1 = remove.includes(oldvalue.roleId) ? -1 : 0;

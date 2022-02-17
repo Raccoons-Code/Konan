@@ -162,9 +162,9 @@ module.exports = class extends SlashCommand {
       await guild.emojis.fetch(button_emoji).catch(() => null) : null;
 
     const newCustomId = {
-      command: this.data.name,
+      c: this.data.name,
       count: 0,
-      date: Date.now(),
+      d: Date.now(),
       roleId: role.id,
     };
 
@@ -238,18 +238,14 @@ module.exports = class extends SlashCommand {
         row.components = row.components.map(button => {
           if (button.customId !== buttonId) return button;
 
-          const oldCustomId = JSON.parse(button.customId);
+          /** @type {customId} */
+          const { c, command, count, d, date, roleId } = this.util.parseJSON(button.customId);
 
-          const newCustomId = {
-            ...oldCustomId,
-            roleId: role?.id || oldCustomId.roleId,
-          };
-
-          button.setCustomId(JSON.stringify(newCustomId))
-            .setDisabled(typeof button_disabled === 'boolean' ? button_disabled : button.disabled)
-            .setEmoji(emoji || button.emoji)
-            .setLabel(`${button_name || button.label} ${oldCustomId.count}`)
-            .setStyle(button_style || button.style);
+          button.setCustomId(JSON.stringify({ c: c || command, count, d: d || date, roleId: role?.id || roleId }));
+          button.setDisabled(typeof button_disabled === 'boolean' ? button_disabled : button.disabled);
+          button.setEmoji(emoji || button.emoji);
+          button.setLabel(button_name ? `${button_name} ${count}` : button.label);
+          button.setStyle(button_style || button.style);
 
           return button;
         });
@@ -292,9 +288,9 @@ module.exports = class extends SlashCommand {
         await guild.emojis.fetch(button_emoji).catch(() => null) : null;
 
       const newCustomId = {
-        command: this.data.name,
+        c: this.data.name,
         count: 0,
-        date: Date.now(),
+        d: Date.now(),
         roleId: role.id,
       };
 
@@ -367,7 +363,7 @@ module.exports = class extends SlashCommand {
     const regex = RegExp(focused.value, 'i');
 
     if (focused.name === 'message_id') {
-      const messages = channel.messages.cache.size ? channel.messages.cache : await channel.messages.fetch();
+      const messages = await channel.messages.fetch();
 
       const messages_filtered = messages.filter(m => m.author.id === client.user.id &&
         m.embeds.length && m.components.some(c => c.components[0].type === 'BUTTON') ?
@@ -418,7 +414,7 @@ module.exports = class extends SlashCommand {
 
           const { customId, label } = element;
 
-          const { roleId } = JSON.parse(customId);
+          const { roleId } = this.util.parseJSON(customId);
 
           const role = await guild.roles.fetch(roleId);
 
@@ -444,3 +440,11 @@ module.exports = class extends SlashCommand {
     this.editAutocomplete(interaction);
   }
 };
+
+/**
+ * @typedef customId
+ * @property {string} c
+ * @property {number} count
+ * @property {number} d
+ * @property {string} roleId
+ */

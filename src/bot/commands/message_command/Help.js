@@ -16,9 +16,12 @@ module.exports = class extends Command {
 
     const locale = guild?.preferredLocale;
 
+    const avatarURL = guild?.me.displayAvatarURL({ dynamic: true }) ||
+      client.user.displayAvatarURL({ dynamic: true });
+
     const embeds = [new MessageEmbed().setColor('RANDOM')
       .setTitle(this.t('konanSupport', { locale }))
-      .setThumbnail(guild?.me.displayAvatarURL() || client.user.displayAvatarURL())
+      .setThumbnail(avatarURL)
       .setDescription(this.t('helpText', { locale, user }))];
 
     const buttons = [new MessageButton().setStyle('LINK')

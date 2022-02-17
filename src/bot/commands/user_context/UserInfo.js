@@ -24,7 +24,7 @@ module.exports = class extends UserContextMenu {
         { name: this.t('discordId', { locale }), value: inlineCode(id), inline: true },
       )
       .setFooter({ text: this.t(member ? 'joinedTheServerAt' : 'creationDate', { locale }) })
-      .setThumbnail(user.displayAvatarURL())
+      .setThumbnail(user.displayAvatarURL({ dynamic: true }))
       .setTimestamp(member?.joinedTimestamp || createdAt)];
 
     if (member) {
@@ -45,7 +45,7 @@ module.exports = class extends UserContextMenu {
         embeds[0].setColor(displayColor);
 
       if (avatar)
-        embeds[0].setThumbnail(member.displayAvatarURL());
+        embeds[0].setThumbnail(member.displayAvatarURL({ dynamic: true }));
     }
 
     interaction.reply({ ephemeral: true, embeds });

@@ -12,9 +12,9 @@ module.exports = class extends ButtonInteraction {
   async execute(interaction = this.ButtonInteraction) {
     const { customId, member } = interaction;
 
-    const { roleId, onlyAdd } = JSON.parse(customId);
+    const { roleId } = this.util.parseJSON(customId);
 
-    member.roles.resolve(roleId) ? onlyAdd ? interaction.deferUpdate() :
+    member.roles.resolve(roleId) ?
       member.roles.remove(roleId)
         .then(() => this.setComponents(interaction, false))
         .catch(() => interaction.deferUpdate()) :
@@ -26,11 +26,14 @@ module.exports = class extends ButtonInteraction {
   setComponents(interaction = this.ButtonInteraction, boolean) {
     const { customId, component, message } = interaction;
 
-    const oldCustomId = JSON.parse(customId);
+    /** @type {customId} */
+    const { c, command, count, date, roleId } = this.util.parseJSON(customId);
 
     const newCustomId = {
-      ...oldCustomId,
-      count: oldCustomId.count + (boolean ? 1 : -1),
+      c: c || command,
+      d: date,
+      count: count + (boolean ? 1 : -1),
+      roleId,
     };
 
     component.setCustomId(JSON.stringify(newCustomId));
@@ -46,3 +49,11 @@ module.exports = class extends ButtonInteraction {
     interaction.update({ components });
   }
 };
+
+/**
+ * @typedef customId
+ * @property {string} c
+ * @property {number} count
+ * @property {number} d
+ * @property {string} roleId
+ */

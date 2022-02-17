@@ -454,7 +454,7 @@ module.exports = class extends SlashCommand {
     const regex = RegExp(focused.value, 'i');
 
     if (focused.name === 'message_id') {
-      const messages = channel.messages.cache.size ? channel.messages.cache : await channel.messages.fetch();
+      const messages = await channel.messages.fetch();
 
       const messages_filtered = messages.filter(m => m.author.id === client.user.id &&
         m.embeds.length && m.components.some(c => c.components[0].type === 'SELECT_MENU') ?

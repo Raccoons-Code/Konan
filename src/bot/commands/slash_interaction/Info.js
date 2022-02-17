@@ -45,9 +45,13 @@ module.exports = class extends SlashCommand {
   }
 
   async application(interaction = this.CommandInteraction, embeds = this.embeds) {
-    const { client, locale } = interaction;
+    const { client, guild, locale } = interaction;
 
-    const { channels, guilds, readyAt, users, ws } = client;
+    const { channels, guilds, readyAt, user, users, ws } = client;
+
+    const avatarURL = guild?.me.displayAvatarURL({ dynamic: true }) || user.displayAvatarURL({ dynamic: true });
+
+    const username = guild?.me.displayName || user.username;
 
     const stats = stripIndents(`
       Servers  : ${client.totalGuilds || guilds.cache.size}
@@ -58,7 +62,7 @@ module.exports = class extends SlashCommand {
       Version  : ${version}
       `);
 
-    embeds[0].setAuthor({ name: client.user.username, iconURL: client.user.displayAvatarURL() })
+    embeds[0].setAuthor({ name: username, iconURL: avatarURL })
       .setFields([{ name: 'Stats', value: codeBlock('properties', stats) }]);
 
     interaction.editReply({ embeds });
@@ -73,9 +77,9 @@ module.exports = class extends SlashCommand {
 
     const t = type.split('_').pop();
 
-    if (interaction.inGuild()) {
-      embeds[0].setFields([{ name: this.t('type', { locale }), value: this.t(t, { locale }), inline }]);
+    embeds[0].setFields([{ name: this.t('type', { locale }), value: this.t(t, { locale }), inline }]);
 
+    if (interaction.inGuild()) {
       if (parent)
         embeds[0].addField(this.t('category', { locale }), `${parent}`, true);
 
@@ -86,11 +90,15 @@ module.exports = class extends SlashCommand {
           { name: this.t('userLimit', { locale }), value: `${userLimit || ':infinity:'}`, inline },
           { name: this.t('full', { locale }), value: this.t(full, { locale }), inline }]);
 
-      if (['GUILD_NEWS', 'GUILD_STORE', 'GUILD_TEXT'].includes(type))
+      if (['GUILD_NEWS', 'GUILD_STORE', 'GUILD_TEXT'].includes(type)) {
+        const arrayThreads = threads.cache.map(thread => thread);
+        const textThreads = arrayThreads.join(' ') || '-';
+
         embeds[0].addFields([
           { name: this.t('slowmode', { locale }), value: ms(rateLimitPerUser * 1000), inline },
           { name: 'NSFW', value: this.t(channel.nsfw, { locale }), inline },
-          { name: this.t('threads', { locale }), value: threads.cache.map(thread => thread).join(' ') || '-' }]);
+          { name: `${this.t('threads', { locale })} [${arrayThreads.length}]`, value: textThreads }]);
+      }
 
       if (['GUILD_NEWS_THREAD', 'GUILD_PRIVATE_THREAD', 'GUILD_PUBLIC_THREAD'].includes(type))
         embeds[0].addFields([
@@ -98,9 +106,13 @@ module.exports = class extends SlashCommand {
           { name: this.t('memberCount', { locale }), value: `${memberCount}`, inline },
           { name: this.t('messageCount', { locale }), value: `${messageCount}`, inline }]);
 
-      if (type === 'GUILD_CATEGORY')
+      if (type === 'GUILD_CATEGORY') {
+        const arrayChildren = children.map(child => child);
+        const textChildren = arrayChildren.join(' ') || '-';
+
         embeds[0].addFields([
-          { name: this.t('channels', { locale }), value: children.map(child => child).join(' ') || '-' }]);
+          { name: `${this.t('channels', { locale })} [${arrayChildren.length}]`, value: textChildren }]);
+      }
     }
 
     embeds[0].setTitle(name)
@@ -121,14 +133,14 @@ module.exports = class extends SlashCommand {
 
     const { color, mentionable, permissions, icon, name, tags } = role;
 
-    const perms = permissions.toArray();
-    const arrayPerms = perms.map((permission) => this.t('PERMISSION', { locale, PERMISSIONS: [permission] }));
-    const textPerms = `${arrayPerms.join(', ')}.`;
+    const arrayPerms = permissions.toArray();
+    const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
 
     embeds[0].setColor(color || 'RANDOM')
       .setAuthor({ name, iconURL: role.iconURL() })
-      .addFields([{ name: this.t('mentionable', { locale }), value: this.t(mentionable, { locale }) },
-      { name: this.t('permissions', { locale }), value: codeBlock('md', textPerms) }]);
+      .addFields([
+        { name: this.t('mentionable', { locale }), value: this.t(mentionable, { locale }) },
+        { name: `${this.t('permissions', { locale })} [${arrayPerms.length}]`, value: codeBlock(textPerms) }]);
 
     interaction.editReply({ embeds });
   }
@@ -167,28 +179,28 @@ module.exports = class extends SlashCommand {
         { name: this.t('discordId', { locale }), value: inlineCode(id), inline: true },
       )
       .setFooter({ text: this.t(member ? 'joinedTheServerAt' : 'creationDate', { locale }) })
-      .setThumbnail(user.displayAvatarURL())
+      .setThumbnail(user.displayAvatarURL({ dynamic: true }))
       .setTimestamp(member?.joinedTimestamp || createdAt);
 
     if (member) {
       const { avatar, displayColor, permissions, roles } = member;
 
-      const textRoles = roles.cache.map(role => role).join(' ').replace('@everyone', '') || '-';
-      const perms = permissions.toArray();
-      const arrayPerms = perms.map((permission) => this.t('PERMISSION', { locale, PERMISSIONS: [permission] }));
-      const textPerms = arrayPerms.join(', ') || '-';
+      const arrayRoles = roles.cache.map(role => role);
+      const textRoles = arrayRoles.join(' ').replace('@everyone', '') || '-';
+      const arrayPerms = permissions.toArray();
+      const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
 
       embeds[0].addFields(
         { name: this.t('role', { locale }), value: `${roles.highest}`, inline: true },
-        { name: this.t('roles', { locale }), value: textRoles },
-        { name: this.t('permissions', { locale }), value: codeBlock('md', textPerms) },
+        { name: `${this.t('roles', { locale })} [${arrayRoles.length - 1}]`, value: textRoles },
+        { name: `${this.t('permissions', { locale })} [${arrayPerms.length}]`, value: codeBlock(textPerms) },
         { name: this.t('creationDate', { locale }), value: `${time(createdAt)} ${time(createdAt, 'R')}` });
 
       if (roles.color)
         embeds[0].setColor(displayColor);
 
       if (avatar)
-        embeds[0].setThumbnail(member.displayAvatarURL());
+        embeds[0].setThumbnail(member.displayAvatarURL({ dynamic: true }));
     }
 
     interaction.editReply({ embeds });

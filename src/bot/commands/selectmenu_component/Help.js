@@ -21,9 +21,12 @@ module.exports = class extends SelectMenuInteraction {
   async home(interaction = this.SelectMenuInteraction) {
     const { client, guild, locale, user } = interaction;
 
+    const avatarURL = guild?.me.displayAvatarURL({ dynamic: true }) ||
+      client.user.displayAvatarURL({ dynamic: true });
+
     const embeds = [new MessageEmbed().setColor('RANDOM')
       .setDescription(this.t('helpText', { locale, user }))
-      .setThumbnail(guild?.me.displayAvatarURL() || client.user.displayAvatarURL())
+      .setThumbnail(avatarURL)
       .setTitle(this.t('konanSupport', { locale }))];
 
     const buttons = [new MessageButton().setStyle('LINK')

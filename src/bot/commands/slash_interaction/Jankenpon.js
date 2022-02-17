@@ -45,7 +45,7 @@ module.exports = class extends SlashCommand {
   async game(interaction = this.CommandInteraction) {
     const { locale, member, options, user } = interaction;
 
-    const name = member?.nickname || user.username;
+    const name = member?.displayName || user.username;
 
     const subcommand = options.getSubcommand();
     const jankenpon = options.getString('jankenpon');
@@ -74,7 +74,7 @@ module.exports = class extends SlashCommand {
       embeds[0].setDescription(`${user} - ${player2}`)
         .addFields([{ name: `${name}`, value: '0', inline: true },
         { name: 'Result', value: '-', inline: true },
-        { name: `${player2.nickname || player2.user.username}`, value: '0', inline: true }]);
+        { name: `${player2.displayName}`, value: '0', inline: true }]);
 
       const buttons = [new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
         .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
@@ -92,7 +92,7 @@ module.exports = class extends SlashCommand {
   async spock(interaction = this.CommandInteraction) {
     const { locale, member, options, user } = interaction;
 
-    const name = member?.nickname || user.username;
+    const name = member?.displayName || user.username;
 
     const subcommand = options.getSubcommand();
     const jankenpon = options.getString('jankenpon');
@@ -122,7 +122,7 @@ module.exports = class extends SlashCommand {
       embeds[0].setDescription(`${user} - ${player2}`)
         .addFields([{ name: `${name}`, value: '0', inline: true },
         { name: 'Result', value: '-', inline: true },
-        { name: `${player2.nickname || player2.user.username}`, value: '0', inline: true }]);
+        { name: `${player2.displayName}`, value: '0', inline: true }]);
 
       const buttons = [new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
         .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),

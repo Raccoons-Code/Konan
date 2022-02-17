@@ -21,9 +21,9 @@ module.exports = class extends SlashCommand {
 
     const message = options.getString('message');
 
-    const avatarURL = member.displayAvatarURL() || user.displayAvatarURL();
+    const avatarURL = member?.displayAvatarURL({ dynamic: true }) || user.displayAvatarURL({ dynamic: true });
 
-    const username = member?.nickname || user.username;
+    const username = member?.displayName || user.username;
 
     if (!channel.permissionsFor(client.user.id).has(this.props.clientPermissions)) {
       const [, title, description] = message.match(this.textRegexp);
