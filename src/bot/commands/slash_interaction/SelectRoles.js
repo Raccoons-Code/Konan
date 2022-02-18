@@ -390,7 +390,7 @@ module.exports = class extends SlashCommand {
 
     if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.respond(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'item') {
       const components = message.components.map((row = this.MessageActionRow) => {
