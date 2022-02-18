@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, Constants, DMChannel, Guild, GuildChannel, Message, MessageActionRow, MessageSelectOptionData, PermissionString } = require('discord.js');
+const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, Constants, DMChannel, Guild, GuildChannel, Message, MessageActionRow, MessageSelectOptionData, PermissionString, TextChannel } = require('discord.js');
 const { ChannelTypes } = Constants;
 const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = ChannelTypes;
 const Client = require('./client');
@@ -61,6 +61,8 @@ module.exports = class extends SlashCommandBuilder {
     this.MessageActionRow;
     /** @type {MessageSelectOptionData} */
     this.MessageSelectOptionData;
+    /** @type {TextChannel} */
+    this.TextChannel;
   }
 
   /**

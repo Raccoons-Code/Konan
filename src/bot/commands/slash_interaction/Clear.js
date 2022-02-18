@@ -49,25 +49,26 @@ module.exports = class extends SlashCommand {
     const limit = options.getNumber('amount');
 
     try {
-      const size = await this.bulkDelete(channel, limit, true);
+      const size = await this.bulkDelete(channel, limit);
+
       interaction.editReply(this.t(size ? 'messageDeleted' : 'noDeletedMessages', { count: size, locale, size }));
     } catch {
       interaction.editReply(this.t('messageDeleteError', { locale }));
     }
   }
 
-  async bulkDelete(channel = this.GuildChannel, number = 0, boolean = false, count = 0) {
+  async bulkDelete(channel = this.TextChannel, number = 0, count = 0) {
     if (number < 1) return count;
 
     const limit = number > 100 ? 100 : number;
 
-    const { size } = await channel.bulkDelete(limit, boolean).catch(() => null);
+    const { size } = await channel.bulkDelete(limit, true);
 
-    size && await this.util.waitAsync(1000);
+    size && await this.util.waitAsync(500);
 
     const go = size && (number - size);
 
-    count = go ? await this.bulkDelete(channel, (number - size), boolean, (count + size)) : count;
+    count = go ? await this.bulkDelete(channel, (number - size), (count + size)) : count + size;
 
     return count;
   }

@@ -1,4 +1,5 @@
 const { SlashCommand } = require('../../classes');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends SlashCommand {
 	constructor(...args) {
@@ -15,11 +16,17 @@ module.exports = class extends SlashCommand {
 
 			const ping = sent.createdTimestamp - interaction.createdTimestamp;
 
-			this._ping > ping ? this._ping = ping : null;
+			if (this._ping > ping) this._ping = ping;
+			if (this.ping_ < ping) this.ping_ = ping;
 
-			this.ping_ < ping ? this.ping_ = ping : null;
+			const embeds = [new MessageEmbed().setColor('RANDOM')
+				.setFields([
+					{ name: 'API', value: `\`${client.ws.ping}\`ms` },
+					{ name: 'Smaller', value: `\`${this._ping}\`ms`, inline: true },
+					{ name: 'BOT', value: `\`${ping}\`ms`, inline: true },
+					{ name: 'Bigger', value: `\`${this.ping_}\`ms`, inline: true }])];
 
-			interaction.editReply(`Pong! \`API: ${client.ws.ping}ms\`, \`BOT: ${ping}ms\` | \`smaller: ${this._ping}ms\`, \`bigger: ${this.ping_}ms\``);
+			interaction.editReply({ embeds });
 
 			console.log(`Ping: ${ping}ms, Smaller: ${this._ping}ms, Bigger: ${this.ping_}ms`);
 		});
