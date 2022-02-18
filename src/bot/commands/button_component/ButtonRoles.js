@@ -27,12 +27,12 @@ module.exports = class extends ButtonInteraction {
     const { customId, component, message } = interaction;
 
     /** @type {customId} */
-    const { c, command, count, date, roleId } = this.util.parseJSON(customId);
-    
+    const { c, command, count, d, date, roleId } = this.util.parseJSON(customId);
+
     const newCustomId = {
       c: c || command,
       count: count + (boolean ? count < 999999999999999 ? 1 : 0 : count > -999999999999999 ? -1 : 0),
-      d: date,
+      d: d || date,
       roleId,
     };
 

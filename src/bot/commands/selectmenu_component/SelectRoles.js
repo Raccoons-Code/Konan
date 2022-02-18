@@ -59,7 +59,7 @@ module.exports = class extends SelectMenuInteraction {
       const rem1 = remove.includes(roleId) ? -1 : 0;
 
       const newValue = {
-        count: count2 + count < 999999999999999 && count > -999999999999999 ? (add1 + rem1) : 0,
+        count: count2 + count2 < 999999999999999 && count2 > -999999999999999 ? (add1 + rem1) : 0,
         d: d2 || date2,
         roleId,
       };
