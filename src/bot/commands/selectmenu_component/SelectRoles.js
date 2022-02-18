@@ -75,7 +75,7 @@ module.exports = class extends SelectMenuInteraction {
         sum2 = (count2 + sum2 < 0 ? -count2 : sum2);
 
       const newValue = {
-        count: sum2,
+        count: count2 + sum2,
         d: d2 || date2,
         roleId,
       };
