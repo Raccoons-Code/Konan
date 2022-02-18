@@ -227,7 +227,7 @@ module.exports = class extends SlashCommand {
 
     if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.respond(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'message') {
       const [, title, description] = options.getString('text').match(this.textRegexp);
@@ -333,7 +333,7 @@ module.exports = class extends SlashCommand {
 
     if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.respond(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'item') {
       const role = options.getRole('role');
