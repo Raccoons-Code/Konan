@@ -41,8 +41,8 @@ module.exports = class extends SelectMenuInteraction {
 
     const newCustomId = {
       c: c || command,
-      count: count + (add.length - remove.length),
-      d: date,
+      count: count + count < 999999999999999 && count > -999999999999999 ? (add.length - remove.length) : 0,
+      d: d || date,
     };
 
     const { options } = component;
@@ -53,13 +53,13 @@ module.exports = class extends SelectMenuInteraction {
       if (!values.includes(option.value)) continue;
 
       /** @type {optionValue} */
-      const { count: count2, d2, date2, roleId } = this.util.parseJSON(option.value);
+      const { count: count2, d: d2, date: date2, roleId } = this.util.parseJSON(option.value);
 
       const add1 = add.includes(roleId) ? 1 : 0;
       const rem1 = remove.includes(roleId) ? -1 : 0;
 
       const newValue = {
-        count: count2 + (add1 + rem1),
+        count: count2 + count < 999999999999999 && count > -999999999999999 ? (add1 + rem1) : 0,
         d: d2 || date2,
         roleId,
       };
