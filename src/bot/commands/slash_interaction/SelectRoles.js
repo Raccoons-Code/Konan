@@ -245,7 +245,7 @@ module.exports = class extends SlashCommand {
       }
     }
 
-    const menu = options.getString('menu');
+    const menuId = options.getString('menu');
 
     if (subcommand === 'menu') {
       const menu_place_holder = options.getString('menu_place_holder')?.match(this.limitRegex)[1] || '';
@@ -254,8 +254,8 @@ module.exports = class extends SlashCommand {
       const components = message.components.map(row => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
 
-        row.components.map(selectmenu => {
-          if (selectmenu.customId !== menu) return selectmenu;
+        row.components.map((selectmenu, i) => {
+          if (selectmenu.customId !== menuId && menuId.split(' |')[0] != (i + 1)) return selectmenu;
 
           const { disabled, placeholder } = selectmenu;
 
@@ -288,8 +288,8 @@ module.exports = class extends SlashCommand {
       const components = message.components.map(row => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
 
-        row.components.map(selectmenu => {
-          if (selectmenu.customId !== menu) return selectmenu;
+        row.components.map((selectmenu, i) => {
+          if (selectmenu.customId !== menuId && menuId.split(' |')[0] != (i + 1)) return selectmenu;
 
           selectmenu.options.map((option = this.MessageSelectOptionData) => {
             if (option.value !== item) return option;
@@ -325,7 +325,7 @@ module.exports = class extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel');
-    const menu = options.getString('menu');
+    const menuId = options.getString('menu');
     const message_id = options.getString('message_id');
     const subcommand = options.getSubcommand();
 
@@ -350,8 +350,8 @@ module.exports = class extends SlashCommand {
       const components = message.components.map(row => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
 
-        row.components.map(selectmenu => {
-          if (selectmenu.customId !== menu) return selectmenu;
+        row.components.map((selectmenu, i) => {
+          if (selectmenu.customId !== menuId && menuId.split(' |')[0] != (i + 1)) return selectmenu;
 
           selectmenu.addOptions([{
             label: `${label} 0`,
@@ -382,7 +382,7 @@ module.exports = class extends SlashCommand {
 
     const channel = options.getChannel('channel');
     const item = options.getString('item');
-    const menu = options.getString('menu');
+    const menuId = options.getString('menu');
     const message_id = options.getString('message_id');
     const subcommand = options.getSubcommand();
 
@@ -396,8 +396,8 @@ module.exports = class extends SlashCommand {
       const components = message.components.map((row = this.MessageActionRow) => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
 
-        row.components.map(selectmenu => {
-          if (selectmenu.customId !== menu) return selectmenu;
+        row.components.map((selectmenu, i) => {
+          if (selectmenu.customId !== menuId && menuId.split(' |')[0] != (i + 1)) return selectmenu;
 
           selectmenu.options = selectmenu.options.filter(option => option.value !== item);
 
@@ -406,7 +406,6 @@ module.exports = class extends SlashCommand {
           return selectmenu;
         });
 
-        return row;
       });
 
       try {
@@ -484,7 +483,8 @@ module.exports = class extends SlashCommand {
           const { customId, disabled, maxValues, placeholder } = element;
 
           const menuProps = [
-            placeholder ? placeholder : `Menu ${i2 + 1}`,
+            `${i2 + 1}`,
+            placeholder ? `| ${placeholder}` : '',
             `| ${maxValues} ${maxValues > 1 ? 'options' : 'option'}`,
             disabled ? '| disabled' : '',
           ];
@@ -520,9 +520,9 @@ module.exports = class extends SlashCommand {
         for (let i2 = 0; i2 < component.components.length; i2++) {
           const element = component.components[i2];
 
-          if (element.customId !== menuId) continue;
+          const { customId, options: menuOptions } = element;
 
-          const { options: menuOptions } = element;
+          if (customId !== menuId && menuId.split(' |')[0] != (i2 + 1)) continue;
 
           for (let i3 = 0; i3 < menuOptions.length; i3++) {
             const option = menuOptions[i3];
