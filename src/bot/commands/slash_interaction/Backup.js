@@ -132,8 +132,8 @@ module.exports = class extends SlashCommand {
     const userId = guild?.ownerId || user.id;
 
     const type = options.getSubcommand();
-    const id = options.getString('id');
-    const key = options.getString('key') || '';
+    const id = options.getString('id').split(' |')[0];
+    const key = options.getString('key')?.split(' |')[0] || '';
 
     const _user = await this.prisma.user.findFirst({
       where: { id: userId },
@@ -191,7 +191,7 @@ module.exports = class extends SlashCommand {
           this.t('undefinedServerName', { locale });
 
         res.push({
-          name: `${name} | ${_guild.id}${_guild.id == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
+          name: `${_guild.id} | ${name}${_guild.id == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
           value: `${_guild.id}`,
         });
 
@@ -200,7 +200,7 @@ module.exports = class extends SlashCommand {
     }
 
     if (focused.name === 'key') {
-      const id = options.getString('id');
+      const id = options.getString('id').split(' |')[0];
 
       const backups = subcommand === 'server' ?
         this.cache.user[userId].guilds.find(g => g.id === id).backups :
@@ -210,7 +210,7 @@ module.exports = class extends SlashCommand {
         const backup = backups[i];
 
         res.push({
-          name: `${backup.data.name} | ${backup.id}${backup.guildId == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
+          name: `${backup.id} | ${backup.data.name}${backup.guildId == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
           value: `${backup.id}`,
         });
 
@@ -250,8 +250,8 @@ module.exports = class extends SlashCommand {
     const userId = guild?.ownerId || user.id;
 
     const _type = options.getSubcommand();
-    const guildId = options.getString('id');
-    const key = options.getString('key');
+    const guildId = options.getString('id').split(' |')[0];
+    const key = options.getString('key')?.split(' |')[0];
 
     const backup = await this.prisma.backup.findFirst({ where: { id: key } });
 
@@ -354,7 +354,7 @@ module.exports = class extends SlashCommand {
           this.t('undefinedServerName', { locale });
 
         res.push({
-          name: `${name} | ${_guild.id}${_guild.id == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
+          name: `${_guild.id} | ${name}${_guild.id == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
           value: `${_guild.id}`,
         });
 
@@ -363,7 +363,7 @@ module.exports = class extends SlashCommand {
     }
 
     if (focused.name === 'key') {
-      const id = options.getString('id') || guildId;
+      const id = options.getString('id')?.split(' |')[0] || guildId;
 
       const backups = subcommand === 'server' ?
         this.cache.user[userId].guilds.find(g => g.id === id).backups : interaction.inGuild() ?
@@ -373,7 +373,7 @@ module.exports = class extends SlashCommand {
         const backup = backups[i];
 
         res.push({
-          name: `${backup.data.name} | ${backup.id}${backup.premium ? ' | Premium' : ''}${backup.guildId == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
+          name: `${backup.id} | ${backup.data.name}${backup.premium ? ' | Premium' : ''}${backup.guildId == guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
           value: `${backup.id}`,
         });
 
@@ -390,7 +390,7 @@ module.exports = class extends SlashCommand {
     if (!interaction.inGuild())
       return interaction.editReply(this.t('onlyOnServer', { locale }));
 
-    const key = options.getString('key');
+    const key = options.getString('key').split(' |')[0];
 
     const owner = this.cache[guild.ownerId] || await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
@@ -423,7 +423,7 @@ module.exports = class extends SlashCommand {
       const backup = backups[i];
 
       res.push({
-        name: `${backup.data.name} | ${backup.id}${backup.premium ? ' | Premium' : ''}`,
+        name: `${backup.id} | ${backup.data.name}${backup.premium ? ' | Premium' : ''}`,
         value: `${backup.id}`,
       });
 

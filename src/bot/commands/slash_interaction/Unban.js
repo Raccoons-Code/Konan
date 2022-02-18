@@ -46,7 +46,7 @@ module.exports = class extends SlashCommand {
 
     await interaction.deferReply({ ephemeral: true });
 
-    const id = options.getString('user');
+    const id = options.getString('user').split(' |')[0];
 
     const ban = await guild.bans.fetch(id);
 
@@ -57,6 +57,7 @@ module.exports = class extends SlashCommand {
 
     try {
       await guild.members.unban(id, reason);
+
       interaction.editReply(this.t('userBanned', { locale }));
     } catch {
       interaction.editReply(this.t('banError', { locale }));
@@ -85,7 +86,7 @@ module.exports = class extends SlashCommand {
       const ban = bans_array[i];
 
       res.push({
-        name: `${ban.user.username}${ban.reason ? ` | Reason: ${ban.reason}` : ''}`,
+        name: `${ban.user.id} | ${ban.user.username}${ban.reason ? ` | Reason: ${ban.reason}` : ''}`,
         value: ban.user.id,
       });
 

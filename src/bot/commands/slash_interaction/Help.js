@@ -20,7 +20,7 @@ module.exports = class extends SlashCommand {
 
     const { client, guild, locale, options, user } = interaction;
 
-    const commandName = options.getString('command');
+    const commandName = options.getString('command')?.split(' |')[0].toLowerCase();
 
     if (commandName) return this.executeCommand(interaction, commandName);
 

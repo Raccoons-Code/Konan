@@ -227,8 +227,8 @@ module.exports = class extends SlashCommand {
       const components = message.components.map(row => {
         if (row.components[0].type !== 'BUTTON') return row;
 
-        row.components = row.components.map(button => {
-          if (button.customId !== buttonId) return button;
+        row.components = row.components.map((button, i) => {
+          if (button.customId !== buttonId && buttonId.split(' |')[0] != i + 1) return button;
 
           /** @type {customId} */
           const { c, command, count, d, date, roleId } = this.util.parseJSON(button.customId);
@@ -327,7 +327,8 @@ module.exports = class extends SlashCommand {
       const components = message.components.map(row => {
         if (row.components[0].type !== 'BUTTON') return row;
 
-        row.components = row.components.filter(button => button.customId !== buttonId);
+        row.components = row.components.filter((button, i) =>
+          button.customId !== buttonId && buttonId.split(' |')[0] != i + 1);
 
         return row;
       });
@@ -404,15 +405,15 @@ module.exports = class extends SlashCommand {
         for (let i2 = 0; i2 < component.components.length; i2++) {
           const element = component.components[i2];
 
-          const { customId, disabled, emoji, label, style } = element;
+          const { customId, disabled, label, style } = element;
 
           const { roleId } = this.util.parseJSON(customId);
 
           const role = await guild.roles.fetch(roleId);
 
           const buttonProps = [
-            emoji?.id ? '' : emoji?.name,
-            label ? label : `Button ${i2 + 1}`,
+            `${i2 + 1}`,
+            label ? `| ${label}` : '',
             `| ${role?.name}`,
             `| ${roleId}`,
             `| ${style}`,

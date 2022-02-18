@@ -47,7 +47,7 @@ module.exports = class extends SlashCommand {
         ephemeral: true,
       });
 
-    const activity = options.getString('activity');
+    const activity = options.getString('activity').toLowerCase();
 
     try {
       const invite = await this.discordTogether.createTogetherCode(channel.id, activity);
