@@ -1,9 +1,5 @@
 const { SlashCommand } = require('../../classes');
-const { Constants, MessageButton, MessageActionRow, MessageEmbed, Message } = require('discord.js');
-const { ChannelTypes } = Constants;
-const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = ChannelTypes;
-const GuildTextChannelTypes = [GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT];
-const ButtonStyleChoices = [['PRIMARY', 'PRIMARY'], ['SECONDARY', 'SECONDARY'], ['SUCCESS', 'SUCCESS'], ['DANGER', 'DANGER']];
+const { MessageButton, MessageActionRow, MessageEmbed, Util } = require('discord.js');
 
 
 module.exports = class extends SlashCommand {
@@ -22,17 +18,17 @@ module.exports = class extends SlashCommand {
         .addStringOption(option => option.setName('text')
           .setDescription('Text: Title {0,256} | Description {0,4096} - default: ButtonRoles'))
         .addStringOption(option => option.setName('button_name')
-          .setDescription('Button name {0,90} - default: <role>'))
+          .setDescription('Button name {0,84} - default: <role>'))
         .addStringOption(option => option.setName('button_emoji')
           .setDescription('Button emoji'))
         .addBooleanOption(option => option.setName('button_disabled')
           .setDescription('Set disabled - default: false'))
         .addStringOption(option => option.setName('button_style')
           .setDescription('Button style - default: PRIMARY')
-          .setChoices(ButtonStyleChoices))
+          .setChoices(this.ButtonStylesChoices))
         .addChannelOption(option => option.setName('channel')
           .setDescription('Channel - default: <current channel>')
-          .addChannelTypes(GuildTextChannelTypes)))
+          .addChannelTypes(this.GuildTextChannelTypes)))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('edit')
         .setDescription('Edit a Button role.')
         .addSubcommand(subcommand => subcommand.setName('message')
@@ -40,7 +36,7 @@ module.exports = class extends SlashCommand {
           .addChannelOption(option => option.setName('channel')
             .setDescription('Channel')
             .setRequired(true)
-            .addChannelTypes(GuildTextChannelTypes))
+            .addChannelTypes(this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
             .setAutocomplete(true)
@@ -53,7 +49,7 @@ module.exports = class extends SlashCommand {
           .addChannelOption(option => option.setName('channel')
             .setDescription('Channel')
             .setRequired(true)
-            .addChannelTypes(GuildTextChannelTypes))
+            .addChannelTypes(this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
             .setAutocomplete(true)
@@ -65,10 +61,10 @@ module.exports = class extends SlashCommand {
           .addRoleOption(option => option.setName('role')
             .setDescription('Role'))
           .addStringOption(option => option.setName('button_name')
-            .setDescription('Button name {0,90}'))
+            .setDescription('Button name {0,84}'))
           .addStringOption(option => option.setName('button_style')
             .setDescription('Button style')
-            .setChoices(ButtonStyleChoices))
+            .setChoices(this.ButtonStylesChoices))
           .addStringOption(option => option.setName('button_emoji')
             .setDescription('Button emoji'))
           .addBooleanOption(option => option.setName('button_disabled')
@@ -80,7 +76,7 @@ module.exports = class extends SlashCommand {
           .addChannelOption(option => option.setName('channel')
             .setDescription('Channel')
             .setRequired(true)
-            .addChannelTypes(GuildTextChannelTypes))
+            .addChannelTypes(this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
             .setAutocomplete(true)
@@ -89,10 +85,10 @@ module.exports = class extends SlashCommand {
             .setDescription('Role')
             .setRequired(true))
           .addStringOption(option => option.setName('button_name')
-            .setDescription('Button name {0,90} - default: <role>'))
+            .setDescription('Button name {0,84} - default: <role>'))
           .addStringOption(option => option.setName('button_style')
             .setDescription('Button style - default: PRIMARY')
-            .setChoices(ButtonStyleChoices))
+            .setChoices(this.ButtonStylesChoices))
           .addStringOption(option => option.setName('button_emoji')
             .setDescription('Button emoji'))
           .addBooleanOption(option => option.setName('button_disabled')
@@ -104,7 +100,7 @@ module.exports = class extends SlashCommand {
           .addChannelOption(option => option.setName('channel')
             .setDescription('Channel')
             .setRequired(true)
-            .addChannelTypes(GuildTextChannelTypes))
+            .addChannelTypes(this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
             .setAutocomplete(true)
@@ -146,7 +142,7 @@ module.exports = class extends SlashCommand {
   }
 
   async setup(interaction = this.CommandInteraction) {
-    const { client, guild, locale, options } = interaction;
+    const { locale, options } = interaction;
 
     const [, title, description] = options.getString('text')?.match(this.textRegexp) || [];
     const button_style = options.getString('button_style') || 'PRIMARY';
@@ -156,10 +152,7 @@ module.exports = class extends SlashCommand {
     const role = options.getRole('role');
     const button_name = options.getString('button_name')?.match(this.labelRegex)[1] || role.name;
 
-    const emoji = button_emoji ? client.emojis.resolveIdentifier(button_emoji) ||
-      client.emojis.resolve(button_emoji) ||
-      guild.emojis.resolve(button_emoji) ||
-      await guild.emojis.fetch(button_emoji).catch(() => null) : null;
+    const emoji = button_emoji ? Util.resolvePartialEmoji(button_emoji) : null;
 
     const newCustomId = {
       c: this.data.name,
@@ -184,14 +177,15 @@ module.exports = class extends SlashCommand {
 
     try {
       await channel.send({ embeds, components });
-      interaction.editReply(this.t('?created', { locale, string: 'Button Role' }));
+
+      return interaction.editReply(this.t('?created', { locale, string: 'Button Role' }));
     } catch {
-      interaction.editReply(this.t('createError', { locale, string: 'Button Role' }));
+      return interaction.editReply(this.t('createError', { locale, string: 'Button Role' }));
     }
   }
 
   async edit(interaction = this.CommandInteraction) {
-    const { client, guild, locale, options } = interaction;
+    const { locale, options } = interaction;
 
     const channel = options.getChannel('channel');
     const message_id = options.getString('message_id').match(this.messageURLRegex)[1];
@@ -213,6 +207,7 @@ module.exports = class extends SlashCommand {
 
       try {
         await message.edit({ embeds });
+
         return interaction.editReply(this.t('?edited', { locale, string: 'Button Role' }));
       } catch {
         return interaction.editReply(this.t('editError', { locale, string: 'Button Role' }));
@@ -227,10 +222,7 @@ module.exports = class extends SlashCommand {
       const button_emoji = options.getString('button_emoji');
       const role = options.getRole('role');
 
-      const emoji = button_emoji ? client.emojis.resolveIdentifier(button_emoji) ||
-        client.emojis.resolve(button_emoji) ||
-        guild.emojis.resolve(button_emoji) ||
-        await guild.emojis.fetch(button_emoji).catch(() => null) : null;
+      const emoji = button_emoji ? Util.resolvePartialEmoji(button_emoji) : null;
 
       const components = message.components.map(row => {
         if (row.components[0].type !== 'BUTTON') return row;
@@ -255,6 +247,7 @@ module.exports = class extends SlashCommand {
 
       try {
         await message.edit({ components });
+
         return interaction.editReply(this.t('?edited', { locale, string: 'Button Role' }));
       } catch {
         return interaction.editReply(this.t('editError', { locale, string: 'Button Role' }));
@@ -263,7 +256,7 @@ module.exports = class extends SlashCommand {
   }
 
   async add(interaction = this.CommandInteraction) {
-    const { client, guild, locale, options } = interaction;
+    const { locale, options } = interaction;
 
     const channel = options.getChannel('channel');
     const message_id = options.getString('message_id').match(this.messageURLRegex)[1];
@@ -282,10 +275,7 @@ module.exports = class extends SlashCommand {
       const role = options.getRole('role');
       const button_name = options.getString('button_name')?.match(this.labelRegex)[1] || role.name;
 
-      const emoji = button_emoji ? client.emojis.resolveIdentifier(button_emoji) ||
-        client.emojis.resolve(button_emoji) ||
-        guild.emojis.resolve(button_emoji) ||
-        await guild.emojis.fetch(button_emoji).catch(() => null) : null;
+      const emoji = button_emoji ? Util.resolvePartialEmoji(button_emoji) : null;
 
       const newCustomId = {
         c: this.data.name,
@@ -310,6 +300,7 @@ module.exports = class extends SlashCommand {
       });
       try {
         await message.edit({ components });
+
         return interaction.editReply(this.t('buttonAdded', { locale }));
       } catch {
         return interaction.editReply(this.t('buttonAddError', { locale }));
@@ -343,6 +334,7 @@ module.exports = class extends SlashCommand {
 
       try {
         await message.edit({ components });
+
         return interaction.editReply(this.t('buttonRemoved', { locale }));
       } catch {
         return interaction.editReply(this.t('buttonRemoveError', { locale }));
@@ -412,13 +404,22 @@ module.exports = class extends SlashCommand {
         for (let i2 = 0; i2 < component.components.length; i2++) {
           const element = component.components[i2];
 
-          const { customId, label } = element;
+          const { customId, disabled, emoji, label, style } = element;
 
           const { roleId } = this.util.parseJSON(customId);
 
           const role = await guild.roles.fetch(roleId);
 
-          const buttonName = `${label ? label : `Button ${i2 + 1}`} | ${role?.name} | ${roleId}`;
+          const buttonProps = [
+            emoji?.id ? '' : emoji?.name,
+            label ? label : `Button ${i2 + 1}`,
+            `| ${role?.name}`,
+            `| ${roleId}`,
+            `| ${style}`,
+            disabled ? '| disabled' : '',
+          ];
+
+          const buttonName = buttonProps.join(' ').trimStart();
 
           if (regex.test(buttonName))
             res.push({
@@ -433,11 +434,11 @@ module.exports = class extends SlashCommand {
   }
 
   async addAutocomplete(interaction = this.AutocompleteInteraction) {
-    this.editAutocomplete(interaction);
+    await this.editAutocomplete(interaction);
   }
 
   async removeAutocomplete(interaction = this.AutocompleteInteraction) {
-    this.editAutocomplete(interaction);
+    await this.editAutocomplete(interaction);
   }
 };
 

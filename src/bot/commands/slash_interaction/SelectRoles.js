@@ -1,8 +1,5 @@
 const { SlashCommand } = require('../../classes');
-const { Constants, GuildChannel, MessageSelectMenu, MessageActionRow, MessageEmbed, Message } = require('discord.js');
-const { ChannelTypes } = Constants;
-const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = ChannelTypes;
-const GuildTextChannelTypes = [GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT];
+const { Emoji, GuildChannel, MessageSelectMenu, MessageActionRow, MessageEmbed, Util } = require('discord.js');
 
 module.exports = class extends SlashCommand {
   constructor(...args) {
@@ -18,7 +15,7 @@ module.exports = class extends SlashCommand {
           .setDescription('Role')
           .setRequired(true))
         .addStringOption(option => option.setName('item_name')
-          .setDescription('Item name {0,90} - default: <role>'))
+          .setDescription('Item name {0,84} - default: <role>'))
         .addStringOption(option => option.setName('item_description')
           .setDescription('Item description {0,100}'))
         .addStringOption(option => option.setName('item_emoji')
@@ -31,7 +28,7 @@ module.exports = class extends SlashCommand {
           .setDescription('Text: Title {0,256} | Description {0,4096} - default: SelectRoles'))
         .addChannelOption(option => option.setName('channel')
           .setDescription('Channel - default: <current channel>')
-          .addChannelTypes(GuildTextChannelTypes)))
+          .addChannelTypes(this.GuildTextChannelTypes)))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('edit')
         .setDescription('Edit a Select menu role.')
         .addSubcommand(subcommand => subcommand.setName('message')
@@ -39,7 +36,7 @@ module.exports = class extends SlashCommand {
           .addChannelOption(option => option.setName('channel')
             .setDescription('Channel')
             .setRequired(true)
-            .addChannelTypes(GuildTextChannelTypes))
+            .addChannelTypes(this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
             .setAutocomplete(true)
@@ -48,11 +45,11 @@ module.exports = class extends SlashCommand {
             .setDescription('Text: Title {1,256} | Description {0,4096}')
             .setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName('menu')
-          .setDescription('Edit select menu')
+          .setDescription('Edit a select menu.')
           .addChannelOption(option => option.setName('channel')
             .setDescription('Channel')
             .setRequired(true)
-            .addChannelTypes(GuildTextChannelTypes))
+            .addChannelTypes(this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
             .setAutocomplete(true)
@@ -70,23 +67,23 @@ module.exports = class extends SlashCommand {
           .addChannelOption(option => option.setName('channel')
             .setDescription('Channel')
             .setRequired(true)
-            .addChannelTypes(GuildTextChannelTypes))
+            .addChannelTypes(this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('menu')
-            .setDescription('Select menu')
+            .setDescription('Select a menu.')
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('item')
-            .setDescription('Select menu item')
+            .setDescription('Select a menu item.')
             .setAutocomplete(true)
             .setRequired(true))
           .addRoleOption(option => option.setName('role')
             .setDescription('Role'))
           .addStringOption(option => option.setName('item_name')
-            .setDescription('Item name {0,90}'))
+            .setDescription('Item name {0,84}'))
           .addStringOption(option => option.setName('item_description')
             .setDescription('Item description {0,100}'))
           .addStringOption(option => option.setName('item_emoji')
@@ -98,20 +95,20 @@ module.exports = class extends SlashCommand {
           .addChannelOption(option => option.setName('channel')
             .setDescription('Channel')
             .setRequired(true)
-            .addChannelTypes(GuildTextChannelTypes))
+            .addChannelTypes(this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('menu')
-            .setDescription('Select menu')
+            .setDescription('Select a menu.')
             .setAutocomplete(true)
             .setRequired(true))
           .addRoleOption(option => option.setName('role')
             .setDescription('Role')
             .setRequired(true))
           .addStringOption(option => option.setName('item_name')
-            .setDescription('Item name {1,90} - default: <role>'))
+            .setDescription('Item name {1,84} - default: <role>'))
           .addStringOption(option => option.setName('item_description')
             .setDescription('Item description {1,100}'))
           .addStringOption(option => option.setName('item_emoji')
@@ -123,17 +120,17 @@ module.exports = class extends SlashCommand {
           .addChannelOption(option => option.setName('channel')
             .setDescription('Channel')
             .setRequired(true)
-            .addChannelTypes(GuildTextChannelTypes))
+            .addChannelTypes(this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('menu')
-            .setDescription('Select menu')
+            .setDescription('Select a menu.')
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('item')
-            .setDescription('Select menu item')
+            .setDescription('Select a menu item.')
             .setAutocomplete(true)
             .setRequired(true))));
   }
@@ -169,21 +166,16 @@ module.exports = class extends SlashCommand {
   }
 
   async setup(interaction = this.CommandInteraction) {
-    const { client, guild, locale, options } = interaction;
+    const { locale, options } = interaction;
 
     const [, title, embed_desc] = options.getString('text')?.match(this.textRegexp) || [];
     const channel = options.getChannel('channel') || interaction.channel;
     const description = options.getString('item_description')?.match(this.limitRegex)[1];
     const menu_place_holder = options.getString('menu_place_holder')?.match(this.limitRegex)[1] || '';
     const menu_disabled = options.getBoolean('menu_disabled');
-    const item_emoji = options.getString('item_emoji');
+    const emoji = options.getString('item_emoji');
     const role = options.getRole('role');
     const label = options.getString('item_name')?.match(this.labelRegex)[1] || role.name;
-
-    const emoji = client.emojis.resolveIdentifier(item_emoji) ||
-      client.emojis.resolve(item_emoji) ||
-      guild.emojis.resolve(item_emoji) ||
-      await guild.emojis.fetch(item_emoji).catch(() => null) || null;
 
     const newCustomId = {
       c: this.data.name,
@@ -200,14 +192,14 @@ module.exports = class extends SlashCommand {
     const selectMenu = new MessageSelectMenu()
       .setCustomId(JSON.stringify(newCustomId))
       .setDisabled(menu_disabled)
+      .setMaxValues(1)
       .setOptions([{
         label: `${label} 0`,
         value,
         description,
         emoji,
       }])
-      .setPlaceholder(menu_place_holder)
-      .setMaxValues(1);
+      .setPlaceholder(menu_place_holder);
 
     const components = [new MessageActionRow().setComponents(selectMenu)];
 
@@ -217,6 +209,7 @@ module.exports = class extends SlashCommand {
 
     try {
       await channel.send({ components, embeds });
+
       interaction.editReply(this.t('?created', { locale, string: 'Select Role' }));
     } catch {
       interaction.editReply(this.t('createError', { locale, string: 'Select Role' }));
@@ -224,7 +217,7 @@ module.exports = class extends SlashCommand {
   }
 
   async edit(interaction = this.CommandInteraction) {
-    const { client, guild, locale, options } = interaction;
+    const { locale, options } = interaction;
 
     const subcommand = options.getSubcommand();
     const channel = options.getChannel('channel');
@@ -245,6 +238,7 @@ module.exports = class extends SlashCommand {
 
       try {
         await message.edit({ embeds });
+
         return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
       } catch {
         return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
@@ -263,8 +257,10 @@ module.exports = class extends SlashCommand {
         row.components.map(selectmenu => {
           if (selectmenu.customId !== menu) return selectmenu;
 
-          selectmenu.setDisabled(menu_disabled)
-            .setPlaceholder(menu_place_holder);
+          const { disabled, placeholder } = selectmenu;
+
+          selectmenu.setDisabled(typeof menu_disabled === 'boolean' ? menu_disabled : disabled)
+            .setPlaceholder(menu_place_holder || placeholder);
 
           return selectmenu;
         });
@@ -274,6 +270,7 @@ module.exports = class extends SlashCommand {
 
       try {
         await message.edit({ components });
+
         return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
       } catch {
         return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
@@ -286,12 +283,7 @@ module.exports = class extends SlashCommand {
       const role = options.getRole('role');
       const label = options.getString('item_name')?.match(this.labelRegex)[1];
       const description = options.getString('item_description')?.match(this.limitRegex)[1];
-      const item_emoji = options.getString('item_emoji');
-
-      const emoji = item_emoji ? client.emojis.resolveIdentifier(item_emoji) ||
-        client.emojis.resolve(item_emoji) ||
-        guild.emojis.resolve(item_emoji) ||
-        await guild.emojis.fetch(item_emoji).catch(() => null) || null : null;
+      const emoji = options.getString('item_emoji');
 
       const components = message.components.map(row => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
@@ -306,7 +298,7 @@ module.exports = class extends SlashCommand {
             const { count, d, date } = this.util.parseJSON(option.value);
 
             option.description = description ? description : option.description;
-            option.emoji = emoji ? `${emoji}` : option.emoji;
+            option.emoji = emoji ? Util.resolvePartialEmoji(emoji) : option.emoji;
             option.label = label ? `${label} ${count}` : option.label;
             option.value = role ? JSON.stringify({ count, d: d || date, roleId: role.id }) : option.value;
 
@@ -321,6 +313,7 @@ module.exports = class extends SlashCommand {
 
       try {
         await message.edit({ components });
+
         return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
       } catch {
         return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
@@ -329,7 +322,7 @@ module.exports = class extends SlashCommand {
   }
 
   async add(interaction = this.CommandInteraction) {
-    const { client, guild, locale, options } = interaction;
+    const { locale, options } = interaction;
 
     const channel = options.getChannel('channel');
     const menu = options.getString('menu');
@@ -346,12 +339,7 @@ module.exports = class extends SlashCommand {
       const role = options.getRole('role');
       const label = options.getString('item_name')?.match(this.labelRegex)[1] || role.name;
       const description = options.getString('item_description')?.match(this.limitRegex)[1];
-      const item_emoji = options.getString('item_emoji');
-
-      const emoji = client.emojis.resolveIdentifier(item_emoji) ||
-        client.emojis.resolve(item_emoji) ||
-        guild.emojis.resolve(item_emoji) ||
-        await guild.emojis.fetch(item_emoji).catch(() => null) || null;
+      const emoji = options.getString('item_emoji');
 
       const value = JSON.stringify({
         count: 0,
@@ -381,6 +369,7 @@ module.exports = class extends SlashCommand {
 
       try {
         await message.edit({ components });
+
         return interaction.editReply(this.t('itemAdded', { locale }));
       } catch {
         return interaction.editReply(this.t('itemAddError', { locale }));
@@ -422,6 +411,7 @@ module.exports = class extends SlashCommand {
 
       try {
         await message.edit({ components });
+
         return interaction.editReply(this.t('itemRemoved', { locale }));
       } catch {
         return interaction.editReply(this.t('itemRemoveError', { locale }));
@@ -491,9 +481,15 @@ module.exports = class extends SlashCommand {
         for (let i2 = 0; i2 < component.components.length; i2++) {
           const element = component.components[i2];
 
-          const { customId, placeholder } = element;
+          const { customId, disabled, maxValues, placeholder } = element;
 
-          const menuName = `${placeholder ? placeholder : `Menu ${i2 + 1}`}`;
+          const menuProps = [
+            placeholder ? placeholder : `Menu ${i2 + 1}`,
+            `| ${maxValues} ${maxValues > 1 ? 'options' : 'option'}`,
+            disabled ? '| disabled' : '',
+          ];
+
+          const menuName = menuProps.join(' ').trimStart();
 
           if (regex.test(menuName))
             res.push({
@@ -536,9 +532,17 @@ module.exports = class extends SlashCommand {
             /** @type {optionValue} */
             const { roleId } = this.util.parseJSON(value);
 
-            const role = guild.roles.resolve(roleId);
+            const role = await guild.roles.fetch(roleId);
 
-            const optionName = `${emoji ? `${emoji} ` : ''}${label} | ${role?.name} | ${roleId}${description ? ` | ${description}` : ''}`;
+            const optionProps = [
+              emoji?.id ? '' : emoji?.name,
+              label ? label : `Item ${i2 + 1}`,
+              `| ${role?.name}`,
+              `| ${roleId}`,
+              description ? `| ${description}` : '',
+            ];
+
+            const optionName = optionProps.join(' ').trimStart();
 
             res.push({
               name: optionName.match(this.limitRegex)[1],
@@ -553,11 +557,11 @@ module.exports = class extends SlashCommand {
   }
 
   async addAutocomplete(interaction = this.AutocompleteInteraction) {
-    this.editAutocomplete(interaction);
+    return await this.editAutocomplete(interaction);
   }
 
   async removeAutocomplete(interaction = this.AutocompleteInteraction) {
-    this.editAutocomplete(interaction);
+    return await this.editAutocomplete(interaction);
   }
 };
 

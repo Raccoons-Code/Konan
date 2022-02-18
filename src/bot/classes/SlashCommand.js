@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, DMChannel, Guild, GuildChannel, Message, MessageActionRow, MessageSelectOptionData, PermissionString } = require('discord.js');
+const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, Constants, DMChannel, Guild, GuildChannel, Message, MessageActionRow, MessageSelectOptionData, PermissionString } = require('discord.js');
+const { ChannelTypes } = Constants;
+const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = ChannelTypes;
 const Client = require('./client');
 
 module.exports = class extends SlashCommandBuilder {
@@ -12,7 +14,7 @@ module.exports = class extends SlashCommandBuilder {
   constructor(client, props) {
     super();
     this.props = props;
-    this.labelRegex = /(.{1,90})/;
+    this.labelRegex = /(.{1,84})/;
     this.limitRegex = /(.{1,100})/;
     this.messageURLRegex = /(?:(?:\/)?(\d+))+/;
     this.textRegexp = /(?:(?:([^|]{0,256}))(?:\|?([\w\W]{0,4096})))/;
@@ -26,6 +28,14 @@ module.exports = class extends SlashCommandBuilder {
 
   get buttonStyles() {
     return ['DANGER', 'PRIMARY', 'SECONDARY', 'SUCCESS'];
+  }
+
+  get ButtonStylesChoices() {
+    return this.buttonStyles.map(style => [style, style]);
+  }
+
+  get GuildTextChannelTypes() {
+    return [GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT];
   }
 
   get randomButtonStyle() {
