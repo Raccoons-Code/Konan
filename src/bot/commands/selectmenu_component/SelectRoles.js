@@ -39,9 +39,17 @@ module.exports = class extends SelectMenuInteraction {
 
     const { add, remove } = roles;
 
+    let sum = add.length - remove.length;
+
+    if (sum > 0)
+      sum = (count + sum > 999999999999999 ? 999999999999999 - count : sum);
+
+    if (sum < 0)
+      sum = (count + sum < 0 ? -count : sum);
+
     const newCustomId = {
       c: c || command,
-      count: count + count < 999999999999999 && count > -999999999999999 ? (add.length - remove.length) : 0,
+      count: count + sum,
       d: d || date,
     };
 
@@ -55,11 +63,19 @@ module.exports = class extends SelectMenuInteraction {
       /** @type {optionValue} */
       const { count: count2, d: d2, date: date2, roleId } = this.util.parseJSON(option.value);
 
-      const add1 = add.includes(roleId) ? 1 : 0;
-      const rem1 = remove.includes(roleId) ? -1 : 0;
+      const add2 = add.includes(roleId) ? 1 : 0;
+      const rem2 = remove.includes(roleId) ? -1 : 0;
+
+      let sum2 = add2 + rem2;
+
+      if (sum2 > 0)
+        sum2 = (count2 + sum2 > 999999999999999 ? 999999999999999 - count2 : sum2);
+
+      if (sum2 < 0)
+        sum2 = (count2 + sum2 < 0 ? -count2 : sum2);
 
       const newValue = {
-        count: count2 + count2 < 999999999999999 && count2 > -999999999999999 ? (add1 + rem1) : 0,
+        count: sum2,
         d: d2 || date2,
         roleId,
       };
