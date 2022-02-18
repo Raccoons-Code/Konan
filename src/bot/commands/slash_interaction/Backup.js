@@ -236,7 +236,7 @@ module.exports = class extends SlashCommand {
     for (let i = 0; i < backups.length; i++) {
       const backup = backups[i];
 
-      embeds[0].addField(`Server: ${backup.data.name} | ${backup.data.id}`, `Key: \`${backup.id}\`${backup.premium ? ' - `Premium`' : ''}`);
+      embeds[0].addField(`${backup.data.id} | ${backup.data.name}`, `\`${backup.id}\`${backup.premium ? ' - `Premium`' : ''}`);
 
       if (i === 24) break;
     }

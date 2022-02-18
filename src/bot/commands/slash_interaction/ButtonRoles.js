@@ -233,11 +233,11 @@ module.exports = class extends SlashCommand {
           /** @type {customId} */
           const { c, command, count, d, date, roleId } = this.util.parseJSON(button.customId);
 
-          button.setCustomId(JSON.stringify({ c: c || command, count, d: d || date, roleId: role?.id || roleId }));
-          button.setDisabled(typeof button_disabled === 'boolean' ? button_disabled : button.disabled);
-          button.setEmoji(emoji || button.emoji);
-          button.setLabel(button_name ? `${button_name} ${count}` : button.label);
-          button.setStyle(button_style || button.style);
+          button.setCustomId(JSON.stringify({ c: c || command, count, d: d || date, roleId: role?.id || roleId }))
+            .setDisabled(typeof button_disabled === 'boolean' ? button_disabled : button.disabled)
+            .setEmoji(emoji || button.emoji)
+            .setLabel(button_name ? `${button_name} ${count}` : button.label)
+            .setStyle(button_style || button.style);
 
           return button;
         });
