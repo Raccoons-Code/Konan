@@ -2,7 +2,7 @@
   "?created": "{{string}} criado com sucesso!",
   "?edited": "{{string}} editado com sucesso!",
   "activity404": "Esta atividade não existe.",
-  "alreadyHaveABackup.": "Você já tem um backup.",
+  "alreadyHaveABackup": "Você já tem um backup.",
   "automatic": "automático",
   "backup404": "Não foi possível encontrar o backup.",
   "backupDeleted": "O backup foi excluído com sucesso.",
