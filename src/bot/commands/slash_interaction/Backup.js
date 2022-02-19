@@ -459,8 +459,7 @@ module.exports = class extends SlashCommand {
   async newUser(guild = this.Guild, options) {
     const { id, ownerId } = guild;
 
-    await this.prisma.user.create({ data: { id: ownerId, guilds: { create: { id } } } })
-      .catch(console.error);
+    await this.prisma.user.create({ data: { id: ownerId, guilds: { create: { id } } } });
 
     return await this.newBackup(guild, options);
   }
@@ -475,7 +474,7 @@ module.exports = class extends SlashCommand {
 
     return await this.prisma.backup.update({
       where: { id: key },
-      data: { id: `${Date.now()}`, data, guildId: id, premium, userId: ownerId },
+      data: { id: data.id, data, guildId: id, premium, userId: ownerId },
     });
   }
 };

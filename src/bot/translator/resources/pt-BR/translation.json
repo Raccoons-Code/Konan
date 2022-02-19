@@ -5,7 +5,7 @@
   "alreadyHaveABackup.": "Você já tem um backup.",
   "automatic": "automático",
   "backup404": "Não foi possível encontrar o backup.",
-  "backupDeleted.": "O backup foi excluído com sucesso.",
+  "backupDeleted": "O backup foi excluído com sucesso.",
   "backupDone": "Backup feito com sucesso.",
   "ban404": "Este usuário não está banido!",
   "banError": "Erro! Não foi possível banir este usuário.",

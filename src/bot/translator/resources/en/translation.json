@@ -5,7 +5,7 @@
   "alreadyHaveABackup.": "You already have a backup.",
   "automatic": "automatic",
   "backup404": "Could not find the backup.",
-  "backupDeleted.": "Backup successfully deleted.",
+  "backupDeleted": "Backup successfully deleted.",
   "backupDone": "Backup successfully done.",
   "ban404": "This user is not banned!",
   "banError": "Error! Unable to ban this user.",
