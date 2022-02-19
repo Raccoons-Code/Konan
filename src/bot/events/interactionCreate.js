@@ -15,7 +15,7 @@ module.exports = class extends Event {
 	async execute(interaction) {
 		const { client, locale, targetType, componentType } = interaction;
 
-		const command = this[targetType || componentType || 'CHAT_INPUT']?.(interaction);
+		const command = await this[targetType || componentType || 'CHAT_INPUT']?.(interaction);
 
 		if (!command) return;
 
@@ -40,7 +40,7 @@ module.exports = class extends Event {
 			const ephemeral = true;
 
 			try {
-				if (!interaction.isAutocomplete() && !interaction.isMessageComponent()) {
+				if (!interaction.isAutocomplete()) {
 					if (interaction.replied) {
 						await interaction.editReply({ components, embeds, ephemeral });
 					} else {

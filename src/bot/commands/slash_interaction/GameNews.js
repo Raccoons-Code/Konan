@@ -31,7 +31,7 @@ module.exports = class extends SlashCommand {
     const cache = news[index] || news.find(gnew => gnew.title.match(index));
 
     if (!cache)
-      return interaction.editReply('Desculpe, não encontrei a notícia, por favor, tente novamente.');
+      return await interaction.editReply('Desculpe, não encontrei a notícia, por favor, tente novamente.');
 
     const { title, paragraphs } = cache;
 
@@ -62,7 +62,7 @@ module.exports = class extends SlashCommand {
       if (i === 24) break;
     }
 
-    interaction.respond(res);
+  await interaction.respond(res);
   }
 
   async fetchnews() {

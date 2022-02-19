@@ -29,6 +29,6 @@ module.exports = class extends UserContextMenu {
 
 		const components = [new MessageActionRow().setComponents(button)];
 
-		interaction.reply({ components, embeds });
+		await interaction.reply({ components, embeds });
 	}
 };

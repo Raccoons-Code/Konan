@@ -72,13 +72,13 @@ module.exports = class extends Command {
         await _guild.commands.set([...data, ...data_private]);
       }
 
-      this.timeout_erase(await message.reply(`${this.t(['reloadedAppCommands', 'type'], { locale })} ${type}`).catch(() => null), 10);
+      await this.timeout_erase(await message.reply(`${this.t(['reloadedAppCommands', 'type'], { locale })} ${type}`).catch(() => null), 10);
 
       console.log('Successfully reloaded application (/) commands.');
     } catch (error) {
       console.error(error);
 
-      this.timeout_erase(await message.reply(`${this.t(['reloadAppCommandsError', 'type'], { locale })} ${type}`).catch(() => null), 10);
+      await this.timeout_erase(await message.reply(`${this.t(['reloadAppCommandsError', 'type'], { locale })} ${type}`).catch(() => null), 10);
     }
   }
 };

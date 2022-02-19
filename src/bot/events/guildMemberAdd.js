@@ -19,7 +19,7 @@ module.exports = class extends Event {
       include: { backups: true, guilds: true },
     });
 
-    this.afterRestore(member, user);
+    await this.afterRestore(member, user);
   }
 
   async afterRestore(member = this.GuildMember, user = this.user) {

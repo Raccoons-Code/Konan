@@ -17,7 +17,7 @@ module.exports = class extends SlashCommand {
     const { client, channel, locale, member, options, user } = interaction;
 
     if (!interaction.inGuild())
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return await interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const message = options.getString('message');
 
@@ -33,7 +33,7 @@ module.exports = class extends SlashCommand {
         .setTitle(title || '')
         .setDescription(description || '')];
 
-      return interaction.reply({ embeds, ephemeral: true });
+      return await interaction.reply({ embeds, ephemeral: true });
     }
 
     /** @type {Webhook} */
@@ -42,6 +42,6 @@ module.exports = class extends SlashCommand {
 
     await webhook.send({ avatarURL, content: `${message}`, username });
 
-    interaction.reply({ content: ':heavy_check_mark:⠀', ephemeral: true });
+    await interaction.reply({ content: ':heavy_check_mark:⠀', ephemeral: true });
   }
 };

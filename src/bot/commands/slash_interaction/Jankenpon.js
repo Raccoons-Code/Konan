@@ -39,7 +39,7 @@ module.exports = class extends SlashCommand {
 
     const subcommand = options.getSubcommandGroup();
 
-    this[subcommand]?.(interaction);
+    await this[subcommand]?.(interaction);
   }
 
   async game(interaction = this.CommandInteraction) {
@@ -59,12 +59,12 @@ module.exports = class extends SlashCommand {
       { name: 'Result', value: result.result, inline: true },
       { name: 'Machine', value: result.player2, inline: true }]);
 
-      return interaction.reply({ embeds });
+      return await interaction.reply({ embeds });
     }
 
     if (subcommand === 'multiplayer') {
       if (!interaction.inGuild())
-        return interaction.reply({
+        return await interaction.reply({
           content: this.t('onlyOnServer', { locale }),
           ephemeral: true,
         });
@@ -85,7 +85,7 @@ module.exports = class extends SlashCommand {
 
       const components = [new MessageActionRow().setComponents(buttons)];
 
-      return interaction.reply({ components, embeds });
+      return await interaction.reply({ components, embeds });
     }
   }
 
@@ -107,12 +107,12 @@ module.exports = class extends SlashCommand {
       { name: 'Result', value: result.result, inline: true },
       { name: 'Machine', value: result.player2, inline: true }]);
 
-      return interaction.reply({ embeds });
+      return await interaction.reply({ embeds });
     }
 
     if (subcommand === 'multiplayer') {
       if (!interaction.inGuild())
-        return interaction.reply({
+        return await interaction.reply({
           content: this.t('onlyOnServer', { locale }),
           ephemeral: true,
         });
@@ -137,7 +137,7 @@ module.exports = class extends SlashCommand {
 
       const components = [new MessageActionRow().setComponents(buttons)];
 
-      return interaction.reply({ components, embeds });
+      return await interaction.reply({ components, embeds });
     }
   }
 };

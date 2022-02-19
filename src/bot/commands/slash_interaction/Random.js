@@ -43,7 +43,7 @@ module.exports = class extends SlashCommand {
     const clientPermissions = channel.permissionsFor(client.user.id).missing(this.props.clientPermissions);
 
     if (clientPermissions.length)
-      return interaction.reply({
+      return await interaction.reply({
         content: this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions }),
         ephemeral: true,
       });
@@ -52,7 +52,7 @@ module.exports = class extends SlashCommand {
 
     const string = options.getString('type');
 
-    this[`execute${string || Choices.getRandom()}`](interaction);
+    await this[`execute${string || Choices.getRandom()}`](interaction);
   }
 
   async executecat(interaction = this.CommandInteraction) {

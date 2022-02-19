@@ -34,7 +34,7 @@ module.exports = class extends SlashCommand {
     const channel = options.getChannel('channel') || member.voice.channel;
 
     if (!channel || channel.type !== 'GUILD_VOICE')
-      return interaction.reply({
+      return await interaction.reply({
         content: `${member}, ${this.t('userMustBeOnVoiceChannel', { locale })}`,
         ephemeral: true,
       });
@@ -42,7 +42,7 @@ module.exports = class extends SlashCommand {
     const clientPermissions = channel.permissionsFor(client.user.id).missing(this.props.clientPermissions);
 
     if (clientPermissions.length)
-      return interaction.reply({
+      return await interaction.reply({
         content: `${member}, ${this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions })}`,
         ephemeral: true,
       });
@@ -52,17 +52,17 @@ module.exports = class extends SlashCommand {
     try {
       const invite = await this.discordTogether.createTogetherCode(channel.id, activity);
 
-      this.timeout_erase(await interaction.reply({ content: `${invite.code}`, fetchReply: true }), 60);
+      await this.timeout_erase(await interaction.reply({ content: `${invite.code}`, fetchReply: true }), 60);
     } catch (error) {
       if (error.name === 'SyntaxError')
-        return interaction.reply({
+        return await interaction.reply({
           content: this.t('activity404', { locale }),
           ephemeral: true,
         });
 
       this.client.sendError(error);
 
-      interaction.reply({
+      await interaction.reply({
         content: this.t('There was an error while executing this command!', { locale }),
         ephemeral: true,
       });
@@ -84,7 +84,7 @@ module.exports = class extends SlashCommand {
 
     const res = this.setChoices(applications, { locale });
 
-    interaction.respond(res);
+  await interaction.respond(res);
   }
 
   setChoices(applications = this.applications, options = { locale: 'en', capitalize: false }, array = []) {

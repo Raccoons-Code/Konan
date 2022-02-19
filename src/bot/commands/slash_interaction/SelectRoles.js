@@ -139,7 +139,7 @@ module.exports = class extends SlashCommand {
     const { locale, memberPermissions, options } = interaction;
 
     if (!interaction.inGuild())
-      return interaction.reply({
+      return await interaction.reply({
         content: this.t('onlyOnServer', { locale }),
         ephemeral: true,
       });
@@ -147,9 +147,9 @@ module.exports = class extends SlashCommand {
     const userPermissions = memberPermissions.missing(this.props.userPermissions);
 
     if (userPermissions.length) {
-      if (interaction.isAutocomplete()) return interaction.respond([]);
+      if (interaction.isAutocomplete()) return await interaction.respond([]);
 
-      return interaction.reply({
+      return await interaction.reply({
         content: this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }),
         ephemeral: true,
       });
@@ -158,11 +158,11 @@ module.exports = class extends SlashCommand {
     const command = options.getSubcommandGroup(false) || options.getSubcommand();
 
     if (interaction.isAutocomplete())
-      return this[`${command}Autocomplete`]?.(interaction);
+      return await this[`${command}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
-    this[command]?.(interaction);
+    await this[command]?.(interaction);
   }
 
   async setup(interaction = this.CommandInteraction) {
@@ -225,9 +225,9 @@ module.exports = class extends SlashCommand {
 
     const message = await this.getMessageById(channel, message_id);
 
-    if (!message) return interaction.editReply(this.t('message404', { locale }));
+    if (!message) return await interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'message') {
       const [, title, description] = options.getString('text').match(this.textRegexp);
@@ -239,9 +239,9 @@ module.exports = class extends SlashCommand {
       try {
         await message.edit({ embeds });
 
-        return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
+        return await interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
       } catch {
-        return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
+        return await interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
       }
     }
 
@@ -271,9 +271,9 @@ module.exports = class extends SlashCommand {
       try {
         await message.edit({ components });
 
-        return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
+        return await interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
       } catch {
-        return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
+        return await interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
       }
     }
 
@@ -314,9 +314,9 @@ module.exports = class extends SlashCommand {
       try {
         await message.edit({ components });
 
-        return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
+        return await interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
       } catch {
-        return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
+        return await interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
       }
     }
   }
@@ -331,9 +331,9 @@ module.exports = class extends SlashCommand {
 
     const message = await this.getMessageById(channel, message_id);
 
-    if (!message) return interaction.editReply(this.t('message404', { locale }));
+    if (!message) return await interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'item') {
       const role = options.getRole('role');
@@ -370,9 +370,9 @@ module.exports = class extends SlashCommand {
       try {
         await message.edit({ components });
 
-        return interaction.editReply(this.t('itemAdded', { locale }));
+        return await interaction.editReply(this.t('itemAdded', { locale }));
       } catch {
-        return interaction.editReply(this.t('itemAddError', { locale }));
+        return await interaction.editReply(this.t('itemAddError', { locale }));
       }
     }
   }
@@ -388,9 +388,9 @@ module.exports = class extends SlashCommand {
 
     const message = await this.getMessageById(channel, message_id);
 
-    if (!message) return interaction.editReply(this.t('message404', { locale }));
+    if (!message) return await interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'item') {
       const components = message.components.map((row = this.MessageActionRow) => {
@@ -411,9 +411,9 @@ module.exports = class extends SlashCommand {
       try {
         await message.edit({ components });
 
-        return interaction.editReply(this.t('itemRemoved', { locale }));
+        return await interaction.editReply(this.t('itemRemoved', { locale }));
       } catch {
-        return interaction.editReply(this.t('itemRemoveError', { locale }));
+        return await interaction.editReply(this.t('itemRemoveError', { locale }));
       }
     }
   }
@@ -466,9 +466,9 @@ module.exports = class extends SlashCommand {
 
       const message = await this.getMessageById(channel, message_id);
 
-      if (!message) return interaction.respond([]);
+      if (!message) return await interaction.respond([]);
 
-      if (!message.editable) return interaction.respond([]);
+      if (!message.editable) return await interaction.respond([]);
 
       const { components } = message;
 
@@ -506,9 +506,9 @@ module.exports = class extends SlashCommand {
 
       const message = await this.getMessageById(channel, message_id);
 
-      if (!message) return interaction.respond([]);
+      if (!message) return await interaction.respond([]);
 
-      if (!message.editable) return interaction.respond([]);
+      if (!message.editable) return await interaction.respond([]);
 
       const { components } = message;
 
@@ -553,7 +553,7 @@ module.exports = class extends SlashCommand {
       }
     }
 
-    interaction.respond(res);
+  await interaction.respond(res);
   }
 
   async addAutocomplete(interaction = this.AutocompleteInteraction) {

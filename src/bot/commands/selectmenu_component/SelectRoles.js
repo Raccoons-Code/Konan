@@ -28,10 +28,10 @@ module.exports = class extends SelectMenuInteraction {
     await member.roles.add(roles.add).catch(() => roles.add = []);
     await member.roles.remove(roles.remove).catch(() => roles.remove = []);
 
-    this.setComponents(interaction, roles);
+    await this.setComponents(interaction, roles);
   }
 
-  setComponents(interaction = this.SelectMenuInteraction, roles) {
+  async setComponents(interaction = this.SelectMenuInteraction, roles) {
     const { customId, component, message, values } = interaction;
 
     /** @type {customId} */
@@ -92,7 +92,7 @@ module.exports = class extends SelectMenuInteraction {
 
     const { components } = message;
 
-    interaction.update({ components });
+    await interaction.update({ components });
   }
 };
 

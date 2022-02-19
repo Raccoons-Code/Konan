@@ -53,7 +53,7 @@ module.exports = class extends SelectMenuInteraction {
     const components = [new MessageActionRow().setComponents(buttons),
     new MessageActionRow().setComponents(menus)];
 
-    interaction.update({ ...resetProps, components, embeds });
+    await interaction.update({ ...resetProps, components, embeds });
   }
 
   async localization(interaction = this.SelectMenuInteraction) {
@@ -72,6 +72,6 @@ module.exports = class extends SelectMenuInteraction {
 
     const components = [new MessageActionRow().setComponents(menus)];
 
-    interaction.update({ ...resetProps, components, embeds });
+    await interaction.update({ ...resetProps, components, embeds });
   }
 };

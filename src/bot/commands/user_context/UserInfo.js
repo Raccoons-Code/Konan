@@ -48,6 +48,6 @@ module.exports = class extends UserContextMenu {
         embeds[0].setThumbnail(member.displayAvatarURL({ dynamic: true }));
     }
 
-    interaction.reply({ ephemeral: true, embeds });
+    await interaction.reply({ ephemeral: true, embeds });
   }
 };

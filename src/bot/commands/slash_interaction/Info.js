@@ -41,7 +41,7 @@ module.exports = class extends SlashCommand {
 
     const embeds = this.embeds = [new MessageEmbed().setColor('RANDOM')];
 
-    this[subcommand]?.(interaction, embeds);
+    await this[subcommand]?.(interaction, embeds);
   }
 
   async application(interaction = this.CommandInteraction, embeds = this.embeds) {
@@ -149,7 +149,7 @@ module.exports = class extends SlashCommand {
     const { guild, locale } = interaction;
 
     if (!guild)
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return await interaction.editReply(this.t('onlyOnServer', { locale }));
 
     embeds[0].setAuthor({ name: guild.name, iconURL: guild.iconURL() })
       .setFields(

@@ -11,7 +11,7 @@ module.exports = class extends SlashCommand {
 	}
 
 	async execute(interaction = this.CommandInteraction) {
-		interaction.reply({ content: 'Pong!', fetchReply: true }).then(sent => {
+		await interaction.reply({ content: 'Pong!', fetchReply: true }).then(async sent => {
 			const { client } = interaction;
 
 			const ping = sent.createdTimestamp - interaction.createdTimestamp;
@@ -26,7 +26,7 @@ module.exports = class extends SlashCommand {
 					{ name: 'BOT', value: `\`${ping}\`ms`, inline: true },
 					{ name: 'Bigger', value: `\`${this.ping_}\`ms`, inline: true }])];
 
-			interaction.editReply({ embeds });
+			await interaction.editReply({ embeds });
 
 			console.log(`Ping: ${ping}ms, Smaller: ${this._ping}ms, Bigger: ${this.ping_}ms`);
 		});

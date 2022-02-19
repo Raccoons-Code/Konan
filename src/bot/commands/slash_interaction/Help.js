@@ -66,7 +66,7 @@ module.exports = class extends SlashCommand {
     const command = slash_interaction.get(commandName);
 
     if (!command)
-      return interaction.editReply(this.t('command404', { locale }));
+      return await interaction.editReply(this.t('command404', { locale }));
 
     const embeds = [new MessageEmbed().setColor('RANDOM')
       .setTitle(`${command.data.name} - ${command.data.description}`)
@@ -100,7 +100,7 @@ module.exports = class extends SlashCommand {
       if (i === 24) break;
     }
 
-    interaction.respond(res);
+  await interaction.respond(res);
   }
 
   /**

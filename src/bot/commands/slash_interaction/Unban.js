@@ -20,15 +20,15 @@ module.exports = class extends SlashCommand {
     const { guild, locale, memberPermissions, options } = interaction;
 
     if (!interaction.inGuild()) {
-      if (interaction.isAutocomplete()) return interaction.respond([]);
+      if (interaction.isAutocomplete()) return await interaction.respond([]);
 
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return await interaction.editReply(this.t('onlyOnServer', { locale }));
     }
 
     const userPermissions = memberPermissions.missing(this.props.userPermissions);
 
     if (userPermissions.length)
-      return interaction.reply({
+      return await interaction.reply({
         content: this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }),
         ephemeral: true,
       });
@@ -36,7 +36,7 @@ module.exports = class extends SlashCommand {
     const clientPermissions = guild.me.permissions.missing(this.props.clientPermissions);
 
     if (clientPermissions.length)
-      return interaction.reply({
+      return await interaction.reply({
         content: this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }),
         ephemeral: true,
       });
@@ -51,7 +51,7 @@ module.exports = class extends SlashCommand {
     const ban = await guild.bans.fetch(id);
 
     if (!ban)
-      return interaction.editReply(this.t('ban404', { locale }));
+      return await interaction.editReply(this.t('ban404', { locale }));
 
     const reason = options.getString('reason');
 
@@ -93,6 +93,6 @@ module.exports = class extends SlashCommand {
       if (i === 24) break;
     }
 
-    interaction.respond(res);
+  await interaction.respond(res);
   }
 };

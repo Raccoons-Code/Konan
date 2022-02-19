@@ -24,6 +24,6 @@ module.exports = class extends Event {
     const reply = channel.messages.cache.find(m => m.reference?.messageId === id && m.author.id === user.id);
 
     if (reply?.deletable)
-      reply.delete();
+      await reply.delete();
   }
 };

@@ -40,6 +40,6 @@ module.exports = class extends Command {
 
     const components = [new MessageActionRow().setComponents(buttons)];
 
-    this.timeout_erase(await message.reply({ components, embeds }), 60);
+    await this.timeout_erase(await message.reply({ components, embeds }), 60);
   }
 };

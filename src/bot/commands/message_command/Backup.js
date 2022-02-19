@@ -16,7 +16,7 @@ module.exports = class extends Command {
 
     message.delete().catch(() => null);
 
-    this[args.shift()]?.(message);
+    await this[args.shift()]?.(message);
   }
 
   async guilds(message = this.Message) {

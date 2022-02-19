@@ -28,7 +28,7 @@ module.exports = class extends SlashCommand {
     const { client, locale, member, options } = interaction;
 
     if (!interaction.inGuild())
-      return interaction.editReply({
+      return await interaction.editReply({
         content: this.t('onlyOnServer', { locale }),
         ephemeral: true,
       });
@@ -38,13 +38,13 @@ module.exports = class extends SlashCommand {
     const userPermissions = channel.permissionsFor(member).missing(this.props.userPermissions);
 
     if (userPermissions.length)
-      return interaction.editReply(this.t('missingUserChannelPermission',
+      return await interaction.editReply(this.t('missingUserChannelPermission',
         { locale, PERMISSIONS: userPermissions }));
 
     const clientPermissions = channel.permissionsFor(client.user.id).missing(this.props.clientPermissions);
 
     if (clientPermissions.length)
-      return interaction.editReply(this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions }));
+      return await interaction.editReply(this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions }));
 
     const limit = options.getNumber('amount');
 

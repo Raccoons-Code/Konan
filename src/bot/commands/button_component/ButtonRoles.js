@@ -14,16 +14,23 @@ module.exports = class extends ButtonInteraction {
 
     const { roleId } = this.util.parseJSON(customId);
 
-    member.roles.resolve(roleId) ?
-      member.roles.remove(roleId)
-        .then(() => this.setComponents(interaction, false))
-        .catch(() => interaction.deferUpdate()) :
-      member.roles.add(roleId)
-        .then(() => this.setComponents(interaction, true))
-        .catch(() => interaction.deferUpdate());
+
+    try {
+      if (member.roles.resolve(roleId)) {
+        await member.roles.remove(roleId);
+
+        await this.setComponents(interaction, false);
+      } else {
+        await member.roles.add(roleId);
+
+        await this.setComponents(interaction, true);
+      }
+    } catch {
+      await interaction.deferUpdate();
+    }
   }
 
-  setComponents(interaction = this.ButtonInteraction, boolean) {
+  async setComponents(interaction = this.ButtonInteraction, boolean) {
     const { customId, component, message } = interaction;
 
     /** @type {customId} */
@@ -46,7 +53,7 @@ module.exports = class extends ButtonInteraction {
 
     const { components } = message;
 
-    interaction.update({ components });
+    await interaction.update({ components });
   }
 };
 

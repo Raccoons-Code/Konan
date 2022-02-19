@@ -24,7 +24,7 @@ module.exports = class extends SlashCommand {
       .setTitle(prime ? `${number} is not prime.` : `${number} is prime!`)
       .setDescription(prime ? `It is divisible by ${prime}.` : '')];
 
-    interaction.reply({ embeds, ephemeral: true });
+    await interaction.reply({ embeds, ephemeral: true });
   }
 
   primeResolve(number) {

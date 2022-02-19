@@ -61,7 +61,7 @@ module.exports = class extends SlashCommand {
         value: `${user?.join(' ') || '-'}`,
       });
 
-      return interaction.editReply({ embeds });
+      return await interaction.editReply({ embeds });
     }
 
     if (user?.length === 9) {
@@ -74,7 +74,7 @@ module.exports = class extends SlashCommand {
 
       db.delete(`${guildId}.${author.id}.guess`);
 
-      return interaction.editReply({ embeds });
+      return await interaction.editReply({ embeds });
     }
 
     if (number < value)
@@ -122,6 +122,6 @@ module.exports = class extends SlashCommand {
       if (res.length === 25) break;
     }
 
-    interaction.respond(res);
+  await interaction.respond(res);
   }
 };

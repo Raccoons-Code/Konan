@@ -22,24 +22,24 @@ module.exports = class extends SlashCommand {
     await interaction.deferReply({ ephemeral: true });
 
     if (!interaction.inGuild())
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return await interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild, locale, memberPermissions, options } = interaction;
 
     const userPermissions = memberPermissions.missing(this.props.userPermissions);
 
     if (userPermissions.length)
-      return interaction.editReply(this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }));
+      return await interaction.editReply(this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }));
 
     const clientPermissions = guild.me.permissions.missing(this.props.clientPermissions);
 
     if (clientPermissions.length)
-      return interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
+      return await interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
 
     const member = options.getMember('user');
 
     if (!member.bannable)
-      return interaction.editReply(this.t('banHierarchyError', { locale }));
+      return await interaction.editReply(this.t('banHierarchyError', { locale }));
 
     const days = options.getNumber('delete_messages') || 0;
 
