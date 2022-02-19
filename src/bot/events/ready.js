@@ -21,6 +21,7 @@ module.exports = class extends Event {
 
 		this.deleteMyGuilds(client);
 		this.setPresence(client);
+		client.topggautoposter();
 	}
 
 	async deleteGuild(guild, user) {

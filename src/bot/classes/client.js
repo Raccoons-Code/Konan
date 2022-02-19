@@ -17,8 +17,8 @@ module.exports = class extends Client {
 		});
 		this.prisma = prisma;
 		this.t = translator.t;
+		this.translator = translator;
 		this.util = methods;
-		this.ready = true;
 	}
 
 	get donate() {
@@ -29,6 +29,7 @@ module.exports = class extends Client {
 
 	async login(token = this.token) {
 		process.on('unhandledRejection', (...args) => this.sendError(...args));
+		this.ready = true;
 		commands.init(this);
 		events.init(this);
 		this.commands = commands.commands;
@@ -63,7 +64,7 @@ module.exports = class extends Client {
 	}
 
 	async fetchStats() {
-		return Promise.all([
+		return await Promise.all([
 			this.shard.fetchClientValues('guilds.cache.size'),
 			this.shard.fetchClientValues('channels.cache.size'),
 			this.shard.broadcastEval(client => client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
@@ -72,5 +73,9 @@ module.exports = class extends Client {
 			this.totalChannels = results[1].reduce((acc, channelsCount) => acc + channelsCount, 0);
 			this.totalMembers = results[2].reduce((acc, memberCount) => acc + memberCount, 0);
 		}).catch(console.error);
+	}
+
+	async topggautoposter() {
+		require('../topgg').AutoPoster(this);
 	}
 };
