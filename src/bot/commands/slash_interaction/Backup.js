@@ -441,10 +441,8 @@ module.exports = class extends SlashCommand {
     const data = await Backup.create(guild,
       { jsonBeautify: false, jsonSave: false, maxMessagesPerChannel: premium ? 20 : 0 });
 
-    const key = `${Date.now()}`;
-
     const newBackup = await this.prisma.backup.create({
-      data: { id: `${key}`, data, guildId: id, premium, userId: ownerId },
+      data: { id: data.id, data, guildId: id, premium, userId: ownerId },
     });
 
     return newBackup;

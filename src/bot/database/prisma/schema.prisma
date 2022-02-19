@@ -15,7 +15,7 @@ model User {
   ObjectId    String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
   createdAt   DateTime @default(now()) @db.Timestamp
   id          String   @unique
-  premium     DateTime @default(now()) @db.Timestamp
+  premium     DateTime @db.Timestamp
   usedPremium Json?
   oldGuild    String?
   newGuild    String?
