@@ -5,6 +5,9 @@
 [![Discord Bots](https://top.gg/api/widget/status/930281485301317633.svg)](https://top.gg/bot/930281485301317633)
 [![Discord Bots](https://top.gg/api/widget/servers/930281485301317633.svg?noavatar=true)](https://discord.gg/YCRyk39Tqt)
 [![Crowdin](https://badges.crowdin.net/konan/localized.svg)](https://crowdin.com/project/konan)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Raccoons-Code/Konan?logo=github)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/Raccoons-Code/Konan)
+![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/Raccoons-Code/Konan/discord.js?logo=discord)
 
 Hello, my name is Konan! I was designed to be helpful and efficient in everything I do.
 
