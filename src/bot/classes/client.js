@@ -1,10 +1,10 @@
-const { Client, ClientOptions, MessageEmbed } = require('discord.js');
+const { Client, ClientOptions, MessageEmbed, WebhookClient } = require('discord.js');
 const { prisma } = require('../database');
 const commands = require('../commands');
 const events = require('../events');
 const methods = require('../methods');
 const translator = require('../translator');
-const { env: { GUILD_ID, ERROR_CHANNEL, DONATE_LINK } } = process;
+const { env: { DONATE_LINK, ERROR_WEBHOOK } } = process;
 
 module.exports = class extends Client {
 	/** @param {ClientOptions} [options] */
@@ -43,24 +43,21 @@ module.exports = class extends Client {
 	}
 
 	async sendError(reason = Error()) {
-		if (!GUILD_ID || !ERROR_CHANNEL || !this.isReady()) return console.error(reason);
+		if (!ERROR_WEBHOOK || !this.isReady()) return console.error(reason);
 
-		const guildId = GUILD_ID.split(',')[0];
-		const channelId = ERROR_CHANNEL.split(',')[0];
+		const webhook = new WebhookClient({ url: ERROR_WEBHOOK });
 
-		const guild = await this.guilds.fetch(guildId);
-
-		if (!guild) return console.error(reason);
-
-		const channel = await guild.channels.fetch(channelId);
-
-		if (!channel || !channel.viewable) return console.error(reason);
+		if (!webhook) return console.error(reason);
 
 		const embeds = [new MessageEmbed().setColor('RED')
 			.setTitle(`${reason.name}: ${reason.message}`)
 			.setDescription(`\`\`\`${reason.stack}\`\`\``)];
 
-		channel.send({ embeds }).catch(() => console.error(reason));
+		await webhook.send({
+			embeds,
+			avatarURL: this.user.displayAvatarURL(),
+			username: this.user.username,
+		}).catch(() => console.error(reason));
 	}
 
 	async fetchStats() {
@@ -76,6 +73,6 @@ module.exports = class extends Client {
 	}
 
 	async topggautoposter() {
-		require('../topgg').AutoPoster(this);
+		require('../topgg').AutoPoster?.(this);
 	}
 };

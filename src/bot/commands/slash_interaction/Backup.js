@@ -218,7 +218,7 @@ module.exports = class extends SlashCommand {
       }
     }
 
-  await interaction.respond(res);
+    await interaction.respond(res);
   }
 
   async list(interaction = this.CommandInteraction) {
@@ -268,9 +268,7 @@ module.exports = class extends SlashCommand {
         return await interaction.editReply(this.t('commandOfflineTryLater', { locale }));
 
       const _guild = await client.guilds.fetch(_guild_id);
-
       const _channel = await _guild.channels.fetch(_channel_id);
-
       const _team = await _guild.members.fetch(_team_id);
 
       if (!_guild || !_channel || !_team)
@@ -381,7 +379,7 @@ module.exports = class extends SlashCommand {
       }
     }
 
-  await interaction.respond(res);
+    await interaction.respond(res);
   }
 
   async update(interaction = this.CommandInteraction) {
@@ -430,7 +428,7 @@ module.exports = class extends SlashCommand {
       if (i === 24) break;
     }
 
-  await interaction.respond(res);
+    await interaction.respond(res);
   }
 
   async newBackup(guild = this.Guild, options) {
