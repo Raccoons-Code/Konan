@@ -65,7 +65,7 @@ module.exports = class extends SlashCommand {
     embeds[0].setAuthor({ name: username, iconURL: avatarURL })
       .setFields([{ name: 'Stats', value: codeBlock('properties', stats) }]);
 
-    interaction.editReply({ embeds });
+    await interaction.editReply({ embeds });
   }
 
   async channel(interaction = this.CommandInteraction, embeds = this.embeds) {
@@ -123,7 +123,7 @@ module.exports = class extends SlashCommand {
     if (topic)
       embeds[0].addField(this.t('topic', { locale }), topic, true);
 
-    interaction.editReply({ embeds });
+    await interaction.editReply({ embeds });
   }
 
   async role(interaction = this.CommandInteraction, embeds = this.embeds) {
@@ -142,7 +142,7 @@ module.exports = class extends SlashCommand {
         { name: this.t('mentionable', { locale }), value: this.t(mentionable, { locale }) },
         { name: `${this.t('permissions', { locale })} [${arrayPerms.length}]`, value: codeBlock(textPerms) }]);
 
-    interaction.editReply({ embeds });
+    await interaction.editReply({ embeds });
   }
 
   async server(interaction = this.CommandInteraction, embeds = this.embeds) {
@@ -162,7 +162,7 @@ module.exports = class extends SlashCommand {
       .setThumbnail(guild.iconURL())
       .setTimestamp(guild.createdTimestamp);
 
-    interaction.editReply({ embeds });
+    await interaction.editReply({ embeds });
   }
 
   async user(interaction = this.CommandInteraction, embeds = this.embeds) {
@@ -203,6 +203,6 @@ module.exports = class extends SlashCommand {
         embeds[0].setThumbnail(member.displayAvatarURL({ dynamic: true }));
     }
 
-    interaction.editReply({ embeds });
+    await interaction.editReply({ embeds });
   }
 };

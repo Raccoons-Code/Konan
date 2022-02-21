@@ -30,15 +30,15 @@ module.exports = class extends UserContextMenu {
     if (member) {
       const { avatar, displayColor, permissions, roles } = member;
 
-      const textRoles = roles.cache.map(role => role).join(' ').replace('@everyone', '') || '-';
-      const perms = permissions.toArray();
-      const arrayPerms = perms.map((permission) => this.t('PERMISSION', { locale, PERMISSIONS: [permission] }));
-      const textPerms = `${arrayPerms.join(', ')}.`;
+      const arrayRoles = roles.cache.map(role => role);
+      const textRoles = arrayRoles.join(' ').replace('@everyone', '') || '-';
+      const arrayPerms = permissions.toArray();
+      const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
 
       embeds[0].addFields(
         { name: this.t('role', { locale }), value: `${roles.highest}`, inline: true },
-        { name: this.t('roles', { locale }), value: textRoles },
-        { name: this.t('permissions', { locale }), value: codeBlock('md', textPerms) },
+        { name: `${this.t('roles', { locale })} [${arrayRoles.length - 1}]`, value: textRoles },
+        { name: `${this.t('permissions', { locale })} [${arrayPerms.length}]`, value: codeBlock(textPerms) },
         { name: this.t('creationDate', { locale }), value: `${time(createdAt)} ${time(createdAt, 'R')}` });
 
       if (roles.color)
