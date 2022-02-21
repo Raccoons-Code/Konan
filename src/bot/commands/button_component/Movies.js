@@ -19,8 +19,6 @@ module.exports = class extends ButtonInteraction {
     /** @type {customId} */
     const { d, c, p, o, target } = this.util.parseJSON(customId);
 
-    console.log(target);
-
     const { offset, page } = this.getPage(target);
 
     const { sort_by } = client.movies?.[message.id] || {};

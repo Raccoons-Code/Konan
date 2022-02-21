@@ -57,8 +57,6 @@ module.exports = class extends ButtonInteraction {
     const value2 = values[player2];
     const result = this.util.jankenpon.spock(value1, value2);
 
-    console.log(result, value1, value2, changed);
-
     const embeds = message.embeds.map((embed = this.MessageEmbed) => {
       embed.fields = embed.fields.map((field, i) => {
         const { name, value } = field;
