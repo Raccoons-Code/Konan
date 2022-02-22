@@ -86,11 +86,11 @@ module.exports = class extends SlashCommand {
       new MessageButton().setLabel('1...').setStyle(a ? 'PRIMARY' : 'SECONDARY').setDisabled(!a)
         .setCustomId(JSON.stringify({ c: this.data.name, d: 0, o: offset, p: page, target: 1 })),
       new MessageButton().setLabel('Back').setStyle(a ? 'PRIMARY' : 'SECONDARY').setDisabled(!a)
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 1, o: offset, p: page, target: page - 1 })),
+        .setCustomId(JSON.stringify({ c: this.data.name, d: 1, o: offset, p: page, target: raw_page - 1 })),
       new MessageButton().setLabel(`${raw_page}`).setStyle('SECONDARY').setDisabled(true)
         .setCustomId(JSON.stringify({ c: this.data.name, d: 2, o: offset, p: page })),
       new MessageButton().setLabel('Next').setStyle(b ? 'PRIMARY' : 'SECONDARY').setDisabled(!b)
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 3, o: offset, p: page, target: page + 1 })),
+        .setCustomId(JSON.stringify({ c: this.data.name, d: 3, o: offset, p: page, target: raw_page + 1 })),
       new MessageButton().setLabel(`...${1000}`).setStyle(b ? 'PRIMARY' : 'SECONDARY').setDisabled(!b)
         .setCustomId(JSON.stringify({ c: this.data.name, d: 4, o: offset, p: page, target: 1000 })),
     ];

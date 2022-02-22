@@ -14,7 +14,7 @@ module.exports = class extends ButtonInteraction {
   }
 
   async execute(interaction = this.ButtonInteraction) {
-    const { client, component, customId, locale, message } = interaction;
+    const { client, customId, locale, message } = interaction;
 
     /** @type {customId} */
     const { d, c, p, o, target } = this.util.parseJSON(customId);
