@@ -123,12 +123,12 @@ module.exports = class extends SlashCommand {
       .setDescription(overview)
       .setFields([
         { name: 'Release date', value: release_date || '-', inline: true },
-        { name: 'Average of votes', value: `${vote_average}`, inline: true },
-        { name: 'Count of votes', value: `${vote_count}`, inline: true },
-        { name: 'Original language', value: lang, inline: true },
-        { name: 'Budget', value: `$${budget},00`, inline: true },
-        { name: 'Revenue', value: `$${revenue},00`, inline: true },
-        { name: 'Runtime', value: `${ms(runtime * 60000)}`, inline: true },
+        { name: 'Average of votes', value: `${vote_average || '0'}`, inline: true },
+        { name: 'Count of votes', value: `${vote_count || '0'}`, inline: true },
+        { name: 'Original language', value: lang || '-', inline: true },
+        { name: 'Budget', value: `$${budget || '0'},00`, inline: true },
+        { name: 'Revenue', value: `$${revenue || '0'},00`, inline: true },
+        { name: 'Runtime', value: `${ms((runtime || 0) * 60000)}`, inline: true },
       ])
       .setImage(backdrop_img)
       .setThumbnail(poster_img)

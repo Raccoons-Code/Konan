@@ -84,15 +84,17 @@ module.exports = class extends ButtonInteraction {
 
       const lang = configuration.getLanguage({ language: original_language });
 
+      console.log({ release_date, vote_average, vote_count, lang });
+
       embeds.push(new MessageEmbed()
         .setAuthor({ name: genre_names.join(', ') })
         .setColor('RANDOM')
         .setDescription(overview)
         .setFields([
-          { name: 'Release date', value: release_date, inline: true },
-          { name: 'Average of votes', value: `${vote_average}`, inline: true },
-          { name: 'Count of votes', value: `${vote_count}`, inline: true },
-          { name: 'Original language', value: lang, inline: true },
+          { name: 'Release date', value: release_date || '-', inline: true },
+          { name: 'Average of votes', value: `${vote_average || '0'}`, inline: true },
+          { name: 'Count of votes', value: `${vote_count || '0'}`, inline: true },
+          { name: 'Original language', value: lang || '-', inline: true },
         ])
         .setImage(backdrop_img)
         .setThumbnail(poster_img)
