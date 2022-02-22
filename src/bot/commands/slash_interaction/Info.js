@@ -1,9 +1,7 @@
 const { SlashCommand } = require('../../classes');
 const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, version: discordjs_version } = require('discord.js');
 const { stripIndents } = require('common-tags');
-const { dependencies } = require(process.cwd() + '/package.json');
-const { 'discord.js': discordjs } = dependencies;
 const { versions, env } = process;
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
 const { node } = versions;
@@ -67,7 +65,7 @@ module.exports = class extends SlashCommand {
       `);
 
     const library = stripIndents(`
-      Discord.js : ${(npm_package_dependencies_discord_js || discordjs).match(/(?:\D*)([\d\D]+)/)[1]}
+      Discord.js : ${(npm_package_dependencies_discord_js || discordjs_version).match(/(?:\D*)([\d\D]+)/)[1]}
       `);
 
     const engine = stripIndents(`
@@ -222,3 +220,6 @@ module.exports = class extends SlashCommand {
     await interaction.editReply({ embeds });
   }
 };
+
+/* const { dependencies } = require(process.cwd() + '/package.json');
+const { 'discord.js': discordjs } = dependencies; */
