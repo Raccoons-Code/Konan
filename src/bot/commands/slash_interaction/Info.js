@@ -2,6 +2,8 @@ const { SlashCommand } = require('../../classes');
 const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const { stripIndents } = require('common-tags');
+const { version, dependencies } = require(process.cwd() + '/package.json');
+const { ['discord.js']: discordjs } = dependencies;
 const { versions, env } = process;
 const { npm_package_dependencies_discord_js, npm_package_version, OS } = env;
 const { node } = versions;
@@ -65,7 +67,7 @@ module.exports = class extends SlashCommand {
       `);
 
     const library = stripIndents(`
-    Discord.js : ${npm_package_dependencies_discord_js}
+    Discord.js : ${npm_package_dependencies_discord_js || discordjs}
     `);
 
     const engine = stripIndents(`
