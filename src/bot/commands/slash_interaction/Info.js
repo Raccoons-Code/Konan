@@ -2,7 +2,9 @@ const { SlashCommand } = require('../../classes');
 const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const { stripIndents } = require('common-tags');
-const { version } = require(require.main.path + '/../../package.json');
+const { versions, env } = process;
+const { npm_package_dependencies_discord_js, npm_package_version, OS } = env;
+const { node } = versions;
 const { DateTimeFormat } = Intl;
 const ms = require('ms');
 const dateOptions = { dateStyle: 'medium', timeStyle: 'long' };
@@ -59,11 +61,23 @@ module.exports = class extends SlashCommand {
       Members  : ${client.totalMembers || users.cache.size}
       Ping     : ${ws.ping} ms
       Uptime   : ${new DateTimeFormat(locale, dateOptions).format(readyAt)}
-      Version  : ${version}
+      Version  : ${npm_package_version}
       `);
 
+    const library = stripIndents(`
+    Discord.js : ${npm_package_dependencies_discord_js}
+    `);
+
+    const engine = stripIndents(`
+    Node : ${node}
+    `);
+
     embeds[0].setAuthor({ name: username, iconURL: avatarURL })
-      .setFields([{ name: 'Stats', value: codeBlock('properties', stats) }]);
+      .setFields([
+        { name: 'Library', value: codeBlock('properties', library), inline },
+        { name: 'Engine', value: codeBlock('properties', engine), inline },
+        { name: 'Stats', value: codeBlock('properties', stats) },
+      ]);
 
     await interaction.editReply({ embeds });
   }

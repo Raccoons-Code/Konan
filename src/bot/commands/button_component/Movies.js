@@ -84,8 +84,6 @@ module.exports = class extends ButtonInteraction {
 
       const lang = configuration.getLanguage({ language: original_language });
 
-      console.log({ release_date, vote_average, vote_count, lang });
-
       embeds.push(new MessageEmbed()
         .setAuthor({ name: genre_names.join(', ') })
         .setColor('RANDOM')
