@@ -20,8 +20,9 @@ module.exports = class extends Event {
 		console.log(`Ready! ${client.user.tag} is on ${client.guilds.cache.size} servers.`);
 
 		this.deleteMyGuilds(client);
-		this.setPresence(client);
+		client.fetchStats({ loop: true });
 		client.topggautoposter();
+		this.setPresence(client);
 	}
 
 	async deleteGuild(guild, user) {
@@ -96,8 +97,6 @@ module.exports = class extends Event {
 	async setPresence(client = this.client) {
 		const ytURL = 'https://www.youtube.com/watch?v=';
 
-		client.fetchStats();
-
 		client.user.setPresence({
 			activities: [
 				{ name: `${client.totalMembers || 'Fetching'} members`, type: 'WATCHING' },
@@ -112,6 +111,7 @@ module.exports = class extends Event {
 		});
 
 		await this.util.waitAsync(10000 * this.util.mathRandom(6, 1));
+
 		this.setPresence(client);
 	}
 };

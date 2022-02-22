@@ -2,10 +2,10 @@ const { SlashCommand } = require('../../classes');
 const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const { stripIndents } = require('common-tags');
-const { version, dependencies } = require(process.cwd() + '/package.json');
-const { ['discord.js']: discordjs } = dependencies;
+const { dependencies } = require(process.cwd() + '/package.json');
+const { 'discord.js': discordjs } = dependencies;
 const { versions, env } = process;
-const { npm_package_dependencies_discord_js, npm_package_version, OS } = env;
+const { npm_package_dependencies_discord_js, npm_package_version } = env;
 const { node } = versions;
 const { DateTimeFormat } = Intl;
 const ms = require('ms');
@@ -67,12 +67,12 @@ module.exports = class extends SlashCommand {
       `);
 
     const library = stripIndents(`
-    Discord.js : ${npm_package_dependencies_discord_js || discordjs}
-    `);
+      Discord.js : ${(npm_package_dependencies_discord_js || discordjs).match(/(?:\D*)([\d\D]+)/)[1]}
+      `);
 
     const engine = stripIndents(`
-    Node : ${node}
-    `);
+      Node : ${node}
+      `);
 
     embeds[0].setAuthor({ name: username, iconURL: avatarURL })
       .setFields([

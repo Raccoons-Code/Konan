@@ -61,19 +61,40 @@ module.exports = class extends Client {
 		}).catch(() => console.error(reason));
 	}
 
-	async fetchStats() {
-		return await Promise.all([
-			this.shard.fetchClientValues('guilds.cache.size'),
-			this.shard.fetchClientValues('channels.cache.size'),
-			this.shard.broadcastEval(client => client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
-		]).then(results => {
+	/**
+	 * @param {FetchStatsOptions} options
+	 * @returns {Promise}
+	 */
+	async fetchStats(options) {
+		try {
+			const results = await Promise.all([
+				this.shard.fetchClientValues('guilds.cache.size'),
+				this.shard.fetchClientValues('channels.cache.size'),
+				this.shard.broadcastEval(client => client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
+			]);
+
 			this.totalGuilds = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
 			this.totalChannels = results[1].reduce((acc, channelsCount) => acc + channelsCount, 0);
 			this.totalMembers = results[2].reduce((acc, memberCount) => acc + memberCount, 0);
-		}).catch(console.error);
+		} catch {
+			return await this.fetchStats(options);
+		}
+
+		if (options.loop) {
+			await this.util.waitAsync(100000);
+
+			return await this.fetchStats(options);
+		}
+
+		return { totalGuilds: this.totalGuilds, totalChannels: this.totalChannels, totalMembers: this.totalMembers };
 	}
 
 	async topggautoposter() {
 		require('../topgg').AutoPoster?.(this);
 	}
 };
+
+/**
+ * @typedef FetchStatsOptions
+ * @property {boolean} loop it doesn't return anything
+ */
