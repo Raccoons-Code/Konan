@@ -1,8 +1,8 @@
 const { Command } = require('../../classes');
 
 module.exports = class extends Command {
-	constructor(...args) {
-		super(...args, {
+	constructor(client) {
+		super(client, {
 			name: 'ping',
 			aliases: ['p'],
 			description: 'Replies with Pong!',

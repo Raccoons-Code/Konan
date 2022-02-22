@@ -1,8 +1,8 @@
 const { SlashCommand } = require('../../classes');
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       clientPermissions: ['BAN_MEMBERS'],
       userPermissions: ['BAN_MEMBERS'],
     });

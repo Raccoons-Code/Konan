@@ -9,8 +9,8 @@ const dateOptions = { dateStyle: 'medium', timeStyle: 'long' };
 const inline = true;
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('info')
       .setDescription('Server or user info.')
       .addSubcommand(subCommand => subCommand.setName('application')

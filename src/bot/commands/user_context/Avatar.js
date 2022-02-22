@@ -2,8 +2,8 @@ const { UserContextMenu } = require('../../classes');
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 
 module.exports = class extends UserContextMenu {
-	constructor(...args) {
-		super(...args);
+	constructor(client) {
+		super(client);
 		this.data = this.setName('Get avatar')
 			.setType(2);
 	}

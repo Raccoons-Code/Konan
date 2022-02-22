@@ -2,8 +2,8 @@ const { Command } = require('../../classes');
 const { Restore } = require('../../BackupAPI');
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: 'backup',
       description: 'Bot restricted backup command.',
     });

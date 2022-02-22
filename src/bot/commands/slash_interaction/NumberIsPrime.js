@@ -2,8 +2,8 @@ const { MessageEmbed } = require('discord.js');
 const { SlashCommand } = require('../../classes');
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('number_is_prime')
       .setDescription('Verify if number is prime.')
       .addIntegerOption(option => option.setName('number')

@@ -7,9 +7,7 @@ const Client = require('./client');
 module.exports = class extends SlashCommandBuilder {
   /**
    * @param {Client} client
-   * @param {object} props
-   * @param {Array<PermissionString>} [props.clientPermissions]
-   * @param {Array<PermissionString>} [props.userPermissions]
+   * @param {Props} props
    */
   constructor(client, props) {
     super();
@@ -85,3 +83,9 @@ module.exports = class extends SlashCommandBuilder {
     return await channel.messages.fetch(id);
   }
 };
+
+/**
+ * @typedef Props
+ * @property {PermissionString[]} [clientPermissions]
+ * @property {PermissionString[]} [userPermissions]
+ */

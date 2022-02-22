@@ -26,8 +26,8 @@ const Choices = new class {
 };
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       clientPermissions: ['ATTACH_FILES'],
     });
     this.data = this.setName('random')

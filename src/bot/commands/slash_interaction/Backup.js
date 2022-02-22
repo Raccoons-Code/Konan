@@ -4,8 +4,8 @@ const { MessageEmbed } = require('discord.js');
 const Backup = require('discord-backup');
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       clientPermissions: ['BAN_MEMBERS', 'MANAGE_CHANNELS', 'MANAGE_EMOJIS_AND_STICKERS', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'MANAGE_ROLES', 'MANAGE_WEBHOOKS'],
       userPermissions: ['ADMINISTRATOR'],
     });

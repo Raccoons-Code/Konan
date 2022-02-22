@@ -1,8 +1,8 @@
 const { Event } = require('../classes');
 
 module.exports = class extends Event {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'],
       name: 'messageDelete',
       partials: ['CHANNEL', 'MESSAGE'],

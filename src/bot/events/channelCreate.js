@@ -1,8 +1,8 @@
 const { Event } = require('../classes');
 
 module.exports = class extends Event {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: 'channelCreate',
       permissions: ['SEND_MESSAGES'],
     });
@@ -13,6 +13,6 @@ module.exports = class extends Event {
 
     if (!(guild && channel.isText() && channel.permissionsFor(client.user.id).has(this.permissions))) return;
 
-    channel.send('First!').catch(() => null);
+    await channel.send('First!').catch(() => null);
   }
 };

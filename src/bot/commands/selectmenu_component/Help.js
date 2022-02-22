@@ -4,8 +4,8 @@ const { env: { DONATE_LINK, GUILD_INVITE } } = process;
 const resetProps = { attachments: [], components: [], content: null, embeds: [], files: [] };
 
 module.exports = class extends SelectMenuInteraction {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = {
       name: 'help',
       description: 'Help menu',

@@ -1,8 +1,8 @@
 const { ButtonInteraction } = require('../../classes');
 
 module.exports = class extends ButtonInteraction {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: 'buttonroles',
       description: 'Button roles',
       clientPermissions: ['MANAGE_ROLES'],
@@ -13,7 +13,6 @@ module.exports = class extends ButtonInteraction {
     const { customId, member } = interaction;
 
     const { roleId } = this.util.parseJSON(customId);
-
 
     try {
       if (member.roles.resolve(roleId)) {

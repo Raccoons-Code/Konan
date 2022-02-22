@@ -4,8 +4,8 @@ const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, MessageA
 const { env: { GUILD_INVITE } } = process;
 
 module.exports = class extends Event {
-	constructor(...args) {
-		super(...args, {
+	constructor(client) {
+		super(client, {
 			intents: ['GUILDS'],
 			name: 'interactionCreate',
 		});

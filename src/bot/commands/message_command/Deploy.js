@@ -2,8 +2,8 @@ const { Command } = require('../../classes');
 const Commands = require('../');
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: 'deploy',
       description: 'Deploy commands (Restricted for bot\'owners).',
       args: {

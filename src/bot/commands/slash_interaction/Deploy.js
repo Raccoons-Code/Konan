@@ -3,8 +3,8 @@ const Commands = require('..');
 const { env: { GUILD_ID, OWNER_ID } } = process;
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('deploy')
       .setDescription('Deploy commands (Restricted for bot\'owners).')
       .setDefaultPermission(false)

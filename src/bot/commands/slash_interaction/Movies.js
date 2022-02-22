@@ -5,8 +5,8 @@ const { image, movie } = TmdbUtils;
 const ms = require('ms');
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('movies')
       .setDescription('Search, list and see details of movies.')
       .addSubcommand(subcommand => subcommand.setName('list')
@@ -69,6 +69,9 @@ module.exports = class extends SlashCommand {
       page,
       sort_by,
     });
+
+    if (!results)
+      return await interaction.editReply('Sorry! I didn\'t find your request.');
 
     client.movies[id] = { sort_by };
 

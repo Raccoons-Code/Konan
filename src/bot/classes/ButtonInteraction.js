@@ -4,10 +4,7 @@ const Client = require('./client');
 module.exports = class {
   /**
    * @param {Client} client
-   * @param {object} data
-   * @param {string} data.name
-   * @param {string} data.description
-   * @param {Array<PermissionString>} [data.clientPermissions]
+   * @param {Data} data
    */
   constructor(client, data) {
     this.data = data;
@@ -30,3 +27,10 @@ module.exports = class {
     this.MessageSelectOptionData;
   }
 };
+
+/**
+ * @typedef Data
+ * @property {string} name
+ * @property {string} description
+ * @property {PermissionString[]} clientPermissions
+ */

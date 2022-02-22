@@ -1,8 +1,8 @@
 const { Event } = require('../classes');
 
 module.exports = class extends Event {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: 'shardError',
     });
   }

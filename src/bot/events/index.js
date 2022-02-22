@@ -89,7 +89,7 @@ module.exports = new class {
     return this.events = events;
   }
 
-  /** @param {Array<IntentsString>} intents */
+  /** @param {IntentsString[]} intents */
   loadIntents(intents = []) {
     for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];
@@ -103,7 +103,7 @@ module.exports = new class {
     return this.intents = BitField.resolve([...new Set(intents)]);
   }
 
-  /** @param {Array<PartialTypes>} partials */
+  /** @param {PartialTypes[]} partials */
   loadPartials(partials = []) {
     for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];

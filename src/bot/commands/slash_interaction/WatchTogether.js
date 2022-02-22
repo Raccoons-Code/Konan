@@ -5,8 +5,8 @@ const { ChannelTypes } = Constants;
 const { GUILD_VOICE } = ChannelTypes;
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       clientPermissions: ['CREATE_INSTANT_INVITE'],
     });
     this.data = this.setName('party')

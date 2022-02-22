@@ -4,12 +4,7 @@ const Client = require('./client');
 module.exports = class {
 	/**
 	 * @param {Client} client
-	 * @param {object} data
-	 * @param {Array<IntentsString>} [data.intents]
-	 * @param {keyof({on,once})} [data.listener]
-	 * @param {keyof(ClientEvents)} data.name
-	 * @param {Array<PartialTypes>} [data.partials]
-	 * @param {Array<PermissionString>} [data.permissions]
+	 * @param {Data} data
 	 */
 	constructor(client, {
 		intents,
@@ -88,3 +83,12 @@ module.exports = class {
 		this.VoiceState;
 	}
 };
+
+/**
+ * @typedef Data
+ * @property {IntentsString[]} [intents]
+ * @property {keyof({on,once})} [listener]
+ * @property {keyof(ClientEvents)} name
+ * @property {PartialTypes[]} [partials]
+ * @property {PermissionString[]} [permissions]
+ */

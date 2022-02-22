@@ -3,8 +3,8 @@ const { userMention } = require('@discordjs/builders');
 const db = require('quick.db');
 
 module.exports = class extends ButtonInteraction {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: 'jankenpon',
       description: 'Jankenpon',
     });

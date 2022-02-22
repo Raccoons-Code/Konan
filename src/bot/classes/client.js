@@ -4,7 +4,7 @@ const commands = require('../commands');
 const events = require('../events');
 const methods = require('../methods');
 const translator = require('../translator');
-const { env: { DONATE_LINK, ERROR_WEBHOOK } } = process;
+const { env: { DONATE_LINK, ERROR_WEBHOOK, PAYPAL_DONATE_LINK } } = process;
 
 module.exports = class extends Client {
 	/** @param {ClientOptions} [options] */
@@ -23,7 +23,8 @@ module.exports = class extends Client {
 
 	get donate() {
 		return {
-			paypal: DONATE_LINK,
+			url: DONATE_LINK,
+			paypal: PAYPAL_DONATE_LINK,
 		};
 	}
 

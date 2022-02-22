@@ -5,8 +5,8 @@ const { image, movie } = TmdbUtils;
 const ms = require('ms');
 
 module.exports = class extends ButtonInteraction {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = {
       name: 'movies',
       description: 'Movies',
@@ -29,6 +29,9 @@ module.exports = class extends ButtonInteraction {
       page: page ? page : 1,
       sort_by,
     });
+
+    if (!results)
+      return await interaction.reply({ content: 'Sorry! I didn\'t find this page.', ephemeral: true });
 
     this.results = results;
 

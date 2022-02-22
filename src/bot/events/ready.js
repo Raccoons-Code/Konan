@@ -4,8 +4,8 @@ const { Restore } = require('../BackupAPI');
 const Backup = require('discord-backup');
 
 module.exports = class extends Event {
-	constructor(...args) {
-		super(...args, {
+	constructor(client) {
+		super(client, {
 			listener: 'once',
 			name: 'ready',
 		});

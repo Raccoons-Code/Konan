@@ -2,8 +2,8 @@ const { SlashCommand } = require('../../classes');
 const { env: { OWNER_ID } } = process;
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('respawn')
       .setDescription('Respawn application (Restricted for bot\'owners).')
       .setDefaultPermission(false);

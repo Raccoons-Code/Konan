@@ -3,8 +3,8 @@ const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = req
 const { env: { DONATE_LINK, GUILD_INVITE } } = process;
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('help')
       .setDescription('Replies with Help!')
       .addStringOption(option => option.setName('command')

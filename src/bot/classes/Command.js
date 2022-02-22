@@ -4,14 +4,7 @@ const Client = require('./client');
 module.exports = class {
 	/**
 	 * @param {Client} client
-	 * @param {object} data
-	 * @param {Array} [data.aliases]
-	 * @param {any} [data.args]
-	 * @param {Array<PermissionString>} [data.clientPermissions]
-	 * @param {String} data.description
-	 * @param {String} [data.emoji]
-	 * @param {String} data.name
-	 * @param {Array<PermissionString>} [data.userPermissions]
+	 * @param {Data} data
 	 */
 	constructor(client, data) {
 		if (!this.regexCommandName(data.name))
@@ -50,3 +43,14 @@ module.exports = class {
 		return /^[\w-]{1,32}$/.test(string);
 	}
 };
+
+/**
+ * @typedef Data
+ * @property {string[]} [aliases]
+ * @property {any} [args]
+ * @property {PermissionString[]} [clientPermissions]
+ * @property {String} description
+ * @property {String} [emoji]
+ * @property {String} name
+ * @property {PermissionString[]} [userPermissions]
+ */

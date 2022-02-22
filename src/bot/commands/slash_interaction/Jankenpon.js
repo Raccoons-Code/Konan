@@ -2,8 +2,8 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
 const { SlashCommand } = require('../../classes');
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('jankenpon')
       .setDescription('jankenpon')
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('game')

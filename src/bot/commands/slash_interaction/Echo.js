@@ -2,8 +2,8 @@ const { SlashCommand } = require('../../classes');
 const { Webhook, MessageEmbed } = require('discord.js');
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       clientPermissions: ['MANAGE_WEBHOOKS'],
     });
     this.data = this.setName('echo')

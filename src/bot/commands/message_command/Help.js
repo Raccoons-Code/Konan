@@ -3,8 +3,8 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const { env: { DONATE_LINK, GUILD_INVITE } } = process;
 
 module.exports = class extends Command {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: 'help',
       aliases: ['h'],
       description: 'Help!',

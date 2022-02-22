@@ -2,8 +2,8 @@ const { ButtonInteraction } = require('../../classes');
 const { userMention } = require('@discordjs/builders');
 
 module.exports = class extends ButtonInteraction {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: 'oldjankenpon',
       description: 'Jankenpon',
     });

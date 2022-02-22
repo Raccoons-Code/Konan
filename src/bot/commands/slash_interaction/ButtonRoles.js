@@ -3,8 +3,8 @@ const { MessageButton, MessageActionRow, MessageEmbed, Util } = require('discord
 
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       clientPermissions: ['EMBED_LINKS', 'MANAGE_ROLES', 'SEND_MESSAGES'],
       userPermissions: ['MANAGE_ROLES'],
     });

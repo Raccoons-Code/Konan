@@ -2,8 +2,8 @@ const { SlashCommand } = require('../../classes');
 const { Emoji, GuildChannel, MessageSelectMenu, MessageActionRow, MessageEmbed, Util } = require('discord.js');
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       clientPermissions: ['EMBED_LINKS', 'MANAGE_ROLES', 'SEND_MESSAGES'],
       userPermissions: ['MANAGE_ROLES'],
     });

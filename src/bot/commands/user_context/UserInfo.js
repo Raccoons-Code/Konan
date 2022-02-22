@@ -3,8 +3,8 @@ const { codeBlock, inlineCode, time } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class extends UserContextMenu {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('User info')
       .setType(2);
   }

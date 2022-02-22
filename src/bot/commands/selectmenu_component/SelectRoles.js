@@ -1,8 +1,8 @@
 const { SelectMenuInteraction } = require('../../classes');
 
 module.exports = class extends SelectMenuInteraction {
-  constructor(...args) {
-    super(...args, {
+  constructor(client) {
+    super(client, {
       name: 'selectroles',
       description: 'Select Roles',
       clientPermissions: ['MANAGE_ROLES'],

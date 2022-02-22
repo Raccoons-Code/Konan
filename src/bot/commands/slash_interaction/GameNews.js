@@ -3,8 +3,8 @@ const { MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('notícias_de_jogos')
       .setDescription('Novidades do mundo dos games.')
       .addStringOption(option => option.setName('notícia')

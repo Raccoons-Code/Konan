@@ -3,8 +3,8 @@ const { SlashCommand } = require('../../classes');
 const db = require('quick.db');
 
 module.exports = class extends SlashCommand {
-  constructor(...args) {
-    super(...args);
+  constructor(client) {
+    super(client);
     this.data = this.setName('guess')
       .setDescription('You have 10 chances to guess the number from 1 to 100 that the bot set.')
       .addIntegerOption(option => option.setName('number')
