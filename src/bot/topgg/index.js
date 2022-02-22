@@ -1,13 +1,19 @@
-if (!process.env.TOPGG_TOKEN) return;
-
 const { AutoPoster } = require('topgg-autoposter');
 
 module.exports = class {
-  static AutoPoster(client) {
-    /* const ap =  */AutoPoster(process.env.TOPGG_TOKEN, client);
+  constructor(client) {
+    this.client = client;
 
-    /* ap.on('posted', () => {
-      console.log('Posted stats to Top.gg!');
-    }); */
+    this.TOPGG_TOKEN = process.env.TOPGG_TOKEN;
+  }
+
+  AutoPoster(client = this.client, token = this.TOPGG_TOKEN) {
+    AutoPoster(token, client);
+  }
+
+  static AutoPoster(client) {
+    if (!process.env.TOPGG_TOKEN) return;
+
+    new this(client).AutoPoster(client);
   }
 };

@@ -81,20 +81,20 @@ module.exports = class extends Client {
 		}
 
 		if (options.loop) {
-			await this.util.waitAsync(100000);
+			await this.util.waitAsync(600000);
 
-			return await this.fetchStats(options);
+			return this.fetchStats(options);
 		}
 
 		return { totalGuilds: this.totalGuilds, totalChannels: this.totalChannels, totalMembers: this.totalMembers };
 	}
 
 	async topggautoposter() {
-		require('../topgg').AutoPoster?.(this);
+		require('../topgg').AutoPoster(this);
 	}
 };
 
 /**
  * @typedef FetchStatsOptions
- * @property {boolean} loop it doesn't return anything
+ * @property {boolean} loop
  */
