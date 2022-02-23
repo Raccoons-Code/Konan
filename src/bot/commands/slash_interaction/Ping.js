@@ -11,24 +11,23 @@ module.exports = class extends SlashCommand {
 	}
 
 	async execute(interaction = this.CommandInteraction) {
-		await interaction.reply({ content: 'Pong!', fetchReply: true }).then(async sent => {
-			const { client } = interaction;
+		const sent = await interaction.reply({ content: 'Pong!', ephemeral: true, fetchReply: true });
 
-			const ping = sent.createdTimestamp - interaction.createdTimestamp;
+		const ping = sent.createdTimestamp - interaction.createdTimestamp;
 
-			if (this._ping > ping) this._ping = ping;
-			if (this.ping_ < ping) this.ping_ = ping;
+		if (this._ping > ping) this._ping = ping;
+		if (this.ping_ < ping) this.ping_ = ping;
 
-			const embeds = [new MessageEmbed().setColor('RANDOM')
-				.setFields([
-					{ name: 'API', value: `\`${client.ws.ping}\`ms` },
-					{ name: 'Smaller', value: `\`${this._ping}\`ms`, inline: true },
-					{ name: 'BOT', value: `\`${ping}\`ms`, inline: true },
-					{ name: 'Bigger', value: `\`${this.ping_}\`ms`, inline: true }])];
+		const embeds = [new MessageEmbed().setColor('RANDOM')
+			.setFields([
+				{ name: ':signal_strength:', value: `**\`${interaction.client.ws.ping}\`ms**` },
+				{ name: ':heavy_minus_sign:', value: `**\`${this._ping}\`ms**`, inline: true },
+				{ name: ':robot:', value: `**\`${ping}\`ms**`, inline: true },
+				{ name: ':heavy_plus_sign:', value: `**\`${this.ping_}\`ms**`, inline: true },
+			])];
 
-			await interaction.editReply({ embeds });
+		await interaction.editReply({ embeds });
 
-			console.log(`Ping: ${ping}ms, Smaller: ${this._ping}ms, Bigger: ${this.ping_}ms`);
-		});
+		console.log(`Ping: ${ping}ms`);
 	}
 };

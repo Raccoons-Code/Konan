@@ -10,12 +10,12 @@ module.exports = class extends Command {
 	}
 
 	async execute(message = this.Message) {
-		await message.reply('Pong!').then(async sent => {
-			const ping = sent.createdTimestamp - message.createdTimestamp;
+		const sent = await message.reply('Pong!');
 
-			await sent.edit(`Pong! \`API: ${message.client.ws.ping}ms\`, \`BOT: ${ping}ms\``);
+		const ping = sent.createdTimestamp - message.createdTimestamp;
 
-			console.log(`Ping: ${ping}ms`);
-		});
+		await sent.edit(`Pong! \`API: ${message.client.ws.ping}ms\`, \`BOT: ${ping}ms\``);
+
+		console.log(`Ping: ${ping}ms`);
 	}
 };

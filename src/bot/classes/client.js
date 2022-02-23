@@ -63,7 +63,7 @@ module.exports = class extends Client {
 
 	/**
 	 * @param {FetchStatsOptions} options
-	 * @returns {Promise}
+	 * @returns {Promise<FetchStats>}
 	 */
 	async fetchStats(options) {
 		try {
@@ -86,7 +86,7 @@ module.exports = class extends Client {
 			return this.fetchStats(options);
 		}
 
-		return { totalGuilds: this.totalGuilds, totalChannels: this.totalChannels, totalMembers: this.totalMembers };
+		return { totalChannels: this.totalChannels, totalGuilds: this.totalGuilds, totalMembers: this.totalMembers };
 	}
 
 	async topggautoposter() {
@@ -97,4 +97,8 @@ module.exports = class extends Client {
 /**
  * @typedef FetchStatsOptions
  * @property {boolean} loop
+ * @typedef FetchStats
+ * @property {number} totalChannels
+ * @property {number} totalGuilds
+ * @property {number} totalMembers
  */

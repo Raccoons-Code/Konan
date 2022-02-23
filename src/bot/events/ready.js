@@ -19,9 +19,9 @@ module.exports = class extends Event {
 
 		console.log(`Ready! ${client.user.tag} is on ${client.guilds.cache.size} servers.`);
 
-		this.deleteMyGuilds(client);
 		client.fetchStats({ loop: true });
 		client.topggautoposter();
+		this.deleteMyGuilds(client);
 		this.setPresence(client);
 	}
 
