@@ -1,13 +1,11 @@
 const { SlashCommand } = require('../../classes');
 const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
-const { MessageEmbed, version: discordjs_version } = require('discord.js');
+const { MessageActionRow, MessageEmbed, version: discordjs_version, MessageButton } = require('discord.js');
 const { stripIndents } = require('common-tags');
 const { versions, env } = process;
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
 const { node } = versions;
-const { DateTimeFormat } = Intl;
 const ms = require('ms');
-const dateOptions = { dateStyle: 'medium', timeStyle: 'long' };
 const inline = true;
 
 module.exports = class extends SlashCommand {
@@ -43,10 +41,12 @@ module.exports = class extends SlashCommand {
 
     const embeds = this.embeds = [new MessageEmbed().setColor('RANDOM')];
 
-    await this[subcommand]?.(interaction, embeds);
+    const components = this.components = [new MessageActionRow()];
+
+    await this[subcommand]?.(interaction, embeds, components);
   }
 
-  async application(interaction = this.CommandInteraction, embeds = this.embeds) {
+  async application(interaction = this.CommandInteraction, embeds = this.embeds, components = this.components) {
     const { client, guild } = interaction;
 
     const { channels, guilds, readyAt, user, users, ws } = client;
@@ -79,7 +79,15 @@ module.exports = class extends SlashCommand {
         { name: 'Uptime', value: `${time(readyAt)} ${time(readyAt, 'R')}` },
       ]);
 
-    await interaction.editReply({ embeds });
+    const buttons = [new MessageButton()
+      .setCustomId(JSON.stringify({ c: this.data.name, sc: 'application' }))
+      .setEmoji('🔄')
+      .setLabel('Update')
+      .setStyle('SECONDARY')];
+
+    components[0].setComponents(buttons);
+
+    await interaction.editReply({ components, embeds });
   }
 
   async channel(interaction = this.CommandInteraction, embeds = this.embeds) {
@@ -145,7 +153,7 @@ module.exports = class extends SlashCommand {
 
     const role = options.getRole('role');
 
-    const { color, mentionable, permissions, icon, name, tags } = role;
+    const { color, mentionable, permissions, name } = role;
 
     const arrayPerms = permissions.toArray();
     const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
