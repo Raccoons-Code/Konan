@@ -1,4 +1,5 @@
 const { SelectMenuInteraction } = require('../../classes');
+const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const { env: { DONATE_LINK, GUILD_INVITE } } = process;
 const resetProps = { attachments: [], components: [], content: null, embeds: [], files: [] };
@@ -52,14 +53,15 @@ module.exports = class extends SelectMenuInteraction {
     const menus = [new MessageSelectMenu()
       .setCustomId(JSON.stringify({ c: this.data.name }))
       .setOptions([
-        { label: '🏠 Home', value: 'home', default: true },
+        { label: '🏠 Home', value: 'home', default: true }, // :home:
+        { label: '🗃️ Commands', value: 'commands' }, // :card_box:
         { label: `${['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)]} Languages`, value: 'localization' },
       ])];
 
     const components = [new MessageActionRow().setComponents(buttons),
     new MessageActionRow().setComponents(menus)];
 
-    await interaction.update({ ...resetProps, components, embeds });
+    await interaction.update({ components, embeds });
   }
 
   async localization(interaction = this.SelectMenuInteraction) {
@@ -74,12 +76,55 @@ module.exports = class extends SelectMenuInteraction {
     const menus = [new MessageSelectMenu()
       .setCustomId(JSON.stringify({ c: this.data.name }))
       .setOptions([
-        { label: '🏠 Home', value: 'home' },
+        { label: '🏠 Home', value: 'home' }, // :home:
+        { label: '🗃️ Commands', value: 'commands' }, // :card_box:
         { label: `${earth} Languages`, value: 'localization', default: true },
       ])];
 
     const components = [new MessageActionRow().setComponents(menus)];
 
-    await interaction.update({ ...resetProps, components, embeds });
+    await interaction.update({ components, embeds });
+  }
+
+  async commands(interaction = this.SelectMenuInteraction) {
+    const { client, locale } = interaction;
+
+    const { slash_interaction } = client.commands;
+
+    const filtered = slash_interaction.filter(c => c.defaultPermission !== false);
+
+    const slashcommands = filtered.toJSON();
+
+    const embeds = [new MessageEmbed().setColor('RANDOM')
+      .setDescription(this.convertCommandsToString(slashcommands))
+      .setTitle(this.t('konanSupport', { locale }))];
+
+    const earth = ['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)];
+
+    const menus = [new MessageSelectMenu()
+      .setCustomId(JSON.stringify({ c: this.data.name }))
+      .setOptions([
+        { label: '🏠 Home', value: 'home' }, // :home:
+        { label: '🗃️ Commands', value: 'commands', default: true }, // :card_box:
+        { label: `${earth} Languages`, value: 'localization' },
+      ])];
+
+    const components = [new MessageActionRow().setComponents(menus)];
+
+    await interaction.update({ components, embeds });
+  }
+
+  /**
+   * @param {Array} commands
+   * @param {string} [text='']
+   */
+  convertCommandsToString(commands, text = '') {
+    for (let i = 0; i < commands.length; i++) {
+      const { description, name } = commands[i];
+
+      text = `${text}${name} - ${description}\n`;
+    }
+
+    return `\`\`\`properties\ntotal - ${commands.length}\n${text}\`\`\``;
   }
 };

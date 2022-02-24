@@ -56,7 +56,8 @@ module.exports = class extends SlashCommand {
     const menus = [new MessageSelectMenu()
       .setCustomId(JSON.stringify({ c: this.data.name }))
       .setOptions([
-        { label: '🏠 Home', value: 'home', default: true },
+        { label: '🏠 Home', value: 'home', default: true }, // :home:
+        { label: '🗃️ Commands', value: 'commands' }, // :card_box:
         { label: `${['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)]} Languages`, value: 'localization' },
       ])];
 
