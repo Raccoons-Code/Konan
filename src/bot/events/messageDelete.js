@@ -21,7 +21,9 @@ module.exports = class extends Event {
 
     if (!matched) return;
 
-    const reply = channel.messages.cache.find(m => m.reference?.messageId === id && m.author.id === user.id);
+    const messages = await channel.messages.fetch({ after: id });
+
+    const reply = messages.find(m => m.author.id === user.id && m.reference?.messageId === id);
 
     if (reply?.deletable)
       await reply.delete();
