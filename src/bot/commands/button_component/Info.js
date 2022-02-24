@@ -36,10 +36,12 @@ module.exports = class extends ButtonInteraction {
 
     const username = guild?.me.displayName || user.username;
 
+    const newStats = await client.fetchStats();
+
     const stats = stripIndents(`
-      Servers  : ${client.totalGuilds || guilds.cache.size}
-      Channels : ${client.totalChannels || channels.cache.size}
-      Members  : ${client.totalMembers || users.cache.size}
+      Servers  : ${newStats.totalGuilds || guilds.cache.size}
+      Channels : ${newStats.totalChannels || channels.cache.size}
+      Members  : ${newStats.totalMembers || users.cache.size}
       Ping     : ${ws.ping} ms
       Version  : ${npm_package_version}
       `);

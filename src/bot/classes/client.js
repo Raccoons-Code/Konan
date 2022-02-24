@@ -15,11 +15,25 @@ module.exports = class extends Client {
 			partials: events.partials,
 			...options,
 		});
-		this.prisma = prisma;
-		this.regexp = util.regexp;
-		this.t = translator.t;
-		this.translator = translator;
-		this.util = util;
+
+		/** @type {prisma} */
+		this.prisma;
+		/** @type {util['regexp']} */
+		this.regexp;
+		/** @type {translator['t']} */
+		this.t;
+		/** @type {translator} */
+		this.translator;
+		/** @type {util} */
+		this.util;
+
+		Object.defineProperties(this, {
+			prisma: { value: prisma },
+			regexp: { value: util.regexp },
+			t: { value: translator.t },
+			translator: { value: translator },
+			util: { value: util },
+		});
 	}
 
 	get donate() {
@@ -66,7 +80,7 @@ module.exports = class extends Client {
 	 * @param {FetchStatsOptions} options
 	 * @returns {Promise<FetchStats>}
 	 */
-	async fetchStats(options) {
+	async fetchStats(options = {}) {
 		try {
 			const results = await Promise.all([
 				this.shard.fetchClientValues('guilds.cache.size'),

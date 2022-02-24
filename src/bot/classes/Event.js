@@ -19,11 +19,26 @@ module.exports = class {
 		this.partials = partials;
 		this.permissions = permissions;
 		if (client?.ready) {
-			this.client = client;
-			this.prisma = client.prisma;
-			this.regexp = client.util.regexp;
-			this.t = client.translator.t;
-			this.util = client.util;
+			/** @type {client} */
+			this.client;
+			/** @type {client['prisma']} */
+			this.prisma;
+			/** @type {client['regexp']} */
+			this.regexp;
+			/** @type {client['t']} */
+			this.t;
+			/** @type {client['translator']} */
+			this.translator;
+			/** @type {client['util']} */
+			this.util;
+
+			Object.defineProperties(this, {
+				client: { value: client },
+				prisma: { value: client.prisma },
+				regexp: { value: client.util.regexp },
+				t: { value: client.t },
+				util: { value: client.util },
+			});
 		}
 	}
 
