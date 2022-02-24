@@ -96,7 +96,7 @@ module.exports = class extends SelectMenuInteraction {
     const slashcommands = filtered.toJSON();
 
     const embeds = [new MessageEmbed().setColor('RANDOM')
-      .setDescription(this.convertCommandsToString(slashcommands))
+      .setDescription(this.convertCommandsToString(slashcommands).match(this.regexp.content)[1])
       .setTitle(this.t('konanSupport', { locale }))];
 
     const earth = ['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)];
@@ -122,7 +122,7 @@ module.exports = class extends SelectMenuInteraction {
     for (let i = 0; i < commands.length; i++) {
       const { description, name } = commands[i];
 
-      text = `${text}${name} - ${description}\n`;
+      text = `${text}/${name} - ${description}\n`;
     }
 
     return `\`\`\`properties\ntotal - ${commands.length}\n${text}\`\`\``;
