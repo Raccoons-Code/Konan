@@ -44,14 +44,16 @@ module.exports = class extends SlashCommand {
     const clientPermissions = channel.permissionsFor(client.user.id).missing(this.props.clientPermissions);
 
     if (clientPermissions.length)
-      return await interaction.editReply(this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions }));
+      return await interaction.editReply(this.t('missingChannelPermission',
+        { locale, PERMISSIONS: clientPermissions }));
 
     const limit = options.getNumber('amount');
 
     try {
       const size = await this.bulkDelete(channel, limit);
 
-      interaction.editReply(this.t(size ? 'messageDeleted' : 'noDeletedMessages', { count: size, locale, size }));
+      interaction.editReply(this.t(size ? 'messageDeleted' : 'noDeletedMessages',
+        { count: size, locale, size }));
     } catch {
       interaction.editReply(this.t('messageDeleteError', { locale }));
     }

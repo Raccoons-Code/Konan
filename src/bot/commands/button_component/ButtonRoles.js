@@ -44,7 +44,7 @@ module.exports = class extends ButtonInteraction {
 
     component.setCustomId(JSON.stringify(newCustomId));
 
-    const [, label] = component.label.match(/(.+?)(?:\s(\d+))+?/) || [];
+    const [, label] = component.label.match(this.regexp.labelWithCount) || [];
 
     const name = `${label} ${newCustomId.count}`;
 

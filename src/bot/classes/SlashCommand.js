@@ -12,14 +12,11 @@ module.exports = class extends SlashCommandBuilder {
   constructor(client, props) {
     super();
     this.props = props;
-    this.labelRegex = /(.{1,84})/;
-    this.limitRegex = /(.{1,100})/;
-    this.messageURLRegex = /(?:(?:\/)?(\d+))+/;
-    this.textRegexp = /(?:(?:([^|]{0,256}))(?:\|?([\w\W]{0,4096})))/;
     if (client?.ready) {
       this.client = client;
       this.prisma = client.prisma;
-      this.t = client.t;
+			this.regexp = client.util.regexp;
+      this.t = client.translator.t;
       this.util = client.util;
     }
   }

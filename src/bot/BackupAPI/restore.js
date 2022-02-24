@@ -1,5 +1,5 @@
 const { Guild, GuildChannel } = require('discord.js');
-const { filterObjectByKeys } = require('../methods');
+const { filterObjectByKeys } = require('../util');
 const defaults = require('./defaults.json');
 
 module.exports = class {

@@ -9,7 +9,8 @@ module.exports = class extends ContextMenuCommandBuilder {
     if (client?.ready) {
       this.client = client;
       this.prisma = client.prisma;
-      this.t = client.t;
+			this.regexp = client.util.regexp;
+      this.t = client.translator.t;
       this.util = client.util;
     }
   }

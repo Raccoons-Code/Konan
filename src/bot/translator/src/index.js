@@ -44,7 +44,6 @@ function interpolate(text, object) {
 class Idjsn {
   /** @param {Options} options */
   constructor(options = {}) {
-    if (!options.resources) return;
     if (!options.interpolation) options.interpolation = {};
     if (!options.interpolation.prefix) options.interpolation.prefix = '\\{\\{';
     if (!options.interpolation.suffix) options.interpolation.suffix = '\\}\\}';
@@ -53,7 +52,7 @@ class Idjsn {
     if (!options.plural.singularSuffix) options.plural.singularSuffix = '_one';
 
     _this.resources = options.resources;
-    _this.capitalize = options.capitalize;
+    _this.capitalize = options.capitalize || false;
     _this.interpolation = options.interpolation;
     _this.plural = options.plural;
   }

@@ -47,9 +47,10 @@ module.exports = class extends SlashCommand {
 
     try {
       await guild.members.ban(member, { days, reason });
-      interaction.editReply(this.t('userBanned', { locale }));
+
+      await interaction.editReply(this.t('userBanned', { locale }));
     } catch {
-      interaction.editReply(this.t('banError', { locale }));
+      await interaction.editReply(this.t('banError', { locale }));
     }
   }
 };

@@ -47,7 +47,7 @@ module.exports = class extends SlashCommand {
   }
 
   async application(interaction = this.CommandInteraction, embeds = this.embeds) {
-    const { client, guild, locale } = interaction;
+    const { client, guild } = interaction;
 
     const { channels, guilds, readyAt, user, users, ws } = client;
 
@@ -60,7 +60,6 @@ module.exports = class extends SlashCommand {
       Channels : ${client.totalChannels || channels.cache.size}
       Members  : ${client.totalMembers || users.cache.size}
       Ping     : ${ws.ping} ms
-      Uptime   : ${new DateTimeFormat(locale, dateOptions).format(readyAt)}
       Version  : ${npm_package_version}
       `);
 
@@ -77,6 +76,7 @@ module.exports = class extends SlashCommand {
         { name: 'Library', value: codeBlock('properties', library), inline },
         { name: 'Engine', value: codeBlock('properties', engine), inline },
         { name: 'Stats', value: codeBlock('properties', stats) },
+        { name: 'Uptime', value: `${time(readyAt)} ${time(readyAt, 'R')}` },
       ]);
 
     await interaction.editReply({ embeds });

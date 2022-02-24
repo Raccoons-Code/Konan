@@ -29,25 +29,31 @@ module.exports = class extends SelectMenuInteraction {
       .setThumbnail(avatarURL)
       .setTitle(this.t('konanSupport', { locale }))];
 
-    const buttons = [new MessageButton().setStyle('LINK')
+    const buttons = [new MessageButton()
+      .setEmoji('📮') // :postbox:
       .setLabel(this.t('inviteLink', { locale }))
+      .setStyle('LINK')
       .setURL(client.invite)];
 
     if (GUILD_INVITE)
-      buttons.push(new MessageButton().setStyle('LINK')
+      buttons.push(new MessageButton()
+        .setEmoji('🪤') // :mouse_trap:
         .setLabel(this.t('supportServer', { locale }))
+        .setStyle('LINK')
         .setURL(`${client.options.http.invite}/${GUILD_INVITE}`));
 
     if (DONATE_LINK)
-      buttons.push(new MessageButton().setStyle('LINK')
+      buttons.push(new MessageButton()
+        .setEmoji('💸') // :money_with_wings:
         .setLabel(this.t('donate', { locale }))
+        .setStyle('LINK')
         .setURL(`${DONATE_LINK}`));
 
     const menus = [new MessageSelectMenu()
       .setCustomId(JSON.stringify({ c: this.data.name }))
       .setOptions([
-        { label: 'Home', value: 'home', default: true },
-        { label: 'Languages', value: 'localization' },
+        { label: '🏠 Home', value: 'home', default: true },
+        { label: `${['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)]} Languages`, value: 'localization' },
       ])];
 
     const components = [new MessageActionRow().setComponents(buttons),
@@ -63,11 +69,13 @@ module.exports = class extends SelectMenuInteraction {
       .setImage('https://badges.awesome-crowdin.com/translation-15144556-499220.png')
       .setTitle(this.t('konanSupport', { locale }))];
 
+    const earth = ['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)];
+
     const menus = [new MessageSelectMenu()
       .setCustomId(JSON.stringify({ c: this.data.name }))
       .setOptions([
-        { label: 'Home', value: 'home' },
-        { label: 'Languages', value: 'localization', default: true },
+        { label: '🏠 Home', value: 'home' },
+        { label: `${earth} Languages`, value: 'localization', default: true },
       ])];
 
     const components = [new MessageActionRow().setComponents(menus)];

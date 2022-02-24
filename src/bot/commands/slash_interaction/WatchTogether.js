@@ -18,8 +18,8 @@ module.exports = class extends SlashCommand {
       .addChannelOption(option => option.setName('channel')
         .setDescription('Select a voice channel.')
         .addChannelTypes([GUILD_VOICE]));
-    if (this.client?.ready) {
-      this.discordTogether = new DiscordTogether(this.client);
+    if (client?.ready) {
+      this.discordTogether = new DiscordTogether(client);
       this.applications = Object.keys(this.discordTogether.applications);
       this.client.discordTogether = this.discordTogether;
     }

@@ -1,4 +1,3 @@
-/** @description exports all functions */
 module.exports = {
   bytes: require('./bytes'),
   capitalize: require('./capitalize'),
@@ -12,6 +11,7 @@ module.exports = {
   keyGen: require('./keyGen'),
   mathRandom: require('./mathRandom'),
   parseJSON: require('./parseJSON'),
+  regexp: require('./RegExp'),
   removeDuplicatesInArray: require('./removeDuplicatesInArray'),
   removeFromArray: require('./removeFromArray'),
   splitArrayInGroups: require('./splitArrayInGroups'),

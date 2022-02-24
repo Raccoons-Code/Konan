@@ -1,5 +1,5 @@
 const { SlashCommand } = require('../../classes');
-const { capitalize, mathRandom } = require('../../methods');
+const { capitalize, mathRandom } = require('../../util');
 const fetch = require('node-fetch');
 
 const Choices = new class {

@@ -1,5 +1,5 @@
 const { Command } = require('../../classes');
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const { env: { DONATE_LINK, GUILD_INVITE } } = process;
 
 module.exports = class extends Command {
@@ -19,27 +19,44 @@ module.exports = class extends Command {
     const avatarURL = guild?.me.displayAvatarURL({ dynamic: true }) ||
       client.user.displayAvatarURL({ dynamic: true });
 
-    const embeds = [new MessageEmbed().setColor('RANDOM')
-      .setTitle(this.t('konanSupport', { locale }))
+    const embeds = [new MessageEmbed()
+      .setColor('RANDOM')
+      .setDescription(this.t('helpText', { locale, user }))
       .setThumbnail(avatarURL)
-      .setDescription(this.t('helpText', { locale, user }))];
+      .setTitle(this.t('konanSupport', { locale }))];
 
-    const buttons = [new MessageButton().setStyle('LINK')
+    const buttons = [new MessageButton()
+      .setEmoji('📮') // :postbox:
       .setLabel(this.t('inviteLink', { locale }))
+      .setStyle('LINK')
       .setURL(client.invite)];
 
     if (GUILD_INVITE)
-      buttons.push(new MessageButton().setStyle('LINK')
+      buttons.push(new MessageButton()
+        .setEmoji('🪤') // :mouse_trap:
         .setLabel(this.t('supportServer', { locale }))
+        .setStyle('LINK')
         .setURL(`${client.options.http.invite}/${GUILD_INVITE}`));
 
     if (DONATE_LINK)
-      buttons.push(new MessageButton().setStyle('LINK')
+      buttons.push(new MessageButton()
+        .setEmoji('💸') // :money_with_wings:
         .setLabel(this.t('donate', { locale }))
+        .setStyle('LINK')
         .setURL(`${DONATE_LINK}`));
 
-    const components = [new MessageActionRow().setComponents(buttons)];
+    const menus = [new MessageSelectMenu()
+      .setCustomId(JSON.stringify({ c: this.data.name }))
+      .setOptions([
+        { label: '🏠 Home', value: 'home', default: true },
+        { label: `${['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)]} Languages`, value: 'localization' },
+      ])];
 
-    await this.timeout_erase(await message.reply({ components, embeds }), 60);
+    const components = [
+      new MessageActionRow().setComponents(buttons),
+      new MessageActionRow().setComponents(menus),
+    ];
+
+    await message.reply({ components, embeds });
   }
 };

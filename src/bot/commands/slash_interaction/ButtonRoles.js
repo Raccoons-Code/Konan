@@ -115,10 +115,7 @@ module.exports = class extends SlashCommand {
     const { locale, memberPermissions, options } = interaction;
 
     if (!interaction.inGuild())
-      return await interaction.reply({
-        content: this.t('onlyOnServer', { locale }),
-        ephemeral: true,
-      });
+      return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
     const userPermissions = memberPermissions.missing(this.props.userPermissions);
 
@@ -144,13 +141,13 @@ module.exports = class extends SlashCommand {
   async setup(interaction = this.CommandInteraction) {
     const { locale, options } = interaction;
 
-    const [, title, description] = options.getString('text')?.match(this.textRegexp) || [];
+    const [, title, description] = options.getString('text')?.match(this.regexp.embed) || [];
     const button_style = options.getString('button_style') || 'PRIMARY';
     const button_emoji = options.getString('button_emoji');
     const button_disabled = options.getBoolean('button_disabled');
     const channel = options.getChannel('channel') || interaction.channel;
     const role = options.getRole('role');
-    const button_name = options.getString('button_name')?.match(this.labelRegex)[1] || role.name;
+    const button_name = options.getString('button_name')?.match(this.regexp.labelLimit)[1] || role.name;
 
     const emoji = button_emoji ? Util.resolvePartialEmoji(button_emoji) : null;
 
@@ -173,7 +170,7 @@ module.exports = class extends SlashCommand {
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
       .setTitle(title || description ? '' : 'ButtonRoles')
-      .setDescription(description || '')];
+      .setDescription(description)];
 
     try {
       await channel.send({ embeds, components });
@@ -188,7 +185,7 @@ module.exports = class extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel');
-    const message_id = options.getString('message_id').match(this.messageURLRegex)[1];
+    const message_id = options.getString('message_id').match(this.regexp.messageURL)[1];
     const subcommand = options.getSubcommand();
 
     const message = await this.getMessageById(channel, message_id);
@@ -198,12 +195,12 @@ module.exports = class extends SlashCommand {
     if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
 
     if (subcommand === 'message') {
-      const [, title, description] = options.getString('text').match(this.textRegexp);
+      const [, title, description] = options.getString('text').match(this.regexp.embed);
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
-        .setTitle(title || '')
-        .setDescription(description || '')];
+        .setTitle(title)
+        .setDescription(description)];
 
       try {
         await message.edit({ embeds });
@@ -216,7 +213,7 @@ module.exports = class extends SlashCommand {
 
     if (subcommand === 'button') {
       const buttonId = options.getString('button');
-      const button_name = options.getString('button_name')?.match(this.labelRegex)[1];
+      const button_name = options.getString('button_name')?.match(this.regexp.labelLimit)[1];
       const button_style = options.getString('button_style');
       const button_disabled = options.getBoolean('button_disabled');
       const button_emoji = options.getString('button_emoji');
@@ -259,7 +256,7 @@ module.exports = class extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel');
-    const message_id = options.getString('message_id').match(this.messageURLRegex)[1];
+    const message_id = options.getString('message_id').match(this.regexp.messageURL)[1];
     const subcommand = options.getSubcommand();
 
     const message = await this.getMessageById(channel, message_id);
@@ -273,7 +270,7 @@ module.exports = class extends SlashCommand {
       const button_emoji = options.getString('button_emoji');
       const button_disabled = options.getBoolean('button_disabled');
       const role = options.getRole('role');
-      const button_name = options.getString('button_name')?.match(this.labelRegex)[1] || role.name;
+      const button_name = options.getString('button_name')?.match(this.regexp.labelLimit)[1] || role.name;
 
       const emoji = button_emoji ? Util.resolvePartialEmoji(button_emoji) : null;
 
@@ -312,7 +309,7 @@ module.exports = class extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel');
-    const message_id = options.getString('message_id').match(this.messageURLRegex)[1];
+    const message_id = options.getString('message_id').match(this.regexp.messageURL)[1];
     const subcommand = options.getSubcommand();
 
     const message = await this.getMessageById(channel, message_id);
@@ -359,30 +356,30 @@ module.exports = class extends SlashCommand {
       const messages = await channel.messages.fetch();
 
       const messages_filtered = messages.filter(m => m.author.id === client.user.id &&
-        m.embeds.length && m.components.some(c => c.components[0].type === 'BUTTON') ?
-        focused.value.length && regex.test(m.id) || regex.test(m.embeds[0]?.title) ||
-        regex.test(m.embeds[0]?.description) : false);
+        m.components.some(c => c.components[0].type === 'BUTTON') && regex.test(m.id));
 
       const messages_array = messages_filtered.toJSON();
 
       for (let i = 0; i < messages_array.length; i++) {
-        const message = messages_array[i];
-
-        const { embeds, id } = message;
+        const { embeds, id } = messages_array[i];
 
         const [embed] = embeds;
 
-        const title = embed?.title?.slice(0, 20);
+        const { title, description } = embed;
 
-        const description = embed?.description?.slice(0, 20);
+        const nameProps = [
+          id,
+          title ? `| ${title}` : '',
+          description ? `| ${description}` : '',
+        ];
 
         if (title || description)
           res.push({
-            name: `${id}`,
+            name: nameProps.join(' ').match(this.regexp.label)[1],
             value: `${id}`,
           });
 
-        if (i === 24) break;
+        if (res.length === 25) break;
       }
     }
 
@@ -424,14 +421,14 @@ module.exports = class extends SlashCommand {
 
           if (regex.test(buttonName))
             res.push({
-              name: buttonName.match(this.limitRegex)[1],
+              name: buttonName.match(this.regexp.labelLimit)[1],
               value: customId,
             });
         }
       }
     }
 
-  await interaction.respond(res);
+    await interaction.respond(res);
   }
 
   async addAutocomplete(interaction = this.AutocompleteInteraction) {
@@ -445,8 +442,8 @@ module.exports = class extends SlashCommand {
 
 /**
  * @typedef customId
- * @property {string} c
+ * @property {string} c command
  * @property {number} count
- * @property {number} d
+ * @property {number} d date
  * @property {string} roleId
  */

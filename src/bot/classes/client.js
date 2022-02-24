@@ -2,7 +2,7 @@ const { Client, ClientOptions, MessageEmbed, WebhookClient } = require('discord.
 const { prisma } = require('../database');
 const commands = require('../commands');
 const events = require('../events');
-const methods = require('../methods');
+const util = require('../util');
 const translator = require('../translator');
 const { env: { DONATE_LINK, ERROR_WEBHOOK, PAYPAL_DONATE_LINK } } = process;
 
@@ -16,9 +16,10 @@ module.exports = class extends Client {
 			...options,
 		});
 		this.prisma = prisma;
+		this.regexp = util.regexp;
 		this.t = translator.t;
 		this.translator = translator;
-		this.util = methods;
+		this.util = util;
 	}
 
 	get donate() {

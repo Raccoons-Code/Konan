@@ -159,7 +159,7 @@ module.exports = class extends SlashCommand {
       ];
 
       res.push({
-        name: nameProps.join(' | ').match(this.limitRegex)[1],
+        name: nameProps.join(' | ').match(this.regexp.label)[1],
         value: `${id}`,
       });
 

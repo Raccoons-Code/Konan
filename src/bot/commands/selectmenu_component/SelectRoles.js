@@ -80,7 +80,7 @@ module.exports = class extends SelectMenuInteraction {
         roleId,
       };
 
-      const [, label] = option.label.match(/(.+?)(?:\s(\d+))+?/) || [];
+      const [, label] = option.label.match(this.regexp.labelWithCount) || [];
 
       option.label = `${label} ${newValue.count}`;
 
