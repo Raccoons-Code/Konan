@@ -169,8 +169,8 @@ module.exports = class extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setTitle(title || description ? '' : 'ButtonRoles')
-      .setDescription(description)];
+      .setDescription(description || '')
+      .setTitle(title || description ? '' : 'ButtonRoles')];
 
     try {
       await channel.send({ embeds, components });
@@ -199,8 +199,8 @@ module.exports = class extends SlashCommand {
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
-        .setTitle(title)
-        .setDescription(description)];
+        .setDescription(description || '')
+        .setTitle(title || '')];
 
       try {
         await message.edit({ embeds });
