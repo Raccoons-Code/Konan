@@ -20,6 +20,7 @@
   "checkers": "damas",
   "chess": "xadrez",
   "chessdev": "xadrezdev",
+  "clickToOpen": "Clique aqui para abrir",
   "command404": "Comando não encontrado!",
   "commandOfflineTryLater": "Este comando está temporariamente offline, por favor, tente novamente mais tarde.",
   "commandTooManyRequests": "No momento, há muitas requisições para este comando.",
