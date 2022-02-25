@@ -232,9 +232,10 @@ module.exports = class extends SlashCommand {
     if (subcommand === 'message') {
       const [, title, description] = options.getString('text').match(this.regexp.embed);
 
-      const embeds = [new MessageEmbed().setColor('RANDOM')
-        .setTitle(title)
-        .setDescription(description)];
+      const embeds = [new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(description || '')
+        .setTitle(title)];
 
       try {
         await message.edit({ embeds });
