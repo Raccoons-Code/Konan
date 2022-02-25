@@ -16,14 +16,9 @@
     "url": "git+https://github.com/Raccoons-Code/Konan.git"
   },
   "keywords": [
-    "bot",
-    "discord",
-    "discord application",
-    "discord backup",
-    "discord.js",
-    "Konan",
     "Raccoons Code",
-    "watch together"
+    "Discord application",
+    "Discord.js"
   ],
   "author": "Gorniaky <hwss.s2@gmail.com>",
   "license": "MIT",
