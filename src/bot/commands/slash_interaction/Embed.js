@@ -84,7 +84,7 @@ module.exports = class extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(description)
+      .setDescription(description.replaceAll(/(\s{2})/g, '\n'))
       .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
       .setImage(image_url)
       .setTimestamp(Date.now())
@@ -121,7 +121,7 @@ module.exports = class extends SlashCommand {
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
-        .setDescription(description)
+        .setDescription(description.replaceAll(/(\s{2})/g, '\n'))
         .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
         .setImage(image_url)
         .setTimestamp(Date.now())
