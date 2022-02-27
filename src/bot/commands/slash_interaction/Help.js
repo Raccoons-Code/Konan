@@ -58,7 +58,7 @@ module.exports = class extends SlashCommand {
       .setOptions([
         { label: '🏠 Home', value: 'home', default: true }, // :home:
         { label: '🗃️ Commands', value: 'commands' }, // :card_box:
-        { label: `${['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)]} Languages`, value: 'localization' },
+        /* { label: `${['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)]} Languages`, value: 'localization' }, */
       ])];
 
     const components = [

@@ -50,38 +50,10 @@ module.exports = class extends SelectMenuInteraction {
         .setStyle('LINK')
         .setURL(`${DONATE_LINK}`));
 
-    const menus = [new MessageSelectMenu()
-      .setCustomId(JSON.stringify({ c: this.data.name }))
-      .setOptions([
-        { label: '🏠 Home', value: 'home', default: true }, // :home:
-        { label: '🗃️ Commands', value: 'commands' }, // :card_box:
-        { label: `${['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)]} Languages`, value: 'localization' },
-      ])];
+    const menus = [this.setSelectMenu(0)];
 
     const components = [new MessageActionRow().setComponents(buttons),
     new MessageActionRow().setComponents(menus)];
-
-    await interaction.update({ components, embeds });
-  }
-
-  async localization(interaction = this.SelectMenuInteraction) {
-    const { locale } = interaction;
-
-    const embeds = [new MessageEmbed().setColor('RANDOM')
-      .setImage('https://badges.awesome-crowdin.com/translation-15144556-499220.png')
-      .setTitle(this.t('konanSupport', { locale }))];
-
-    const earth = ['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)];
-
-    const menus = [new MessageSelectMenu()
-      .setCustomId(JSON.stringify({ c: this.data.name }))
-      .setOptions([
-        { label: '🏠 Home', value: 'home' }, // :home:
-        { label: '🗃️ Commands', value: 'commands' }, // :card_box:
-        { label: `${earth} Languages`, value: 'localization', default: true },
-      ])];
-
-    const components = [new MessageActionRow().setComponents(menus)];
 
     await interaction.update({ components, embeds });
   }
@@ -100,15 +72,21 @@ module.exports = class extends SelectMenuInteraction {
       .setFooter({ text: `Total: ${slashcommands.length}` })
       .setTitle(this.t('konanSupport', { locale }))];
 
-    const earth = ['🌎', '🌏', '🌍'][this.util.mathRandom(2, 0)];
+    const menus = [this.setSelectMenu(1)];
 
-    const menus = [new MessageSelectMenu()
-      .setCustomId(JSON.stringify({ c: this.data.name }))
-      .setOptions([
-        { label: '🏠 Home', value: 'home' }, // :home:
-        { label: '🗃️ Commands', value: 'commands', default: true }, // :card_box:
-        { label: `${earth} Languages`, value: 'localization' },
-      ])];
+    const components = [new MessageActionRow().setComponents(menus)];
+
+    await interaction.update({ components, embeds });
+  }
+
+  async localization(interaction = this.SelectMenuInteraction) {
+    const { locale } = interaction;
+
+    const embeds = [new MessageEmbed().setColor('RANDOM')
+      .setImage('https://badges.awesome-crowdin.com/translation-15144556-499220.png')
+      .setTitle(this.t('konanSupport', { locale }))];
+
+    const menus = [this.setSelectMenu(2)];
 
     const components = [new MessageActionRow().setComponents(menus)];
 
@@ -127,5 +105,17 @@ module.exports = class extends SelectMenuInteraction {
     }
 
     return `\`\`\`properties\n${text}\`\`\``;
+  }
+
+  setSelectMenu(i = 0) {
+    const earth = ['🌍', '🌎', '🌏'][this.util.mathRandom(2, 0)]; // :earth_africa: :earth_americas: :earth_asia:
+
+    return new MessageSelectMenu()
+      .setCustomId(JSON.stringify({ c: this.data.name }))
+      .setOptions([
+        { label: '🏠 Home', value: 'home', default: i === 0 }, // :home:
+        { label: '🗃️ Commands', value: 'commands', default: i === 1 }, // :card_box:
+        /* { label: `${earth} Languages`, value: 'localization', default: i === 0 }, */
+      ]);
   }
 };
