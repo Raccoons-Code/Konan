@@ -421,7 +421,7 @@ module.exports = class extends SlashCommand {
 
           if (regex.test(buttonName))
             res.push({
-              name: buttonName.match(this.regexp.labelLimit)[1],
+              name: buttonName.match(this.regexp.label)[1],
               value: customId,
             });
         }

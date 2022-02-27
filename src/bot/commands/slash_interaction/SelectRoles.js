@@ -494,7 +494,7 @@ module.exports = class extends SlashCommand {
 
           if (regex.test(menuName))
             res.push({
-              name: menuName.match(this.limitRegex)[1],
+              name: menuName.match(this.regexp.label)[1],
               value: customId,
             });
         }
@@ -546,7 +546,7 @@ module.exports = class extends SlashCommand {
             const optionName = optionProps.join(' ').trimStart();
 
             res.push({
-              name: optionName.match(this.limitRegex)[1],
+              name: optionName.match(this.regexp.label)[1],
               value,
             });
           }
