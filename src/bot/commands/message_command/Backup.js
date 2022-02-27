@@ -1,4 +1,4 @@
-const { Command } = require('../../classes');
+const { Command } = require('../../structures');
 const { Restore } = require('../../BackupAPI');
 
 module.exports = class extends Command {

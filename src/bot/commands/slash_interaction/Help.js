@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const { env: { DONATE_LINK, GUILD_INVITE } } = process;
 

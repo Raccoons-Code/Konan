@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const db = require('quick.db');
 
 module.exports = class extends SlashCommand {

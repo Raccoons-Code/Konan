@@ -1,4 +1,4 @@
-const { SelectMenuInteraction } = require('../../classes');
+const { SelectMenuInteraction } = require('../../structures');
 const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const { env: { DONATE_LINK, GUILD_INVITE } } = process;

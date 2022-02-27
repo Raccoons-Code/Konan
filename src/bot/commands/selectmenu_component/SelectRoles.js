@@ -1,4 +1,4 @@
-const { SelectMenuInteraction } = require('../../classes');
+const { SelectMenuInteraction } = require('../../structures');
 
 module.exports = class extends SelectMenuInteraction {
   constructor(client) {

@@ -1,4 +1,4 @@
-const { Event } = require('../classes');
+const { Event } = require('../structures');
 const { Permissions } = require('discord.js');
 const { Restore } = require('../BackupAPI');
 const Backup = require('discord-backup');

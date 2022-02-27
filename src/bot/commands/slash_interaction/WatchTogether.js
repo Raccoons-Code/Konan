@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { DiscordTogether } = require('discord-together');
 const { Constants } = require('discord.js');
 const { ChannelTypes } = Constants;

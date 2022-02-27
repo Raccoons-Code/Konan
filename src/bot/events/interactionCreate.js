@@ -1,4 +1,4 @@
-const { Event } = require('../classes');
+const { Event } = require('../structures');
 const { codeBlock } = require('@discordjs/builders');
 const { AutocompleteInteraction, ButtonInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageContextMenuInteraction, MessageEmbed, SelectMenuInteraction, UserContextMenuInteraction } = require('discord.js');
 const { env: { GUILD_INVITE } } = process;

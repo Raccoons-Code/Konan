@@ -1,4 +1,4 @@
-const { ButtonInteraction } = require('../../classes');
+const { ButtonInteraction } = require('../../structures');
 const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
 const { MessageEmbed, version: discordjs_version } = require('discord.js');
 const { stripIndents } = require('common-tags');

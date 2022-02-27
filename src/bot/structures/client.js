@@ -55,6 +55,7 @@ module.exports = class extends Client {
 
 	static async login(token = this.token) {
 		const client = new this();
+
 		return await client.login(token);
 	}
 

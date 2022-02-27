@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { env: { OWNER_ID } } = process;
 
 module.exports = class extends SlashCommand {

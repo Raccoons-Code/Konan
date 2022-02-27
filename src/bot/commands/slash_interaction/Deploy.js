@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const Commands = require('..');
 const { env: { GUILD_ID, OWNER_ID } } = process;
 

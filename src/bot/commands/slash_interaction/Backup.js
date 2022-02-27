@@ -1,5 +1,5 @@
 const { env: { GUILD_ID, TEAM, TEAM_CHANNEL } } = process;
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { MessageEmbed } = require('discord.js');
 const Backup = require('discord-backup');
 
@@ -183,6 +183,8 @@ module.exports = class extends SlashCommand {
         include: { guilds: { where: { backups: { some: { NOT: undefined } } }, include: { backups: true } } },
       });
 
+      if (!guilds) interaction.respond(res);
+
       for (let i = 0; i < guilds.length; i++) {
         const _guild = guilds[i];
 
@@ -344,6 +346,8 @@ module.exports = class extends SlashCommand {
         include: { guilds: { where: { backups: { some: { NOT: undefined } } }, include: { backups: true } } },
       });
 
+      if (!guilds) return interaction.respond(res);
+
       for (let i = 0; i < guilds.length; i++) {
         const _guild = guilds[i];
 
@@ -390,7 +394,7 @@ module.exports = class extends SlashCommand {
 
     const key = options.getString('key').split(' |')[0];
 
-    const owner = this.cache[guild.ownerId] || await this.prisma.user.findFirst({
+    const owner = this.cache.user[guild.ownerId] || await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
       include: { backups: { where: { id: key } }, guilds: { where: { id: guildId } } },
     });
@@ -414,8 +418,10 @@ module.exports = class extends SlashCommand {
 
     this.cache.user[guild.ownerId] ? null : this.cache.user[guild.ownerId] = {};
 
-    const { backups } = this.cache[guild.ownerId] =
+    const { backups } = this.cache.user[guild.ownerId] =
       await this.prisma.user.findFirst({ where: { id: guild.ownerId }, include: { backups: { where: { guildId } } } });
+
+    if (!backups) return interaction.respond(res);
 
     for (let i = 0; i < backups.length; i++) {
       const backup = backups[i];

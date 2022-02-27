@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
 

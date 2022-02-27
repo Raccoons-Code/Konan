@@ -1,29 +1,24 @@
 const { Collection } = require('discord.js');
 const { GlobSync } = require('glob');
-const Client = require('../classes/client');
+const Client = require('../structures/client');
 const fs = require('fs');
 
 module.exports = new class {
   /** @param {Client} client */
   init(client) {
-    this.client = client;
-    this.client.commandTypes = this.commandTypes;
+    client.commandTypes = this.commandTypes;
+
+    /** @type {Client} */
+    this.client;
+
+    Object.defineProperty(this, 'client', { value: client });
+
     return this;
   }
 
-  /** @type {Array<String>} */
-  get applicationCommandTypes() {
-    return this.applicationCommandTypes = Object.values(this.commandTypes).flat()
-      .filter(f => !/(_(?:command|component))/i.test(f));
-  }
-
-  set applicationCommandTypes(value) {
-    /** @private */
-    this._applicationCommandTypes = value;
-  }
-
   get applicationCommands() {
-    return this._applicationCommands || this.loadCommands(this.applicationCommandTypes);
+    return this._applicationCommands ? this._applicationCommands :
+      this.applicationCommands = this.loadCommands(this.applicationCommandTypes);
   }
 
   set applicationCommands(value) {
@@ -31,8 +26,19 @@ module.exports = new class {
     this._applicationCommands = value;
   }
 
+  /** @type {Array<String>} */
+  get applicationCommandTypes() {
+    return this._applicationCommandTypes ? this._applicationCommandTypes : this.applicationCommandTypes =
+      Object.values(this.commandTypes).flat().filter(f => !/(_(?:command|component))/i.test(f));
+  }
+
+  set applicationCommandTypes(value) {
+    /** @private */
+    this._applicationCommandTypes = value;
+  }
+
   get commands() {
-    return this._commands || this.loadCommands();
+    return this._commands ? this._commands : this.commands = this.loadCommands();
   }
 
   set commands(value) {
@@ -99,10 +105,11 @@ module.exports = new class {
         if (!command.data || !command.execute) continue;
 
         commands[dir].set(command.data.name, command);
+
         command.data.aliases?.forEach(alias => commands[dir].set(alias, command));
       }
     }
 
-    return this.commands = commands;
+    return commands;
   }
 };

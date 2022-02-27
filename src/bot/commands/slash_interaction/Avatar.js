@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { MessageButton, MessageActionRow, MessageEmbed } = require('discord.js');
 
 module.exports = class extends SlashCommand {

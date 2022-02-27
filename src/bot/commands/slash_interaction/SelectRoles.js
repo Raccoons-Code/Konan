@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { Emoji, GuildChannel, MessageSelectMenu, MessageActionRow, MessageEmbed, Util } = require('discord.js');
 
 module.exports = class extends SlashCommand {
@@ -204,8 +204,8 @@ module.exports = class extends SlashCommand {
     const components = [new MessageActionRow().setComponents(selectMenu)];
 
     const embeds = [new MessageEmbed().setColor('RANDOM')
-      .setTitle(title ? title : embed_desc ? '' : 'SelectRoles')
-      .setDescription(embed_desc || '')];
+      .setTitle(title || embed_desc ? '' : 'SelectRoles')
+      .setDescription(embed_desc?.replaceAll(/(\s{2})/g, '\n') || '')];
 
     try {
       await channel.send({ components, embeds });
@@ -234,7 +234,7 @@ module.exports = class extends SlashCommand {
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
-        .setDescription(description || '')
+        .setDescription(description?.replaceAll(/(\s{2})/g, '\n') || '')
         .setTitle(title)];
 
       try {

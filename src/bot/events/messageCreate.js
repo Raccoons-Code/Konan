@@ -1,4 +1,4 @@
-const { Event } = require('../classes');
+const { Event } = require('../structures');
 const { env: { TEAM } } = process;
 
 module.exports = class extends Event {

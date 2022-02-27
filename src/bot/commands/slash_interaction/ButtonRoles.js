@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { MessageButton, MessageActionRow, MessageEmbed, Util } = require('discord.js');
 
 
@@ -169,7 +169,7 @@ module.exports = class extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(description || '')
+      .setDescription(description?.replaceAll(/(\s{2})/g, '\n') || '')
       .setTitle(title || description ? '' : 'ButtonRoles')];
 
     try {
@@ -199,7 +199,7 @@ module.exports = class extends SlashCommand {
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
-        .setDescription(description || '')
+        .setDescription(description?.replaceAll(/(\s{2})/g, '\n') || '')
         .setTitle(title || '')];
 
       try {

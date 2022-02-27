@@ -17,7 +17,7 @@
   // }
   "Class event": {
     "body": [
-      "const { Event } = require('../classes');",
+      "const { Event } = require('../structures');",
       "",
       "module.exports = class extends Event {",
       "  constructor(client) {",
@@ -37,7 +37,7 @@
   },
   "Class button component": {
     "body": [
-      "const { ButtonInteraction } = require('../../classes');",
+      "const { ButtonInteraction } = require('../../structures');",
       "",
       "module.exports = class extends ButtonInteraction {",
       "  constructor(client) {",
@@ -59,7 +59,7 @@
   },
   "Class menu message context": {
     "body": [
-      "const { MessageContextMenu } = require('../../classes');",
+      "const { MessageContextMenu } = require('../../structures');",
       "",
       "module.exports = class extends MessageContextMenu {",
       "  constructor(client) {",
@@ -79,7 +79,7 @@
   },
   "Class menu user context": {
     "body": [
-      "const { UserContextMenu } = require('../../classes');",
+      "const { UserContextMenu } = require('../../structures');",
       "",
       "module.exports = class extends UserContextMenu {",
       "  constructor(client) {",
@@ -99,7 +99,7 @@
   },
   "Class message command": {
     "body": [
-      "const { Command } = require('../../classes');",
+      "const { Command } = require('../../structures');",
       "",
       "module.exports = class extends Command {",
       "  constructor(client) {",
@@ -120,7 +120,7 @@
   },
   "Class select component": {
     "body": [
-      "const { SelectMenuInteraction } = require('../../classes');",
+      "const { SelectMenuInteraction } = require('../../structures');",
       "",
       "module.exports = class extends SelectMenuInteraction {",
       "  constructor(client) {",
@@ -142,7 +142,7 @@
   },
   "Class slash command": {
     "body": [
-      "const { SlashCommand } = require('../../classes');",
+      "const { SlashCommand } = require('../../structures');",
       "",
       "module.exports = class extends SlashCommand {",
       "  constructor(client) {",

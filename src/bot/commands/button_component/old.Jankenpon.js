@@ -1,4 +1,4 @@
-const { ButtonInteraction } = require('../../classes');
+const { ButtonInteraction } = require('../../structures');
 const { userMention } = require('@discordjs/builders');
 
 module.exports = class extends ButtonInteraction {

@@ -1,4 +1,4 @@
-const { UserContextMenu } = require('../../classes');
+const { UserContextMenu } = require('../../structures');
 const { codeBlock, inlineCode, time } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 

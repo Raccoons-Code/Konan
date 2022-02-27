@@ -1,12 +1,25 @@
 const { BitField, ClientEvents, Intents, IntentsString, PartialTypes } = require('discord.js');
 const { GlobSync } = require('glob');
-const Client = require('../classes/client');
+const Client = require('../structures/client');
 
 module.exports = new class {
   /** @param {Client} client */
   init(client) {
-    this.client = client;
+    /** @type {Client} */
+    this.client;
+
+    Object.defineProperty(this, 'client', { value: client });
+
     return this;
+  }
+
+  get events() {
+    return this._events || this.getEvents();
+  }
+
+  set events(events) {
+    /** @private */
+    this._events = events;
   }
 
   /** @return {Array<String>} */
@@ -17,15 +30,6 @@ module.exports = new class {
   set eventFiles(eventFiles) {
     /** @private */
     this._eventFiles = eventFiles;
-  }
-
-  get events() {
-    return this._events || this.getEvents();
-  }
-
-  set events(events) {
-    /** @private */
-    this._events = events;
   }
 
   /** @return {Array<String|Number>|Number} */

@@ -1,4 +1,4 @@
-const { ButtonInteraction } = require('../../classes');
+const { ButtonInteraction } = require('../../structures');
 const { userMention } = require('@discordjs/builders');
 const db = require('quick.db');
 

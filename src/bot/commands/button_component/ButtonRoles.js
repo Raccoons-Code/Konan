@@ -1,4 +1,4 @@
-const { ButtonInteraction } = require('../../classes');
+const { ButtonInteraction } = require('../../structures');
 
 module.exports = class extends ButtonInteraction {
   constructor(client) {

@@ -1,2 +1,2 @@
-const { Client } = require('./classes');
+const { Client } = require('./structures');
 Client.login();

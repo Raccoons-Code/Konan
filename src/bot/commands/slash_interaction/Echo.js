@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { Webhook, MessageEmbed } = require('discord.js');
 const dynamic = true;
 

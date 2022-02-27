@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
 const { MessageActionRow, MessageEmbed, version: discordjs_version, MessageButton } = require('discord.js');
 const { stripIndents } = require('common-tags');

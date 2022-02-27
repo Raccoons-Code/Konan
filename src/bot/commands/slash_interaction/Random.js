@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { capitalize, mathRandom } = require('../../util');
 const fetch = require('node-fetch');
 

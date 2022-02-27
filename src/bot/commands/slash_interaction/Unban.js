@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 
 module.exports = class extends SlashCommand {
   constructor(client) {

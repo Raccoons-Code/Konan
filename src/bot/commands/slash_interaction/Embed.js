@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { GuildChannel, MessageEmbed } = require('discord.js');
 
 module.exports = class extends SlashCommand {
@@ -84,7 +84,7 @@ module.exports = class extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(description.replaceAll(/(\s{2})/g, '\n'))
+      .setDescription(description?.replaceAll(/(\s{2})/g, '\n') || '')
       .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
       .setImage(image_url)
       .setTimestamp(Date.now())
@@ -121,7 +121,7 @@ module.exports = class extends SlashCommand {
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
-        .setDescription(description.replaceAll(/(\s{2})/g, '\n'))
+        .setDescription(description?.replaceAll(/(\s{2})/g, '\n') || '')
         .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
         .setImage(image_url)
         .setTimestamp(Date.now())

@@ -1,4 +1,4 @@
-const { UserContextMenu } = require('../../classes');
+const { UserContextMenu } = require('../../structures');
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 
 module.exports = class extends UserContextMenu {

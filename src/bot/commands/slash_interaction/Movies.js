@@ -1,4 +1,4 @@
-const { SlashCommand } = require('../../classes');
+const { SlashCommand } = require('../../structures');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { configuration, discover, genres, movies, search, util: TmdbUtils } = require('../../TMDBAPI');
 const { image, movie } = TmdbUtils;
