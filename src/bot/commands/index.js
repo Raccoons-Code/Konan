@@ -57,21 +57,20 @@ module.exports = new class {
   }
 
   /** @private */
-  getCommandTypes() {
+  getCommandTypes(commandTypes = {}) {
     const types = fs.readdirSync(`${__dirname}`).filter(f => fs.statSync(`${__dirname}/${f}`).isDirectory());
-    const object = {};
 
     for (let i = 0; i < types.length; i++) {
       const type = types[i];
       const [value, key] = type.split('_');
 
-      if (!object[key || value])
-        Object.assign(object, { [key || value]: [] });
+      if (!commandTypes[key || value])
+        Object.assign(commandTypes, { [key || value]: [] });
 
-      object[key || value].push(type);
+        commandTypes[key || value].push(type);
     }
 
-    return this.commandTypes = object;
+    return this.commandTypes = commandTypes;
   }
 
   /**

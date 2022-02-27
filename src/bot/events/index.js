@@ -13,15 +13,6 @@ module.exports = new class {
     return this;
   }
 
-  get events() {
-    return this._events || this.getEvents();
-  }
-
-  set events(events) {
-    /** @private */
-    this._events = events;
-  }
-
   /** @return {Array<String>} */
   get eventFiles() {
     return this._eventFiles || this.getEventFiles();
@@ -30,6 +21,15 @@ module.exports = new class {
   set eventFiles(eventFiles) {
     /** @private */
     this._eventFiles = eventFiles;
+  }
+
+  get events() {
+    return this._events || this.getEvents();
+  }
+
+  set events(events) {
+    /** @private */
+    this._events = events;
   }
 
   /** @return {Array<String|Number>|Number} */
@@ -51,16 +51,6 @@ module.exports = new class {
     this._partials = partials;
   }
 
-  /**
-   * @param {Function} value
-   * @return {Boolean}
-   * @private
-   */
-  isClass(value) {
-    return typeof value === 'function' &&
-      /^((?:class\s*)(\s+(?!extends)\w+\s*)?(?:(?:\s+extends)(\s+\w+\s*))?){/.test(value.toString());
-  }
-
   /** @private */
   getEventFiles() {
     return this.eventFiles = new GlobSync(`${__dirname}/*.js`, { ignore: ['**/index.js'] }).found;
@@ -76,6 +66,16 @@ module.exports = new class {
     }
 
     return this.events = events;
+  }
+
+  /**
+   * @param {Function} value
+   * @return {Boolean}
+   * @private
+   */
+  isClass(value) {
+    return typeof value === 'function' &&
+      /^((?:class\s*)(\s+(?!extends)\w+\s*)?(?:(?:\s+extends)(\s+\w+\s*))?){/.test(value.toString());
   }
 
   /** @param {Array<keyof(ClientEvents)>} events */
