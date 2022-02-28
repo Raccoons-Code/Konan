@@ -12,10 +12,6 @@ build
 # db
 *.sqlite
 
-# Lock files
-package-lock.json
-yarn.lock
-
 # Logs
 logs
 *.log
