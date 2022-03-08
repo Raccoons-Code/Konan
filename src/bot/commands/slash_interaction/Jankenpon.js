@@ -64,10 +64,7 @@ module.exports = class extends SlashCommand {
 
     if (subcommand === 'multiplayer') {
       if (!interaction.inGuild())
-        return await interaction.reply({
-          content: this.t('onlyOnServer', { locale }),
-          ephemeral: true,
-        });
+        return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
       const player2 = options.getMember('user');
 
@@ -112,10 +109,7 @@ module.exports = class extends SlashCommand {
 
     if (subcommand === 'multiplayer') {
       if (!interaction.inGuild())
-        return await interaction.reply({
-          content: this.t('onlyOnServer', { locale }),
-          ephemeral: true,
-        });
+        return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
       const player2 = options.getMember('user');
 

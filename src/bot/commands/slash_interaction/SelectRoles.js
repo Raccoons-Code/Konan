@@ -1,5 +1,5 @@
 const { SlashCommand } = require('../../structures');
-const { Emoji, GuildChannel, MessageSelectMenu, MessageActionRow, MessageEmbed, Util } = require('discord.js');
+const { MessageSelectMenu, MessageActionRow, MessageEmbed, Util } = require('discord.js');
 
 module.exports = class extends SlashCommand {
   constructor(client) {
@@ -139,10 +139,7 @@ module.exports = class extends SlashCommand {
     const { locale, memberPermissions, options } = interaction;
 
     if (!interaction.inGuild())
-      return await interaction.reply({
-        content: this.t('onlyOnServer', { locale }),
-        ephemeral: true,
-      });
+      return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
     const userPermissions = memberPermissions.missing(this.props.userPermissions);
 
@@ -203,16 +200,17 @@ module.exports = class extends SlashCommand {
 
     const components = [new MessageActionRow().setComponents(selectMenu)];
 
-    const embeds = [new MessageEmbed().setColor('RANDOM')
-      .setTitle(title || embed_desc ? '' : 'SelectRoles')
-      .setDescription(embed_desc?.replaceAll(/(\s{2})/g, '\n') || '')];
+    const embeds = [new MessageEmbed()
+      .setColor('RANDOM')
+      .setDescription(embed_desc?.replaceAll(/(\s{2})/g, '\n') || '')
+      .setTitle(title || embed_desc ? '' : 'SelectRoles')];
 
     try {
       await channel.send({ components, embeds });
 
-      interaction.editReply(this.t('?created', { locale, string: 'Select Role' }));
+      await interaction.editReply(this.t('?created', { locale, string: 'Select Role' }));
     } catch {
-      interaction.editReply(this.t('createError', { locale, string: 'Select Role' }));
+      await interaction.editReply(this.t('createError', { locale, string: 'Select Role' }));
     }
   }
 

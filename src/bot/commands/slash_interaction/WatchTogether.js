@@ -55,10 +55,7 @@ module.exports = class extends SlashCommand {
       await this.timeout_erase(await interaction.reply({ content: `${invite.code}`, fetchReply: true }), 60);
     } catch (error) {
       if (error.name === 'SyntaxError')
-        return await interaction.reply({
-          content: this.t('activity404', { locale }),
-          ephemeral: true,
-        });
+        return await interaction.reply({ content: this.t('activity404', { locale }), ephemeral: true });
 
       this.client.sendError(error);
 

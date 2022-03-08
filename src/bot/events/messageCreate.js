@@ -8,6 +8,9 @@ module.exports = class extends Event {
 			name: 'messageCreate',
 			partials: ['CHANNEL', 'MESSAGE'],
 		});
+
+    this.messageCommandNames = [...client.commands?.message_command.keys() || []];
+    this.messageCommandNamesRegexp = `\\s*(${this.messageCommandNames.join('|')})?`;
 	}
 
 	async execute(message = this.Message) {
@@ -17,13 +20,15 @@ module.exports = class extends Event {
 
 		const { commands, user } = client;
 		const botRole = guild?.me.roles.botRole || user.id;
-		const regexp = RegExp(`^\\s*(?:<@!?&?(?:${user.id}|${botRole.id})>)(.*)$`);
+    const regexp = RegExp(`^\\s*<@!?&?(?:${user.id}|${botRole.id})>${this.messageCommandNamesRegexp}(.*)$`);
 		const matched = content.match(regexp);
 
 		if (!matched) return;
 
-		message.args = matched[1].trim().split(/\s+/g);
-		const commandName = message.commandName = message.args.shift().toLowerCase() || 'help';
+    message.args = matched[2].trim().split(/\s+/g);
+    const commandName = message.commandName = matched[1] || !matched[2] && 'help';
+
+    if (!commandName) return;
 
 		const command = commands.message_command.get(commandName);
 

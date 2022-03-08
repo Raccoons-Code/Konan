@@ -1,11 +1,10 @@
 const { ButtonInteraction } = require('../../structures');
-const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
+const { codeBlock, time } = require('@discordjs/builders');
 const { MessageEmbed, version: discordjs_version } = require('discord.js');
 const { stripIndents } = require('common-tags');
 const { versions, env } = process;
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
 const { node } = versions;
-const ms = require('ms');
 const inline = true;
 
 module.exports = class extends ButtonInteraction {
