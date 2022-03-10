@@ -1,4 +1,5 @@
-const { env: { GUILD_ID, TEAM, TEAM_CHANNEL } } = process;
+const { env } = process;
+const { GUILD_ID, TEAM, TEAM_CHANNEL } = env;
 const { SlashCommand } = require('../../structures');
 const { MessageEmbed } = require('discord.js');
 const Backup = require('discord-backup');

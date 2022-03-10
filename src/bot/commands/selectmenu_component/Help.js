@@ -1,7 +1,8 @@
 const { SelectMenuInteraction } = require('../../structures');
 const { codeBlock, inlineCode, time, userMention } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const { env: { DONATE_LINK, GUILD_INVITE } } = process;
+const { env } = process;
+const { DONATE_LINK, GUILD_INVITE } = env;
 const resetProps = { attachments: [], components: [], content: null, embeds: [], files: [] };
 
 module.exports = class extends SelectMenuInteraction {
@@ -53,7 +54,7 @@ module.exports = class extends SelectMenuInteraction {
     const menus = [this.setSelectMenu(0)];
 
     const components = [new MessageActionRow().setComponents(buttons),
-    new MessageActionRow().setComponents(menus)];
+      new MessageActionRow().setComponents(menus)];
 
     await interaction.update({ components, embeds });
   }

@@ -67,7 +67,7 @@ module.exports = new class {
       if (!commandTypes[key || value])
         Object.assign(commandTypes, { [key || value]: [] });
 
-        commandTypes[key || value].push(type);
+      commandTypes[key || value].push(type);
     }
 
     return this.commandTypes = commandTypes;

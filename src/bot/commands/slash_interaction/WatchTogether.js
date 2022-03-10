@@ -81,7 +81,7 @@ module.exports = class extends SlashCommand {
 
     const res = this.setChoices(applications, { locale });
 
-  await interaction.respond(res);
+    await interaction.respond(res);
   }
 
   setChoices(applications = this.applications, options = { locale: 'en', capitalize: false }, array = []) {

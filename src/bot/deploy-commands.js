@@ -3,14 +3,15 @@ if (!process.env.DISCORD_TOKEN)
 
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const { env: { CLIENT_ID, DEPLOY_GLOBAL, DEPLOY_RESET, DISCORD_TOKEN, GUILD_ID } } = process;
+const { env } = process;
+const { CLIENT_ID, DEPLOY_GLOBAL, DEPLOY_RESET, DISCORD_TOKEN, GUILD_ID } = env;
 const Commands = require('./commands');
 
 const GLOBAL = false || DEPLOY_GLOBAL == 'true';
 const reset = false || DEPLOY_RESET == 'true';
 
 if (!CLIENT_ID || !DISCORD_TOKEN)
-  return console.error(`Missing required params:${CLIENT_ID ? '' : ' CLIENT_ID'}${DISCORD_TOKEN ? '' : ' DISCORD_TOKEN'}`);
+  throw Error(`Missing required params:${CLIENT_ID ? '' : ' CLIENT_ID'}${DISCORD_TOKEN ? '' : ' DISCORD_TOKEN'}`);
 
 const guilds = GUILD_ID?.split(',');
 

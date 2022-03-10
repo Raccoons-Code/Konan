@@ -122,6 +122,6 @@ module.exports = class extends SlashCommand {
       if (res.length === 25) break;
     }
 
-  await interaction.respond(res);
+    await interaction.respond(res);
   }
 };

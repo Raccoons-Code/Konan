@@ -22,17 +22,17 @@
       "module.exports = class extends Event {",
       "  constructor(client) {",
       "    super(client, {",
-      "      name: '${1:name}',",
+      "      name: '$1',",
       "    });",
       "  }",
       "",
-      "  async execute(${2:params}) {",
+      "  async execute($2) {",
       "    $0",
       "  }",
       "};"
     ],
     "description": "class to event snippet",
-    "prefix": "class event",
+    "prefix": "dce",
     "scope": "javascript,typescript"
   },
   "Class button component": {
@@ -43,8 +43,8 @@
       "  constructor(client) {",
       "    super(client);",
       "    this.data = {",
-      "      name: '${1:name}',",
-      "      description: '${2:description}',",
+      "      name: '$1',",
+      "      description: '$2',",
       "    };",
       "  }",
       "",
@@ -54,7 +54,7 @@
       "};"
     ],
     "description": "class to button component snippet",
-    "prefix": "class button component",
+    "prefix": "dcbc",
     "scope": "javascript,typescript"
   },
   "Class menu message context": {
@@ -64,7 +64,7 @@
       "module.exports = class extends MessageContextMenu {",
       "  constructor(client) {",
       "    super(client);",
-      "    this.data = this.setName('${1:name}')",
+      "    this.data = this.setName('$1')",
       "      .setType(3);",
       "  }",
       "",
@@ -74,7 +74,7 @@
       "};"
     ],
     "description": "class to menu context snippet",
-    "prefix": "class menu message context",
+    "prefix": "dcmcm",
     "scope": "javascript,typescript"
   },
   "Class menu user context": {
@@ -84,7 +84,7 @@
       "module.exports = class extends UserContextMenu {",
       "  constructor(client) {",
       "    super(client);",
-      "    this.data = this.setName('${1:name}')",
+      "    this.data = this.setName('$1')",
       "      .setType(2);",
       "  }",
       "",
@@ -94,7 +94,7 @@
       "};"
     ],
     "description": "class to menu context snippet",
-    "prefix": "class menu user context",
+    "prefix": "dcucm",
     "scope": "javascript,typescript"
   },
   "Class message command": {
@@ -104,8 +104,8 @@
       "module.exports = class extends Command {",
       "  constructor(client) {",
       "    super(client, {",
-      "      name: '${1:name}',",
-      "      description: '${2:description}',",
+      "      name: '$1',",
+      "      description: '$2',",
       "    });",
       "  }",
       "",
@@ -115,7 +115,7 @@
       "};"
     ],
     "description": "class to message command snippet",
-    "prefix": "class message command",
+    "prefix": "dcm",
     "scope": "javascript,typescript"
   },
   "Class select component": {
@@ -126,8 +126,8 @@
       "  constructor(client) {",
       "    super(client);",
       "    this.data = {",
-      "      name: '${1:name}',",
-      "      description: '${2:description}',",
+      "      name: '$1',",
+      "      description: '$2',",
       "    };",
       "  }",
       "",
@@ -137,7 +137,7 @@
       "};"
     ],
     "description": "class to select component snippet",
-    "prefix": "class select component",
+    "prefix": "dcsmc",
     "scope": "javascript,typescript"
   },
   "Class slash command": {
@@ -147,8 +147,8 @@
       "module.exports = class extends SlashCommand {",
       "  constructor(client) {",
       "    super(client);",
-      "    this.data = this.setName('${1:name}')",
-      "      .setDescription('${2:description}')$3;",
+      "    this.data = this.setName('$1')",
+      "      .setDescription('$2')$3;",
       "  }",
       "",
       "  async execute(interaction = this.CommandInteraction) {",
@@ -157,7 +157,7 @@
       "};"
     ],
     "description": "class to slash command snippet",
-    "prefix": "class slash command",
+    "prefix": "dcci",
     "scope": "javascript,typescript"
   }
 }

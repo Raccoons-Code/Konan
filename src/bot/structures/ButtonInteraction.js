@@ -9,18 +9,18 @@ module.exports = class {
   constructor(client, data) {
     this.data = data;
     if (client?.ready) {
-			/** @type {client} */
-			this.client;
-			/** @type {client['prisma']} */
-			this.prisma;
-			/** @type {client['regexp']} */
-			this.regexp;
-			/** @type {client['t']} */
-			this.t;
-			/** @type {client['translator']} */
-			this.translator;
-			/** @type {client['util']} */
-			this.util;
+      /** @type {client} */
+      this.client;
+      /** @type {client['prisma']} */
+      this.prisma;
+      /** @type {client['regexp']} */
+      this.regexp;
+      /** @type {client['t']} */
+      this.t;
+      /** @type {client['translator']} */
+      this.translator;
+      /** @type {client['util']} */
+      this.util;
 
       Object.defineProperties(this, {
         client: { value: client },

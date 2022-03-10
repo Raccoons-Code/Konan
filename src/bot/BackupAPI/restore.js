@@ -1,4 +1,3 @@
-const { Guild, GuildChannel } = require('discord.js');
 const { filterObjectByKeys } = require('../util');
 const defaults = require('./defaults.json');
 

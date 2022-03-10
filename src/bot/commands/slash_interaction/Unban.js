@@ -93,6 +93,6 @@ module.exports = class extends SlashCommand {
       if (i === 24) break;
     }
 
-  await interaction.respond(res);
+    await interaction.respond(res);
   }
 };

@@ -1,6 +1,7 @@
 const { Command } = require('../../structures');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const { env: { DONATE_LINK, GUILD_INVITE } } = process;
+const { env } = process;
+const { DONATE_LINK, GUILD_INVITE } = env;
 
 module.exports = class extends Command {
   constructor(client) {

@@ -1,6 +1,7 @@
 const { SlashCommand } = require('../../structures');
 const Commands = require('..');
-const { env: { GUILD_ID, OWNER_ID } } = process;
+const { env } = process;
+const { GUILD_ID, OWNER_ID } = env;
 
 module.exports = class extends SlashCommand {
   constructor(client) {

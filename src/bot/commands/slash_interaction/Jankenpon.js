@@ -56,8 +56,8 @@ module.exports = class extends SlashCommand {
       const result = this.util.jankenpon.game(jankenpon);
 
       embeds[0].addFields([{ name, value: result.p1, inline: true },
-      { name: 'Result', value: result.result, inline: true },
-      { name: 'Machine', value: result.player2, inline: true }]);
+        { name: 'Result', value: result.result, inline: true },
+        { name: 'Machine', value: result.player2, inline: true }]);
 
       return await interaction.reply({ embeds });
     }
@@ -70,8 +70,8 @@ module.exports = class extends SlashCommand {
 
       embeds[0].setDescription(`${user} - ${player2}`)
         .addFields([{ name: `${name}`, value: '0', inline: true },
-        { name: 'Result', value: '-', inline: true },
-        { name: `${player2.displayName}`, value: '0', inline: true }]);
+          { name: 'Result', value: '-', inline: true },
+          { name: `${player2.displayName}`, value: '0', inline: true }]);
 
       const buttons = [new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
         .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
@@ -101,8 +101,8 @@ module.exports = class extends SlashCommand {
       const result = this.util.jankenpon.spock(jankenpon);
 
       embeds[0].addFields([{ name, value: result.p1, inline: true },
-      { name: 'Result', value: result.result, inline: true },
-      { name: 'Machine', value: result.player2, inline: true }]);
+        { name: 'Result', value: result.result, inline: true },
+        { name: 'Machine', value: result.player2, inline: true }]);
 
       return await interaction.reply({ embeds });
     }
@@ -115,8 +115,8 @@ module.exports = class extends SlashCommand {
 
       embeds[0].setDescription(`${user} - ${player2}`)
         .addFields([{ name: `${name}`, value: '0', inline: true },
-        { name: 'Result', value: '-', inline: true },
-        { name: `${player2.displayName}`, value: '0', inline: true }]);
+          { name: 'Result', value: '-', inline: true },
+          { name: `${player2.displayName}`, value: '0', inline: true }]);
 
       const buttons = [new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
         .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
