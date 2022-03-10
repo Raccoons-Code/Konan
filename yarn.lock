@@ -527,6 +527,13 @@ discord-backup@^3.0.1:
   dependencies:
     discord.js "^13.0.1"
 
+discord-tictactoe@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/discord-tictactoe/-/discord-tictactoe-3.0.0.tgz#ea4abc0ce6572c87ccbc25d85d394adc773fb64b"
+  integrity sha512-wsPi6a2N/L7vjXg8qd0D8QNIwQ/GKqKFR0FyzgX0WGgT+QEsti4zse4f71KJDKiVPefauZa771I0tUDArQg5fQ==
+  dependencies:
+    discord.js "^13.6.0"
+
 discord-together@^1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/discord-together/-/discord-together-1.3.3.tgz#a2c9e1c503b620f18d579d55f72a0dcdc61ea078"

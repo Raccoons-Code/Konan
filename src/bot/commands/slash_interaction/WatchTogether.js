@@ -10,7 +10,7 @@ module.exports = class extends SlashCommand {
       clientPermissions: ['CREATE_INSTANT_INVITE'],
     });
     this.data = this.setName('party')
-      .setDescription('Create an activity party together.')
+      .setDescription('Create an activity party together - Powered by Discord Together.')
       .addStringOption(option => option.setName('activity')
         .setDescription('Select activity.')
         .setAutocomplete(true)

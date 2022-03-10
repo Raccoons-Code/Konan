@@ -32,6 +32,7 @@ module.exports = class extends SlashCommand {
           .addUserOption(option => option.setName('user')
             .setDescription('Player 2')
             .setRequired(true))));
+    this.emoji = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };
   }
 
   async execute(interaction = this.CommandInteraction) {
@@ -53,11 +54,13 @@ module.exports = class extends SlashCommand {
     const embeds = [new MessageEmbed().setColor('RANDOM').setTitle('Jankenpon')];
 
     if (subcommand === 'single') {
-      const result = this.util.jankenpon.game(jankenpon);
+      const { player1, player2, result } = this.util.jankenpon.game(jankenpon);
 
-      embeds[0].addFields([{ name, value: result.p1, inline: true },
-        { name: 'Result', value: result.result, inline: true },
-        { name: 'Machine', value: result.player2, inline: true }]);
+      embeds[0].addFields([
+        { name, value: `${this.emoji[player1]} ${player1}`, inline: true },
+        { name: 'Result', value: result, inline: true },
+        { name: 'Machine', value: `${this.emoji[player2]} ${player2}`, inline: true },
+      ]);
 
       return await interaction.reply({ embeds });
     }
@@ -69,16 +72,19 @@ module.exports = class extends SlashCommand {
       const player2 = options.getMember('user');
 
       embeds[0].setDescription(`${user} - ${player2}`)
-        .addFields([{ name: `${name}`, value: '0', inline: true },
+        .addFields([
+          { name: `${name}`, value: '0', inline: true },
           { name: 'Result', value: '-', inline: true },
-          { name: `${player2.displayName}`, value: '0', inline: true }]);
+          { name: `${player2.displayName}`, value: '0', inline: true },
+        ]);
 
-      const buttons = [new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
-      new MessageButton().setLabel('Paper').setEmoji('✋').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 2 })),
-      new MessageButton().setLabel('Scissors').setEmoji('✌️').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 3 }))];
+      const buttons = [
+        new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
+          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
+        new MessageButton().setLabel('Paper').setEmoji('✋').setStyle(this.randomButtonStyle)
+          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 2 })),
+        new MessageButton().setLabel('Scissors').setEmoji('✌️').setStyle(this.randomButtonStyle)
+          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 3 }))];
 
       const components = [new MessageActionRow().setComponents(buttons)];
 
@@ -100,7 +106,7 @@ module.exports = class extends SlashCommand {
     if (subcommand === 'single') {
       const result = this.util.jankenpon.spock(jankenpon);
 
-      embeds[0].addFields([{ name, value: result.p1, inline: true },
+      embeds[0].addFields([{ name, value: result.player1, inline: true },
         { name: 'Result', value: result.result, inline: true },
         { name: 'Machine', value: result.player2, inline: true }]);
 
@@ -118,16 +124,17 @@ module.exports = class extends SlashCommand {
           { name: 'Result', value: '-', inline: true },
           { name: `${player2.displayName}`, value: '0', inline: true }]);
 
-      const buttons = [new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
-      new MessageButton().setLabel('Paper').setEmoji('✋').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 2 })),
-      new MessageButton().setLabel('Scissors').setEmoji('✌️').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 3 })),
-      new MessageButton().setLabel('Lizard').setEmoji('🦎').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 4 })),
-      new MessageButton().setLabel('Spock').setEmoji('🖖').setStyle(this.randomButtonStyle)
-        .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 5 }))];
+      const buttons = [
+        new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
+          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
+        new MessageButton().setLabel('Paper').setEmoji('✋').setStyle(this.randomButtonStyle)
+          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 2 })),
+        new MessageButton().setLabel('Scissors').setEmoji('✌️').setStyle(this.randomButtonStyle)
+          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 3 })),
+        new MessageButton().setLabel('Lizard').setEmoji('🦎').setStyle(this.randomButtonStyle)
+          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 4 })),
+        new MessageButton().setLabel('Spock').setEmoji('🖖').setStyle(this.randomButtonStyle)
+          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 5 }))];
 
       const components = [new MessageActionRow().setComponents(buttons)];
 
