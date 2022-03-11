@@ -10,7 +10,7 @@ module.exports = class extends Event {
       partials: ['CHANNEL', 'MESSAGE'],
     });
 
-    this.messageCommandNames = [...client.commands?.message_command.keys() || []];
+    this.messageCommandNames = [...(client?.commands?.message_command.keys() || [])];
     this.messageCommandNamesRegexp = `\\s*(${this.messageCommandNames.join('|')})?`;
   }
 

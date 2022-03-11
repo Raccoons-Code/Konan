@@ -3,15 +3,16 @@ const Client = require('./client');
 
 module.exports = class {
   /**
-	 * @param {Client} client
-	 * @param {Data} data
-	 */
+   * @param {Client} client
+   * @param {Data} data
+   */
   constructor(client, data) {
     if (!this.regexCommandName(data.name))
       return console.error(`Command ${data.name} cannot be loaded.`);
 
     this.data = data;
-    if (client?.ready) {
+
+    if (client) {
       /** @type {client} */
       this.client;
       /** @type {client['prisma']} */
@@ -41,10 +42,10 @@ module.exports = class {
   }
 
   /**
-	 * @description delete one message with async timeout delay
-	 * @param {Seconds<Number>} timeout
-	 * @async
-	 */
+   * @description delete one message with async timeout delay
+   * @param {Seconds<Number>} timeout
+   * @async
+   */
   async timeout_erase(message, timeout = 0) {
     if (!message) return console.error('Unable to delete undefined message.');
     await this.util.waitAsync(timeout * 1000);
@@ -52,9 +53,9 @@ module.exports = class {
   }
 
   /**
-	 * @param {String} string
-	 * @return {Boolean}
-	 */
+   * @param {String} string
+   * @return {Boolean}
+   */
   regexCommandName(string) {
     return /^[\w-]{1,32}$/.test(string);
   }

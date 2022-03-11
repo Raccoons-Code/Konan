@@ -46,11 +46,15 @@ module.exports = class extends Client {
 
   async login(token = this.token) {
     process.on('unhandledRejection', (...args) => this.sendError(...args));
-    this.ready = true;
+
     commands.init(this);
+
     events.init(this);
+
     this.commands = commands.commands;
+
     events.loadEvents();
+
     return await super.login(token);
   }
 

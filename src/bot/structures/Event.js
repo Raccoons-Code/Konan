@@ -6,19 +6,12 @@ module.exports = class {
 	 * @param {Client} client
 	 * @param {Data} data
 	 */
-  constructor(client, {
-    intents,
-    listener,
-    name,
-    partials,
-    permissions,
-  }) {
-    this.intents = intents;
-    this.listener = listener?.match(/(on(?:ce)?)/)[1] || 'on';
-    this.name = name;
-    this.partials = partials;
-    this.permissions = permissions;
-    if (client?.ready) {
+  constructor(client, data) {
+    data.listener = data.listener?.match(/(on(ce)?)/)?.[1] || 'on';
+
+    this.data = data;
+
+    if (client) {
       /** @type {client} */
       this.client;
       /** @type {client['prisma']} */

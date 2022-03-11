@@ -1,5 +1,6 @@
-const { BitField, ClientEvents, Intents, IntentsString, PartialTypes } = require('discord.js');
+const { ClientEvents, Intents, IntentsString, PartialTypes } = require('discord.js');
 const { GlobSync } = require('glob');
+const { join } = require('path');
 const Client = require('../structures/client');
 
 module.exports = new class {
@@ -13,50 +14,51 @@ module.exports = new class {
     return this;
   }
 
-  /** @return {Array<String>} */
+  /** @type {string[]} */
   get eventFiles() {
     return this._eventFiles || this.getEventFiles();
   }
 
-  set eventFiles(eventFiles) {
+  set eventFiles(value) {
     /** @private */
-    this._eventFiles = eventFiles;
+    this._eventFiles = value;
   }
 
+  /** @type {any[]} */
   get events() {
     return this._events || this.getEvents();
   }
 
-  set events(events) {
+  set events(value) {
     /** @private */
-    this._events = events;
+    this._events = value;
   }
 
-  /** @return {Array<String|Number>|Number} */
+  /** @type {number} */
   get intents() {
     return this._intents || this.loadIntents();
   }
 
-  set intents(intents) {
+  set intents(value) {
     /** @private */
-    this._intents = intents;
+    this._intents = value;
   }
 
+  /** @type {PartialTypes[]} */
   get partials() {
     return this._partials || this.loadPartials();
   }
 
-  set partials(partials) {
+  set partials(value) {
     /** @private */
-    this._partials = partials;
+    this._partials = value;
   }
 
-  /** @private */
   getEventFiles() {
-    return this.eventFiles = new GlobSync(`${__dirname}/*.js`, { ignore: ['**/index.js'] }).found;
+    return this.eventFiles = new GlobSync(join(__dirname, '*.@(j|t)s'), { ignore: ['**/index.@(j|t)s'] }).found;
   }
 
-  getEvents(events = [], client = this.client || {}) {
+  getEvents(events = [], client = this.client) {
     for (let i = 0; i < this.eventFiles.length; i++) {
       const eventFile = require(this.eventFiles[i]);
 
@@ -78,7 +80,6 @@ module.exports = new class {
       /^((?:class\s*)(\s+(?!extends)\w+\s*)?(?:(?:\s+extends)(\s+\w+\s*))?){/.test(value.toString());
   }
 
-  /** @param {Array<keyof(ClientEvents)>} events */
   loadEvents(events = [], client = this.client) {
     for (let i = 0; i < this.eventFiles.length; i++) {
       const eventFile = require(this.eventFiles[i]);
@@ -87,7 +88,7 @@ module.exports = new class {
 
       events.push(event);
 
-      client[event.listener](event.name, (...args) => event.execute(...args));
+      client[event.data.listener](event.data.name, (...args) => event.execute(...args));
     }
 
     return this.events = events;
@@ -98,13 +99,11 @@ module.exports = new class {
     for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];
 
-      if (event.intents?.length)
-        intents.push(...event.intents);
+      if (event.data.intents?.length)
+        intents.push(...event.data.intents);
     }
 
-    BitField.FLAGS = Intents.FLAGS;
-
-    return this.intents = BitField.resolve([...new Set(intents)]);
+    return this.intents = Intents.resolve([...new Set(intents)]);
   }
 
   /** @param {PartialTypes[]} partials */
@@ -112,10 +111,10 @@ module.exports = new class {
     for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];
 
-      if (event.partials?.length)
-        partials.push(...event.partials);
+      if (event.data.partials?.length)
+        partials.push(...event.data.partials);
     }
 
-    return this.partials = [...new Set(partials)];
+    return this.partials = partials.length ? [...new Set(partials)] : partials;
   }
 };

@@ -6,7 +6,7 @@ module.exports = class extends ContextMenuCommandBuilder {
   /** @param {Client} client */
   constructor(client) {
     super();
-    if (client?.ready) {
+    if (client) {
       /** @type {client} */
       this.client;
       /** @type {client['prisma']} */

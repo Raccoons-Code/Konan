@@ -7,11 +7,10 @@ const resetProps = { attachments: [], components: [], content: null, embeds: [],
 
 module.exports = class extends SelectMenuInteraction {
   constructor(client) {
-    super(client);
-    this.data = {
+    super(client, {
       name: 'help',
       description: 'Help menu',
-    };
+    });
   }
 
   async execute(interaction = this.SelectMenuInteraction) {

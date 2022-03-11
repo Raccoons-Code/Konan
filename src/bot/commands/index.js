@@ -1,7 +1,8 @@
 const { Collection } = require('discord.js');
+const { readdirSync, statSync } = require('fs');
 const { GlobSync } = require('glob');
+const { join } = require('path');
 const Client = require('../structures/client');
-const fs = require('fs');
 
 module.exports = new class {
   /** @param {Client} client */
@@ -26,7 +27,7 @@ module.exports = new class {
     this._applicationCommands = value;
   }
 
-  /** @type {Array<String>} */
+  /** @type {string[]} */
   get applicationCommandTypes() {
     return this._applicationCommandTypes ? this._applicationCommandTypes : this.applicationCommandTypes =
       Object.values(this.commandTypes).flat().filter(f => !/(_(?:command|component))/i.test(f));
@@ -46,7 +47,7 @@ module.exports = new class {
     this._commands = value;
   }
 
-  /** @type {Array<String>} */
+  /** @type {string[]} */
   get commandTypes() {
     return this._commandTypes || this.getCommandTypes();
   }
@@ -56,9 +57,8 @@ module.exports = new class {
     this._commandTypes = value;
   }
 
-  /** @private */
   getCommandTypes(commandTypes = {}) {
-    const types = fs.readdirSync(`${__dirname}`).filter(f => fs.statSync(`${__dirname}/${f}`).isDirectory());
+    const types = readdirSync(__dirname).filter(f => statSync(join(__dirname, f)).isDirectory());
 
     for (let i = 0; i < types.length; i++) {
       const type = types[i];
@@ -73,19 +73,12 @@ module.exports = new class {
     return this.commandTypes = commandTypes;
   }
 
-  /**
-   * @param {Function} value
-   * @private
-   */
+  /** @param {Function} value */
   isClass(value) {
     return typeof value === 'function' &&
       /^((?:class\s*)(\s+(?!extends)\w+\s*)?(?:(?:\s+extends)(\s+\w+\s*))?){/.test(value.toString());
   }
 
-  /**
-   * @param {Array<String>} commandTypes
-   * @private
-   */
   loadCommands(commandTypes = this.commandTypes, commands = {}, client = this.client || {}) {
     const dirs = Object.values(commandTypes).flat();
 
@@ -94,7 +87,7 @@ module.exports = new class {
 
       commands[dir] = new Collection();
 
-      const { found } = new GlobSync(`${__dirname}/${dir}/*.js`, { ignore: ['**/.ignore_*'] });
+      const { found } = new GlobSync(join(__dirname, dir, '*.@(j|t)s'), { ignore: ['**/.ignore_*'] });
 
       for (let j = 0; j < found.length; j++) {
         const commandFile = require(found[j]);

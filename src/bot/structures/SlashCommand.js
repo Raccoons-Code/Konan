@@ -11,8 +11,10 @@ module.exports = class extends SlashCommandBuilder {
    */
   constructor(client, props) {
     super();
+
     this.props = props;
-    if (client?.ready) {
+
+    if (client) {
       /** @type {client} */
       this.client;
       /** @type {client['prisma']} */

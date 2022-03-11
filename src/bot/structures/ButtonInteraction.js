@@ -8,7 +8,8 @@ module.exports = class {
    */
   constructor(client, data) {
     this.data = data;
-    if (client?.ready) {
+
+    if (client) {
       /** @type {client} */
       this.client;
       /** @type {client['prisma']} */
