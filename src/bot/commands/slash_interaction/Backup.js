@@ -11,7 +11,7 @@ module.exports = class extends SlashCommand {
       userPermissions: ['ADMINISTRATOR'],
     });
     this.data = this.setName('backup')
-      .setDescription('Make backup for your server.')
+      .setDescription('Make backup for your server - Powered by Discord Backup.')
       .addSubcommand(subcommand => subcommand.setName('create')
         .setDescription('Create a new backup. Only on server!'))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('delete')

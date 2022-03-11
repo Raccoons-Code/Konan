@@ -79,7 +79,7 @@ module.exports = new class {
       /^((?:class\s*)(\s+(?!extends)\w+\s*)?(?:(?:\s+extends)(\s+\w+\s*))?){/.test(value.toString());
   }
 
-  loadCommands(commandTypes = this.commandTypes, commands = {}, client = this.client || {}) {
+  loadCommands(commandTypes = this.commandTypes, commands = {}, client = this.client) {
     const dirs = Object.values(commandTypes).flat();
 
     for (let i = 0; i < dirs.length; i++) {
