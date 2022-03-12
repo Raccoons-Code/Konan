@@ -20,7 +20,7 @@ module.exports = class extends Event {
     if (author.bot && !TEAM?.split(',').includes(author.id)) return;
 
     const { commands, user } = client;
-    const botRole = guild?.me.roles.botRole || user.id;
+    const botRole = guild?.me.roles.botRole || user;
     const regexp = RegExp(`^\\s*<@!?&?(?:${user.id}|${botRole.id})>${this.messageCommandNamesRegexp}(.*)$`);
     const matched = content.match(regexp);
 
