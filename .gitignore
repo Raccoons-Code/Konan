@@ -2,6 +2,7 @@
 
 # test files
 test*.js
+test*.ts
 
 # ignore average files with this pattern
 **/.ignore.*
@@ -56,7 +57,7 @@ node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
-typings/
+# typings/
 
 # TypeScript cache
 *.tsbuildinfo

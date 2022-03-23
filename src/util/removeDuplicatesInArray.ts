@@ -1,0 +1,1 @@
+export = (array: any[]) => [...new Set(array)];

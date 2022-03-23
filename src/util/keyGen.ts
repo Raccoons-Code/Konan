@@ -1,0 +1,1 @@
+export = (length: number, toString = 36) => Math.random().toString(toString).substring(2, length);

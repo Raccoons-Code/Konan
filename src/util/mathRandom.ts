@@ -1,0 +1,1 @@
+export = (max: number, min = 1) => Math.min(Math.floor((max * Math.random()) + min), max);
