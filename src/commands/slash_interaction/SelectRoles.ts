@@ -25,11 +25,11 @@ export default class SelectRoles extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('selectroles')
-      .setDescription('Select menu roles.')
+      .setDescription('A command to create a select menu for roles.')
       .addSubcommand(subcommand => subcommand.setName('setup')
-        .setDescription('New Select menu role.')
+        .setDescription('Create a select menu for roles.')
         .addRoleOption(option => option.setName('role')
-          .setDescription('Role')
+          .setDescription('Role.')
           .setRequired(true))
         .addStringOption(option => option.setName('item_name')
           .setDescription('Item name {0,84} - default: <role>'))
@@ -47,7 +47,7 @@ export default class SelectRoles extends SlashCommand {
           .setDescription('Channel - default: <current channel>')
           .addChannelTypes(this.GuildTextChannelTypes as any)))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('edit')
-        .setDescription('Edit a Select menu role.')
+        .setDescription('Edit a select menu for roles.')
         .addSubcommand(subcommand => subcommand.setName('message')
           .setDescription('Edit a text in a Select menu role.')
           .addChannelOption(option => option.setName('channel')

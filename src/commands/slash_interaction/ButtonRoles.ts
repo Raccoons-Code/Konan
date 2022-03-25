@@ -19,11 +19,11 @@ export default class ButtonRoles extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('buttonroles')
-      .setDescription('Button roles.')
+      .setDescription('A command to create a button role.')
       .addSubcommand(subcommand => subcommand.setName('setup')
-        .setDescription('New Button role.')
+        .setDescription('Create a button role.')
         .addRoleOption(option => option.setName('role')
-          .setDescription('Role')
+          .setDescription('Role.')
           .setRequired(true))
         .addStringOption(option => option.setName('text')
           .setDescription('Text: Title {0,256} | Description {0,4096} - default: ButtonRoles'))
@@ -40,7 +40,7 @@ export default class ButtonRoles extends SlashCommand {
           .setDescription('Channel - default: <current channel>')
           .addChannelTypes(this.GuildTextChannelTypes as any)))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('edit')
-        .setDescription('Edit a Button role.')
+        .setDescription('Edit a button role.')
         .addSubcommand(subcommand => subcommand.setName('message')
           .setDescription('Edit a text in a Button role.')
           .addChannelOption(option => option.setName('channel')

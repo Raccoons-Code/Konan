@@ -25,18 +25,18 @@ export default class News extends SlashCommand {
     super(client);
 
     this.data = new SlashCommandBuilder().setName('news')
-      .setDescription('News')
+      .setDescription('Show news from a journal.')
       .addStringOption(option => option.setName('category')
-        .setDescription('Category')
+        .setDescription('Category of the journal.')
         .setAutocomplete(true))
       .addStringOption(option => option.setName('journal')
-        .setDescription('Journal')
+        .setDescription('Journal to show news from.')
         .setAutocomplete(true))
       .addStringOption(option => option.setName('language')
-        .setDescription('Language')
+        .setDescription('Language of the journal.')
         .setAutocomplete(true))
       .addStringOption(option => option.setName('new')
-        .setDescription('New')
+        .setDescription('New to search.')
         .setAutocomplete(true));
   }
 

@@ -11,30 +11,30 @@ export default class Jankenpon extends SlashCommand {
     this.data = new SlashCommandBuilder().setName('jankenpon')
       .setDescription('jankenpon')
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('game')
-        .setDescription('jankenpon')
+        .setDescription('Play a game of Jankenpon with your friends!')
         .addSubcommand(subcommand => subcommand.setName('single')
-          .setDescription('Single player')
+          .setDescription('Human vs machine.')
           .addStringOption(option => option.setName('jankenpon')
-            .setDescription('jankenpon')
+            .setDescription('Jankenpon.')
             .setChoices([['Rock', 'rock'], ['Paper', 'paper'], ['Scissors', 'scissors']])
             .setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName('multiplayer')
-          .setDescription('Multiplayer')
-          .addUserOption(option => option.setName('user')
-            .setDescription('Player 2')
+          .setDescription('Human vs human.')
+          .addUserOption(option => option.setName('opponent')
+            .setDescription('Choose your opponent.')
             .setRequired(true))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('spock')
-        .setDescription('jankenpon')
+        .setDescription('A Spock version of Jankenpon.')
         .addSubcommand(subcommand => subcommand.setName('single')
-          .setDescription('Single player')
+          .setDescription('Human vs machine.')
           .addStringOption(option => option.setName('jankenpon')
-            .setDescription('jankenpon')
+            .setDescription('Jankenpon.')
             .setRequired(true)
             .setChoices([['Rock', 'rock'], ['Paper', 'paper'], ['Scissors', 'scissors'], ['Lizard', 'lizard'], ['Spock', 'spock']])))
         .addSubcommand(subcommand => subcommand.setName('multiplayer')
-          .setDescription('Multiplayer')
-          .addUserOption(option => option.setName('user')
-            .setDescription('Player 2')
+          .setDescription('Human vs human.')
+          .addUserOption(option => option.setName('opponent')
+            .setDescription('Choose your opponent.')
             .setRequired(true))));
   }
 
@@ -73,7 +73,7 @@ export default class Jankenpon extends SlashCommand {
       if (!interaction.inCachedGuild())
         return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
-      const player2 = options.getMember('user', true);
+      const player2 = options.getMember('opponent', true);
 
       embeds[0].setDescription(`${user} - ${player2}`)
         .addFields([
@@ -124,7 +124,7 @@ export default class Jankenpon extends SlashCommand {
       if (!interaction.inCachedGuild())
         return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
-      const player2 = options.getMember('user', true);
+      const player2 = options.getMember('opponent', true);
 
       embeds[0].setDescription(`${user} - ${player2}`)
         .addFields([

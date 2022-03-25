@@ -8,7 +8,9 @@ export default class extends SlashCommand {
     super(client);
 
     this.data = new SlashCommandBuilder().setName('tictactoe')
-      .setDescription('TicTacToe');
+      .setDescription('Play a game of TicTacToe with your friends! - Powered by Discord TicTacToe.')
+      .addUserOption(option => option.setName('opponent')
+        .setDescription('Choose your opponent'));
   }
 
   async execute(interaction: CommandInteraction) {
