@@ -172,11 +172,10 @@ export default class extends SlashCommand {
     const { color, mentionable, permissions, name } = role;
 
     const arrayPerms = permissions.toArray();
-    const textPerms = arrayPerms.map((p: any) =>
-      this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
+    const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
 
     embeds[0].setColor(color || 'RANDOM')
-      .setAuthor({ name, iconURL: `${role.iconURL()}` })
+      .setAuthor({ name, iconURL: role.iconURL() as string })
       .addFields([
         { name: this.t('mentionable', { locale }), value: this.t(`${mentionable}`, { locale }) },
         { name: `${this.t('permissions', { locale })} [${arrayPerms.length}]`, value: codeBlock(textPerms) }]);
@@ -185,20 +184,22 @@ export default class extends SlashCommand {
   }
 
   async server(interaction: CommandInteraction, embeds: MessageEmbed[]): Promise<any> {
-    const { guild, locale } = interaction;
+    const { locale } = interaction;
 
-    if (!guild)
+    if (!interaction.inCachedGuild())
       return await interaction.editReply(this.t('onlyOnServer', { locale }));
 
-    embeds[0].setAuthor({ name: guild.name, iconURL: `${guild.iconURL()}` })
+    const { guild } = interaction;
+
+    embeds[0].setAuthor({ name: guild.name, iconURL: guild.iconURL() as string })
       .setFields(
         { name: this.t('id', { locale }), value: inlineCode(guild.id), inline: true },
         { name: this.t('owner', { locale }), value: userMention(guild.ownerId), inline: true },
         { name: this.t('members', { locale }), value: `${guild.memberCount}`, inline: true },
       )
       .setFooter({ text: this.t('serverCreatedAt', { locale }) })
-      .setImage(`${guild.splashURL({ size: 512 })}`)
-      .setThumbnail(`${guild.iconURL()}`)
+      .setImage(guild.splashURL({ size: 512 }) as string)
+      .setThumbnail(guild.iconURL() as string)
       .setTimestamp(guild.createdTimestamp);
 
     await interaction.editReply({ embeds });
@@ -224,11 +225,10 @@ export default class extends SlashCommand {
     if (member) {
       const { avatar, displayColor, permissions, roles } = member;
 
-      const arrayRoles = roles.cache.map((role: any) => role);
+      const arrayRoles = roles.cache.map(role => role);
       const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') || '-';
       const arrayPerms = permissions.toArray();
-      const textPerms = arrayPerms.map((p: any) =>
-        this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
+      const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
 
       embeds[0].addFields(
         { name: this.t('role', { locale }), value: `${roles.highest}`, inline: true },
