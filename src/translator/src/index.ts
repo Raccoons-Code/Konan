@@ -45,7 +45,7 @@ class Idjsn {
   protected ta(array: string[], options: Options) {
     array = array.map(key => idjsn.t(key, options));
 
-    return array.join(' ');
+    return array.join(' ').trim();
   }
 }
 

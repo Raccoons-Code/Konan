@@ -13,7 +13,7 @@ export default class Command extends Base {
     return /^[\w-]{1,32}$/.test(string);
   }
 
-  async execute(message: Message) { }
+  public async execute(message: Message) { }
 }
 
 export interface CommandData {

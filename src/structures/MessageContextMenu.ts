@@ -10,5 +10,5 @@ export default class MessageContextMenu extends Base {
     super(client);
   }
 
-  async execute(interaction: MessageContextMenuInteraction) { }
+  public async execute(interaction: MessageContextMenuInteraction) { }
 }

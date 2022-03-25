@@ -4,9 +4,9 @@ import { join } from 'path';
 import { Client, Event } from '../structures';
 
 export default new class Events {
-  private client!: Client;
+  client!: Client;
   eventFiles!: string[];
-  private _events!: Event[];
+  _events!: Event[];
   intents!: number;
   partials!: PartialTypes[];
 

@@ -16,7 +16,7 @@ export default class Movies extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction) {
     const { customId, locale } = interaction;
 
-    const { c, target } = this.util.parseJSON(customId) as MoviesCustomId;
+    const { c, target } = JSON.parse(customId) as MoviesCustomId;
 
     const { offset, page } = this.getPage(target);
 

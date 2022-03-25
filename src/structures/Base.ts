@@ -23,7 +23,7 @@ export default abstract class Base {
     }
   }
 
-  async execute(...args: any[]) { }
+  public async execute(...args: any[]) { }
 }
 
 export interface ComponentInteractionData {

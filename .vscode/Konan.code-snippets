@@ -165,7 +165,7 @@
       "  async execute(interaction: CommandInteraction) {",
       "    $0",
       "  }",
-      "};"
+      "}"
     ],
     "description": "class to slash command snippet",
     "prefix": "dcci",
