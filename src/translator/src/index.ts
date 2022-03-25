@@ -34,10 +34,12 @@ class Idjsn {
 
     key = idjsn.translator.translate(key, options);
 
-    key = idjsn.interpolator.interpolate(key, options);
+    if (typeof key === 'string') {
+      key = idjsn.interpolator.interpolate(key, options);
 
-    if (typeof options.capitalize === 'boolean' || typeof idjsn.capitalize === 'boolean')
-      key = idjsn.postProcessor.capitalization(key, options);
+      if (typeof options.capitalize === 'boolean' || typeof idjsn.capitalize === 'boolean')
+        key = idjsn.postProcessor.capitalization(key, options);
+    }
 
     return key;
   }
