@@ -1,3 +1,4 @@
+import { codeBlock } from '@discordjs/builders';
 import { DiscordTogether } from 'discord-together';
 import DJS, { ClientOptions, Collection, MessageEmbed, WebhookClient } from 'discord.js';
 import AutoPoster from 'topgg-autoposter';
@@ -26,11 +27,8 @@ export default class Client extends DJS.Client {
   totalChannels?: number;
   totalMembers?: number;
 
-  constructor(options?: ClientOptions) {
-    super({
-      intents: options?.intents || 0,
-      ...options,
-    });
+  constructor(options: ClientOptions) {
+    super(options);
 
     Object.defineProperties(this, {
       pattern: { value: util.pattern },
@@ -53,7 +51,7 @@ export default class Client extends DJS.Client {
 
     this.commands = await commands.loadCommands();
 
-    events.loadEvents();
+    await events.loadEvents();
 
     return await super.login(token);
   }
@@ -77,7 +75,7 @@ export default class Client extends DJS.Client {
 
     const embeds = [new MessageEmbed().setColor('RED')
       .setTitle(`${reason.name}: ${reason.message}`)
-      .setDescription(`\`\`\`\n${reason.stack?.match(/[\w\W]{0,4089}/)?.[1]}\`\`\``)];
+      .setDescription(`${codeBlock(`${reason.stack}`).match(this.pattern.content)?.[1]}`)];
 
     await webhook.send({
       embeds,

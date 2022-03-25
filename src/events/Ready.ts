@@ -23,74 +23,27 @@ export default class Ready extends Event {
     this.setPresence(client);
   }
 
-  async deleteGuild(guild: Guild/* , user */) {
+  async deleteGuild(guild: Guild) {
     await guild.delete().then(async () => {
       console.log(guild.name, 'deleted!');
-
-      /* if (user)
-        await this.prisma.user.update({
-          where: { id: user.id },
-          data: { newGuild: null, oldGuild: null },
-        }); */
     }).catch(() => null);
   }
 
   async deleteMyGuilds(client = this.client) {
     const guilds = client.guilds.cache.filter(g => g.ownerId === client.user?.id);
 
-    /* const users = await this.prisma.user.findMany({
-      where: { newGuild: { not: null } },
-      include: { backups: true },
-    }); */
-
     let multiplier = 0;
 
     for (const [, guild] of guilds) {
       const timeout = 60000 - (Date.now() - guild.createdTimestamp);
 
-      /* const user = users.find(_user => _user.newGuild == guild.id); */
-
-      /* if (!user) return this.deleteGuild(guild); */
-
-      /* let member = await guild.members.fetch(user.id); */
-
-      /* if (member)
-        return await this.restoreGuild(guild, member, user); */
-
       multiplier++;
 
       setTimeout(async () => {
-        /* member = await guild.members.fetch(user.id);
-
-        if (member)
-          return await this.restoreGuild(guild, member, user); */
-
-        await this.deleteGuild(guild/* , user */);
+        await this.deleteGuild(guild);
       }, ((timeout < 0 ? 0 : timeout) + (multiplier * 1000)));
     }
   }
-
-  /* async restoreGuild(guild, member, user) {
-    const backup = user.backups.find(b => b.userId === user.id);
-
-    if (backup) {
-      if (!backup.premium)
-        backup.data = Restore.filter(backup).data;
-
-      await Backup.load(backup.data, guild,
-        { clearGuildBeforeRestore: true, maxMessagesPerChannel: backup.premium ? 20 : 0 });
-    }
-    const m = backup?.data.channels.categories.reduce((pca, cca) =>
-      pca + (cca.children?.reduce((pch, cch) => pch + (cch.messages?.length || 0) || 0), 0), 0) || 0;
-
-    setTimeout(async () => {
-      await guild.setOwner(member.id);
-
-      await this.prisma.user.update({ where: { id: member.id }, data: { newGuild: null, oldGuild: null } });
-
-      await guild.leave();
-    }, isNaN(m) ? 1000 : m * 1000);
-  } */
 
   async setPresence(client: Client) {
     const ytURL = 'https://www.youtube.com/watch?v=';

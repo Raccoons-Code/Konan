@@ -92,7 +92,7 @@ export default class Embed extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(description?.replace(/(\s{2})/g, '\n') || '')
+      .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
       .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
       .setImage(image_url)
       .setTimestamp(Date.now())
@@ -130,7 +130,7 @@ export default class Embed extends SlashCommand {
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
-        .setDescription(description?.replace(/(\s{2})/g, '\n') || '')
+        .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
         .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
         .setImage(image_url)
         .setTimestamp(Date.now())

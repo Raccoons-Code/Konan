@@ -76,7 +76,7 @@ export default class extends SlashCommand {
     await this[command]?.(interaction);
   }
 
-  async create(interaction: CommandInteraction) {
+  async create(interaction: CommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -118,7 +118,7 @@ export default class extends SlashCommand {
     return await interaction.editReply(`${user}, ${this.t('alreadyHaveABackup', { locale })} ${this.t('doYouMean??', { locale, string: 'update' })}`);
   }
 
-  async delete(interaction: CommandInteraction) {
+  async delete(interaction: CommandInteraction): Promise<any> {
     const { guild, locale, options, user } = interaction;
 
     const userId = guild?.ownerId || user.id;
@@ -157,7 +157,7 @@ export default class extends SlashCommand {
     }
   }
 
-  async list(interaction: CommandInteraction) {
+  async list(interaction: CommandInteraction): Promise<any> {
     const { guild, locale, user } = interaction;
 
     const userId = guild?.ownerId || user.id;
@@ -175,8 +175,8 @@ export default class extends SlashCommand {
       if (!backup.data || typeof backup.data !== 'object' || Array.isArray(backup.data)) continue;
 
       embeds[0].addField(
-        [backup.data.id, '|', backup.data.name].join(' '),
-        [backup.id, backup.premium ? '- `Premium`' : ''].join(' '),
+        [backup.data.id, '|', backup.data.name].join(' ').trim(),
+        [backup.id, backup.premium ? '- `Premium`' : ''].join(' ').trim(),
       );
 
       if (embeds[0].fields.length === 25) break;
@@ -185,7 +185,7 @@ export default class extends SlashCommand {
     await interaction.editReply({ embeds });
   }
 
-  async restore(interaction: CommandInteraction) {
+  async restore(interaction: CommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -217,7 +217,7 @@ export default class extends SlashCommand {
     }
   }
 
-  async update(interaction: CommandInteraction) {
+  async update(interaction: CommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())

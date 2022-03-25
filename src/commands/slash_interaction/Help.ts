@@ -16,7 +16,7 @@ export default class Help extends SlashCommand {
         .setAutocomplete(true));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     if (interaction.isAutocomplete())
       return await this.executeAutocomplete(interaction);
 
@@ -73,7 +73,7 @@ export default class Help extends SlashCommand {
     await interaction.editReply({ components, embeds });
   }
 
-  async executeCommand(interaction: CommandInteraction, commandName: string) {
+  async executeCommand(interaction: CommandInteraction, commandName: string): Promise<any> {
     const { locale } = interaction;
 
     const { slash_interaction } = this.client.commands;
@@ -139,12 +139,12 @@ export default class Help extends SlashCommand {
 
       text = [
         text,
-        index,
+        ' ', index,
         `\`${name}\` - \`${description}\``,
-        autocomplete ? '| `Autocomplete`' : '',
+        autocomplete ? ' | `Autocomplete`' : '',
         required ? ' | `Required`' : '',
         '\n',
-      ].join(' ');
+      ].join('').trim();
 
       if (options)
         text = this.convertOptionsToString(options, text, index + '- ');

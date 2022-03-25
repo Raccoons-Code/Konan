@@ -1,10 +1,11 @@
+import { BackupData } from 'discord-backup/lib/types';
 import { filterObjectByKeys } from '../util';
 import { guild, roles } from './defaults';
 
-export default class {
-  backup: any;
+export default class Restore {
+  backup: BackupData;
   options: any;
-  data: any;
+  private data!: Partial<BackupData>;
 
   constructor(backup: any, options: any) {
     this.backup = backup?.data || backup;
@@ -14,7 +15,7 @@ export default class {
   /** @private */
   create(backup = this.backup) {
     this.data = backup;
-    this.data.channels = this.channelsDefaults();
+    this.data.channels = this.channelsDefaults() as any;
     this.data = this.guildDefaults();
 
     delete this.data.roles;
@@ -36,7 +37,7 @@ export default class {
   }
 
   static create(backup: any, options: any) {
-    const restore = new this(backup, options);
+    const restore = new Restore(backup, options);
 
     restore.create();
 
@@ -44,7 +45,7 @@ export default class {
   }
 
   static filter(backup: any, options: any) {
-    const restore = new this(backup, options);
+    const restore = new Restore(backup, options);
 
     restore.guildDefaults();
 

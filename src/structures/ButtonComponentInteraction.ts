@@ -7,5 +7,5 @@ export default class ButtonComponentInteraction extends Base {
     super(client);
   }
 
-  async execute(interaction: ButtonInteraction) { }
+  public async execute(interaction: ButtonInteraction) { }
 }

@@ -7,15 +7,13 @@ const { ChannelTypes } = Constants;
 const { GUILD_NEWS, GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD, GUILD_STORE, GUILD_TEXT } = ChannelTypes;
 
 export default class SlashCommand extends Base {
-  /* data!: SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>; */
-
   data!: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
 
   constructor(client: Client, public props?: CommandProps) {
     super(client);
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> { }
+  public async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> { }
 
   get buttonStyles(): MessageButtonStyleResolvable[] {
     return ['DANGER', 'PRIMARY', 'SECONDARY', 'SUCCESS'];

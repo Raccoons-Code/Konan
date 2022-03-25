@@ -131,7 +131,7 @@ export default class extends SlashCommand {
 
     if (['GUILD_NEWS', 'GUILD_STORE', 'GUILD_TEXT'].includes(type)) {
       const arrayThreads = threads.cache.map(thread => thread);
-      const textThreads = arrayThreads.join(' ') || '-';
+      const textThreads = arrayThreads.join(' ').trim() || '-';
 
       embeds[0].addFields([
         { name: this.t('slowmode', { locale }), value: ms(rateLimitPerUser * 1000), inline },
@@ -147,7 +147,7 @@ export default class extends SlashCommand {
 
     if (['GUILD_CATEGORY'].includes(type)) {
       const arrayChildren = children.map(child => child);
-      const textChildren = arrayChildren.join(' ') || '-';
+      const textChildren = arrayChildren.join(' ').trim() || '-';
 
       embeds[0].addFields([
         { name: `${this.t('channels', { locale })} [${arrayChildren.length}]`, value: textChildren }]);
@@ -184,7 +184,7 @@ export default class extends SlashCommand {
     await interaction.editReply({ embeds });
   }
 
-  async server(interaction: CommandInteraction, embeds: MessageEmbed[]) {
+  async server(interaction: CommandInteraction, embeds: MessageEmbed[]): Promise<any> {
     const { guild, locale } = interaction;
 
     if (!guild)
@@ -225,7 +225,7 @@ export default class extends SlashCommand {
       const { avatar, displayColor, permissions, roles } = member;
 
       const arrayRoles = roles.cache.map((role: any) => role);
-      const textRoles = arrayRoles.join(' ').replace('@everyone', '') || '-';
+      const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') || '-';
       const arrayPerms = permissions.toArray();
       const textPerms = arrayPerms.map((p: any) =>
         this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';

@@ -21,7 +21,7 @@ export default class Ban extends SlashCommand {
         .setDescription('The reason for banishment, if any.'));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;

@@ -14,7 +14,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction<'cached'>) {
     const { customId, member } = interaction;
 
-    const { roleId } = this.util.parseJSON(customId) as ButtonRolesCustomId;
+    const { roleId } = JSON.parse(customId) as ButtonRolesCustomId;
 
     try {
       if (member.roles.resolve(roleId)) {
@@ -34,7 +34,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
   async setComponents(interaction: ButtonInteraction<'cached'>, boolean: boolean) {
     const { customId, component, message } = interaction;
 
-    const { c, count, d, roleId } = this.util.parseJSON(customId) as ButtonRolesCustomId;
+    const { c, count, d, roleId } = JSON.parse(customId) as ButtonRolesCustomId;
 
     const newCustomId = {
       c,
@@ -47,10 +47,8 @@ export default class ButtonRoles extends ButtonComponentInteraction {
 
     const [, label] = component.label?.match(this.pattern.labelWithCount) || [];
 
-    component.setLabel([label, newCustomId.count].join(' '));
+    component.setLabel([label, newCustomId.count].join(' ').trim());
 
-    const { components } = message;
-
-    await interaction.update({ components });
+    await interaction.update({ components: message.components });
   }
 }

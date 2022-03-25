@@ -42,7 +42,7 @@ export default class Movies extends SlashCommand {
     await this[subcommand]?.(interaction);
   }
 
-  async list(interaction: CommandInteraction) {
+  async list(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const raw_page = options.getInteger('page') || 1;

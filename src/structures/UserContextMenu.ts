@@ -10,5 +10,5 @@ export default class UserContextMenu extends Base {
     super(client);
   }
 
-  async execute(interaction: UserContextMenuInteraction) { }
+  public async execute(interaction: UserContextMenuInteraction) { }
 }

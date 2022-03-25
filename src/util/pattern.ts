@@ -12,7 +12,7 @@ export = new class {
   /** @pattern /([\w\W]{0,100})/ */
   label = /([\w\W]{0,100})/;
   /** @pattern /([\w\W]{0,84})/ */
-  labelLimit = /([\w\W]{0,84})/;
+  labelLimited = /([\w\W]{0,84})/;
   /** @pattern /(.+?)(?:\s(\d+))+?/ */
   labelWithCount = /(.+?)(?:\s(\d+))+?/;
   /** @pattern /(on(?:ce)?)/ */

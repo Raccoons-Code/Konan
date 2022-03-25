@@ -33,7 +33,7 @@ export default class UserInfo extends UserContextMenu {
       const { avatar, displayColor, permissions, roles } = member;
 
       const arrayRoles = roles.cache.map(role => role);
-      const textRoles = arrayRoles.join(' ').replace('@everyone', '') || '-';
+      const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') || '-';
       const arrayPerms = permissions.toArray();
       const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
 

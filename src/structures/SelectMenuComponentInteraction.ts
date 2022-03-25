@@ -7,5 +7,5 @@ export default class MenuComponentInteraction extends Base {
     super(client);
   }
 
-  async execute(interaction: SelectMenuInteraction) { }
+  public async execute(interaction: SelectMenuInteraction) { }
 }

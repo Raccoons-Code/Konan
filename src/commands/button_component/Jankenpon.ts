@@ -14,7 +14,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction) {
     const { customId, message, user } = interaction;
 
-    const parsedCustomId = this.util.parseJSON(customId) as customId;
+    const parsedCustomId = JSON.parse(customId) as customId;
 
     const { c, p, v } = parsedCustomId;
 

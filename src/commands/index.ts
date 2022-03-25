@@ -6,8 +6,8 @@ import { Client, Command, SlashCommand } from '../structures';
 
 export default new class Commands {
   client!: Client;
-  protected _applicationCommandTypes!: string[];
-  protected _commandTypes!: { [k: string]: string[] } | string[];
+  _applicationCommandTypes!: string[];
+  _commandTypes!: { [k: string]: string[] } | string[];
 
   init(client: Client) {
     Object.defineProperties(this, { client: { value: client } });

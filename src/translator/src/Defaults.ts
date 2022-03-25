@@ -1,3 +1,5 @@
+import { Options } from '.';
+
 export const defaults = {
   capitalize: undefined,
   interpolation: {
@@ -10,12 +12,12 @@ export const defaults = {
   },
 };
 
-export default new class Defaults {
-  get() {
+export default class Defaults {
+  static get() {
     return defaults;
   }
 
-  merge(options: any) {
+  static merge(options: any): Options {
     return { ...defaults, ...options };
   }
-};
+}

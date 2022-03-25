@@ -152,7 +152,7 @@ export default class SelectRoles extends SlashCommand {
             .setRequired(true))));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
@@ -187,14 +187,14 @@ export default class SelectRoles extends SlashCommand {
   async setup(interaction: CommandInteraction) {
     const { locale, options } = interaction;
 
-    const [, title, embed_desc] = options.getString('text')?.match(this.pattern.embed) || [];
+    const [, title, embed_description] = options.getString('text')?.match(this.pattern.embed) || [];
     const channel = (options.getChannel('channel') || interaction.channel) as TextChannel;
     const description = options.getString('item_description')?.match(this.pattern.label)?.[1];
     const emoji = options.getString('item_emoji') as EmojiIdentifierResolvable;
     const menu_disabled = options.getBoolean('menu_disabled') as boolean;
     const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] || '';
     const role = options.getRole('role', true);
-    const label = options.getString('item_name')?.match(this.pattern.labelLimit)?.[1] || role.name;
+    const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1] || role.name;
 
     const selectMenu = new MessageSelectMenu()
       .setCustomId(JSON.stringify({
@@ -220,8 +220,8 @@ export default class SelectRoles extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(embed_desc?.replace(/(\s{2})/g, '\n') || '')
-      .setTitle(title || embed_desc ? '' : 'SelectRoles')];
+      .setDescription(embed_description ? embed_description.replace(/(\s{2})/g, '\n') : '')
+      .setTitle(title ? title : embed_description ? '' : 'SelectRoles')];
 
     try {
       await channel.send({ components, embeds });
@@ -232,7 +232,7 @@ export default class SelectRoles extends SlashCommand {
     }
   }
 
-  async edit(interaction: CommandInteraction) {
+  async edit(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel', true) as TextChannel;
@@ -251,7 +251,7 @@ export default class SelectRoles extends SlashCommand {
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
-        .setDescription(description?.replace(/(\s{2})/g, '\n') || '')
+        .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
         .setTitle(title)];
 
       try {
@@ -267,7 +267,7 @@ export default class SelectRoles extends SlashCommand {
 
     if (subcommand === 'menu') {
       const menu_disabled = options.getBoolean('menu_disabled');
-      const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] || '';
+      const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1];
 
       const components = message.components.map(row => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
@@ -300,7 +300,7 @@ export default class SelectRoles extends SlashCommand {
     if (subcommand === 'item') {
       const description = options.getString('item_description')?.match(this.pattern.label)?.[1];
       const emoji = options.getString('item_emoji');
-      const label = options.getString('item_name')?.match(this.pattern.labelLimit)?.[1];
+      const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1];
       const role = options.getRole('role');
 
       const components = message.components.map(row => {
@@ -312,7 +312,7 @@ export default class SelectRoles extends SlashCommand {
           selectmenu.options.map(option => {
             if (option.value !== item) return option;
 
-            const { count, d } = this.util.parseJSON(option.value) as SelectRolesItemOptionValue;
+            const { count, d } = JSON.parse(option.value) as SelectRolesItemOptionValue;
 
             option.description = description ? description : option.description;
             option.emoji = emoji ? Util.resolvePartialEmoji(emoji) : option.emoji as any;
@@ -338,7 +338,7 @@ export default class SelectRoles extends SlashCommand {
     }
   }
 
-  async add(interaction: CommandInteraction) {
+  async add(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel', true) as TextChannel;
@@ -355,7 +355,7 @@ export default class SelectRoles extends SlashCommand {
 
     if (subcommand === 'item') {
       const role = options.getRole('role', true);
-      const label = options.getString('item_name')?.match(this.pattern.labelLimit)?.[1] || role.name;
+      const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1] || role.name;
       const description = options.getString('item_description')?.match(this.pattern.label)?.[1];
       const emoji = options.getString('item_emoji') as EmojiIdentifierResolvable;
 
@@ -393,7 +393,7 @@ export default class SelectRoles extends SlashCommand {
     }
   }
 
-  async remove(interaction: CommandInteraction) {
+  async remove(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel', true) as TextChannel;
@@ -544,7 +544,7 @@ export default class SelectRoles extends SlashCommand {
 
             const { description, emoji, label, value } = option;
 
-            const { roleId } = this.util.parseJSON(value) as SelectRolesItemOptionValue;
+            const { roleId } = JSON.parse(value) as SelectRolesItemOptionValue;
 
             const role = await guild?.roles.fetch(roleId);
 

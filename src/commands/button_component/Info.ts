@@ -19,7 +19,7 @@ export default class Info extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction) {
     const { customId } = interaction;
 
-    const { sc } = this.util.parseJSON(customId) as InfoCustomId;
+    const { sc } = JSON.parse(customId) as InfoCustomId;
 
     const embeds = [new MessageEmbed().setColor('RANDOM')];
 
