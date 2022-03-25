@@ -363,7 +363,7 @@ export default class ButtonRoles extends SlashCommand {
     const pattern = RegExp(`${focused.value}`, 'i');
 
     if (focused.name === 'message_id') {
-      const messages = await channel.messages.fetch();
+      const messages = await channel.messages.fetch({ limit: 100 });
 
       const messages_array = messages.filter(m =>
         m.author.id === client.user?.id &&
@@ -394,7 +394,7 @@ export default class ButtonRoles extends SlashCommand {
     }
 
     if (focused.name === 'button') {
-      const message_id = options.getString('message_id', true);
+      const message_id = options.getString('message_id', true).match(this.pattern.messageURL)?.[1] as string;
 
       const message = await channel.messages.fetch(message_id);
 
