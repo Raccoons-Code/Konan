@@ -6,7 +6,7 @@ export default class MessageCreate extends Event {
     super(client, {
       intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'],
       name: 'messageCreate',
-      partials: ['CHANNEL', 'MESSAGE'],
+      partials: ['MESSAGE'],
     });
   }
 

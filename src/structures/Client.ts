@@ -15,17 +15,18 @@ export default class Client extends DJS.Client {
   applicationCommandTypes!: string[];
   commandTypes!: { [k: string]: string[] } | string[];
   commands!: { [k: string]: Collection<string, any> };
-  discordTogether!: DiscordTogether<{ [k: string]: string }>;
 
   pattern!: typeof util['pattern'];
   t!: typeof t;
   prisma!: typeof prisma;
   util!: typeof util;
 
+  discordTogether!: DiscordTogether<{ [k: string]: string }>;
   invite!: string;
   totalGuilds?: number;
   totalChannels?: number;
   totalMembers?: number;
+  ERROR_WEBHOOK!: WebhookClient;
 
   constructor(options: ClientOptions) {
     super(options);
@@ -67,21 +68,26 @@ export default class Client extends DJS.Client {
   }
 
   async sendError(reason: Error) {
-    if (!ERROR_WEBHOOK || !this.isReady()) return console.error(reason);
+    if (!ERROR_WEBHOOK || !this.isReady())
+      return console.error(reason);
 
-    const webhook = new WebhookClient({ url: ERROR_WEBHOOK });
+    if (!this.ERROR_WEBHOOK)
+      this.ERROR_WEBHOOK = new WebhookClient({ url: ERROR_WEBHOOK });
 
-    if (!webhook) return console.error(reason);
-
-    const embeds = [new MessageEmbed().setColor('RED')
+    const embeds = [new MessageEmbed()
+      .setColor('RED')
       .setTitle(`${reason.name}: ${reason.message}`)
       .setDescription(`${codeBlock(`${reason.stack}`).match(this.pattern.content)?.[1]}`)];
 
-    await webhook.send({
-      embeds,
-      avatarURL: this.user.displayAvatarURL(),
-      username: this.user.username,
-    }).catch(() => console.error(reason));
+    try {
+      await this.ERROR_WEBHOOK.send({
+        embeds,
+        avatarURL: this.user.displayAvatarURL(),
+        username: this.user.username,
+      });
+    } catch {
+      console.error(reason);
+    }
   }
 
   async fetchStats(options: FetchStatsOptions = {}): Promise<Stats> {

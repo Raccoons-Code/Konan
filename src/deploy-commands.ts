@@ -16,7 +16,7 @@ if (!CLIENT_ID || !DISCORD_TOKEN)
 const guilds = GUILD_ID?.split(',');
 
 const data = [];
-const data_private = [];
+const data_private: any[] = [];
 const commands: SlashCommand[] = [];
 const { applicationCommandTypes } = Commands;
 
@@ -53,7 +53,21 @@ const rest = new REST().setToken(DISCORD_TOKEN);
       for (let i = 0; i < guilds?.length; i++) {
         const id = guilds[i];
 
-        await rest.put(Routes.applicationGuildCommands(CLIENT_ID, id), { body: data_private });
+        const guild_commands = await rest.get(Routes.applicationGuildCommands(CLIENT_ID, id)) as any[];
+
+        const guild_commands_data = guild_commands.filter(guild_command =>
+          !data_private.some(command => command.name === guild_command.name))
+          .reduce((acc, command) => [...acc, {
+            name: command.name,
+            defaultPermission: command.defaultPermission,
+            description: command.description,
+            options: command.options,
+            type: command.type,
+          }], [] as any[]);
+
+        guild_commands_data.push(...data_private);
+
+        await rest.put(Routes.applicationGuildCommands(CLIENT_ID, id), { body: guild_commands });
       }
 
       console.log('Successfully reloaded application (/) commands.');

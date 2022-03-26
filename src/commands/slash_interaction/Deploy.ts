@@ -35,7 +35,7 @@ export default class extends SlashCommand {
     const reset = options.getBoolean('reset');
 
     const data = [];
-    const data_private = [];
+    const data_private: any[] = [];
     const commands: SlashCommand[] = [];
     const { applicationCommandTypes } = Commands;
     const applicationCommands = await Commands.loadCommands(applicationCommandTypes);
@@ -66,16 +66,31 @@ export default class extends SlashCommand {
       for (let i = 0; i < guilds?.length; i++) {
         const id = guilds[i];
 
-        const _guild = await client.guilds.fetch(id);
+        const guild = await client.guilds.fetch(id);
 
-        if (!_guild) continue;
+        if (!guild) continue;
 
         if (type === 'global') {
-          await _guild.commands.set(data_private);
+          const guild_commands = await guild.commands.fetch();
+
+          const guild_commands_data = guild_commands.filter(guild_command =>
+            !data_private.some(command => command.name === guild_command.name))
+            .toJSON().reduce((acc, command) => [...acc, {
+              name: command.name,
+              defaultPermission: command.defaultPermission,
+              description: command.description,
+              options: command.options,
+              type: command.type,
+            }], [] as any[]);
+
+          guild_commands_data.push(...data_private);
+
+          await guild.commands.set(guild_commands_data);
+
           continue;
         }
 
-        await _guild.commands.set([...data, ...data_private]);
+        await guild.commands.set([...data, ...data_private]);
       }
 
       await interaction.editReply(`${this.t(['reloadedAppCommands', 'type'], { locale })} ${type}`);

@@ -8,7 +8,6 @@ export default class NumberIsPrime extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('number_is_prime')
       .setDescription('Verify if number is prime.')
-      .setDefaultPermission(false)
       .addIntegerOption(option => option.setName('number')
         .setDescription('Write a integer. Below 1,000,000,000 shows all numbers.')
         .setMaxValue(Number.MAX_SAFE_INTEGER)

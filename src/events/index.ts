@@ -3,12 +3,12 @@ import { GlobSync } from 'glob';
 import { join } from 'path';
 import { Client, Event } from '../structures';
 
-export default new class Events {
-  client!: Client;
+class Events {
+  private client!: Client;
   eventFiles!: string[];
-  _events!: Event[];
-  intents!: number;
-  partials!: PartialTypes[];
+  private _events!: Event[];
+  intents?: number;
+  partials?: PartialTypes[];
 
   constructor() {
     this.eventFiles = this.getEventFiles();
@@ -87,4 +87,6 @@ export default new class Events {
 
     return this.partials;
   }
-};
+}
+
+export default new Events();

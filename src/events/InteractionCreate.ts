@@ -1,5 +1,5 @@
 import { codeBlock } from '@discordjs/builders';
-import { AutocompleteInteraction, ButtonInteraction, CommandInteraction, ContextMenuInteraction, Interaction, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { AutocompleteInteraction, ButtonInteraction, CommandInteraction, ContextMenuInteraction, Interaction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
 import { ButtonComponentInteraction, Client, Event, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 const { env } = process;
@@ -13,10 +13,10 @@ export default class InteractionCreate extends Event {
     });
   }
 
-  async execute(interaction: InteractionTypes) {
-    const { client, locale, targetType, componentType } = interaction as CommandInteraction & ContextMenuInteraction & MessageComponentInteraction;
+  async execute(interaction: Interaction & (CommandInteraction | AutocompleteInteraction)) {
+    const { client, locale, type } = interaction;
 
-    const command = this[targetType || componentType || 'CHAT_INPUT']?.(interaction as any);
+    const command = this[type as Exclude<InteractionType, 'PING'>]?.(interaction as any);
 
     if (!command) return;
 
@@ -25,7 +25,7 @@ export default class InteractionCreate extends Event {
     } catch (error: any) {
       this.client.sendError(error);
 
-      const embeds: MessageEmbed[] = [new MessageEmbed()
+      const embeds = [new MessageEmbed()
         .setColor('DARK_RED')
         .setTitle(this.t('There was an error while executing this command!', { locale }))
         .setDescription(codeBlock('properties', `${error.name}: ${error.message}`))
@@ -35,9 +35,11 @@ export default class InteractionCreate extends Event {
       const components: MessageActionRow[] = [];
 
       if (GUILD_INVITE)
-        components.push(new MessageActionRow().setComponents(new MessageButton().setStyle('LINK')
-          .setLabel(this.t('supportServer', { locale }))
-          .setURL(`${client.options.http?.invite}/${GUILD_INVITE}`)));
+        components.push(new MessageActionRow()
+          .setComponents(new MessageButton()
+            .setStyle('LINK')
+            .setLabel(this.t('supportServer', { locale }))
+            .setURL(`${client.options.http?.invite}/${GUILD_INVITE}`)));
 
       try {
         if (!interaction.isAutocomplete()) {
@@ -51,27 +53,37 @@ export default class InteractionCreate extends Event {
     }
   }
 
-  BUTTON({ client, customId }: ButtonInteraction & { client: Client }) {
-    const { c, command } = JSON.parse(customId);
-    return client.commands.button_component?.get(c || command) as ButtonComponentInteraction;
+  APPLICATION_COMMAND(interaction: CommandInteraction & ContextMenuInteraction) {
+    return this[interaction.targetType ?? 'CHAT_INPUT']?.(interaction as any);
   }
 
-  CHAT_INPUT({ client, commandName }: CommandInteraction & { client: Client }) {
-    return client.commands.slash_interaction?.get(commandName) as SlashCommand;
+  APPLICATION_COMMAND_AUTOCOMPLETE(interaction: AutocompleteInteraction) {
+    return this['CHAT_INPUT']?.(interaction as any);
   }
 
-  MESSAGE({ client, commandName }: MessageContextMenuInteraction & { client: Client }) {
-    return client.commands.message_context?.get(commandName) as MessageContextMenu;
+  MESSAGE_COMPONENT(interaction: MessageComponentInteraction) {
+    return this[interaction.componentType]?.(interaction as any);
   }
 
-  SELECT_MENU({ client, customId }: SelectMenuInteraction & { client: Client }) {
-    const { c, command } = JSON.parse(customId);
-    return client.commands.selectmenu_component?.get(c || command) as SelectMenuComponentInteraction;
+  BUTTON(interaction: ButtonInteraction & { client: Client }): ButtonComponentInteraction {
+    const { c, command } = JSON.parse(interaction.customId);
+    return interaction.client.commands.button_component?.get(c || command);
   }
 
-  USER({ client, commandName }: UserContextMenuInteraction & { client: Client }) {
-    return client.commands.user_context?.get(commandName) as UserContextMenu;
+  CHAT_INPUT(interaction: CommandInteraction & { client: Client }): SlashCommand {
+    return interaction.client.commands.slash_interaction?.get(interaction.commandName);
+  }
+
+  MESSAGE(interaction: MessageContextMenuInteraction & { client: Client }): MessageContextMenu {
+    return interaction.client.commands.message_context?.get(interaction.commandName);
+  }
+
+  SELECT_MENU(interaction: SelectMenuInteraction & { client: Client }): SelectMenuComponentInteraction {
+    const { c, command } = JSON.parse(interaction.customId);
+    return interaction.client.commands.selectmenu_component?.get(c || command);
+  }
+
+  USER(interaction: UserContextMenuInteraction & { client: Client }): UserContextMenu {
+    return interaction.client.commands.user_context?.get(interaction.commandName);
   }
 }
-
-export type InteractionTypes = Interaction & (CommandInteraction | AutocompleteInteraction | ContextMenuInteraction | MessageComponentInteraction)

@@ -4,10 +4,10 @@ import { GlobSync } from 'glob';
 import { join } from 'path';
 import { Client, Command, SlashCommand } from '../structures';
 
-export default new class Commands {
-  client!: Client;
-  _applicationCommandTypes!: string[];
-  _commandTypes!: { [k: string]: string[] } | string[];
+class Commands {
+  private client!: Client;
+  private _applicationCommandTypes!: string[];
+  private _commandTypes!: { [k: string]: string[] } | string[];
 
   init(client: Client) {
     Object.defineProperties(this, { client: { value: client } });
@@ -81,4 +81,6 @@ export default new class Commands {
 
     return commands as { [k: string]: Collection<string, Command | SlashCommand> };
   }
-};
+}
+
+export default new Commands();
