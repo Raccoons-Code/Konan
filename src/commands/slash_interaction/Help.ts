@@ -116,12 +116,12 @@ export default class Help extends SlashCommand {
 
         const nameProps = [
           this.t(command.data.name),
-          '|',
+          ' | ',
           command.data.description,
         ];
 
         res.push({
-          name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
           value: `${command.data.name}`,
         });
 

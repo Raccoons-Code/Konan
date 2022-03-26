@@ -107,6 +107,29 @@ export default class SelectRoles extends SlashCommand {
             .setDescription('Item emoji'))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('add')
         .setDescription('Add to Select menu.')
+        .addSubcommand(subcommand => subcommand.setName('menu')
+          .setDescription('Add a Select menu.')
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Channel')
+            .setRequired(true)
+            .addChannelTypes(this.GuildTextChannelTypes as any))
+          .addStringOption(option => option.setName('message_id')
+            .setDescription('Message ID | Message URL')
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addRoleOption(option => option.setName('role')
+            .setDescription('Role.')
+            .setRequired(true))
+          .addStringOption(option => option.setName('item_name')
+            .setDescription('Item name {0,84} - default: <role>'))
+          .addStringOption(option => option.setName('item_description')
+            .setDescription('Item description {0,100}'))
+          .addStringOption(option => option.setName('item_emoji')
+            .setDescription('Item emoji'))
+          .addBooleanOption(option => option.setName('menu_disabled')
+            .setDescription('Set menu disabled - default: false'))
+          .addStringOption(option => option.setName('menu_place_holder')
+            .setDescription('Menu place holder')))
         .addSubcommand(subcommand => subcommand.setName('item')
           .setDescription('Add a item in a Select menu.')
           .addChannelOption(option => option.setName('channel')
@@ -132,6 +155,20 @@ export default class SelectRoles extends SlashCommand {
             .setDescription('Item emoji'))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('remove')
         .setDescription('Remove from a Select menu.')
+        .addSubcommand(subcommand => subcommand.setName('menu')
+          .setDescription('Remove a Select menu.')
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Channel')
+            .setRequired(true)
+            .addChannelTypes(this.GuildTextChannelTypes as any))
+          .addStringOption(option => option.setName('message_id')
+            .setDescription('Message ID | Message URL')
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addStringOption(option => option.setName('menu')
+            .setDescription('Select a menu.')
+            .setAutocomplete(true)
+            .setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName('item')
           .setDescription('Remove a item in a Select menu.')
           .addChannelOption(option => option.setName('channel')
@@ -208,7 +245,6 @@ export default class SelectRoles extends SlashCommand {
         label: `${label} 0`,
         value: JSON.stringify({
           count: 0,
-          d: Date.now(),
           roleId: role.id,
         }),
         description,
@@ -252,7 +288,7 @@ export default class SelectRoles extends SlashCommand {
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
         .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title)];
+        .setTitle(title ?? '')];
 
       try {
         await message.edit({ embeds });
@@ -298,10 +334,18 @@ export default class SelectRoles extends SlashCommand {
     const item = options.getString('item', true);
 
     if (subcommand === 'item') {
+      const role = options.getRole('role');
+
+      if (role ? message.components.some(row => row.components.some(element => {
+        if (element.type === 'BUTTON')
+          return JSON.parse(`${element.customId}`).roleId === role?.id;
+
+        return element.options.some(option => JSON.parse(`${option.value}`).roleId === role?.id);
+      })) : false) return await interaction.editReply(this.t('itemAddError', { locale }));
+
       const description = options.getString('item_description')?.match(this.pattern.label)?.[1];
       const emoji = options.getString('item_emoji');
       const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1];
-      const role = options.getRole('role');
 
       const components = message.components.map(row => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
@@ -342,7 +386,6 @@ export default class SelectRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel', true) as TextChannel;
-    const menuId = options.getString('menu', true);
     const message_id = options.getString('message_id', true).match(this.pattern.messageURL)?.[1] as string;
 
     const message = await channel.messages.fetch(message_id);
@@ -351,15 +394,59 @@ export default class SelectRoles extends SlashCommand {
 
     if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
 
+    const role = options.getRole('role', true);
+
+    if (message.components.some(row => row.components.some(element => {
+      if (element.type === 'BUTTON')
+        return JSON.parse(`${element.customId}`).roleId === role?.id;
+
+      return element.options.some(option => JSON.parse(`${option.value}`).roleId === role?.id);
+    }))) return await interaction.editReply(this.t('itemAddError', { locale }));
+
+    const description = options.getString('item_description')?.match(this.pattern.label)?.[1];
+    const emoji = options.getString('item_emoji') as EmojiIdentifierResolvable;
+    const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1] || role.name;
+
     const subcommand = options.getSubcommand();
 
-    if (subcommand === 'item') {
-      const role = options.getRole('role', true);
-      const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1] || role.name;
-      const description = options.getString('item_description')?.match(this.pattern.label)?.[1];
-      const emoji = options.getString('item_emoji') as EmojiIdentifierResolvable;
+    if (subcommand === 'menu') {
+      const menu_disabled = options.getBoolean('menu_disabled') as boolean;
+      const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] || '';
 
-      const components = message.components.map(row => {
+      const selectMenu = new MessageSelectMenu()
+        .setCustomId(JSON.stringify({
+          c: this.data.name,
+          count: 0,
+          d: Date.now(),
+        }))
+        .setDisabled(menu_disabled)
+        .setMaxValues(1)
+        .setOptions([{
+          label: `${label} 0`,
+          value: JSON.stringify({
+            count: 0,
+            roleId: role.id,
+          }),
+          description,
+          emoji: emoji,
+        }])
+        .setPlaceholder(menu_place_holder);
+
+      message.components.push(new MessageActionRow().setComponents([selectMenu]));
+
+      try {
+        await message.edit({ components: message.components });
+
+        return await interaction.editReply(this.t('itemAdded', { locale }));
+      } catch {
+        return await interaction.editReply(this.t('itemAddError', { locale }));
+      }
+    }
+
+    if (subcommand === 'item') {
+      const menuId = options.getString('menu', true);
+
+      message.components.map(row => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
 
         row.components.map(selectmenu => {
@@ -369,7 +456,6 @@ export default class SelectRoles extends SlashCommand {
             label: `${label} 0`,
             value: JSON.stringify({
               count: 0,
-              d: Date.now(),
               roleId: role.id,
             }),
             description,
@@ -384,7 +470,7 @@ export default class SelectRoles extends SlashCommand {
       });
 
       try {
-        await message.edit({ components });
+        await message.edit({ components: message.components });
 
         return await interaction.editReply(this.t('itemAdded', { locale }));
       } catch {
@@ -397,7 +483,6 @@ export default class SelectRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel', true) as TextChannel;
-    const menuId = options.getString('menu', true);
     const message_id = options.getString('message_id', true).match(this.pattern.messageURL)?.[1] as string;
 
     const message = await channel.messages.fetch(message_id);
@@ -408,14 +493,30 @@ export default class SelectRoles extends SlashCommand {
 
     const subcommand = options.getSubcommand();
 
+    const menuId = options.getString('menu', true);
+
+    if (subcommand === 'menu') {
+      message.components = message.components.filter(row =>
+        row.components[0].type !== 'SELECT_MENU' ||
+        row.components.some(selectmenu => selectmenu.customId !== menuId));
+
+      try {
+        await message.edit({ components: message.components });
+
+        return await interaction.editReply(this.t('itemRemoved', { locale }));
+      } catch {
+        return await interaction.editReply(this.t('itemRemoveError', { locale }));
+      }
+    }
+
     if (subcommand === 'item') {
       const item = options.getString('item', true);
 
-      const components = message.components.map(row => {
+      message.components.map(row => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
 
-        row.components.map(selectmenu => {
-          if (selectmenu.customId !== menuId || selectmenu.type !== 'SELECT_MENU') return selectmenu;
+        row.components = (row.components as MessageSelectMenu[]).map(selectmenu => {
+          if (selectmenu.customId !== menuId) return selectmenu;
 
           selectmenu.options = selectmenu.options.filter(option => option.value !== item);
 
@@ -428,7 +529,7 @@ export default class SelectRoles extends SlashCommand {
       });
 
       try {
-        await message.edit({ components });
+        await message.edit({ components: message.components });
 
         return await interaction.editReply(this.t('itemRemoved', { locale }));
       } catch {
@@ -440,11 +541,11 @@ export default class SelectRoles extends SlashCommand {
   async editAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
     if (interaction.responded) return;
 
-    const { client, guild, options } = interaction;
+    const { client, guild, options } = interaction as AutocompleteInteraction<'cached'>;
 
     const channelId = options.get('channel', true).value as string;
 
-    const channel = await guild?.channels.fetch(channelId) as TextChannel;
+    const channel = await guild.channels.fetch(channelId) as TextChannel;
 
     const focused = options.getFocused(true);
     const pattern = RegExp(`${focused.value}`, 'i');
@@ -466,13 +567,13 @@ export default class SelectRoles extends SlashCommand {
 
         const nameProps = [
           id,
-          title ? `| ${title}` : '',
-          description ? `| ${description}` : '',
+          title ? ` | ${title}` : '',
+          description ? ` | ${description}` : '',
         ];
 
         if (title || description)
           res.push({
-            name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+            name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
             value: `${id}`,
           });
 
@@ -501,12 +602,12 @@ export default class SelectRoles extends SlashCommand {
 
           const menuProps = [
             `${i2 + 1}`,
-            placeholder ? `| ${placeholder}` : '',
-            `| ${maxValues} ${maxValues as number > 1 ? 'options' : 'option'}`,
-            disabled ? '| disabled' : '',
+            placeholder ? ` | ${placeholder}` : '',
+            maxValues ? ` | ${maxValues} ${maxValues > 1 ? 'options' : 'option'}` : '',
+            disabled ? ' | disabled' : '',
           ];
 
-          const menuName = menuProps.join(' ').trim();
+          const menuName = menuProps.join('');
 
           if (pattern.test(menuName))
             res.push({
@@ -518,8 +619,8 @@ export default class SelectRoles extends SlashCommand {
     }
 
     if (focused.name === 'item') {
-      const message_id = options.getString('message_id', true).match(this.pattern.messageURL)?.[1] as string;
       const menuId = options.getString('menu', true);
+      const message_id = options.getString('message_id', true).match(this.pattern.messageURL)?.[1] as string;
 
       const message = await channel.messages.fetch(message_id);
 
@@ -546,18 +647,18 @@ export default class SelectRoles extends SlashCommand {
 
             const { roleId } = JSON.parse(value) as SelectRolesItemOptionValue;
 
-            const role = await guild?.roles.fetch(roleId);
+            const role = await guild.roles.fetch(roleId);
 
             const nameProps = [
               emoji?.id ? '' : emoji?.name,
-              label ? label : `Item ${i2 + 1}`,
-              `| ${role?.name}`,
-              `| ${roleId}`,
-              description ? `| ${description}` : '',
+              label ? label : ` Item ${i2 + 1}`,
+              ` | ${role?.name}`,
+              ` | ${roleId}`,
+              description ? ` | ${description}` : '',
             ];
 
             res.push({
-              name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+              name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
               value,
             });
           }

@@ -96,12 +96,12 @@ export default class Unban extends SlashCommand {
 
       const nameProps = [
         ban.user.id,
-        '|', ban.user.tag,
-        ban.reason ? `| Reason: ${ban.reason}` : '',
+        ' | ', ban.user.tag,
+        ban.reason ? ` | Reason: ${ban.reason}` : '',
       ];
 
       res.push({
-        name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+        name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
         value: `${ban.user.id}`,
       });
 

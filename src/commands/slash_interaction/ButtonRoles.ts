@@ -168,7 +168,6 @@ export default class ButtonRoles extends SlashCommand {
       .setCustomId(JSON.stringify({
         c: this.data.name,
         count: 0,
-        d: Date.now(),
         roleId: role.id,
       }))
       .setDisabled(button_disabled)
@@ -180,7 +179,7 @@ export default class ButtonRoles extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
+      .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
       .setTitle(title ? title : description ? '' : 'ButtonRoles')];
 
     try {
@@ -212,7 +211,7 @@ export default class ButtonRoles extends SlashCommand {
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
         .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title || '')];
+        .setTitle(title ?? '')];
 
       try {
         await message.edit({ embeds });
@@ -224,12 +223,20 @@ export default class ButtonRoles extends SlashCommand {
     }
 
     if (subcommand === 'button') {
+      const role = options.getRole('role');
+
+      if (role ? message.components.some(row => row.components.some(element => {
+        if (element.type === 'BUTTON')
+          return JSON.parse(`${element.customId}`).roleId === role.id;
+
+        return element.options.some(option => JSON.parse(`${option.value}`).roleId === role?.id);
+      })) : false) return await interaction.editReply(this.t('itemAddError', { locale }));
+
       const button_disabled = options.getBoolean('button_disabled');
       const button_emoji = options.getString('button_emoji');
       const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1];
       const button_style = options.getString('button_style');
       const buttonId = options.getString('button', true);
-      const role = options.getRole('role');
 
       const emoji = button_emoji ? Util.resolvePartialEmoji(button_emoji) : null;
 
@@ -275,14 +282,22 @@ export default class ButtonRoles extends SlashCommand {
 
     if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
 
+    const role = options.getRole('role', true);
+
+    if (message.components.some(row => row.components.some(element => {
+      if (element.type === 'BUTTON')
+        return JSON.parse(`${element.customId}`).roleId === role?.id;
+
+      return element.options.some(option => JSON.parse(`${option.value}`).roleId === role?.id);
+    }))) return await interaction.editReply(this.t('itemAddError', { locale }));
+
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'button') {
-      const button_style = (options.getString('button_style') || 'PRIMARY') as MessageButtonStyleResolvable;
-      const button_emoji = options.getString('button_emoji');
       const button_disabled = options.getBoolean('button_disabled') as boolean;
-      const role = options.getRole('role', true);
+      const button_emoji = options.getString('button_emoji');
       const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1] || role.name;
+      const button_style = (options.getString('button_style') || 'PRIMARY') as MessageButtonStyleResolvable;
 
       const emoji = (button_emoji ? Util.resolvePartialEmoji(button_emoji) : null) as EmojiIdentifierResolvable;
 
@@ -290,23 +305,37 @@ export default class ButtonRoles extends SlashCommand {
         .setCustomId(JSON.stringify({
           c: this.data.name,
           count: 0,
-          d: Date.now(),
-          roleId: role?.id,
+          roleId: role.id,
         }))
         .setDisabled(button_disabled)
         .setEmoji(emoji)
         .setLabel([button_name, ' 0'].join(''))
         .setStyle(button_style);
 
-      const components = message.components.map(row => {
-        if (row.components[0].type !== 'BUTTON') return row;
+      const buttonsLength = message.components.length ?
+        message.components.reduce((acc: number[], row) => [
+          ...acc,
+          row.components[0].type === 'BUTTON' ? row.components.length : 0,
+        ], []) : [];
 
-        row.addComponents(button);
+      if (!buttonsLength.length || buttonsLength.every(v => v === 5)) {
+        message.components.push(new MessageActionRow().setComponents([button]));
+      } else {
+        let index = 0;
 
-        return row;
-      });
+        message.components.map(row => {
+          if (row.components[0].type !== 'BUTTON' || row.components.length === 5 || index) return row;
+
+          row.addComponents(button);
+
+          index++;
+
+          return row;
+        });
+      }
+
       try {
-        await message.edit({ components });
+        await message.edit({ components: message.components });
 
         return await interaction.editReply(this.t('buttonAdded', { locale }));
       } catch {
@@ -332,16 +361,16 @@ export default class ButtonRoles extends SlashCommand {
     if (subcommand === 'button') {
       const buttonId = options.getString('button', true);
 
-      const components = message.components.map(row => {
+      message.components = message.components.map(row => {
         if (row.components[0].type !== 'BUTTON') return row;
 
-        row.components = row.components.filter(button => button.customId !== buttonId);
+        row.components = (row.components as MessageButton[]).filter(button => button.customId !== buttonId);
 
         return row;
-      });
+      }).filter(row => row.components.length);
 
       try {
-        await message.edit({ components });
+        await message.edit({ components: message.components });
 
         return await interaction.editReply(this.t('buttonRemoved', { locale }));
       } catch {
@@ -379,13 +408,13 @@ export default class ButtonRoles extends SlashCommand {
 
         const nameProps = [
           id,
-          title ? `| ${title}` : '',
-          description ? `| ${description}` : '',
+          title ? ` | ${title}` : '',
+          description ? ` | ${description}` : '',
         ];
 
         if (title || description)
           res.push({
-            name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+            name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
             value: `${id}`,
           });
 
@@ -417,15 +446,15 @@ export default class ButtonRoles extends SlashCommand {
           const role = await guild?.roles.fetch(roleId);
 
           const nameProps = [
-            `${i2 + 1}`,
-            label ? `| ${label}` : '',
-            `| ${role?.name}`,
-            `| ${roleId}`,
-            `| ${style}`,
-            disabled ? '| disabled' : '',
+            `${i + 1} - ${i2 + 1}`,
+            label ? ` | ${label}` : '',
+            ` | ${role?.name}`,
+            ` | ${roleId}`,
+            ` | ${style}`,
+            disabled ? ' | disabled' : '',
           ];
 
-          const name = nameProps.join(' ').trim();
+          const name = nameProps.join('');
 
           if (pattern.test(name))
             res.push({

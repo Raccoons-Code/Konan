@@ -175,8 +175,8 @@ export default class extends SlashCommand {
       if (!backup.data || typeof backup.data !== 'object' || Array.isArray(backup.data)) continue;
 
       embeds[0].addField(
-        [backup.data.id, '|', backup.data.name].join(' ').trim(),
-        [backup.id, backup.premium ? '- `Premium`' : ''].join(' ').trim(),
+        [backup.data.id, ' | ', backup.data.name].join(''),
+        [backup.id, backup.premium ? ' - `Premium`' : ''].join(''),
       );
 
       if (embeds[0].fields.length === 25) break;
@@ -269,12 +269,12 @@ export default class extends SlashCommand {
 
         const nameProps = [
           _guild.id,
-          '|', name,
-          `${_guild.id === guildId ? `| ${this.t('currentServer', { locale })}` : ''}`,
+          ' | ', name,
+          `${_guild.id === guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
         ];
 
         res.push({
-          name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
           value: `${_guild.id}`,
         });
 
@@ -294,12 +294,12 @@ export default class extends SlashCommand {
 
         const nameProps = [
           backup.id,
-          '|', backup.data.name,
-          backup.guildId == guildId ? `| ${this.t('currentServer', { locale })}` : '',
+          ' | ', backup.data.name,
+          backup.guildId == guildId ? ` | ${this.t('currentServer', { locale })}` : '',
         ];
 
         res.push({
-          name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
           value: `${backup.id}`,
         });
 
@@ -337,12 +337,12 @@ export default class extends SlashCommand {
 
         const nameProps = [
           _guild.id,
-          '|', name,
-          _guild.id == guildId ? `| ${this.t('currentServer', { locale })}` : '',
+          ' | ', name,
+          _guild.id == guildId ? ` | ${this.t('currentServer', { locale })}` : '',
         ];
 
         res.push({
-          name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
           value: `${_guild.id}`,
         });
 
@@ -364,13 +364,13 @@ export default class extends SlashCommand {
 
         const nameProps = [
           backup.id,
-          '|', backup.data.name,
-          backup.premium ? '| Premium' : '',
+          ' | ', backup.data.name,
+          backup.premium ? ' | Premium' : '',
           backup.guildId === guildId ? ` | ${this.t('currentServer', { locale })}` : '',
         ];
 
         res.push({
-          name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
           value: `${backup.id}`,
         });
 
@@ -402,12 +402,12 @@ export default class extends SlashCommand {
 
       const nameProps = [
         backup.id,
-        '|', backup.data.name,
-        backup.premium ? '| Premium' : '',
+        ' | ', backup.data.name,
+        backup.premium ? ' | Premium' : '',
       ];
 
       res.push({
-        name: `${nameProps.join(' ').trim().match(this.pattern.label)?.[1]}`,
+        name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
         value: `${backup.id}`,
       });
 
