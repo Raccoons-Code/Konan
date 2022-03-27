@@ -1,19 +1,25 @@
 import { codeBlock } from '@discordjs/builders';
-import { AutocompleteInteraction, ButtonInteraction, CommandInteraction, ContextMenuInteraction, Interaction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { AutocompleteInteraction, ButtonInteraction, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
 import { ButtonComponentInteraction, Client, Event, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 const { env } = process;
 const { GUILD_INVITE } = env;
 
+type InteractionTypes =
+  AutocompleteInteraction |
+  CommandInteraction |
+  ContextMenuInteraction |
+  MessageComponentInteraction
+
 export default class InteractionCreate extends Event {
   constructor(client: Client) {
     super(client, {
-      intents: ['GUILDS'],
+      intents: ['GUILDS', 'GUILD_BANS', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES', 'GUILD_WEBHOOKS'],
       name: 'interactionCreate',
     });
   }
 
-  async execute(interaction: Interaction & (CommandInteraction | AutocompleteInteraction)) {
+  async execute(interaction: InteractionTypes) {
     const { client, locale, type } = interaction;
 
     const command = this[type as Exclude<InteractionType, 'PING'>]?.(interaction as any);
@@ -70,7 +76,7 @@ export default class InteractionCreate extends Event {
     return interaction.client.commands.button_component?.get(c || command);
   }
 
-  CHAT_INPUT(interaction: CommandInteraction & { client: Client }): SlashCommand {
+  CHAT_INPUT(interaction: CommandInteraction & { client: Client }): SlashCommand | undefined {
     return interaction.client.commands.slash_interaction?.get(interaction.commandName);
   }
 

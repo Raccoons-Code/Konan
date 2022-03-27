@@ -11,6 +11,8 @@ export default class ChannelCreate extends Event {
   }
 
   async execute(channel: NonThreadGuildBasedChannel) {
+    this.client.fetchStats();
+
     const { client } = channel;
 
     if (!(channel.isText() &&

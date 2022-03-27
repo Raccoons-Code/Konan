@@ -91,16 +91,18 @@ export default class Client extends DJS.Client {
   }
 
   async fetchStats(options: FetchStatsOptions = {}): Promise<Stats> {
+    const promises = [
+      this.shard?.fetchClientValues('guilds.cache.size'),
+      this.shard?.fetchClientValues('channels.cache.size'),
+      this.shard?.broadcastEval(client => client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
+    ];
+
     try {
-      const results = await Promise.all([
-        this.shard?.fetchClientValues('guilds.cache.size'),
-        this.shard?.fetchClientValues('channels.cache.size'),
-        this.shard?.broadcastEval(client => client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
-      ]);
+      const results = await Promise.all(promises);
 
       this.totalGuilds = results[0]?.reduce((acc: number, guildCount: any) => acc + guildCount, 0);
       this.totalChannels = results[1]?.reduce((acc: number, channelsCount: any) => acc + channelsCount, 0);
-      this.totalMembers = results[2]?.reduce((acc: number, memberCount) => acc + memberCount, 0);
+      this.totalMembers = results[2]?.reduce((acc: number, memberCount: any) => acc + memberCount, 0);
     } catch {
       return await this.fetchStats(options);
     }
