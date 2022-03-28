@@ -30,10 +30,15 @@ export default class Timeout extends SlashCommand {
         .setDescription('Reason for timeout.'));
   }
 
-  async execute(interaction: CommandInteraction<'cached'>) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
-    const { guild, locale, memberPermissions, options } = interaction;
+    const { locale } = interaction;
+
+    if (!interaction.inCachedGuild())
+      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+
+    const { guild, memberPermissions, options } = interaction;
 
     const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]);
 
@@ -57,13 +62,13 @@ export default class Timeout extends SlashCommand {
       await member.timeout(timeout, reason);
 
       if (!timeout)
-        return await interaction.editReply(this.t('memberTimeoutRemoved', { locale }));
+        return await interaction.editReply(this.t('timeoutRemoved', { locale }));
 
       const t = Math.floor(((Date.now() + timeout) / 1000));
 
-      await interaction.editReply(this.t('memberTimeout', { locale, time: time(t), timeR: time(t, 'R') }));
+      await interaction.editReply(this.t('userTimedOut', { locale, time: time(t), timeR: time(t, 'R') }));
     } catch {
-      await interaction.editReply(this.t('memberTimeoutError', { locale }));
+      await interaction.editReply(this.t('timeoutError', { locale }));
     }
   }
 }

@@ -2,26 +2,20 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, PermissionString } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
-export default class Ban extends SlashCommand {
+export default class Kick extends SlashCommand {
   constructor(client: Client) {
     super(client, {
-      clientPermissions: ['BAN_MEMBERS'],
-      userPermissions: ['BAN_MEMBERS'],
+      clientPermissions: ['KICK_MEMBERS'],
+      userPermissions: ['KICK_MEMBERS'],
     });
 
-    this.data = new SlashCommandBuilder().setName('ban')
-      .setDescription('Ban user.')
+    this.data = new SlashCommandBuilder().setName('kick')
+      .setDescription('Kick')
       .addUserOption(option => option.setName('user')
-        .setDescription('The user to be banned.')
+        .setDescription('The user to kick.')
         .setRequired(true))
-      .addIntegerOption(option => option.setName('delete_messages')
-        .setDescription('How much of that person\'s message history should be deleted.')
-        .setChoices([
-          ['Last 24 hours', 1],
-          ['Last 7 days', 7],
-        ]))
       .addStringOption(option => option.setName('reason')
-        .setDescription('The reason for banishment, if any.'));
+        .setDescription('Reason for kick.'));
   }
 
   async execute(interaction: CommandInteraction): Promise<any> {
@@ -50,19 +44,17 @@ export default class Ban extends SlashCommand {
 
     const member = options.getMember('user', true);
 
-    if (!member.bannable)
-      return await interaction.editReply(this.t('banHierarchyError', { locale }));
-
-    const days = options.getInteger('delete_messages') || 0;
+    if (!member.kickable)
+      return await interaction.editReply(this.t('kickHierarchyError', { locale }));
 
     const reason = options.getString('reason') || undefined;
 
     try {
-      await guild.members.ban(member, { days, reason });
+      await guild.members.kick(member, reason);
 
-      await interaction.editReply(this.t('userBanned', { locale }));
+      await interaction.editReply(this.t('userKicked', { locale }));
     } catch {
-      await interaction.editReply(this.t('banError', { locale }));
+      await interaction.editReply(this.t('kickError', { locale }));
     }
   }
 }

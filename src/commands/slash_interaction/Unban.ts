@@ -25,7 +25,7 @@ export default class Unban extends SlashCommand {
     if (!interaction.inCachedGuild()) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
-      return await interaction.reply(this.t('onlyOnServer', { locale }));
+      return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
     }
 
     const { guild, memberPermissions, options } = interaction;
@@ -65,7 +65,7 @@ export default class Unban extends SlashCommand {
     if (!ban)
       return await interaction.editReply(this.t('ban404', { locale }));
 
-    const reason = options.getString('reason') as string;
+    const reason = options.getString('reason') || undefined;
 
     try {
       await guild.members.unban(id, reason);
