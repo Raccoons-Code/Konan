@@ -10,6 +10,8 @@ const Choices = new class {
 
   constructor() {
     this.choices = ['cat'];
+
+    this.setChoices();
   }
 
   getChoices() {

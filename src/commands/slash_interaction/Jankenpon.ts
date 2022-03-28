@@ -16,7 +16,11 @@ export default class Jankenpon extends SlashCommand {
           .setDescription('Human vs machine.')
           .addStringOption(option => option.setName('jankenpon')
             .setDescription('Jankenpon.')
-            .setChoices([['Rock', 'rock'], ['Paper', 'paper'], ['Scissors', 'scissors']])
+            .setChoices([
+              ['Rock', 'rock'],
+              ['Paper', 'paper'],
+              ['Scissors', 'scissors'],
+            ])
             .setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName('multiplayer')
           .setDescription('Human vs human.')
@@ -30,7 +34,13 @@ export default class Jankenpon extends SlashCommand {
           .addStringOption(option => option.setName('jankenpon')
             .setDescription('Jankenpon.')
             .setRequired(true)
-            .setChoices([['Rock', 'rock'], ['Paper', 'paper'], ['Scissors', 'scissors'], ['Lizard', 'lizard'], ['Spock', 'spock']])))
+            .setChoices([
+              ['Rock', 'rock'],
+              ['Paper', 'paper'],
+              ['Scissors', 'scissors'],
+              ['Lizard', 'lizard'],
+              ['Spock', 'spock'],
+            ])))
         .addSubcommand(subcommand => subcommand.setName('multiplayer')
           .setDescription('Human vs human.')
           .addUserOption(option => option.setName('opponent')

@@ -1,4 +1,4 @@
-export = new class {
+export = new class pattern {
   /** @pattern /([\w\W]{0,4096})/ */
   content = /([\w\W]{0,4096})/;
   /** @pattern /(?:(?:([^|]{0,256}))(?:\|?([\w\W]{0,4096})))/ */
@@ -11,8 +11,11 @@ export = new class {
   isClass = /^((?:class\s*)(\s+(?!extends)\w+\s*)?(?:(?:\s+extends)(\s+\w+\s*))?){/;
   /** @pattern /([\w\W]{0,100})/ */
   label = /([\w\W]{0,100})/;
-  /** @pattern /([\w\W]{0,84})/ */
-  labelLimited = /([\w\W]{0,84})/;
+  /**
+   * @description A label regex pattern with space for max safe integer value (2^53-1)
+   * @pattern /([\w\W]{0,83})/
+   */
+  labelLimited = /([\w\W]{0,83})/;
   /** @pattern /(.+?)(?:\s(\d+))+?/ */
   labelWithCount = /(.+?)(?:\s(\d+))+?/;
   /** @pattern /(on(?:ce)?)/ */

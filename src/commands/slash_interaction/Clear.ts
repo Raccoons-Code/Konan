@@ -11,7 +11,7 @@ export default class Clear extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('clear')
       .setDescription('Deletes up to 1000 channel messages at once.')
-      .addNumberOption(option => option.setName('amount')
+      .addIntegerOption(option => option.setName('amount')
         .setDescription('Amount of messages.')
         .setMaxValue(1000)
         .setMinValue(1)
@@ -47,7 +47,7 @@ export default class Clear extends SlashCommand {
       return await interaction.editReply(this.t('missingChannelPermission',
         { locale, PERMISSIONS: clientPermissions }));
 
-    const limit = options.getNumber('amount') as number;
+    const limit = options.getInteger('amount') as number;
 
     try {
       const size = await this.bulkDelete(channel, limit);

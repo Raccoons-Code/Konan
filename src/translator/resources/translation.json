@@ -52,6 +52,8 @@
   "lettertile": "Letter League",
   "memberCount": "Member count",
   "members": "members",
+  "memberTimeout": "Successfully punished {{member}}. Until {{time}} {{timeR}}.",
+  "memberTimeoutRemoved": "Successfully removed timeout.",
   "mentionable": "mentionable",
   "message404": "Message not found!",
   "messageCount": "Message count",

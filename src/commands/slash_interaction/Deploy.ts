@@ -15,7 +15,10 @@ export default class extends SlashCommand {
       .setDefaultPermission(false)
       .addStringOption(option => option.setName('type')
         .setDescription('Type of deploy')
-        .setChoices([['Global', 'global'], ['Guild', 'guild']])
+        .setChoices([
+          ['Global', 'global'],
+          ['Guild', 'guild'],
+        ])
         .setRequired(true))
       .addBooleanOption(option => option.setName('reset')
         .setDescription('Reset all commands.'));

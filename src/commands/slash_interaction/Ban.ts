@@ -14,9 +14,12 @@ export default class Ban extends SlashCommand {
       .addUserOption(option => option.setName('user')
         .setDescription('The user to be banned.')
         .setRequired(true))
-      .addNumberOption(option => option.setName('delete_messages')
+      .addIntegerOption(option => option.setName('delete_messages')
         .setDescription('How much of that person\'s message history should be deleted.')
-        .setChoices([['Last 24 hours', 1], ['Last 7 days', 7]]))
+        .setChoices([
+          ['Last 24 hours', 1],
+          ['Last 7 days', 7],
+        ]))
       .addStringOption(option => option.setName('reason')
         .setDescription('The reason for banishment, if any.'));
   }
@@ -50,7 +53,7 @@ export default class Ban extends SlashCommand {
     if (!member.bannable)
       return await interaction.editReply(this.t('banHierarchyError', { locale }));
 
-    const days = options.getNumber('delete_messages') || 0;
+    const days = options.getInteger('delete_messages') || 0;
 
     const reason = options.getString('reason') as string;
 
