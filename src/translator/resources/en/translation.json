@@ -53,6 +53,7 @@
   "memberCount": "Member count",
   "members": "members",
   "memberTimeout": "Successfully punished {{member}}. Until {{time}} {{timeR}}.",
+  "memberTimeoutError": "Error! Unable to punish member!",
   "memberTimeoutRemoved": "Successfully removed timeout.",
   "mentionable": "mentionable",
   "message404": "Message not found!",

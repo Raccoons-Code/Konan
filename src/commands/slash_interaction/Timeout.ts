@@ -57,13 +57,13 @@ export default class Timeout extends SlashCommand {
       await member.timeout(timeout, reason);
 
       if (!timeout)
-        return await interaction.editReply('Successfully removed timeout.');
+        return await interaction.editReply(this.t('memberTimeoutRemoved', { locale }));
 
       const t = Math.floor(((Date.now() + timeout) / 1000));
 
       await interaction.editReply(this.t('memberTimeout', { locale, time: time(t), timeR: time(t, 'R') }));
     } catch {
-      await interaction.editReply(`Failed to timeout ${member}.`);
+      await interaction.editReply(this.t('memberTimeoutError', { locale }));
     }
   }
 }
