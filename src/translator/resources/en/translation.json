@@ -103,7 +103,7 @@
   "userMustBeOnVoiceChannel": "you must be on a voice channel.",
   "userMustChooseVoiceChannel": "you need to choose a voice channel.",
   "userNotOwner": "You are not the owner of the server.",
-  "userTimedOut": "Successfully punished {{member}}. Until {{time}} {{timeR}}.",
+  "userTimedOut": "{{member}} successfully punished. Until {{time}} {{timeR}}.",
   "userUnbanned": "User successfully unbanned!",
   "wordsnack": "Word Snacks",
   "CATEGORY": "Category",
