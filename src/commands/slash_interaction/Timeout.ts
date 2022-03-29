@@ -10,7 +10,7 @@ export default class Timeout extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('timeout')
-      .setDescription('Timeout')
+      .setDescription('Temporarily mutes a user.')
       .addUserOption(option => option.setName('user')
         .setDescription('The user to timeout.')
         .setRequired(true))

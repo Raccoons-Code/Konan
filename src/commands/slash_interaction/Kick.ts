@@ -10,7 +10,7 @@ export default class Kick extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('kick')
-      .setDescription('Kick')
+      .setDescription('Kicks a user from the server.')
       .addUserOption(option => option.setName('user')
         .setDescription('The user to kick.')
         .setRequired(true))

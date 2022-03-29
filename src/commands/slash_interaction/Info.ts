@@ -60,9 +60,9 @@ export default class extends SlashCommand {
     const username = guild?.me?.displayName || user?.username as string;
 
     const stats = stripIndents(`
-      Servers  : ${this.client.totalGuilds || guilds.cache.size}
-      Channels : ${this.client.totalChannels || channels.cache.size}
-      Members  : ${this.client.totalMembers || users.cache.size}
+      Servers  : ${this.client.stats.guilds || guilds.cache.size}
+      Channels : ${this.client.stats.channels || channels.cache.size}
+      Members  : ${this.client.stats.members || users.cache.size}
       Ping     : ${ws.ping} ms
       Version  : ${npm_package_version}
       `);

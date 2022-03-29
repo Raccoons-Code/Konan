@@ -9,7 +9,7 @@ export default class Jankenpon extends SlashCommand {
     super(client);
 
     this.data = new SlashCommandBuilder().setName('jankenpon')
-      .setDescription('jankenpon')
+      .setDescription('Play a game of Jankenpon with your opponent.')
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('game')
         .setDescription('Play a game of Jankenpon with your friends!')
         .addSubcommand(subcommand => subcommand.setName('single')

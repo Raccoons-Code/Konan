@@ -9,7 +9,7 @@ import { t } from '../translator';
 import * as util from '../util';
 
 const { env } = process;
-const { ERROR_WEBHOOK } = env;
+const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
 
 export default class Client extends DJS.Client {
   applicationCommandTypes!: string[];
@@ -23,9 +23,7 @@ export default class Client extends DJS.Client {
 
   discordTogether!: DiscordTogether<{ [k: string]: string }>;
   invite!: string;
-  totalGuilds?: number;
-  totalChannels?: number;
-  totalMembers?: number;
+  stats: Stats = {};
   ERROR_WEBHOOK!: WebhookClient;
 
   constructor(options: ClientOptions) {
@@ -100,9 +98,9 @@ export default class Client extends DJS.Client {
     try {
       const results = await Promise.all(promises);
 
-      this.totalGuilds = results[0]?.reduce((acc: number, guildCount: any) => acc + guildCount, 0);
-      this.totalChannels = results[1]?.reduce((acc: number, channelsCount: any) => acc + channelsCount, 0);
-      this.totalMembers = results[2]?.reduce((acc: number, memberCount: any) => acc + memberCount, 0);
+      this.stats.guilds = results[0]?.reduce((acc: number, guildCount: any) => acc + guildCount, 0);
+      this.stats.channels = results[1]?.reduce((acc: number, channelsCount: any) => acc + channelsCount, 0);
+      this.stats.members = results[2]?.reduce((acc: number, memberCount: any) => acc + memberCount, 0);
     } catch {
       return await this.fetchStats(options);
     }
@@ -113,11 +111,12 @@ export default class Client extends DJS.Client {
       return this.fetchStats(options);
     }
 
-    return { totalChannels: this.totalChannels, totalGuilds: this.totalGuilds, totalMembers: this.totalMembers };
+    return this.stats;
   }
 
-  async topggautoposter(token = this.token as string) {
-    AutoPoster(token, this);
+  async topggautoposter(token = TOPGG_TOKEN) {
+    if (token)
+      AutoPoster(token, this);
   }
 }
 
@@ -126,7 +125,7 @@ export interface FetchStatsOptions {
 }
 
 export interface Stats {
-  totalChannels?: number
-  totalGuilds?: number
-  totalMembers?: number
+  channels?: number
+  guilds?: number
+  members?: number
 }

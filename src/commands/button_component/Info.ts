@@ -38,9 +38,9 @@ export default class Info extends ButtonComponentInteraction {
     const newStats = await this.client.fetchStats();
 
     const stats = stripIndents(`
-      Servers  : ${newStats.totalGuilds || guilds.cache.size}
-      Channels : ${newStats.totalChannels || channels.cache.size}
-      Members  : ${newStats.totalMembers || users.cache.size}
+      Servers  : ${newStats.guilds || guilds.cache.size}
+      Channels : ${newStats.channels || channels.cache.size}
+      Members  : ${newStats.members || users.cache.size}
       Ping     : ${ws.ping} ms
       Version  : ${npm_package_version}
       `);

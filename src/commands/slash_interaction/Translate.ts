@@ -13,7 +13,7 @@ export default class Translate extends SlashCommand {
     super(client);
 
     this.data = new SlashCommandBuilder().setName('translate')
-      .setDescription('Translate text from one language to another.')
+      .setDescription('Translate text from one language to another. - Powered by Google Translate Api.')
       .addStringOption(option => option.setName('from')
         .setDescription('The language to translate from.')
         .setAutocomplete(true)

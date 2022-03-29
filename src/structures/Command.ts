@@ -18,12 +18,25 @@ export default class Command extends Base {
 
 export interface CommandData {
   aliases?: string[]
-  args?: any
+  args?: CommandArgsData[]
   clientPermissions?: PermissionString[]
   description: string
   emoji?: string
   name: string
   userPermissions?: PermissionString[]
+}
+
+export interface CommandArgsData {
+  name: string
+  description: string
+  type: 'string' | 'number' | 'boolean'
+  choices?: CommandChoicesData[]
+  required?: boolean
+}
+
+export interface CommandChoicesData {
+  name: string
+  value: any
 }
 
 export interface CommandsCollection {

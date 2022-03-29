@@ -10,7 +10,7 @@ export default class Ban extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('ban')
-      .setDescription('Ban user.')
+      .setDescription('Bans a user from the server.')
       .addUserOption(option => option.setName('user')
         .setDescription('The user to be banned.')
         .setRequired(true))
