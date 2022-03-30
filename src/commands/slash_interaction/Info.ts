@@ -55,20 +55,20 @@ export default class extends SlashCommand {
 
     const { channels, guilds, readyAt, user, users, ws } = client;
 
-    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) || user?.displayAvatarURL({ dynamic: true });
+    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ?? user?.displayAvatarURL({ dynamic: true });
 
-    const username = guild?.me?.displayName || user?.username as string;
+    const username = guild?.me?.displayName ?? user?.username as string;
 
     const stats = stripIndents(`
-      Servers  : ${this.client.stats.guilds || guilds.cache.size}
-      Channels : ${this.client.stats.channels || channels.cache.size}
-      Members  : ${this.client.stats.members || users.cache.size}
+      Servers  : ${this.client.stats.guilds ?? guilds.cache.size}
+      Channels : ${this.client.stats.channels ?? channels.cache.size}
+      Members  : ${this.client.stats.members ?? users.cache.size}
       Ping     : ${ws.ping} ms
       Version  : ${npm_package_version}
       `);
 
     const library = stripIndents(`
-      Discord.js : ${(npm_package_dependencies_discord_js || discordjs_version).match(/(?:\D*)([\d\D]+)/)?.[1]}
+      Discord.js : ${(npm_package_dependencies_discord_js ?? discordjs_version).match(/(?:\D*)([\d\D]+)/)?.[1]}
       `);
 
     const engine = stripIndents(`
@@ -97,7 +97,7 @@ export default class extends SlashCommand {
   async channel(interaction: CommandInteraction, embeds: MessageEmbed[]) {
     const { locale, options } = interaction;
 
-    const channel = options.getChannel('channel') || interaction.channel;
+    const channel = options.getChannel('channel') ?? interaction.channel;
 
     /** DM */
     /* const { } = channel as DMChannel | PartialDMChannel; */
@@ -125,13 +125,13 @@ export default class extends SlashCommand {
     if (['GUILD_STAGE_VOICE', 'GUILD_VOICE'].includes(type))
       embeds[0].addFields([
         { name: this.t('bitrate', { locale }), value: `${bitrate / 1000}kbps`, inline },
-        { name: this.t('rtcRegion', { locale }), value: rtcRegion || this.t('automatic', { locale }), inline },
-        { name: this.t('userLimit', { locale }), value: `${userLimit || ':infinity:'}`, inline },
+        { name: this.t('rtcRegion', { locale }), value: rtcRegion ?? this.t('automatic', { locale }), inline },
+        { name: this.t('userLimit', { locale }), value: `${userLimit ?? ':infinity:'}`, inline },
         { name: this.t('full', { locale }), value: this.t(`${full}`, { locale }), inline }]);
 
     if (['GUILD_NEWS', 'GUILD_STORE', 'GUILD_TEXT'].includes(type)) {
       const arrayThreads = threads.cache.map(thread => thread);
-      const textThreads = arrayThreads.join(' ').trim() || '-';
+      const textThreads = arrayThreads.join(' ').trim() ?? '-';
 
       embeds[0].addFields([
         { name: this.t('slowmode', { locale }), value: ms(rateLimitPerUser * 1000), inline },
@@ -147,7 +147,7 @@ export default class extends SlashCommand {
 
     if (['GUILD_CATEGORY'].includes(type)) {
       const arrayChildren = children.map(child => child);
-      const textChildren = arrayChildren.join(' ').trim() || '-';
+      const textChildren = arrayChildren.join(' ').trim() ?? '-';
 
       embeds[0].addFields([
         { name: `${this.t('channels', { locale })} [${arrayChildren.length}]`, value: textChildren }]);
@@ -172,9 +172,9 @@ export default class extends SlashCommand {
     const { color, mentionable, permissions, name } = role;
 
     const arrayPerms = permissions.toArray();
-    const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
+    const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') ?? '-';
 
-    embeds[0].setColor(color || 'RANDOM')
+    embeds[0].setColor(color ?? 'RANDOM')
       .setAuthor({ name, iconURL: role.iconURL() as string })
       .addFields([
         { name: this.t('mentionable', { locale }), value: this.t(`${mentionable}`, { locale }) },
@@ -208,8 +208,8 @@ export default class extends SlashCommand {
   async user(interaction: CommandInteraction, embeds: MessageEmbed[]) {
     const { locale, options } = interaction;
 
-    const user = options.getUser('user') || interaction.user;
-    const member = (options.getMember('user') || interaction.member) as GuildMember;
+    const user = options.getUser('user') ?? interaction.user;
+    const member = (options.getMember('user') ?? interaction.member) as GuildMember;
 
     const { createdAt, id, tag } = user;
 
@@ -220,15 +220,15 @@ export default class extends SlashCommand {
       )
       .setFooter({ text: this.t(member ? 'joinedTheServerAt' : 'creationDate', { locale }) })
       .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-      .setTimestamp(member?.joinedTimestamp || createdAt);
+      .setTimestamp(member?.joinedTimestamp ?? createdAt);
 
     if (member) {
       const { avatar, displayColor, permissions, roles } = member;
 
       const arrayRoles = roles.cache.map(role => role);
-      const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') || '-';
+      const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') ?? '-';
       const arrayPerms = permissions.toArray();
-      const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
+      const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') ?? '-';
 
       embeds[0].addFields(
         { name: this.t('role', { locale }), value: `${roles.highest}`, inline: true },

@@ -6,7 +6,7 @@ export default class Authentication {
   baseURL: string;
 
   constructor(options: AuthenticationOptions) {
-    this.apiKey = process.env.TMDB_APIKEY || options.apiKey;
+    this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
     this.baseURL = `${options.baseURL}/authentication`;
   }
 

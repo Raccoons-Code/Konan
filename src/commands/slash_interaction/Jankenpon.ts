@@ -59,7 +59,7 @@ export default class Jankenpon extends SlashCommand {
   async game(interaction: CommandInteraction) {
     const { locale, member, options, user } = interaction as CommandInteraction<'cached'>;
 
-    const name = member?.displayName || user.username;
+    const name = member?.displayName ?? user.username;
 
     const subcommand = options.getSubcommand();
 
@@ -110,7 +110,7 @@ export default class Jankenpon extends SlashCommand {
   async spock(interaction: CommandInteraction) {
     const { locale, member, options, user } = interaction as CommandInteraction<'cached'>;
 
-    const name = member?.displayName || user.username;
+    const name = member?.displayName ?? user.username;
 
     const subcommand = options.getSubcommand();
 

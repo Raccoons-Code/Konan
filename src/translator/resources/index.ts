@@ -12,7 +12,7 @@ for (let i = 0; i < langs.length; i++) {
   const { found } = new GlobSync(`${__dirname}/${lang}/translation*.json`);
 
   translations[lang] = found.reduce((acc: any, value) => {
-    const [, matched] = value.match(RegExp(`(?:(?!${lang})/${lang}/(.+)\\.json)$`)) || [];
+    const [, matched] = value.match(RegExp(`(?:(?!${lang})/${lang}/(.+)\\.json)$`)) ?? [];
 
     const key = matched.split('.').pop() as string;
 

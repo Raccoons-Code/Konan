@@ -42,7 +42,7 @@ export default class Translate extends SlashCommand {
 
     const cache = this.util.isJSON(text) ? this.cache.get(text) : text;
 
-    const translation = await translate(cache || text, { from, to });
+    const translation = await translate(cache ?? text, { from, to });
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')

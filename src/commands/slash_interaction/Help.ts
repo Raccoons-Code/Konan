@@ -28,7 +28,7 @@ export default class Help extends SlashCommand {
 
     if (commandName) return await this.executeCommand(interaction, commandName);
 
-    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ||
+    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ??
       client.user?.displayAvatarURL({ dynamic: true }) as string;
 
     const embeds = [new MessageEmbed()

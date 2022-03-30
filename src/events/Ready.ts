@@ -50,11 +50,11 @@ export default class Ready extends Event {
 
     client.user?.setPresence({
       activities: [
-        { name: `${client.stats.members || 'Fetching'} members`, type: 'WATCHING' },
+        { name: `${client.stats.members ?? 'Fetching'} members`, type: 'WATCHING' },
         { name: 'Cat Vibing Meme', type: 'STREAMING', url: `${ytURL}NUYvbT6vTPs` },
-        { name: `${client.stats.guilds || 'Fetching'} servers`, type: 'PLAYING' },
+        { name: `${client.stats.guilds ?? 'Fetching'} servers`, type: 'PLAYING' },
         { name: 'Wide Putin Walking', type: 'STREAMING', url: `${ytURL}SLU3oG_ePhM` },
-        { name: `${client.stats.channels || 'Fetching'} channels`, type: 'LISTENING' },
+        { name: `${client.stats.channels ?? 'Fetching'} channels`, type: 'LISTENING' },
         { name: 'Noisestorm - Crab Rave', type: 'STREAMING', url: `${ytURL}LDU_Txk06tM` },
         { name: 'National Anthem of USSR', type: 'STREAMING', url: `${ytURL}U06jlgpMtQs` },
         { name: 'Rick Astley - Never Gonna Give You Up', type: 'STREAMING', url: `${ytURL}dQw4w9WgXcQ` },

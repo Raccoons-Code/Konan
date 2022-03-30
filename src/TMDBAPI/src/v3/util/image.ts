@@ -5,7 +5,7 @@ export default class Image {
   baseURL: string;
 
   constructor(options: UtilOptions) {
-    this.apiKey = process.env.TMDB_APIKEY || options.apiKey;
+    this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
     this.baseURL = 'https://image.tmdb.org/t/p';
   }
 

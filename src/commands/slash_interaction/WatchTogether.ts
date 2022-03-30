@@ -46,7 +46,7 @@ export default class WatchTogether extends SlashCommand {
 
     const { client, member, options } = interaction;
 
-    const channel = options.getChannel('channel') || member.voice.channel;
+    const channel = options.getChannel('channel') ?? member.voice.channel;
 
     if (!channel || channel.type !== 'GUILD_VOICE')
       return await interaction.reply({
@@ -55,7 +55,7 @@ export default class WatchTogether extends SlashCommand {
       });
 
     const clientPermissions = channel.permissionsFor(client.user as User)
-      ?.missing(this.props?.clientPermissions as PermissionString[]) || [];
+      ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
       return await interaction.reply({

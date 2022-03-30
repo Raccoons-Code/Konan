@@ -15,7 +15,7 @@ const Choices = new class {
   }
 
   getChoices() {
-    return this._choices || this.setChoices();
+    return this._choices ?? this.setChoices();
   }
 
   getRandom() {
@@ -52,7 +52,7 @@ export default class Random extends SlashCommand {
     const { channel, client, locale, options } = interaction as CommandInteraction<'cached'>;
 
     const clientPermissions = channel?.permissionsFor(client.user?.id as any)
-      ?.missing(this.props?.clientPermissions as PermissionString[]) || [];
+      ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
       return await interaction.reply({
@@ -64,7 +64,7 @@ export default class Random extends SlashCommand {
 
     const string = options.getString('type');
 
-    await this[`execute${string || Choices.getRandom()}`]?.(interaction);
+    await this[`execute${string ?? Choices.getRandom()}`]?.(interaction);
   }
 
   async executecat(interaction: CommandInteraction) {

@@ -22,15 +22,15 @@ export default class Echo extends SlashCommand {
 
     const content = options.getString('message', true);
 
-    const avatarURL = member?.displayAvatarURL({ dynamic }) || user.displayAvatarURL({ dynamic });
+    const avatarURL = member?.displayAvatarURL({ dynamic }) ?? user.displayAvatarURL({ dynamic });
 
-    const username = member?.displayName || user.username;
+    const username = member?.displayName ?? user.username;
 
     if (!channel?.permissionsFor(client.user as User)?.has(this.props?.clientPermissions as PermissionString[])) {
-      const [, title, description] = content.match(this.pattern.embed) || [];
+      const [, title, description] = content.match(this.pattern.embed) ?? [];
 
       const embeds = [new MessageEmbed()
-        .setColor(member?.displayColor || 'RANDOM')
+        .setColor(member?.displayColor ?? 'RANDOM')
         .setFooter({ text: username, iconURL: avatarURL })
         .setTimestamp(Date.now())
         .setTitle(title)
@@ -40,7 +40,7 @@ export default class Echo extends SlashCommand {
     }
 
     const webhook = await (channel as TextChannel).fetchWebhooks()
-      .then(w => w.find(v => v.name === client.user?.id)) ||
+      .then(w => w.find(v => v.name === client.user?.id)) ??
       await (channel as TextChannel).createWebhook(client.user?.id as string);
 
     await webhook.send({ avatarURL, content, username });

@@ -30,7 +30,7 @@ export default class Unban extends SlashCommand {
 
     const { guild, memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]) || [];
+    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -42,7 +42,7 @@ export default class Unban extends SlashCommand {
     }
 
     const clientPermissions =
-      guild.me?.permissions.missing(this.props?.clientPermissions as PermissionString[]) || [];
+      guild.me?.permissions.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -65,7 +65,7 @@ export default class Unban extends SlashCommand {
     if (!ban)
       return await interaction.editReply(this.t('ban404', { locale }));
 
-    const reason = options.getString('reason') || undefined;
+    const reason = options.getString('reason') ?? undefined;
 
     try {
       await guild.members.unban(id, reason);

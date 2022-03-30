@@ -16,7 +16,7 @@ export default class MessageCreate extends Event {
     if (author.bot) return;
 
     const { commands, user } = client as Client;
-    const botRole = guild?.me?.roles.botRole || user;
+    const botRole = guild?.me?.roles.botRole ?? user;
     const pattern = RegExp(`^\\s*<@!?&?(?:${user?.id}|${botRole?.id})>([\\w\\W]*)$`);
     const matched = content.match(pattern);
 
@@ -24,7 +24,7 @@ export default class MessageCreate extends Event {
 
     message.args = matched[1].trim().split(/\s+/g);
 
-    const commandName = message.commandName = message.args.shift() || 'help';
+    const commandName = message.commandName = message.args.shift() ?? 'help';
 
     const command = commands.message_command?.get(commandName) as Command;
 

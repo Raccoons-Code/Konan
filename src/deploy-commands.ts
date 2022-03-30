@@ -13,7 +13,7 @@ const reset = false;
 if (!CLIENT_ID || !DISCORD_TOKEN)
   throw Error(`Missing required params:${CLIENT_ID ? '' : ' CLIENT_ID'}${DISCORD_TOKEN ? '' : ' DISCORD_TOKEN'}`);
 
-const guilds = GUILD_ID?.split(',');
+const guilds = GUILD_ID?.split(',') ?? [];
 
 const data = [];
 const data_private: any[] = [];
@@ -50,7 +50,7 @@ const rest = new REST().setToken(DISCORD_TOKEN);
     if (GLOBAL) {
       await rest.put(Routes.applicationCommands(CLIENT_ID), { body: data });
 
-      for (let i = 0; i < guilds?.length; i++) {
+      for (let i = 0; i < guilds.length; i++) {
         const id = guilds[i];
 
         const guild_commands = await rest.get(Routes.applicationGuildCommands(CLIENT_ID, id)) as any[];

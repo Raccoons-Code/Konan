@@ -21,7 +21,7 @@ class Events {
   }
 
   get events(): Event[] {
-    return this._events || this.getEvents();
+    return this._events ?? this.getEvents();
   }
 
   set events(value) {
@@ -36,7 +36,7 @@ class Events {
     for (let i = 0; i < this.eventFiles.length; i++) {
       const eventFile = await import(`${this.eventFiles[i]}`);
 
-      const event = new (eventFile.default || eventFile)() as Event;
+      const event = new (eventFile.default ?? eventFile)() as Event;
 
       events.push(event);
     }
@@ -52,9 +52,9 @@ class Events {
     for (let i = 0; i < this.eventFiles.length; i++) {
       const eventFile = await import(`${this.eventFiles[i]}`);
 
-      const event = new (eventFile.default || eventFile)(client) as Event;
+      const event = new (eventFile.default ?? eventFile)(client) as Event;
 
-      client[event.data.listener || 'on']?.(event.data.name, (...args: any) => event.execute(...args));
+      client[event.data.listener ?? 'on']?.(event.data.name, (...args: any) => event.execute(...args));
     }
   }
 

@@ -35,7 +35,7 @@ export default class InteractionCreate extends Event {
         .setColor('DARK_RED')
         .setTitle(this.t('There was an error while executing this command!', { locale }))
         .setDescription(codeBlock('properties', `${error.name}: ${error.message}`))
-        .setFooter({ text: command.data?.name || '-' })
+        .setFooter({ text: command.data?.name ?? '-' })
         .setTimestamp(Date.now())];
 
       const components: MessageActionRow[] = [];
@@ -73,7 +73,7 @@ export default class InteractionCreate extends Event {
 
   BUTTON(interaction: ButtonInteraction & { client: Client }): ButtonComponentInteraction {
     const { c, command } = JSON.parse(interaction.customId);
-    return interaction.client.commands.button_component?.get(c || command);
+    return interaction.client.commands.button_component?.get(c ?? command);
   }
 
   CHAT_INPUT(interaction: CommandInteraction & { client: Client }): SlashCommand | undefined {
@@ -86,7 +86,7 @@ export default class InteractionCreate extends Event {
 
   SELECT_MENU(interaction: SelectMenuInteraction & { client: Client }): SelectMenuComponentInteraction {
     const { c, command } = JSON.parse(interaction.customId);
-    return interaction.client.commands.selectmenu_component?.get(c || command);
+    return interaction.client.commands.selectmenu_component?.get(c ?? command);
   }
 
   USER(interaction: UserContextMenuInteraction & { client: Client }): UserContextMenu {

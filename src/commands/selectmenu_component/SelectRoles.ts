@@ -65,7 +65,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
         roleId,
       };
 
-      const [, label] = option.label.match(this.pattern.labelWithCount) || [];
+      const [, label] = option.label.match(this.pattern.labelWithCount) ?? [];
 
       option.label = [label, newValue.count].join(' ').trim();
 

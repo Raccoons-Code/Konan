@@ -130,7 +130,7 @@ export default class ButtonRoles extends SlashCommand {
       return await interaction.editReply(this.t('onlyOnServer', { locale }));
     }
 
-    const userPermissions = memberPermissions?.missing(this.props?.userPermissions as PermissionString[]) || [];
+    const userPermissions = memberPermissions?.missing(this.props?.userPermissions as PermissionString[]) ?? [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -141,7 +141,7 @@ export default class ButtonRoles extends SlashCommand {
       });
     }
 
-    const subcommand = (options.getSubcommandGroup(false) || options.getSubcommand()) as 'edit';
+    const subcommand = (options.getSubcommandGroup(false) ?? options.getSubcommand()) as 'edit';
 
     if (interaction.isAutocomplete())
       return await this[`${subcommand}Autocomplete`]?.(interaction);
@@ -154,13 +154,13 @@ export default class ButtonRoles extends SlashCommand {
   async setup(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
-    const [, title, description] = options.getString('text')?.match(this.pattern.embed) || [];
+    const [, title, description] = options.getString('text')?.match(this.pattern.embed) ?? [];
     const button_emoji = options.getString('button_emoji');
     const button_disabled = options.getBoolean('button_disabled') as boolean;
-    const button_style = (options.getString('button_style') || 'PRIMARY') as MessageButtonStyleResolvable;
-    const channel = (options.getChannel('channel') || interaction.channel) as TextChannel;
+    const button_style = (options.getString('button_style') ?? 'PRIMARY') as MessageButtonStyleResolvable;
+    const channel = (options.getChannel('channel') ?? interaction.channel) as TextChannel;
     const role = options.getRole('role', true);
-    const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1] || role.name;
+    const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1] ?? role.name;
 
     const emoji = (button_emoji ? Util.resolvePartialEmoji(button_emoji) : null) as EmojiIdentifierResolvable;
 
@@ -206,7 +206,7 @@ export default class ButtonRoles extends SlashCommand {
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'message') {
-      const [, title, description] = options.getString('text', true).match(this.pattern.embed) || [];
+      const [, title, description] = options.getString('text', true).match(this.pattern.embed) ?? [];
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
@@ -248,11 +248,11 @@ export default class ButtonRoles extends SlashCommand {
 
           const { c, count, d, roleId } = JSON.parse(button.customId) as ButtonRolesCustomId;
 
-          button.setCustomId(JSON.stringify({ c, count, d, roleId: role?.id || roleId }))
+          button.setCustomId(JSON.stringify({ c, count, d, roleId: role?.id ?? roleId }))
             .setDisabled(typeof button_disabled === 'boolean' ? button_disabled : button.disabled)
-            .setEmoji((emoji || button.emoji) as EmojiIdentifierResolvable)
+            .setEmoji((emoji ?? button.emoji) as EmojiIdentifierResolvable)
             .setLabel(button_name ? `${button_name} ${count}` : `${button.label}`)
-            .setStyle((button_style || button.style) as MessageButtonStyleResolvable);
+            .setStyle((button_style ?? button.style) as MessageButtonStyleResolvable);
 
           return button;
         });
@@ -296,8 +296,8 @@ export default class ButtonRoles extends SlashCommand {
     if (subcommand === 'button') {
       const button_disabled = options.getBoolean('button_disabled') as boolean;
       const button_emoji = options.getString('button_emoji');
-      const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1] || role.name;
-      const button_style = (options.getString('button_style') || 'PRIMARY') as MessageButtonStyleResolvable;
+      const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1] ?? role.name;
+      const button_style = (options.getString('button_style') ?? 'PRIMARY') as MessageButtonStyleResolvable;
 
       const emoji = (button_emoji ? Util.resolvePartialEmoji(button_emoji) : null) as EmojiIdentifierResolvable;
 

@@ -200,7 +200,7 @@ export default class SelectRoles extends SlashCommand {
 
     const { memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]) || [];
+    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -211,7 +211,7 @@ export default class SelectRoles extends SlashCommand {
       });
     }
 
-    const subcommand = (options.getSubcommandGroup(false) || options.getSubcommand()) as 'edit';
+    const subcommand = (options.getSubcommandGroup(false) ?? options.getSubcommand()) as 'edit';
 
     if (interaction.isAutocomplete())
       return await this[`${subcommand}Autocomplete`]?.(interaction);
@@ -224,14 +224,14 @@ export default class SelectRoles extends SlashCommand {
   async setup(interaction: CommandInteraction) {
     const { locale, options } = interaction;
 
-    const [, title, embed_description] = options.getString('text')?.match(this.pattern.embed) || [];
-    const channel = (options.getChannel('channel') || interaction.channel) as TextChannel;
+    const [, title, embed_description] = options.getString('text')?.match(this.pattern.embed) ?? [];
+    const channel = (options.getChannel('channel') ?? interaction.channel) as TextChannel;
     const description = options.getString('item_description')?.match(this.pattern.label)?.[1];
     const emoji = options.getString('item_emoji') as EmojiIdentifierResolvable;
     const menu_disabled = options.getBoolean('menu_disabled') as boolean;
-    const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] || '';
+    const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] ?? '';
     const role = options.getRole('role', true);
-    const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1] || role.name;
+    const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1] ?? role.name;
 
     const selectMenu = new MessageSelectMenu()
       .setCustomId(JSON.stringify({
@@ -283,7 +283,7 @@ export default class SelectRoles extends SlashCommand {
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'message') {
-      const [, title, description] = options.getString('text', true).match(this.pattern.embed) || [];
+      const [, title, description] = options.getString('text', true).match(this.pattern.embed) ?? [];
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
@@ -314,7 +314,7 @@ export default class SelectRoles extends SlashCommand {
           const { disabled, placeholder } = selectmenu;
 
           selectmenu.setDisabled(typeof menu_disabled === 'boolean' ? menu_disabled : disabled)
-            .setPlaceholder((menu_place_holder || placeholder) as string);
+            .setPlaceholder((menu_place_holder ?? placeholder) as string);
 
           return selectmenu;
         });
@@ -405,13 +405,13 @@ export default class SelectRoles extends SlashCommand {
 
     const description = options.getString('item_description')?.match(this.pattern.label)?.[1];
     const emoji = options.getString('item_emoji') as EmojiIdentifierResolvable;
-    const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1] || role.name;
+    const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1] ?? role.name;
 
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'menu') {
       const menu_disabled = options.getBoolean('menu_disabled') as boolean;
-      const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] || '';
+      const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] ?? '';
 
       const selectMenu = new MessageSelectMenu()
         .setCustomId(JSON.stringify({

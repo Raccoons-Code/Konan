@@ -30,13 +30,13 @@ export default class Interpolator {
               for (let i = 0; i < options[cv].length; i++) {
                 const v = options[cv][i] as any;
 
-                options[cv][i] = ca[v] || idjsn.t(cv)[v] || v;
+                options[cv][i] = ca[v] ?? idjsn.t(cv)[v] ?? v;
               }
 
               return [...pv, ...options[cv]];
             }
 
-            return options[cv] || pv[cv] || cv || [...pv, cv];
+            return options[cv] ?? pv[cv] ?? cv ?? [...pv, cv];
           }, [])];
       }, []).join('');
 

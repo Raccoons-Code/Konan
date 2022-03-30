@@ -31,23 +31,23 @@ export default class Clear extends SlashCommand {
 
     const { client, member, options } = interaction;
 
-    const channel = (options.getChannel('channel') || interaction.channel) as TextChannel;
+    const channel = (options.getChannel('channel') ?? interaction.channel) as TextChannel;
 
     const userPermissions =
-      channel.permissionsFor(member).missing(this.props?.userPermissions as PermissionString[]) || [];
+      channel.permissionsFor(member).missing(this.props?.userPermissions as PermissionString[]) ?? [];
 
     if (userPermissions.length)
       return await interaction.editReply(this.t('missingUserChannelPermission',
         { locale, PERMISSIONS: userPermissions }));
 
     const clientPermissions = channel.permissionsFor(client.user as User)
-      ?.missing(this.props?.clientPermissions as PermissionString[]) || [];
+      ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
       return await interaction.editReply(this.t('missingChannelPermission',
         { locale, PERMISSIONS: clientPermissions }));
 
-    const limit = options.getInteger('amount') as number;
+    const limit = options.getInteger('amount', true);
 
     try {
       const size = await this.bulkDelete(channel, limit);

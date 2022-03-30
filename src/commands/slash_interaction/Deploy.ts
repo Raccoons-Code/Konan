@@ -27,7 +27,7 @@ export default class extends SlashCommand {
   async execute(interaction: CommandInteraction) {
     const { client, locale, options, user } = interaction;
 
-    const guilds = GUILD_ID?.split(',');
+    const guilds = GUILD_ID?.split(',') ?? [];
     const owners = OWNER_ID?.split(',');
 
     if (!owners?.includes(user.id)) return;
@@ -59,14 +59,14 @@ export default class extends SlashCommand {
         continue;
       }
 
-      reset || data.push(command_data);
+      reset ?? data.push(command_data);
     }
 
     try {
       if (type === 'global')
         await client.application?.commands.set(data);
 
-      for (let i = 0; i < guilds?.length; i++) {
+      for (let i = 0; i < guilds.length; i++) {
         const id = guilds[i];
 
         const guild = await client.guilds.fetch(id);

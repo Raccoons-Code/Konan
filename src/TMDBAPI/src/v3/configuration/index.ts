@@ -12,7 +12,7 @@ export default class Configuration {
   timezones!: Timezones;
 
   constructor(options: ConfigurationOpitons) {
-    this.apiKey = process.env.TMDB_APIKEY || options.apiKey;
+    this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
     this.baseURL = `${options.baseURL}/configuration`;
 
     this.fetchConfiguration();
@@ -23,7 +23,7 @@ export default class Configuration {
 
     const lang = this.languages?.find(language => language.iso_639_1 === original_language);
 
-    let language = lang?.name || lang?.english_name || lang?.iso_639_1 || original_language;
+    let language = lang?.name ?? lang?.english_name ?? lang?.iso_639_1 ?? original_language;
 
     language = original_language !== 'en' ? lang?.name ?
       `${language} (${lang?.english_name})` : language : language;

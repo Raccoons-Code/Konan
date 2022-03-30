@@ -51,8 +51,8 @@ export default class Movies extends ButtonComponentInteraction {
   }
 
   getPage(raw_page = 1) {
-    const page = Math.round((raw_page || 1) / 2) || 1;
-    const offset = ((raw_page || 1) % 2) ? 0 : 1;
+    const page = Math.round((raw_page ?? 1) / 2) ?? 1;
+    const offset = ((raw_page ?? 1) % 2) ? 0 : 1;
     return { offset, page };
   }
 
@@ -81,14 +81,14 @@ export default class Movies extends ButtonComponentInteraction {
         .setColor('RANDOM')
         .setDescription(overview)
         .setFields([
-          { name: 'Release date', value: release_date || '-', inline: true },
-          { name: 'Average of votes', value: `${vote_average || '0'}`, inline: true },
-          { name: 'Count of votes', value: `${vote_count || '0'}`, inline: true },
-          { name: 'Original language', value: lang || '-', inline: true },
+          { name: 'Release date', value: release_date ?? '-', inline: true },
+          { name: 'Average of votes', value: `${vote_average ?? '0'}`, inline: true },
+          { name: 'Count of votes', value: `${vote_count ?? '0'}`, inline: true },
+          { name: 'Original language', value: lang ?? '-', inline: true },
         ])
         .setImage(backdrop_img)
         .setThumbnail(poster_img)
-        .setTitle(title || original_title)
+        .setTitle(title ?? original_title)
         .setURL(movie_url),
       );
     }

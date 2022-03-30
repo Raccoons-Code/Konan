@@ -45,7 +45,7 @@ export default class Movies extends SlashCommand {
   async list(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
-    const raw_page = options.getInteger('page') || 1;
+    const raw_page = options.getInteger('page') ?? 1;
     const { offset, page } = this.getPage(raw_page);
 
     const { results } = await discover.fetchMovies({
@@ -102,17 +102,17 @@ export default class Movies extends SlashCommand {
       .setColor('RANDOM')
       .setDescription(overview)
       .setFields([
-        { name: 'Release date', value: release_date || '-', inline: true },
-        { name: 'Average of votes', value: `${vote_average || '0'}`, inline: true },
-        { name: 'Count of votes', value: `${vote_count || '0'}`, inline: true },
-        { name: 'Original language', value: lang || '-', inline: true },
-        { name: 'Budget', value: `$${budget || '0'},00`, inline: true },
-        { name: 'Revenue', value: `$${revenue || '0'},00`, inline: true },
-        { name: 'Runtime', value: `${ms((runtime || 0) * 60000)}`, inline: true },
+        { name: 'Release date', value: release_date ?? '-', inline: true },
+        { name: 'Average of votes', value: `${vote_average ?? '0'}`, inline: true },
+        { name: 'Count of votes', value: `${vote_count ?? '0'}`, inline: true },
+        { name: 'Original language', value: lang ?? '-', inline: true },
+        { name: 'Budget', value: `$${budget ?? '0'},00`, inline: true },
+        { name: 'Revenue', value: `$${revenue ?? '0'},00`, inline: true },
+        { name: 'Runtime', value: `${ms((runtime ?? 0) * 60000)}`, inline: true },
       ])
       .setImage(backdrop_img)
       .setThumbnail(poster_img)
-      .setTitle(title || original_title)
+      .setTitle(title ?? original_title)
       .setURL(movie_url)];
 
     await interaction.editReply({ embeds });
@@ -187,7 +187,7 @@ export default class Movies extends SlashCommand {
         ])
         .setImage(backdrop_img)
         .setThumbnail(poster_img)
-        .setTitle(title || original_title)
+        .setTitle(title ?? original_title)
         .setURL(movie_url),
       );
     }

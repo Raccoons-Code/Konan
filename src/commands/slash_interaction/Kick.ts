@@ -37,7 +37,7 @@ export default class Kick extends SlashCommand {
       }));
 
     const clientPermissions =
-      guild.me?.permissions.missing(this.props?.userPermissions as PermissionString[]) || [];
+      guild.me?.permissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
       return await interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
@@ -47,7 +47,7 @@ export default class Kick extends SlashCommand {
     if (!member.kickable)
       return await interaction.editReply(this.t('kickHierarchyError', { locale }));
 
-    const reason = options.getString('reason') || undefined;
+    const reason = options.getString('reason') ?? undefined;
 
     try {
       await guild.members.kick(member, reason);

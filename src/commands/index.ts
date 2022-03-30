@@ -67,7 +67,7 @@ class Commands {
       for (let j = 0; j < found.length; j++) {
         const importedFile = await import(`${found[j]}`);
 
-        const commandFile = importedFile.default || importedFile;
+        const commandFile = importedFile.default ?? importedFile;
 
         const command = this.isClass(commandFile) ? new commandFile(client) : commandFile;
 

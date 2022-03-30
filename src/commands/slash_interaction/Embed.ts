@@ -54,7 +54,7 @@ export default class Embed extends SlashCommand {
 
     const { memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]) || [];
+    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -65,7 +65,7 @@ export default class Embed extends SlashCommand {
       });
     }
 
-    const subcommand = (options.getSubcommandGroup(false) || options.getSubcommand()) as 'edit';
+    const subcommand = (options.getSubcommandGroup(false) ?? options.getSubcommand()) as 'edit';
 
     if (interaction.isAutocomplete())
       return await this[`${subcommand}Autocomplete`]?.(interaction);
@@ -78,13 +78,13 @@ export default class Embed extends SlashCommand {
   async send(interaction: CommandInteraction<'cached'>) {
     const { client, locale, member, options } = interaction;
 
-    const channel = (options.getChannel('channel') || interaction.channel) as TextChannel;
-    const [, content] = options.getString('content')?.match(this.pattern.content) || [];
-    const [, title, description] = options.getString('embed')?.match(this.pattern.embed) || [];
+    const channel = (options.getChannel('channel') ?? interaction.channel) as TextChannel;
+    const [, content] = options.getString('content')?.match(this.pattern.content) ?? [];
+    const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
     const image_url = options.getString('image_url') as string;
 
     const clientPermissions = channel?.permissionsFor(client.user as User)
-      ?.missing(this.props?.clientPermissions as PermissionString[]) || [];
+      ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
       return await interaction.editReply(this.t('missingChannelPermission',
@@ -124,8 +124,8 @@ export default class Embed extends SlashCommand {
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'embed') {
-      const [, title, description] = options.getString('embed')?.match(this.pattern.embed) || [];
-      const [, content] = options.getString('content')?.match(this.pattern.content) || [];
+      const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
+      const [, content] = options.getString('content')?.match(this.pattern.content) ?? [];
       const image_url = options.getString('image_url') as string;
 
       const embeds = [new MessageEmbed()

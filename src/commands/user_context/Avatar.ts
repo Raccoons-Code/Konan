@@ -19,14 +19,14 @@ export default class Avatar extends UserContextMenu {
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
       .setDescription(`${user}`)
-      .setImage((member?.displayAvatarURL({ dynamic: true, size: 512 }) ||
+      .setImage((member?.displayAvatarURL({ dynamic: true, size: 512 }) ??
         user?.displayAvatarURL({ dynamic: true, size: 512 })) as string)];
 
     const button = new MessageButton()
       .setStyle('LINK')
       .setLabel('Link')
       .setEmoji('🖼')
-      .setURL((member?.displayAvatarURL({ dynamic: true, size: 4096 }) ||
+      .setURL((member?.displayAvatarURL({ dynamic: true, size: 4096 }) ??
         user?.displayAvatarURL({ dynamic: true, size: 4096 })) as string);
 
     const components = [new MessageActionRow().setComponents(button)];

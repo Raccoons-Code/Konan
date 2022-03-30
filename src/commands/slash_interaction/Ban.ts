@@ -43,7 +43,7 @@ export default class Ban extends SlashCommand {
       }));
 
     const clientPermissions =
-      guild.me?.permissions.missing(this.props?.userPermissions as PermissionString[]) || [];
+      guild.me?.permissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
       return await interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
@@ -53,9 +53,9 @@ export default class Ban extends SlashCommand {
     if (!member.bannable)
       return await interaction.editReply(this.t('banHierarchyError', { locale }));
 
-    const days = options.getInteger('delete_messages') || 0;
+    const days = options.getInteger('delete_messages') ?? 0;
 
-    const reason = options.getString('reason') || undefined;
+    const reason = options.getString('reason') ?? undefined;
 
     try {
       await guild.members.ban(member, { days, reason });

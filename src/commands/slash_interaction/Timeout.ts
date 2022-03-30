@@ -49,14 +49,14 @@ export default class Timeout extends SlashCommand {
       }));
 
     const clientPermissions =
-      guild.me?.permissions.missing(this.props?.userPermissions as PermissionString[]) || [];
+      guild.me?.permissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
       return await interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
 
     const member = options.getMember('user', true) as GuildMember;
-    const timeout = options.getInteger('time') || null;
-    const reason = options.getString('reason') || undefined;
+    const timeout = options.getInteger('time', true);
+    const reason = options.getString('reason') ?? undefined;
 
     try {
       await member.timeout(timeout, reason);

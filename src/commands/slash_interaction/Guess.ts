@@ -41,7 +41,7 @@ export default class extends SlashCommand {
         .setDescription(this.t('numberCorrect', { locale, author, number }))
         .addFields({
           name: `${this.t('previousGuesses', { locale })} ${user?.length + 1}/10`,
-          value: `${user?.join(' ').trim() || '-'}`,
+          value: `${user?.join(' ').trim() ?? '-'}`,
         });
 
       db.delete(`${guildId}.${author.id}.guess`);
@@ -60,7 +60,7 @@ export default class extends SlashCommand {
 
       embeds[0].addFields({
         name: `${this.t('previousGuesses', { locale })} ${user?.length}/10`,
-        value: `${user?.join(' ').trim() || '-'}`,
+        value: `${user?.join(' ').trim() ?? '-'}`,
       });
 
       return await interaction.editReply({ embeds });
@@ -84,7 +84,7 @@ export default class extends SlashCommand {
         .setDescription(`${this.t('numberSmaller', { locale, author, number })} :arrow_down_small:`)
         .addFields({
           name: `${this.t('previousGuesses', { locale })} ${user?.length + 1}/10`,
-          value: `${user?.join(' ').trim() || '-'}`,
+          value: `${user?.join(' ').trim() ?? '-'}`,
         });
 
     if (number > value)
@@ -92,7 +92,7 @@ export default class extends SlashCommand {
         .setDescription(`${this.t('numberGreater', { locale, author, number })} :arrow_up_small:`)
         .addFields({
           name: `${this.t('previousGuesses', { locale })} ${user?.length + 1}/10`,
-          value: `${user?.join(' ').trim() || '-'}`,
+          value: `${user?.join(' ').trim() ?? '-'}`,
         });
 
     user.push(number);

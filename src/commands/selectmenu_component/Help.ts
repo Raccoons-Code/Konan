@@ -23,7 +23,7 @@ export default class Help extends SelectMenuComponentInteraction {
   async home(interaction: SelectMenuInteraction) {
     const { client, guild, locale, user } = interaction as SelectMenuInteraction<'cached'>;
 
-    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ||
+    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ??
       client.user?.displayAvatarURL({ dynamic: true }) as string;
 
     const embeds = [new MessageEmbed()

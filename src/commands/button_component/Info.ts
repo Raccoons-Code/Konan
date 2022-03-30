@@ -31,22 +31,22 @@ export default class Info extends ButtonComponentInteraction {
 
     const { channels, guilds, readyAt, user, users, ws } = client;
 
-    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) || user?.displayAvatarURL({ dynamic: true });
+    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ?? user?.displayAvatarURL({ dynamic: true });
 
-    const username = guild?.me?.displayName || user?.username as string;
+    const username = guild?.me?.displayName ?? user?.username as string;
 
     const newStats = await this.client.fetchStats();
 
     const stats = stripIndents(`
-      Servers  : ${newStats.guilds || guilds.cache.size}
-      Channels : ${newStats.channels || channels.cache.size}
-      Members  : ${newStats.members || users.cache.size}
+      Servers  : ${newStats.guilds ?? guilds.cache.size}
+      Channels : ${newStats.channels ?? channels.cache.size}
+      Members  : ${newStats.members ?? users.cache.size}
       Ping     : ${ws.ping} ms
       Version  : ${npm_package_version}
       `);
 
     const library = stripIndents(`
-      Discord.js : ${(npm_package_dependencies_discord_js || discordjs_version).match(/(?:\D*)([\d\D]+)/)?.[1]}
+      Discord.js : ${(npm_package_dependencies_discord_js ?? discordjs_version).match(/(?:\D*)([\d\D]+)/)?.[1]}
       `);
 
     const engine = stripIndents(`

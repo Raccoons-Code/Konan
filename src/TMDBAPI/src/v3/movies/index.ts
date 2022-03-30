@@ -7,9 +7,9 @@ export default class Movies {
   language: string;
 
   constructor(options: MoviesOptions) {
-    this.apiKey = process.env.TMDB_APIKEY || options.apiKey;
+    this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
     this.baseURL = `${options.baseURL}/movie`;
-    this.language = options.language || 'en-US';
+    this.language = options.language ?? 'en-US';
   }
 
   async fetchDetails(props: SearchDetailsOptions): Promise<Movie> {

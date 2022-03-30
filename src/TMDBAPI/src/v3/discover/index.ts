@@ -12,14 +12,14 @@ export default class Discover {
   with_watch_monetization_types: DiscoverMovieOptions['with_watch_monetization_types'];
 
   constructor(options: DiscoverOptions) {
-    this.apiKey = process.env.TMDB_APIKEY || options.apiKey;
+    this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
     this.baseURL = `${options.baseURL}/discover`;
-    this.include_adult = options.include_adult || false;
-    this.include_video = options.include_video || false;
-    this.language = options.language || 'en-US';
-    this.page = options.page || 1;
-    this.sort_by = options.sort_by || 'popularity.desc';
-    this.with_watch_monetization_types = options.with_watch_monetization_types || 'flatrate';
+    this.include_adult = options.include_adult ?? false;
+    this.include_video = options.include_video ?? false;
+    this.language = options.language ?? 'en-US';
+    this.page = options.page ?? 1;
+    this.sort_by = options.sort_by ?? 'popularity.desc';
+    this.with_watch_monetization_types = options.with_watch_monetization_types ?? 'flatrate';
   }
 
   async fetchMovies(props: DiscoverMovieOptions = {}): Promise<SearchMoviesData> {

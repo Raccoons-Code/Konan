@@ -12,9 +12,6 @@ declare namespace NodeJS {
     GUILD_INVITE?: string
     OWNER_ID?: string
     PAYPAL_DONATE_LINK?: string
-    TEAM?: string
-    TEAM_CHANNEL?: string
-    TEAM_WEBHOOK?: string
     TMDB_APIKEY?: string
     TOPGG_TOKEN?: string
   }

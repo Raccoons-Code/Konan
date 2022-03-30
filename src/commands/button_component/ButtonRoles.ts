@@ -45,7 +45,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
 
     component.setCustomId(JSON.stringify(newCustomId));
 
-    const [, label] = component.label?.match(this.pattern.labelWithCount) || [];
+    const [, label] = component.label?.match(this.pattern.labelWithCount) ?? [];
 
     component.setLabel([label, newCustomId.count].join(' ').trim());
 

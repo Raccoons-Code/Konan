@@ -15,19 +15,19 @@ export default class Avatar extends SlashCommand {
   async execute(interaction: CommandInteraction) {
     const { options } = interaction;
 
-    const user = options.getUser('user') || interaction.user;
-    const member = (options.getMember('user') || interaction.member) as GuildMember;
+    const user = options.getUser('user') ?? interaction.user;
+    const member = (options.getMember('user') ?? interaction.member) as GuildMember;
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(`${member || user}`)
-      .setImage(member?.displayAvatarURL({ dynamic: true, size: 512 }) ||
+      .setDescription(`${member ?? user}`)
+      .setImage(member?.displayAvatarURL({ dynamic: true, size: 512 }) ??
         user.displayAvatarURL({ dynamic: true, size: 512 }))];
 
     const button = new MessageButton()
       .setLabel('Link')
       .setStyle('LINK')
-      .setURL(member?.displayAvatarURL({ dynamic: true, size: 4096 }) ||
+      .setURL(member?.displayAvatarURL({ dynamic: true, size: 4096 }) ??
         user.displayAvatarURL({ dynamic: true, size: 4096 }));
 
     const components = [new MessageActionRow().setComponents(button)];

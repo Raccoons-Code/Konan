@@ -8,7 +8,7 @@ export default class Restore {
   private data!: Partial<BackupData>;
 
   constructor(backup: any, options: any) {
-    this.backup = backup?.data || backup;
+    this.backup = backup?.data ?? backup;
     this.options = options;
   }
 

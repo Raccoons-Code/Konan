@@ -12,8 +12,8 @@ const { env } = process;
 const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
 
 export default class Client extends DJS.Client {
-  applicationCommandTypes!: string[];
-  commandTypes!: { [k: string]: string[] } | string[];
+  applicationCommandTypes: string[] = commands.applicationCommandTypes;
+  commandTypes: { [k: string]: string[] } | string[] = commands.commandTypes;
   commands!: { [k: string]: Collection<string, any> };
 
   pattern!: typeof util['pattern'];
@@ -37,16 +37,12 @@ export default class Client extends DJS.Client {
     });
   }
 
-  async login(token = this.token || undefined) {
+  async login(token = this.token ?? undefined) {
     process.on('unhandledRejection', this.sendError);
 
     commands.init(this);
 
     events.init(this);
-
-    this.applicationCommandTypes = commands.applicationCommandTypes;
-
-    this.commandTypes = commands.commandTypes;
 
     this.commands = await commands.loadCommands();
 

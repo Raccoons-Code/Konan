@@ -27,15 +27,15 @@ export default class UserInfo extends UserContextMenu {
       )
       .setFooter({ text: this.t(member ? 'joinedTheServerAt' : 'creationDate', { locale }) })
       .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-      .setTimestamp(member?.joinedTimestamp || createdAt)];
+      .setTimestamp(member?.joinedTimestamp ?? createdAt)];
 
     if (member) {
       const { avatar, displayColor, permissions, roles } = member;
 
       const arrayRoles = roles.cache.map(role => role);
-      const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') || '-';
+      const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') ?? '-';
       const arrayPerms = permissions.toArray();
-      const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
+      const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') ?? '-';
 
       embeds[0].addFields(
         { name: this.t('role', { locale }), value: `${roles.highest}`, inline: true },
