@@ -22,6 +22,6 @@ export = new class pattern {
   listeners = /(on(?:ce)?)/;
   /** @pattern /<@!?&?(\d{17,})>/g */
   mentions = /<@!?&?(\d{17,})>/g;
-  /** @pattern /(?:(?:\/)?(\d+))+/ */
-  messageURL = /(?:(?:\/)?(\d+))+/;
+  /** @pattern /(?:(?:\/)?(\d{17,}))+/ */
+  messageURL = /(?:(?:\/)?(\d{17,}))+/;
 };
