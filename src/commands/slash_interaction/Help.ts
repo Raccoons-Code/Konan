@@ -22,14 +22,14 @@ export default class Help extends SlashCommand {
 
     await interaction.deferReply({ ephemeral: true });
 
-    const { client, guild, locale, options, user } = interaction as CommandInteraction<'cached'>;
+    const { client, guild, locale, options, user } = <CommandInteraction<'cached'>>interaction;
 
     const commandName = options.getString('command')?.split(' |')[0].toLowerCase();
 
     if (commandName) return await this.executeCommand(interaction, commandName);
 
-    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ??
-      client.user?.displayAvatarURL({ dynamic: true }) as string;
+    const avatarURL = <string>guild?.me?.displayAvatarURL({ dynamic: true }) ??
+      client.user?.displayAvatarURL({ dynamic: true });
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
@@ -134,8 +134,8 @@ export default class Help extends SlashCommand {
 
   convertOptionsToString(dataOptions: any[], text = '', index = '') {
     for (let i = 0; i < dataOptions.length; i++) {
-      const { required } = dataOptions[i] as ApplicationCommandNonOptionsData;
-      const { autocomplete, description, name, options } = dataOptions[i] as ApplicationCommandSubCommand;
+      const { required } = <ApplicationCommandNonOptionsData>dataOptions[i];
+      const { autocomplete, description, name, options } = <ApplicationCommandSubCommand>dataOptions[i];
 
       text = [
         text,

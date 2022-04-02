@@ -26,7 +26,7 @@ const rest = new REST().setToken(DISCORD_TOKEN);
   const applicationCommands = await Commands.loadCommands(applicationCommandTypes);
 
   Object.values(applicationCommands).forEach(_commands =>
-    commands.push(..._commands.toJSON() as SlashCommand[]));
+    commands.push(...<SlashCommand[]>_commands.toJSON()));
 
   for (let i = 0; i < commands.length; i++) {
     const command = commands[i];
@@ -63,7 +63,7 @@ const rest = new REST().setToken(DISCORD_TOKEN);
             description: command.description,
             options: command.options,
             type: command.type,
-          }], [] as any[]);
+          }], <any[]>[]);
 
         guild_commands_data.push(...data_private);
 

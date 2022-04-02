@@ -14,7 +14,7 @@ export default class UserInfo extends UserContextMenu {
     const { locale, options } = interaction;
 
     const user = options.getUser('user', true);
-    const member = options.getMember('user') as GuildMember;
+    const member = <GuildMember>options.getMember('user');
 
     const { createdAt, id, tag } = user;
 

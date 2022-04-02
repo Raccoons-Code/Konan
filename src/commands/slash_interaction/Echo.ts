@@ -26,7 +26,7 @@ export default class Echo extends SlashCommand {
 
     const username = member?.displayName ?? user.username;
 
-    if (!channel?.permissionsFor(client.user as User)?.has(this.props?.clientPermissions as PermissionString[])) {
+    if (!channel?.permissionsFor(<User>client.user)?.has(this.props?.clientPermissions as PermissionString[])) {
       const [, title, description] = content.match(this.pattern.embed) ?? [];
 
       const embeds = [new MessageEmbed()
@@ -39,9 +39,9 @@ export default class Echo extends SlashCommand {
       return await interaction.reply({ embeds });
     }
 
-    const webhook = await (channel as TextChannel).fetchWebhooks()
+    const webhook = await (<TextChannel>channel).fetchWebhooks()
       .then(w => w.find(v => v.name === client.user?.id)) ??
-      await (channel as TextChannel).createWebhook(client.user?.id as string);
+      await (<TextChannel>channel).createWebhook(<string>client.user?.id);
 
     await webhook.send({ avatarURL, content, username });
 

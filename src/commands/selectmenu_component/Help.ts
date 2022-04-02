@@ -17,14 +17,14 @@ export default class Help extends SelectMenuComponentInteraction {
   async execute(interaction: SelectMenuInteraction) {
     const { values } = interaction;
 
-    this[values[0] as 'home']?.(interaction);
+    this[<'home'>values[0]]?.(interaction);
   }
 
   async home(interaction: SelectMenuInteraction) {
-    const { client, guild, locale, user } = interaction as SelectMenuInteraction<'cached'>;
+    const { client, guild, locale, user } = <SelectMenuInteraction<'cached'>>interaction;
 
-    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ??
-      client.user?.displayAvatarURL({ dynamic: true }) as string;
+    const avatarURL = <string>guild?.me?.displayAvatarURL({ dynamic: true }) ??
+      client.user?.displayAvatarURL({ dynamic: true });
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')

@@ -16,7 +16,7 @@ export default class Movies extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction) {
     const { customId, locale } = interaction;
 
-    const { c, target } = JSON.parse(customId) as MoviesCustomId;
+    const { c, target } = <MoviesCustomId>JSON.parse(customId);
 
     const { offset, page } = this.getPage(target);
 
@@ -66,13 +66,13 @@ export default class Movies extends ButtonComponentInteraction {
 
       const { backdrop_path, genre_ids, id, original_title, original_language, overview, poster_path, release_date, title, vote_average, vote_count } = result;
 
-      const backdrop_img = image.imageURL({ path: backdrop_path as string });
+      const backdrop_img = image.imageURL({ path: <string>backdrop_path });
 
       const genre_names = await genres.parseGenres({ genre_ids, language: locale });
 
       const movie_url = movie.movieURL({ id });
 
-      const poster_img = image.imageURL({ path: poster_path as string });
+      const poster_img = image.imageURL({ path: <string>poster_path });
 
       const lang = configuration.getLanguage({ language: original_language });
 

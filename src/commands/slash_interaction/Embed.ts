@@ -65,7 +65,7 @@ export default class Embed extends SlashCommand {
       });
     }
 
-    const subcommand = (options.getSubcommandGroup(false) ?? options.getSubcommand()) as 'edit';
+    const subcommand = <'edit'>options.getSubcommandGroup(false) ?? options.getSubcommand();
 
     if (interaction.isAutocomplete())
       return await this[`${subcommand}Autocomplete`]?.(interaction);
@@ -78,12 +78,12 @@ export default class Embed extends SlashCommand {
   async send(interaction: CommandInteraction<'cached'>) {
     const { client, locale, member, options } = interaction;
 
-    const channel = (options.getChannel('channel') ?? interaction.channel) as TextChannel;
+    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const [, content] = options.getString('content')?.match(this.pattern.content) ?? [];
     const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
-    const image_url = options.getString('image_url') as string;
+    const image_url = <string>options.getString('image_url');
 
-    const clientPermissions = channel?.permissionsFor(client.user as User)
+    const clientPermissions = channel?.permissionsFor(<User>client.user)
       ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
@@ -112,8 +112,8 @@ export default class Embed extends SlashCommand {
   async edit(interaction: CommandInteraction<'cached'>) {
     const { client, locale, member, options } = interaction;
 
-    const channel = options.getChannel('channel', true) as TextChannel;
-    const message_id = options.getString('message_id', true).match(this.pattern.messageURL)?.[1] as string;
+    const channel = <TextChannel>options.getChannel('channel', true);
+    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -126,7 +126,7 @@ export default class Embed extends SlashCommand {
     if (subcommand === 'embed') {
       const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
       const [, content] = options.getString('content')?.match(this.pattern.content) ?? [];
-      const image_url = options.getString('image_url') as string;
+      const image_url = <string>options.getString('image_url');
 
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
@@ -136,7 +136,7 @@ export default class Embed extends SlashCommand {
         .setTimestamp(Date.now())
         .setTitle(title)];
 
-      const clientPermissions = channel.permissionsFor(client.user as User)
+      const clientPermissions = channel.permissionsFor(<User>client.user)
         ?.missing(this.props?.clientPermissions as PermissionString[]);
 
       if (!clientPermissions?.includes('SEND_MESSAGES')) {
@@ -156,7 +156,7 @@ export default class Embed extends SlashCommand {
 
     const { client, guild, options } = interaction;
 
-    const channelId = options.get('channel', true).value as string;
+    const channelId = <string>options.get('channel', true).value;
 
     const channel = await guild.channels.fetch(channelId) as TextChannel;
 

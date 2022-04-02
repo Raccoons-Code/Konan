@@ -27,8 +27,8 @@ export default class NumberIsPrime extends SlashCommand {
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
       .setTitle(prime.length ? `${number} is not prime.` : `${number} is prime!`)
-      .setDescription((prime.length ?
-        `It is divisible by ${codeBlock(prime.join(', '))}` : '').match(this.pattern.content)?.[1] as string)];
+      .setDescription(<string>(prime.length ?
+        `It is divisible by ${codeBlock(prime.join(', '))}` : '').match(this.pattern.content)?.[1])];
 
     await interaction.editReply({ embeds });
   }

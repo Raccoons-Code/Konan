@@ -23,7 +23,7 @@ export default class TMDB_API_V3 {
   constructor(options: TMDB_API_Options = { apiKey: process.env.TMDB_APIKEY }) {
     if (options.apiKey) process.env.TMDB_APIKEY = options.apiKey;
 
-    this.apiKey = process.env.TMDB_APIKEY as string;
+    this.apiKey = <string>process.env.TMDB_APIKEY;
     this.baseURL = 'https://api.themoviedb.org/3';
 
     this.authentication = new Authentication(this);

@@ -74,7 +74,7 @@ export default class News extends SlashCommand {
 
     const focused = interaction.options.getFocused(true);
 
-    res = await this[`${focused.name as 'category' | 'journal' | 'language' | 'new'}Autocomplete`]?.(interaction);
+    res = await this[`${<'category' | 'journal' | 'language' | 'new'>focused.name}Autocomplete`]?.(interaction);
 
     await interaction.respond(res);
   }

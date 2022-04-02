@@ -79,7 +79,7 @@ export default class Unban extends SlashCommand {
   async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
     if (interaction.responded) return;
 
-    const { guild, options } = interaction as AutocompleteInteraction<'cached'>;
+    const { guild, options } = <AutocompleteInteraction<'cached'>>interaction;
 
     const user = options.getString('user', true);
     const pattern = RegExp(user, 'i');
@@ -89,7 +89,7 @@ export default class Unban extends SlashCommand {
     const bans_array = bans_collection.filter(ban =>
       pattern.test(ban.user.tag) ||
       pattern.test(ban.user.id) ||
-      pattern.test(ban.reason as string)).toJSON();
+      pattern.test(<string>ban.reason)).toJSON();
 
     for (let i = 0; i < bans_array.length; i++) {
       const ban = bans_array[i];

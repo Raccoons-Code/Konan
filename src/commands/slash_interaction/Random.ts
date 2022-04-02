@@ -49,9 +49,9 @@ export default class Random extends SlashCommand {
   }
 
   async execute(interaction: CommandInteraction) {
-    const { channel, client, locale, options } = interaction as CommandInteraction<'cached'>;
+    const { channel, client, locale, options } = <CommandInteraction<'cached'>>interaction;
 
-    const clientPermissions = channel?.permissionsFor(client.user?.id as any)
+    const clientPermissions = channel?.permissionsFor(<string>client.user?.id)
       ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)

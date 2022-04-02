@@ -14,7 +14,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction) {
     const { customId, message, user } = interaction;
 
-    const parsedCustomId = JSON.parse(customId) as customId;
+    const parsedCustomId = <customId>JSON.parse(customId);
 
     const { c, p, v } = parsedCustomId;
 
@@ -29,7 +29,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
       acc.player2 = p[i];
 
       return acc;
-    }, {} as any);
+    }, <{ [k: string]: any }>{});
 
     if (!db.has(`${message.id}`))
       db.set(`${message.id}`, { [user.id]: v, p });
@@ -80,7 +80,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
         return field;
       });
 
-      (embed as MessageEmbed).setColor('RANDOM');
+      (<MessageEmbed>embed).setColor('RANDOM');
 
       return embed;
     });

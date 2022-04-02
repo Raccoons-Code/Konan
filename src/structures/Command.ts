@@ -6,7 +6,7 @@ export default class Command extends Base {
   constructor(client: Client, public data: CommandData) {
     super(client);
     if (!this.regexCommandName(data.name))
-      return console.error(`Command ${data.name} cannot be loaded.`) as any;
+      return <any>console.error(`Command ${data.name} cannot be loaded.`);
   }
 
   regexCommandName(string: string) {

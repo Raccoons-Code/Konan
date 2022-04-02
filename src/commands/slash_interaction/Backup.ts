@@ -66,7 +66,7 @@ export default class extends SlashCommand {
       });
     }
 
-    const command = (options.getSubcommandGroup(false) ?? options.getSubcommand()) as 'update';
+    const command = <'update'>options.getSubcommandGroup(false) ?? options.getSubcommand();
 
     if (interaction.isAutocomplete())
       return await this[`${command}Autocomplete`]?.(interaction);
@@ -201,12 +201,12 @@ export default class extends SlashCommand {
 
     const { data, premium } = backup;
 
-    const clear = options.getBoolean('clear_server') as boolean;
+    const clear = <boolean>options.getBoolean('clear_server');
 
     await interaction.editReply(`${this.t('restoring'), { locale }}...`).catch(() => null);
 
     try {
-      await Backup.load(data as string, guild, {
+      await Backup.load(<string>data, guild, {
         clearGuildBeforeRestore: clear,
         maxMessagesPerChannel: premium ? 20 : 0,
       });
@@ -225,11 +225,11 @@ export default class extends SlashCommand {
 
     const { guild, guildId, options } = interaction;
 
-    const key = options.getString('key')?.split(' |')[0] as string;
+    const key = <string>options.getString('key')?.split(' |')[0];
 
     const dbUser = await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
-      include: { backups: { where: { id: key } }, guilds: { where: { id: guildId as string } } },
+      include: { backups: { where: { id: key } }, guilds: { where: { id: <string>guildId } } },
     });
 
     if (!dbUser || !dbUser.backups.length)
@@ -353,7 +353,7 @@ export default class extends SlashCommand {
     if (focused.name === 'key') {
       const id = options.getString('id')?.split(' |')[0] ?? guildId;
 
-      const backups = await this.prisma.backup.findMany({ where: { guildId: id as string } });
+      const backups = await this.prisma.backup.findMany({ where: { guildId: <string>id } });
 
       if (!backups) return;
 

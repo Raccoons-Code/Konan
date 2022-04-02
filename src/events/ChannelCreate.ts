@@ -16,7 +16,7 @@ export default class ChannelCreate extends Event {
     const { client } = channel;
 
     if (!(channel.isText() &&
-      channel.permissionsFor(client.user as User)?.has(this.data.permissions as PermissionString[])))
+      channel.permissionsFor(<User>client.user)?.has(this.data.permissions as PermissionString[])))
       return;
 
     await channel.send('First!').catch(() => null);

@@ -22,7 +22,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
     for (let i = 0; i < values.length; i++) {
       const value = values[i];
 
-      const { roleId } = JSON.parse(value) as SelectRolesItemOptionValue;
+      const { roleId } = <SelectRolesItemOptionValue>JSON.parse(value);
 
       const role = member.roles.resolve(roleId);
 
@@ -46,7 +46,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
 
       if (!values.includes(option.value)) continue;
 
-      const { count, d, roleId } = JSON.parse(option.value) as SelectRolesItemOptionValue;
+      const { count, d, roleId } = <SelectRolesItemOptionValue>JSON.parse(option.value);
 
       const add2 = roles.add.includes(roleId) ? 1 : 0;
       const rem2 = roles.remove.includes(roleId) ? -1 : 0;
@@ -72,7 +72,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
       option.value = JSON.stringify(newValue);
     }
 
-    const { c, count, d } = JSON.parse(customId) as SelectRolesCustomId;
+    const { c, count, d } = <SelectRolesCustomId>JSON.parse(customId);
 
     let sum = roles.add.length - roles.remove.length;
 
@@ -87,7 +87,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
       count: count + sum,
       d,
     }))
-      .setOptions(component.options as MessageSelectOptionData[]);
+      .setOptions(<MessageSelectOptionData[]>component.options);
 
     await interaction.update({ components: message.components });
   }

@@ -57,7 +57,7 @@ export default class extends SlashCommand {
 
     const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ?? user?.displayAvatarURL({ dynamic: true });
 
-    const username = guild?.me?.displayName ?? user?.username as string;
+    const username = <string>guild?.me?.displayName ?? user?.username;
 
     const stats = stripIndents(`
       Servers  : ${this.client.stats.guilds ?? guilds.cache.size}
@@ -80,7 +80,7 @@ export default class extends SlashCommand {
         { name: 'Library', value: codeBlock('properties', library), inline },
         { name: 'Engine', value: codeBlock('properties', engine), inline },
         { name: 'Stats', value: codeBlock('properties', stats) },
-        { name: 'Uptime', value: `${time(readyAt as Date)} ${time(readyAt as Date, 'R')}` },
+        { name: 'Uptime', value: `${time(<Date>readyAt)} ${time(<Date>readyAt, 'R')}` },
       ]);
 
     const buttons = [new MessageButton()
@@ -100,20 +100,20 @@ export default class extends SlashCommand {
     const channel = options.getChannel('channel') ?? interaction.channel;
 
     /** DM */
-    /* const { } = channel as DMChannel | PartialDMChannel; */
+    /* const { } = <DMChannel | PartialDMChannel>channel; */
     /** GUILD_NEWS */
-    /* const { } = channel as NewsChannel; */
+    /* const { } = <NewsChannel>channel; */
     /** GUILD_STORE */
-    /* const { } = channel as StoreChannel; */
+    /* const { } = <StoreChannel>channel; */
     /** GUILD_CATEGORY */
-    const { children, parent } = channel as CategoryChannel;
+    const { children, parent } = <CategoryChannel>channel;
     /** GUILD_TEXT */
-    const { nsfw, rateLimitPerUser, topic, threads } = channel as TextChannel;
+    const { nsfw, rateLimitPerUser, topic, threads } = <TextChannel>channel;
     /** GUILD_NEWS_THREAD | GUILD_PRIVATE_THREAD | GUILD_PUBLIC_THREAD */
-    const { memberCount, messageCount } = channel as ThreadChannel;
+    const { memberCount, messageCount } = <ThreadChannel>channel;
     /** GUILD_STAGE_VOICE | GUILD_VOICE */
-    const { bitrate, full, name, rtcRegion, userLimit } = channel as StageChannel | VoiceChannel;
-    const { createdAt, type } = channel as Channel;
+    const { bitrate, full, name, rtcRegion, userLimit } = <StageChannel | VoiceChannel>channel;
+    const { createdAt, type } = <Channel>channel;
 
     const t = `${type}`.split('_').pop();
 
@@ -167,7 +167,7 @@ export default class extends SlashCommand {
   async role(interaction: CommandInteraction, embeds: MessageEmbed[]) {
     const { locale, options } = interaction;
 
-    const role = options.getRole('role') as Role;
+    const role = <Role>options.getRole('role');
 
     const { color, mentionable, permissions, name } = role;
 
@@ -175,7 +175,7 @@ export default class extends SlashCommand {
     const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') ?? '-';
 
     embeds[0].setColor(color ?? 'RANDOM')
-      .setAuthor({ name, iconURL: role.iconURL() as string })
+      .setAuthor({ name, iconURL: <string>role.iconURL() })
       .addFields([
         { name: this.t('mentionable', { locale }), value: this.t(`${mentionable}`, { locale }) },
         { name: `${this.t('permissions', { locale })} [${arrayPerms.length}]`, value: codeBlock(textPerms) }]);
@@ -191,15 +191,15 @@ export default class extends SlashCommand {
 
     const { guild } = interaction;
 
-    embeds[0].setAuthor({ name: guild.name, iconURL: guild.iconURL() as string })
+    embeds[0].setAuthor({ name: guild.name, iconURL: <string>guild.iconURL() })
       .setFields(
         { name: this.t('id', { locale }), value: inlineCode(guild.id), inline: true },
         { name: this.t('owner', { locale }), value: userMention(guild.ownerId), inline: true },
         { name: this.t('members', { locale }), value: `${guild.memberCount}`, inline: true },
       )
       .setFooter({ text: this.t('serverCreatedAt', { locale }) })
-      .setImage(guild.splashURL({ size: 512 }) as string)
-      .setThumbnail(guild.iconURL() as string)
+      .setImage(<string>guild.splashURL({ size: 512 }))
+      .setThumbnail(<string>guild.iconURL())
       .setTimestamp(guild.createdTimestamp);
 
     await interaction.editReply({ embeds });
@@ -209,7 +209,7 @@ export default class extends SlashCommand {
     const { locale, options } = interaction;
 
     const user = options.getUser('user') ?? interaction.user;
-    const member = (options.getMember('user') ?? interaction.member) as GuildMember;
+    const member = <GuildMember>options.getMember('user') ?? interaction.member;
 
     const { createdAt, id, tag } = user;
 

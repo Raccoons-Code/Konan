@@ -16,7 +16,7 @@ export default class Avatar extends SlashCommand {
     const { options } = interaction;
 
     const user = options.getUser('user') ?? interaction.user;
-    const member = (options.getMember('user') ?? interaction.member) as GuildMember;
+    const member = <GuildMember>options.getMember('user') ?? interaction.member;
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')

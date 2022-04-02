@@ -83,17 +83,17 @@ export default class Movies extends SlashCommand {
   async search(interaction: CommandInteraction) {
     const { locale, options } = interaction;
 
-    const movie_id = parseInt(options.getString('keyword')?.split(' |')[0] as string);
+    const movie_id = parseInt(<string>options.getString('keyword')?.split(' |')[0]);
 
     const { backdrop_path, budget, genres: _genres, id, original_language, original_title, overview, poster_path, release_date, revenue, runtime, title, vote_average, vote_count } = await movies.fetchDetails({ movie_id, language: locale });
 
-    const backdrop_img = image.imageURL({ path: backdrop_path as string });
+    const backdrop_img = image.imageURL({ path: <string>backdrop_path });
 
     const genre_names = _genres.map(genre => genre.name);
 
     const movie_url = movie.movieURL({ id });
 
-    const poster_img = image.imageURL({ path: poster_path as string });
+    const poster_img = image.imageURL({ path: <string>poster_path });
 
     const lang = configuration.getLanguage({ language: original_language });
 
@@ -165,13 +165,13 @@ export default class Movies extends SlashCommand {
 
       const { backdrop_path, genre_ids, id, original_title, original_language, overview, poster_path, release_date, title, vote_average, vote_count } = result;
 
-      const backdrop_img = image.imageURL({ path: backdrop_path as string });
+      const backdrop_img = image.imageURL({ path: <string>backdrop_path });
 
       const genre_names = await genres.parseGenres({ genre_ids, language: locale });
 
       const movie_url = movie.movieURL({ id });
 
-      const poster_img = image.imageURL({ path: poster_path as string });
+      const poster_img = image.imageURL({ path: <string>poster_path });
 
       const lang = configuration.getLanguage({ language: original_language });
 

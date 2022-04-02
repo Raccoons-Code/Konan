@@ -14,7 +14,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction<'cached'>) {
     const { customId, member } = interaction;
 
-    const { roleId } = JSON.parse(customId) as ButtonRolesCustomId;
+    const { roleId } = <ButtonRolesCustomId>JSON.parse(customId);
 
     try {
       if (member.roles.resolve(roleId)) {
@@ -34,7 +34,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
   async setComponents(interaction: ButtonInteraction<'cached'>, boolean: boolean) {
     const { customId, component, message } = interaction;
 
-    const { c, count, d, roleId } = JSON.parse(customId) as ButtonRolesCustomId;
+    const { c, count, d, roleId } = <ButtonRolesCustomId>JSON.parse(customId);
 
     const newCustomId = {
       c,

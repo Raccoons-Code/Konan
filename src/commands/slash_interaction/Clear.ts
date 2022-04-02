@@ -31,7 +31,7 @@ export default class Clear extends SlashCommand {
 
     const { client, member, options } = interaction;
 
-    const channel = (options.getChannel('channel') ?? interaction.channel) as TextChannel;
+    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
 
     const userPermissions =
       channel.permissionsFor(member).missing(this.props?.userPermissions as PermissionString[]) ?? [];
@@ -40,7 +40,7 @@ export default class Clear extends SlashCommand {
       return await interaction.editReply(this.t('missingUserChannelPermission',
         { locale, PERMISSIONS: userPermissions }));
 
-    const clientPermissions = channel.permissionsFor(client.user as User)
+    const clientPermissions = channel.permissionsFor(<User>client.user)
       ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)

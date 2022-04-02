@@ -28,7 +28,7 @@ export default class Interpolator {
               const ca = idjsn.t(cv, { locale });
 
               for (let i = 0; i < options[cv].length; i++) {
-                const v = options[cv][i] as any;
+                const v = <any>options[cv][i];
 
                 options[cv][i] = ca[v] ?? idjsn.t(cv)[v] ?? v;
               }

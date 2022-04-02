@@ -19,11 +19,11 @@ export default class Info extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction) {
     const { customId } = interaction;
 
-    const { sc } = JSON.parse(customId) as InfoCustomId;
+    const { sc } = <InfoCustomId>JSON.parse(customId);
 
     const embeds = [new MessageEmbed().setColor('RANDOM')];
 
-    this[sc as 'application']?.(interaction, embeds);
+    this[<'application'>sc]?.(interaction, embeds);
   }
 
   async application(interaction: ButtonInteraction, embeds: MessageEmbed[]) {
@@ -33,7 +33,7 @@ export default class Info extends ButtonComponentInteraction {
 
     const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ?? user?.displayAvatarURL({ dynamic: true });
 
-    const username = guild?.me?.displayName ?? user?.username as string;
+    const username = <string>guild?.me?.displayName ?? user?.username;
 
     const newStats = await this.client.fetchStats();
 
@@ -58,7 +58,7 @@ export default class Info extends ButtonComponentInteraction {
         { name: 'Library', value: codeBlock('properties', library), inline },
         { name: 'Engine', value: codeBlock('properties', engine), inline },
         { name: 'Stats', value: codeBlock('properties', stats) },
-        { name: 'Uptime', value: `${time(readyAt as Date)} ${time(readyAt as Date, 'R')}` },
+        { name: 'Uptime', value: `${time(<Date>readyAt)} ${time(<Date>readyAt, 'R')}` },
       ]);
 
     await interaction.update({ embeds });

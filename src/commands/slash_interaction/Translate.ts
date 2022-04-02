@@ -3,8 +3,8 @@ import translate, { languages } from '@vitalets/google-translate-api';
 import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
-const Choices = Object.keys(languages).filter(l => !/(isSupported|getCode)/.test(l))
-  .map((l) => [languages[l as 'auto'], l]) as [string, string][];
+const Choices = <[string, string][]>Object.keys(languages).filter(l => !/(isSupported|getCode)/.test(l))
+  .map((l) => [languages[<'auto'>l], l]);
 
 export default class Translate extends SlashCommand {
   cache: Map<string, string> = new Map();
@@ -37,7 +37,7 @@ export default class Translate extends SlashCommand {
     const { options } = interaction;
 
     const from = options.getString('from', true);
-    const to = options.getString('to', true) as 'auto';
+    const to = <'auto'>options.getString('to', true);
     const text = options.getString('text', true);
 
     const cache = this.util.isJSON(text) ? this.cache.get(text) : text;
@@ -47,7 +47,7 @@ export default class Translate extends SlashCommand {
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
       .setDescription(`${codeBlock(translation.text).match(this.pattern.content)?.[0]}`)
-      .setTitle(`Translation from ${languages[translation.from.language.iso as 'auto']} to ${languages[to]}.`)];
+      .setTitle(`Translation from ${languages[<'auto'>translation.from.language.iso]} to ${languages[to]}.`)];
 
     await interaction.editReply({ embeds });
   }
@@ -59,7 +59,7 @@ export default class Translate extends SlashCommand {
 
     const focused = options.getFocused(true);
 
-    res = await this[`${focused.name as 'from'}Autocomplete`]?.(interaction);
+    res = await this[`${<'from'>focused.name}Autocomplete`]?.(interaction);
 
     await interaction.respond(res);
   }

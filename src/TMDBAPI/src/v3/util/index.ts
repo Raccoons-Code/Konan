@@ -8,5 +8,5 @@ export default class Util {
   static movie: Movie;
 }
 
-Util.image = new Image({ apiKey: process.env.TMDB_APIKEY as string });
-Util.movie = new Movie({ apiKey: process.env.TMDB_APIKEY as string });
+Util.image = new Image({ apiKey: <string>process.env.TMDB_APIKEY });
+Util.movie = new Movie({ apiKey: <string>process.env.TMDB_APIKEY });

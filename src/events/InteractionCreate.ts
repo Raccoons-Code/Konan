@@ -22,12 +22,12 @@ export default class InteractionCreate extends Event {
   async execute(interaction: InteractionTypes) {
     const { client, locale, type } = interaction;
 
-    const command = this[type as Exclude<InteractionType, 'PING'>]?.(interaction as any);
+    const command = this[<Exclude<InteractionType, 'PING'>>type]?.(<any>interaction);
 
     if (!command) return;
 
     try {
-      await command.execute(interaction as any);
+      await command.execute(<any>interaction);
     } catch (error: any) {
       this.client.sendError(error);
 
@@ -60,15 +60,15 @@ export default class InteractionCreate extends Event {
   }
 
   APPLICATION_COMMAND(interaction: CommandInteraction & ContextMenuInteraction) {
-    return this[interaction.targetType ?? 'CHAT_INPUT']?.(interaction as any);
+    return this[interaction.targetType ?? 'CHAT_INPUT']?.(<any>interaction);
   }
 
   APPLICATION_COMMAND_AUTOCOMPLETE(interaction: AutocompleteInteraction) {
-    return this['CHAT_INPUT']?.(interaction as any);
+    return this['CHAT_INPUT']?.(<any>interaction);
   }
 
   MESSAGE_COMPONENT(interaction: MessageComponentInteraction) {
-    return this[interaction.componentType]?.(interaction as any);
+    return this[interaction.componentType]?.(<any>interaction);
   }
 
   BUTTON(interaction: ButtonInteraction & { client: Client }): ButtonComponentInteraction {

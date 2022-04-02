@@ -79,7 +79,7 @@ class Commands {
       }
     }
 
-    return commands as { [k: string]: Collection<string, Command | SlashCommand> };
+    return <{ [k: string]: Collection<string, Command | SlashCommand> }>commands;
   }
 }
 

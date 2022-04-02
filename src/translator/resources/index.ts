@@ -14,7 +14,7 @@ for (let i = 0; i < langs.length; i++) {
   translations[lang] = found.reduce((acc: any, value) => {
     const [, matched] = value.match(RegExp(`(?:(?!${lang})/${lang}/(.+)\\.json)$`)) ?? [];
 
-    const key = matched.split('.').pop() as string;
+    const key = <string>matched.split('.').pop();
 
     if (!acc.translation && key === 'translation')
       return { translation: require(value) };

@@ -29,7 +29,7 @@ export default class WatchTogether extends SlashCommand {
         .setRequired(true))
       .addChannelOption(option => option.setName('channel')
         .setDescription('Select a voice channel.')
-        .addChannelTypes([GUILD_VOICE] as any));
+        .addChannelTypes(<any>[GUILD_VOICE]));
   }
 
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {
@@ -54,7 +54,7 @@ export default class WatchTogether extends SlashCommand {
         ephemeral: true,
       });
 
-    const clientPermissions = channel.permissionsFor(client.user as User)
+    const clientPermissions = channel.permissionsFor(<User>client.user)
       ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
