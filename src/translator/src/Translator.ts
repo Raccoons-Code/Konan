@@ -1,5 +1,5 @@
-import { defaults } from './Defaults';
 import { Options, PluralData, Resources } from '.';
+import { defaults } from './Defaults';
 
 export default class Translator {
   plural!: PluralData;
@@ -12,7 +12,7 @@ export default class Translator {
   }
 
   translate(key: string, options: Options) {
-    const locale = options.locale ?? 'en';
+    const locale = options.locale || 'en';
 
     const pluralKey = [key, options.count === 1 ? this.plural.singularSuffix : this.plural.pluralSuffix].join('');
 

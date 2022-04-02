@@ -229,7 +229,7 @@ export default class SelectRoles extends SlashCommand {
     const description = options.getString('item_description')?.match(this.pattern.label)?.[1];
     const emoji = <EmojiIdentifierResolvable>options.getString('item_emoji');
     const menu_disabled = <boolean>options.getBoolean('menu_disabled');
-    const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] ?? '';
+    const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] || '';
     const role = options.getRole('role', true);
     const label = options.getString('item_name')?.match(this.pattern.labelLimited)?.[1] ?? role.name;
 
@@ -288,7 +288,7 @@ export default class SelectRoles extends SlashCommand {
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
         .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title ?? '')];
+        .setTitle(title || '')];
 
       try {
         await message.edit({ embeds });
@@ -411,7 +411,7 @@ export default class SelectRoles extends SlashCommand {
 
     if (subcommand === 'menu') {
       const menu_disabled = <boolean>options.getBoolean('menu_disabled');
-      const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] ?? '';
+      const menu_place_holder = options.getString('menu_place_holder')?.match(this.pattern.label)?.[1] || '';
 
       const selectMenu = new MessageSelectMenu()
         .setCustomId(JSON.stringify({

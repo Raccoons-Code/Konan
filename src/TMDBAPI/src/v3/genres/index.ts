@@ -11,7 +11,7 @@ export default class Genres {
   constructor(options: GenresOptions) {
     this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
     this.baseURL = `${options.baseURL}/genre`;
-    this.language = options.language ?? 'en-US';
+    this.language = options.language || 'en-US';
 
     this.movieGenres = new Map();
     this.tvGenres = new Map();

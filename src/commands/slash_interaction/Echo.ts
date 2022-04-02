@@ -30,7 +30,7 @@ export default class Echo extends SlashCommand {
       const [, title, description] = content.match(this.pattern.embed) ?? [];
 
       const embeds = [new MessageEmbed()
-        .setColor(member?.displayColor ?? 'RANDOM')
+        .setColor(member?.displayColor || 'RANDOM')
         .setFooter({ text: username, iconURL: avatarURL })
         .setTimestamp(Date.now())
         .setTitle(title)

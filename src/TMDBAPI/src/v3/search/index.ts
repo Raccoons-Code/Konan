@@ -12,7 +12,7 @@ export default class Search {
     this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
     this.baseURL = `${options.baseURL}/search`;
     this.include_adult = false;
-    this.language = options.language ?? 'en-US';
+    this.language = options.language || 'en-US';
     this.page = 1;
   }
 

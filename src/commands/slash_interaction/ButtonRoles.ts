@@ -157,7 +157,7 @@ export default class ButtonRoles extends SlashCommand {
     const [, title, description] = options.getString('text')?.match(this.pattern.embed) ?? [];
     const button_emoji = options.getString('button_emoji');
     const button_disabled = <boolean>options.getBoolean('button_disabled');
-    const button_style = <MessageButtonStyleResolvable>options.getString('button_style') ?? 'PRIMARY';
+    const button_style = <MessageButtonStyleResolvable>options.getString('button_style') || 'PRIMARY';
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const role = options.getRole('role', true);
     const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1] ?? role.name;
@@ -211,7 +211,7 @@ export default class ButtonRoles extends SlashCommand {
       const embeds = [new MessageEmbed()
         .setColor('RANDOM')
         .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title ?? '')];
+        .setTitle(title || '')];
 
       try {
         await message.edit({ embeds });
@@ -297,7 +297,7 @@ export default class ButtonRoles extends SlashCommand {
       const button_disabled = <boolean>options.getBoolean('button_disabled');
       const button_emoji = options.getString('button_emoji');
       const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1] ?? role.name;
-      const button_style = <MessageButtonStyleResolvable>options.getString('button_style') ?? 'PRIMARY';
+      const button_style = <MessageButtonStyleResolvable>options.getString('button_style') || 'PRIMARY';
 
       const emoji = <EmojiIdentifierResolvable>(button_emoji ? Util.resolvePartialEmoji(button_emoji) : null);
 

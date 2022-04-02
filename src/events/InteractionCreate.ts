@@ -35,7 +35,7 @@ export default class InteractionCreate extends Event {
         .setColor('DARK_RED')
         .setTitle(this.t('There was an error while executing this command!', { locale }))
         .setDescription(codeBlock('properties', `${error.name}: ${error.message}`))
-        .setFooter({ text: command.data?.name ?? '-' })
+        .setFooter({ text: command.data?.name || '-' })
         .setTimestamp(Date.now())];
 
       const components: MessageActionRow[] = [];
@@ -60,7 +60,7 @@ export default class InteractionCreate extends Event {
   }
 
   APPLICATION_COMMAND(interaction: CommandInteraction & ContextMenuInteraction) {
-    return this[interaction.targetType ?? 'CHAT_INPUT']?.(<any>interaction);
+    return this[interaction.targetType || 'CHAT_INPUT']?.(<any>interaction);
   }
 
   APPLICATION_COMMAND_AUTOCOMPLETE(interaction: AutocompleteInteraction) {

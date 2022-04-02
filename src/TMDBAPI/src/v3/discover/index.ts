@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { DiscoverOptions, DiscoverMovieOptions, SearchMoviesData, Rejected } from '../typings';
+import { DiscoverMovieOptions, DiscoverOptions, SearchMoviesData } from '../typings';
 
 export default class Discover {
   apiKey: string;
@@ -16,10 +16,10 @@ export default class Discover {
     this.baseURL = `${options.baseURL}/discover`;
     this.include_adult = options.include_adult ?? false;
     this.include_video = options.include_video ?? false;
-    this.language = options.language ?? 'en-US';
+    this.language = options.language || 'en-US';
     this.page = options.page ?? 1;
-    this.sort_by = options.sort_by ?? 'popularity.desc';
-    this.with_watch_monetization_types = options.with_watch_monetization_types ?? 'flatrate';
+    this.sort_by = options.sort_by || 'popularity.desc';
+    this.with_watch_monetization_types = options.with_watch_monetization_types || 'flatrate';
   }
 
   async fetchMovies(props: DiscoverMovieOptions = {}): Promise<SearchMoviesData> {

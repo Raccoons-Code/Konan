@@ -24,7 +24,7 @@ export default class MessageCreate extends Event {
 
     message.args = matched[1].trim().split(/\s+/g);
 
-    const commandName = message.commandName = message.args.shift() ?? 'help';
+    const commandName = message.commandName = message.args.shift() || 'help';
 
     const command = <Command>commands.message_command?.get(commandName);
 

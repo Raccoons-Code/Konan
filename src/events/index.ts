@@ -54,7 +54,7 @@ class Events {
 
       const event = new (eventFile.default ?? eventFile)(client) as Event;
 
-      client[event.data.listener ?? 'on']?.(event.data.name, (...args: any) => event.execute(...args));
+      client[event.data.listener || 'on']?.(event.data.name, (...args: any) => event.execute(...args));
     }
   }
 

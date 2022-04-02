@@ -123,7 +123,7 @@ export default class extends SlashCommand {
 
     const userId = guild?.ownerId ?? user.id;
     const id = options.getString('id')?.split(' |')[0];
-    const key = options.getString('key')?.split(' |')[0] ?? '';
+    const key = options.getString('key')?.split(' |')[0] || '';
 
     const dbUser = await this.prisma.user.findFirst({
       where: { id: userId },
