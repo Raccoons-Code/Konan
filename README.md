@@ -23,3 +23,7 @@ If you're interested, [click here](https://discord.com/api/oauth2/authorize?clie
 ## Supported languages
 
 [![Crowdin](https://badges.awesome-crowdin.com/translation-15144556-499220.png)](https://crowdin.com/project/konan)
+
+## Information
+
+[Privacy](../../wiki/Privacy)
