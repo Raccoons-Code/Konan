@@ -7,8 +7,6 @@ const Choices = <[string, string][]>Object.keys(languages).filter(l => !/(isSupp
   .map((l) => [languages[<'auto'>l], l]);
 
 export default class Translate extends SlashCommand {
-  cache: Map<string, string> = new Map();
-
   constructor(client: Client) {
     super(client);
 
@@ -40,9 +38,7 @@ export default class Translate extends SlashCommand {
     const to = <'auto'>options.getString('to', true);
     const text = options.getString('text', true);
 
-    const cache = this.util.isJSON(text) ? this.cache.get(text) : text;
-
-    const translation = await translate(cache ?? text, { from, to });
+    const translation = await translate(text, { from, to });
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
@@ -122,8 +118,6 @@ export default class Translate extends SlashCommand {
     if (!focused.value) return res;
 
     const varJson = JSON.stringify({ from, to, userId: user.id });
-
-    this.cache.set(varJson, `${focused.value}`);
 
     const translation = await translate(`${focused.value}`, { from, to });
 

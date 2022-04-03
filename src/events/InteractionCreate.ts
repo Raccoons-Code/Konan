@@ -73,6 +73,7 @@ export default class InteractionCreate extends Event {
 
   BUTTON(interaction: ButtonInteraction & { client: Client }): ButtonComponentInteraction {
     const { c, command } = JSON.parse(interaction.customId);
+
     return interaction.client.commands.button_component?.get(c ?? command);
   }
 
@@ -86,6 +87,7 @@ export default class InteractionCreate extends Event {
 
   SELECT_MENU(interaction: SelectMenuInteraction & { client: Client }): SelectMenuComponentInteraction {
     const { c, command } = JSON.parse(interaction.customId);
+
     return interaction.client.commands.selectmenu_component?.get(c ?? command);
   }
 

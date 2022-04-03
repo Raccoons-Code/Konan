@@ -2,6 +2,8 @@ import { Guild } from 'discord.js';
 import { Client, Event } from '../structures';
 
 export default class Ready extends Event {
+  ytURL = 'https://www.youtube.com/watch?v=';
+
   constructor(client: Client) {
     super(client, {
       name: 'ready',
@@ -46,18 +48,16 @@ export default class Ready extends Event {
   }
 
   async setPresence(client: Client) {
-    const ytURL = 'https://www.youtube.com/watch?v=';
-
     client.user?.setPresence({
       activities: [
         { name: `${client.stats.members || 'Fetching'} members`, type: 'WATCHING' },
-        { name: 'Cat Vibing Meme', type: 'STREAMING', url: `${ytURL}NUYvbT6vTPs` },
+        { name: 'Cat Vibing Meme', type: 'STREAMING', url: `${this.ytURL}NUYvbT6vTPs` },
         { name: `${client.stats.guilds || 'Fetching'} servers`, type: 'PLAYING' },
-        { name: 'Wide Putin Walking', type: 'STREAMING', url: `${ytURL}SLU3oG_ePhM` },
+        { name: 'Wide Putin Walking', type: 'STREAMING', url: `${this.ytURL}SLU3oG_ePhM` },
         { name: `${client.stats.channels || 'Fetching'} channels`, type: 'LISTENING' },
-        { name: 'Noisestorm - Crab Rave', type: 'STREAMING', url: `${ytURL}LDU_Txk06tM` },
-        { name: 'National Anthem of USSR', type: 'STREAMING', url: `${ytURL}U06jlgpMtQs` },
-        { name: 'Rick Astley - Never Gonna Give You Up', type: 'STREAMING', url: `${ytURL}dQw4w9WgXcQ` },
+        { name: 'Noisestorm - Crab Rave', type: 'STREAMING', url: `${this.ytURL}LDU_Txk06tM` },
+        { name: 'National Anthem of USSR', type: 'STREAMING', url: `${this.ytURL}U06jlgpMtQs` },
+        { name: 'Rick Astley - Never Gonna Give You Up', type: 'STREAMING', url: `${this.ytURL}dQw4w9WgXcQ` },
       ],
     });
 

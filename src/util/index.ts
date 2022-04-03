@@ -1,5 +1,6 @@
 import bytes from './bytes';
 import capitalize from './capitalize';
+import composition from './composition';
 import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
 import hasDuplicatesInArray from './hasDuplicatesInArray';
@@ -22,6 +23,7 @@ import waitSync from './waitSync';
 export {
   bytes,
   capitalize,
+  composition,
   filterObjectByKeys,
   findDuplicatesInArray,
   hasDuplicatesInArray,
