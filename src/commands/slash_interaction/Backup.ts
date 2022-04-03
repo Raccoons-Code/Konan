@@ -25,10 +25,6 @@ export default class extends SlashCommand {
             .setRequired(true)))
         .addSubcommand(subcommand => subcommand.setName('backup')
           .setDescription('Delete backup')
-          .addStringOption(option => option.setName('id')
-            .setDescription('Server ID')
-            .setAutocomplete(true)
-            .setRequired(true))
           .addStringOption(option => option.setName('key')
             .setDescription('Backup key')
             .setAutocomplete(true)
@@ -255,7 +251,12 @@ export default class extends SlashCommand {
     if (focused.name === 'id') {
       const dbUser = await this.prisma.user.findFirst({
         where: { id: userId },
-        include: { guilds: { where: { backups: { some: { NOT: undefined } } }, include: { backups: true } } },
+        include: {
+          guilds: {
+            where: { backups: { some: { NOT: undefined } } },
+            include: { backups: true },
+          },
+        },
       });
 
       if (!dbUser || !dbUser.guilds) return await interaction.respond(res);
@@ -284,9 +285,7 @@ export default class extends SlashCommand {
     }
 
     if (focused.name === 'key') {
-      const id = options.getString('id')?.split(' |')[0];
-
-      const backups = await this.prisma.backup.findMany({ where: { guildId: id } });
+      const backups = await this.prisma.backup.findMany({ where: { userId } });
 
       for (let i = 0; i < backups.length; i++) {
         const backup = backups[i];
@@ -316,47 +315,14 @@ export default class extends SlashCommand {
 
     if (!interaction.inCachedGuild()) return await interaction.respond(res);
 
-    const { client, guild, guildId, locale, options } = interaction;
+    const { guildId, locale, options, user } = interaction;
 
     const focused = options.getFocused(true);
 
-    if (focused.name === 'id') {
-      const dbUser = await this.prisma.user.findFirst({
-        where: { id: guild.ownerId },
-        include: { guilds: { where: { backups: { some: { NOT: undefined } } }, include: { backups: true } } },
-      });
-
-      if (!dbUser || !dbUser.guilds) return await interaction.respond(res);
-
-      for (let i = 0; i < dbUser.guilds.length; i++) {
-        const _guild = dbUser.guilds[i];
-
-        const name = (typeof _guild?.backups[0].data === 'object' &&
-          !Array.isArray(_guild?.backups[0].data) && _guild?.backups[0].data?.name) ||
-          client.guilds.resolve(_guild.id)?.name ||
-          this.t('undefinedServerName', { locale });
-
-        const nameProps = [
-          _guild.id,
-          ' | ', name,
-          _guild.id == guildId ? ` | ${this.t('currentServer', { locale })}` : '',
-        ];
-
-        res.push({
-          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
-          value: `${_guild.id}`,
-        });
-
-        if (i === 24) break;
-      }
-    }
-
     if (focused.name === 'key') {
-      const id = options.getString('id')?.split(' |')[0] ?? guildId;
+      const backups = await this.prisma.backup.findMany({ where: { userId: user.id } });
 
-      const backups = await this.prisma.backup.findMany({ where: { guildId: <string>id } });
-
-      if (!backups) return;
+      if (!backups) return await interaction.respond(res);
 
       for (let i = 0; i < backups.length; i++) {
         const backup = backups[i];

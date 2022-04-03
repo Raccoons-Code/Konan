@@ -1,6 +1,6 @@
 {
   "name": "konan",
-  "version": "0.13.25",
+  "version": "0.13.26",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
