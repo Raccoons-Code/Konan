@@ -14,12 +14,10 @@ if (STATCORD_KEY) {
     manager,
   });
 
-  statcord.on('autopost-start', () => console.log('Started Statcord autopost'));
+  statcord.on('autopost-start', () => console.log('Statcord autopost started.'));
 
   statcord.on('post', (status) => {
-    if (status) return console.error(status);
-
-    console.log('Successful Statcord post.');
+    if (status) return console.error('Statcord post failed:', status);
   });
 }
 
