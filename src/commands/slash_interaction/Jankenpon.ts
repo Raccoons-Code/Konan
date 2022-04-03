@@ -6,7 +6,9 @@ export default class Jankenpon extends SlashCommand {
   emoji: { [k: string]: string } = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };
 
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Game',
+    });
 
     this.data = new SlashCommandBuilder().setName('jankenpon')
       .setDescription('Play a game of Jankenpon with your opponent.')

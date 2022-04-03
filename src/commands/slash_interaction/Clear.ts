@@ -5,6 +5,7 @@ import { Client, SlashCommand } from '../../structures';
 export default class Clear extends SlashCommand {
   constructor(client: Client) {
     super(client, {
+      category: 'Moderation',
       clientPermissions: ['MANAGE_MESSAGES', 'READ_MESSAGE_HISTORY'],
       userPermissions: ['MANAGE_MESSAGES'],
     });

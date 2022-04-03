@@ -12,6 +12,7 @@ export default class WatchTogether extends SlashCommand {
 
   constructor(client: Client) {
     super(client, {
+      category: 'Utility',
       clientPermissions: ['CREATE_INSTANT_INVITE'],
     });
 

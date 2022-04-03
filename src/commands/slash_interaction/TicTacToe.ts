@@ -5,7 +5,9 @@ import { Client, SlashCommand } from '../../structures';
 
 export default class extends SlashCommand {
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Game',
+    });
 
     this.data = new SlashCommandBuilder().setName('tictactoe')
       .setDescription('Play a game of TicTacToe with your friends! - Powered by Discord TicTacToe.')

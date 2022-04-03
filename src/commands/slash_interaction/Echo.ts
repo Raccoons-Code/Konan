@@ -7,6 +7,7 @@ const dynamic = true;
 export default class Echo extends SlashCommand {
   constructor(client: Client) {
     super(client, {
+      category: 'Fun',
       clientPermissions: ['MANAGE_WEBHOOKS'],
     });
 

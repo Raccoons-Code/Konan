@@ -5,6 +5,7 @@ import { Client, SlashCommand } from '../../structures';
 export default class Timeout extends SlashCommand {
   constructor(client: Client) {
     super(client, {
+      category: 'Moderation',
       clientPermissions: ['MODERATE_MEMBERS'],
       userPermissions: ['MODERATE_MEMBERS'],
     });

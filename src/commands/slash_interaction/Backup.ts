@@ -6,6 +6,7 @@ import { Client, SlashCommand } from '../../structures';
 export default class extends SlashCommand {
   constructor(client: Client) {
     super(client, {
+      category: 'Utility',
       clientPermissions: ['BAN_MEMBERS', 'MANAGE_CHANNELS', 'MANAGE_EMOJIS_AND_STICKERS', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'MANAGE_ROLES', 'MANAGE_WEBHOOKS'],
       userPermissions: ['ADMINISTRATOR'],
     });

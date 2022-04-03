@@ -38,6 +38,7 @@ export default class Random extends SlashCommand {
 
   constructor(client: Client) {
     super(client, {
+      category: 'Fun',
       clientPermissions: ['ATTACH_FILES'],
     });
 

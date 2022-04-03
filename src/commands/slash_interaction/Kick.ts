@@ -5,6 +5,7 @@ import { Client, SlashCommand } from '../../structures';
 export default class Kick extends SlashCommand {
   constructor(client: Client) {
     super(client, {
+      category: 'Moderation',
       clientPermissions: ['KICK_MEMBERS'],
       userPermissions: ['KICK_MEMBERS'],
     });

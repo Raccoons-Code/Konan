@@ -15,9 +15,11 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   async execute(interaction: SelectMenuInteraction) {
-    const { values } = interaction;
+    const { customId, values } = interaction;
 
-    this[<'home'>values[0]]?.(interaction);
+    const { sc } = JSON.parse(customId);
+
+    this[<'home'>sc || values[0]]?.(interaction);
   }
 
   async home(interaction: SelectMenuInteraction) {
@@ -75,9 +77,10 @@ export default class Help extends SelectMenuComponentInteraction {
       .setFooter({ text: `Total: ${slashcommands.length}` })
       .setTitle(this.t('konanSupport', { locale }))];
 
-    const menus = [this.setSelectMenu(1)];
-
-    const components = [new MessageActionRow().setComponents(menus)];
+    const components = [
+      new MessageActionRow().setComponents([this.setSelectCategory('general')]),
+      new MessageActionRow().setComponents([this.setSelectMenu(1)]),
+    ];
 
     await interaction.update({ components, embeds });
   }
@@ -93,6 +96,27 @@ export default class Help extends SelectMenuComponentInteraction {
     const menus = [this.setSelectMenu(2)];
 
     const components = [new MessageActionRow().setComponents(menus)];
+
+    await interaction.update({ components, embeds });
+  }
+
+  async setCommandCategory(interaction: SelectMenuInteraction) {
+    const { locale, values } = interaction;
+
+    const commands = this.client.commandsByCategory[values[0]] || this.client.commands.slash_interaction;
+
+    const slashcommands = commands.filter((c: any) => c.data.defaultPermission !== false).toJSON();
+
+    const embeds = [new MessageEmbed()
+      .setColor('RANDOM')
+      .setDescription(`${this.convertCommandsToString(slashcommands).match(this.pattern.content)?.[1]}`)
+      .setFooter({ text: `Total: ${slashcommands.length}` })
+      .setTitle(this.t('konanSupport', { locale }))];
+
+    const components = [
+      new MessageActionRow().setComponents(this.setSelectCategory(values[0])),
+      new MessageActionRow().setComponents(this.setSelectMenu(1)),
+    ];
 
     await interaction.update({ components, embeds });
   }
@@ -116,6 +140,18 @@ export default class Help extends SelectMenuComponentInteraction {
         { label: '🏠 Home', value: 'home', default: i === 0 }, // :home:
         { label: '🗃️ Commands', value: 'commands', default: i === 1 }, // :card_box:
         /* { label: `${earth} Languages`, value: 'localization', default: i === 2 }, */
+      ]);
+  }
+
+  setSelectCategory(i: string | number = 0) {
+    return new MessageSelectMenu()
+      .setCustomId(JSON.stringify({ c: this.data.name, sc: 'setCommandCategory', i }))
+      .setOptions([
+        { label: '📝 General', value: 'general', default: i === 'general' }, // :pencil2:
+        { label: '🤣 Fun', value: 'Fun', default: i === 'Fun' }, // :rofl:
+        { label: '🎮 Games', value: 'Game', default: i === 'Game' }, // :video_game:
+        { label: '🛡️ Moderation', value: 'Moderation', default: i === 'Moderation' }, // :shield:
+        { label: '🧰 Utility', value: 'Utility', default: i === 'Utility' }, // :toolbox:
       ]);
   }
 }

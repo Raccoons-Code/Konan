@@ -22,7 +22,9 @@ const languages: { [k: string]: string } = {
 export default class News extends SlashCommand {
 
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Fun',
+    });
 
     this.data = new SlashCommandBuilder().setName('news')
       .setDescription('Show news from a journal.')

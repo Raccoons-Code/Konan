@@ -13,7 +13,9 @@ export default class extends SlashCommand {
   [k: string]: any
 
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Utility',
+    });
 
     this.data = new SlashCommandBuilder().setName('info')
       .setDescription('Server or user info.')

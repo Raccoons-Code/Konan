@@ -5,6 +5,7 @@ import { Client, SlashCommand } from '../../structures';
 export default class Ban extends SlashCommand {
   constructor(client: Client) {
     super(client, {
+      category: 'Moderation',
       clientPermissions: ['BAN_MEMBERS'],
       userPermissions: ['BAN_MEMBERS'],
     });

@@ -3,9 +3,11 @@ import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInterac
 import db from 'quick.db';
 import { Client, SlashCommand } from '../../structures';
 
-export default class extends SlashCommand {
+export default class Guess extends SlashCommand {
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Game',
+    });
 
     this.data = new SlashCommandBuilder().setName('guess')
       .setDescription('You have 10 chances to guess the number from 1 to 100 that the bot set.')

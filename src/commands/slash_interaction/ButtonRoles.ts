@@ -14,6 +14,7 @@ export interface ButtonRolesCustomId {
 export default class ButtonRoles extends SlashCommand {
   constructor(client: Client) {
     super(client, {
+      category: 'Moderation',
       clientPermissions: ['EMBED_LINKS', 'MANAGE_ROLES', 'SEND_MESSAGES'],
       userPermissions: ['MANAGE_ROLES'],
     });

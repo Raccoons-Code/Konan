@@ -5,6 +5,7 @@ import { Client, SlashCommand } from '../../structures';
 export default class Embed extends SlashCommand {
   constructor(client: Client) {
     super(client, {
+      category: 'Utility',
       clientPermissions: ['SEND_MESSAGES'],
       userPermissions: ['MANAGE_MESSAGES'],
     });

@@ -4,7 +4,9 @@ import { Client, SlashCommand } from '../../structures';
 
 export default class NumberIsPrime extends SlashCommand {
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Utility',
+    });
 
     this.data = new SlashCommandBuilder().setName('number_is_prime')
       .setDescription('Verify if number is prime.')

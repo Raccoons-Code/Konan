@@ -13,7 +13,9 @@ export default class Movies extends SlashCommand {
   [k: string]: any
 
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Fun',
+    });
 
     this.data = new SlashCommandBuilder().setName('movies')
       .setDescription('Search, list and see details of movies.')

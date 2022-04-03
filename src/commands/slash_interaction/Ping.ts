@@ -7,7 +7,9 @@ export default class Ping extends SlashCommand {
   ping_: number;
 
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Utility',
+    });
 
     this.data = new SlashCommandBuilder().setName('ping')
       .setDescription('Replies with Pong!');

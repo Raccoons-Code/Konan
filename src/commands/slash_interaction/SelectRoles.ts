@@ -20,6 +20,7 @@ export interface SelectRolesItemOptionValue {
 export default class SelectRoles extends SlashCommand {
   constructor(client: Client) {
     super(client, {
+      category: 'Moderation',
       clientPermissions: ['EMBED_LINKS', 'MANAGE_ROLES', 'SEND_MESSAGES'],
       userPermissions: ['MANAGE_ROLES'],
     });

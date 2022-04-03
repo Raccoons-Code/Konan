@@ -4,7 +4,9 @@ import { Client, SlashCommand } from '../../structures';
 
 export default class Avatar extends SlashCommand {
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Utility',
+    });
 
     this.data = new SlashCommandBuilder().setName('avatar')
       .setDescription('Replies with the user\'s profile picture.')

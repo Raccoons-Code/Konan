@@ -13,6 +13,7 @@ const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
 
 export default class Client extends DJS.Client {
   applicationCommandTypes: string[] = commands.applicationCommandTypes;
+  commandsByCategory!: { [k: string]: Collection<string, any> };
   commandTypes: { [k: string]: string[] } | string[] = commands.commandTypes;
   commands!: { [k: string]: Collection<string, any> };
 
@@ -45,6 +46,8 @@ export default class Client extends DJS.Client {
     events.init(this);
 
     this.commands = await commands.loadCommands();
+
+    this.commandsByCategory = commands.commandsByCategory;
 
     await events.loadEvents();
 

@@ -8,7 +8,9 @@ const Choices = <[string, string][]>Object.keys(languages).filter(l => !/(isSupp
 
 export default class Translate extends SlashCommand {
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'Utility',
+    });
 
     this.data = new SlashCommandBuilder().setName('translate')
       .setDescription('Translate text from one language to another. - Powered by Google Translate Api.')

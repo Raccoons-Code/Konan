@@ -8,6 +8,7 @@ class Commands {
   private client!: Client;
   private _applicationCommandTypes!: string[];
   private _commandTypes!: { [k: string]: string[] } | string[];
+  commandsByCategory: { [k: string]: Collection<string, Command | SlashCommand> } = {};
 
   init(client: Client) {
     Object.defineProperties(this, { client: { value: client } });
@@ -72,6 +73,13 @@ class Commands {
         const command = this.isClass(commandFile) ? new commandFile(client) : commandFile;
 
         if (!command.data || !command.execute) continue;
+
+        if (command.props?.category) {
+          if (!this.commandsByCategory[command.props.category])
+            this.commandsByCategory[command.props.category] = new Collection();
+
+          this.commandsByCategory[command.props.category].set(command.data.name, command);
+        }
 
         commands[dir].set(command.data.name, command);
 

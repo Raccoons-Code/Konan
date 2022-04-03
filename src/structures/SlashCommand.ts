@@ -33,6 +33,9 @@ export default class SlashCommand extends Base {
 }
 
 export interface CommandProps {
+  category?: CategoryTypes;
   clientPermissions?: PermissionString[]
   userPermissions?: PermissionString[]
 }
+
+export type CategoryTypes = 'Fun' | 'Game' | 'Moderation' | 'Utility';
