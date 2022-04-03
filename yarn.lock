@@ -1321,7 +1321,7 @@ node-abi@^3.3.0:
   dependencies:
     semver "^7.3.5"
 
-node-fetch@^2.6.1, node-fetch@^2.6.5:
+node-fetch@^2.6.1, node-fetch@^2.6.5, node-fetch@^2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
   integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
@@ -1622,6 +1622,14 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
+statcord.js@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/statcord.js/-/statcord.js-3.4.1.tgz#0f1a6db941bcd60bf586ac5516a3334b9af03651"
+  integrity sha512-kxUuDLeCHWcwKqJa3RmFm73o9oMk/XyKo3apWIBnqOzcEzEPQMUC1mGXfCy6yxCgRsSLBFIkmhtM2n3Ww1HebQ==
+  dependencies:
+    node-fetch "^2.6.7"
+    systeminformation "^5.7.12"
+
 statuses@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-2.0.1.tgz#55cb000ccf1d48728bd23c685a063998cf1a1b63"
@@ -1689,6 +1697,11 @@ supports-color@^7.1.0:
   integrity sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==
   dependencies:
     has-flag "^4.0.0"
+
+systeminformation@^5.7.12:
+  version "5.11.9"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.11.9.tgz#95f2334e739dd224178948a2afaced7d9abfdf9d"
+  integrity sha512-eeMtL9UJFR/LYG+2rpeAgZ0Va4ojlNQTkYiQH/xbbPwDjDMsaetj3Pkc+C1aH5G8mav6HvDY8kI4Vl4noksSkA==
 
 tar-fs@^2.0.0:
   version "2.1.1"
