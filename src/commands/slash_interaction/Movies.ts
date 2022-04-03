@@ -2,7 +2,8 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import ms from 'ms';
 import { Client, SlashCommand } from '../../structures';
-import tmdbApi, { SearchMoviesData } from '../../TMDBAPI';
+import tmdbApi from '../../TMDBAPI';
+import { SearchMoviesData } from '../../TMDBAPI/src/v3/typings';
 
 const { configuration, discover, genres, movies, search, Util: TmdbUtil } = tmdbApi;
 const { image, movie } = TmdbUtil;

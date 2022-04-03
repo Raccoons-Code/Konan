@@ -1,6 +1,7 @@
 import { ButtonInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { ButtonComponentInteraction, Client } from '../../structures';
-import tmdbApi, { ResultsMovieData } from '../../TMDBAPI';
+import tmdbApi from '../../TMDBAPI';
+import { ResultsMovieData } from '../../TMDBAPI/src/v3/typings';
 
 const { configuration, discover, genres, Util: TmdbUtil } = tmdbApi;
 const { image, movie } = TmdbUtil;

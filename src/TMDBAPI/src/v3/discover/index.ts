@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { DiscoverMovieOptions, DiscoverOptions, SearchMoviesData } from '../typings';
 
 export default class Discover {
@@ -52,7 +52,6 @@ export default class Discover {
       year } = props;
 
     const fetchProps = [
-      this.baseURL,
       '/movie?api_key=', this.apiKey,
       '&include_adult=', include_adult,
       '&include_video=', include_video,
@@ -92,6 +91,6 @@ export default class Discover {
       year ? `&year=${year}` : '',
     ];
 
-    return await fetch(fetchProps.join('')).then(r => r.json());
+    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
   }
 }

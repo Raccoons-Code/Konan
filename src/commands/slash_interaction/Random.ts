@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
+import axios from 'axios';
 import { CommandInteraction, PermissionString } from 'discord.js';
-import fetch from 'node-fetch';
 import { Client, SlashCommand } from '../../structures';
 import { capitalize, mathRandom } from '../../util';
 
@@ -68,7 +68,7 @@ export default class Random extends SlashCommand {
   }
 
   async executecat(interaction: CommandInteraction) {
-    const { file } = await fetch('https://aws.random.cat/meow').then(response => response.json());
+    const { file } = await axios.get('https://aws.random.cat/meow').then(r => r.data);
 
     await interaction.editReply({ files: [file] });
   }

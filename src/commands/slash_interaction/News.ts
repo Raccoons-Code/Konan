@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
+import axios from 'axios';
 import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
-import fetch from 'node-fetch';
 import { Client, SlashCommand } from '../../structures';
 
 const journals = [{
@@ -57,7 +57,7 @@ export default class News extends SlashCommand {
 
     if (!_new) return;
 
-    const news = await fetch(journal.url).then(r => r.json()) as any[];
+    const news = await axios.get(journal.url).then(r => r.data) as any[];
 
     const __new = news.find(_fnew => _fnew[journal.properties.title].match(_new));
 
@@ -174,7 +174,7 @@ export default class News extends SlashCommand {
 
     if (!journal) return res;
 
-    const news = await fetch(journal.url).then(r => r.json()) as any[];
+    const news = await axios.get(journal.url).then(r => r.data) as any[];
 
     const _news = news.filter(n => pattern.test(n[journal.properties.title]));
 

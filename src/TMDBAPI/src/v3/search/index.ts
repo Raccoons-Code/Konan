@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { SearchMoviesData, SearchOptions, SearchQueryOptions } from '../typings';
 
 export default class Search {
@@ -26,7 +26,6 @@ export default class Search {
       year } = props;
 
     const searchProps = [
-      this.baseURL,
       '/movie?api_key=', this.apiKey,
       '&query=', query,
       '&language=', language,
@@ -37,6 +36,6 @@ export default class Search {
       year ? `&year=${year}` : '',
     ];
 
-    return await fetch(searchProps.join('')).then(r => r.json());
+    return await axios.get(searchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
   }
 }

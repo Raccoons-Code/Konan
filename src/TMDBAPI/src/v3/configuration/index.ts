@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { ApiConfiguration, ConfigurationOpitons, Countries, GetLanguageProps, Jobs, Languages, PrimaryTranslations, Timezones } from '../typings';
 
 export default class Configuration {
@@ -42,55 +42,49 @@ export default class Configuration {
 
   async fetchApiConfiguration(): Promise<ApiConfiguration> {
     const fetchProps = [
-      this.baseURL,
       '?api_key=', this.apiKey,
     ];
 
-    return await fetch(fetchProps.join('')).then(r => r.json());
+    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
   }
 
   async fetchCountries(): Promise<Countries> {
     const fetchProps = [
-      this.baseURL,
       '/countries?api_key=', this.apiKey,
     ];
 
-    return await fetch(fetchProps.join('')).then(r => r.json());
+    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
   }
 
   async fetchJobs(): Promise<Jobs> {
     const fetchProps = [
-      this.baseURL,
       '/jobs?api_key=', this.apiKey,
     ];
 
-    return await fetch(fetchProps.join('')).then(r => r.json());
+    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
   }
 
   async fetchLanguages(): Promise<Languages> {
     const fetchProps = [
-      this.baseURL,
       '/languages?api_key=', this.apiKey,
     ];
 
-    return await fetch(fetchProps.join('')).then(r => r.json());
+    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
   }
 
   private async fetchPrimaryTranslations(): Promise<PrimaryTranslations> {
     const fetchProps = [
-      this.baseURL,
       '/primary_translations?api_key=', this.apiKey,
     ];
 
-    return await fetch(fetchProps.join('')).then(r => r.json());
+    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
   }
 
   async fetchTimezones(): Promise<Timezones> {
     const fetchProps = [
-      this.baseURL,
       '/timezones?api_key=', this.apiKey,
     ];
 
-    return await fetch(fetchProps.join('')).then(r => r.json());
+    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
   }
 }

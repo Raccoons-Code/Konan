@@ -1,6 +1,6 @@
 {
   "name": "konan",
-  "version": "0.13.22",
+  "version": "0.13.23",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -30,6 +30,7 @@
     "@prisma/client": "^3.11.1",
     "@tsconfig/recommended": "^1.0.1",
     "@vitalets/google-translate-api": "^8.0.0",
+    "axios": "^0.26.1",
     "common-tags": "^1.8.2",
     "discord-api-types": "^0.30.0",
     "discord-backup": "^3.0.1",

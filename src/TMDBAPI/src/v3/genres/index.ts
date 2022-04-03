@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { GenresData, GenresOptions, ParseGenresOptions, SearchGenresOptions } from '../typings';
 
 export default class Genres {
@@ -24,12 +24,11 @@ export default class Genres {
       return this.movieGenres.get(language) as GenresData;
 
     const fetchProps = [
-      this.baseURL,
       '/movie/list?api_key=', this.apiKey,
       '&language=', language,
     ];
 
-    const { genres } = await fetch(fetchProps.join('')).then(r => r.json());
+    const { genres } = await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
 
     return this.movieGenres.set(language, { language, genres }).get(language) as GenresData;
   }
@@ -41,12 +40,11 @@ export default class Genres {
       return this.tvGenres.get(language) as GenresData;
 
     const fetchProps = [
-      this.baseURL,
       '/tv/list?api_key=', this.apiKey,
       '&language=', language,
     ];
 
-    const { genres } = await fetch(fetchProps.join('')).then(r => r.json());
+    const { genres } = await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
 
     return this.tvGenres.set(language, { language, genres }).get(language) as GenresData;
   }
