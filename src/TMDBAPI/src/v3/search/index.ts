@@ -25,17 +25,18 @@ export default class Search {
       region,
       year } = props;
 
-    const searchProps = [
-      '/movie?api_key=', this.apiKey,
-      '&query=', query,
-      '&language=', language,
-      '&page=', page,
-      '&include_adult=', include_adult,
-      primary_release_year ? `&primary_release_year=${primary_release_year}` : '',
-      region ? `&region=${region}` : '',
-      year ? `&year=${year}` : '',
-    ];
-
-    return await axios.get(searchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
+    return await axios.get('/movie', {
+      baseURL: this.baseURL,
+      params: {
+        api_key: this.apiKey,
+        query,
+        language,
+        page,
+        include_adult,
+        primary_release_year,
+        region,
+        year,
+      },
+    }).then(r => r.data);
   }
 }

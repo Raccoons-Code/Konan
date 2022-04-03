@@ -15,50 +15,53 @@ export default class Movies {
   async fetchDetails(props: SearchDetailsOptions): Promise<Movie> {
     const { append_to_response, movie_id, language = this.language } = props;
 
-    const fetchProps = [
-      '/', movie_id,
-      '?api_key=', this.apiKey,
-      '&language=', language,
-      append_to_response ? `&append_to_response=${append_to_response}` : '',
-    ];
-
-    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
+    return await axios.get(`/${movie_id}`, {
+      baseURL: this.baseURL,
+      params: {
+        api_key: this.apiKey,
+        language,
+        append_to_response,
+      },
+    }).then(r => r.data);
   }
 
   async fetchLatest(props: { language?: string } = {}): Promise<Movie> {
     const { language = this.language } = props;
 
-    const fetchProps = [
-      '/latest?api_key=', this.apiKey,
-      '&language=', language,
-    ];
-
-    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
+    return await axios.get('/latest', {
+      baseURL: this.baseURL,
+      params: {
+        api_key: this.apiKey,
+        language,
+      },
+    }).then(r => r.data);
   }
 
   async fetchNowPlaying(props: SearchPopularOptions = {}): Promise<ESearchMoviesData> {
     const { language = this.language, page = 1, region } = props;
 
-    const fetchProps = [
-      '/popular?api_key=', this.apiKey,
-      '&language=', language,
-      '&page=', page,
-      region ? `&region=${region}` : '',
-    ];
-
-    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
+    return await axios.get('/popular', {
+      baseURL: this.baseURL,
+      params: {
+        api_key: this.apiKey,
+        language,
+        page,
+        region,
+      },
+    }).then(r => r.data);
   }
 
   async fetchPopular(props: SearchPopularOptions = {}): Promise<ESearchMoviesData> {
     const { language = this.language, page = 1, region } = props;
 
-    const fetchProps = [
-      '/popular?api_key=', this.apiKey,
-      '&language=', language,
-      '&page=', page,
-      region ? `&region=${region}` : '',
-    ];
-
-    return await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
+    return await axios.get('/popular', {
+      baseURL: this.baseURL,
+      params: {
+        api_key: this.apiKey,
+        language,
+        page,
+        region,
+      },
+    }).then(r => r.data);
   }
 }

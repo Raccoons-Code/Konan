@@ -23,12 +23,13 @@ export default class Genres {
     if (this.movieGenres.has(language))
       return this.movieGenres.get(language) as GenresData;
 
-    const fetchProps = [
-      '/movie/list?api_key=', this.apiKey,
-      '&language=', language,
-    ];
-
-    const { genres } = await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
+    const { genres } = await axios.get('/movie/list', {
+      baseURL: this.baseURL,
+      params: {
+        api_key: this.apiKey,
+        language,
+      },
+    }).then(r => r.data);
 
     return this.movieGenres.set(language, { language, genres }).get(language) as GenresData;
   }
@@ -39,12 +40,13 @@ export default class Genres {
     if (this.tvGenres.has(language))
       return this.tvGenres.get(language) as GenresData;
 
-    const fetchProps = [
-      '/tv/list?api_key=', this.apiKey,
-      '&language=', language,
-    ];
-
-    const { genres } = await axios.get(fetchProps.join(''), { baseURL: this.baseURL }).then(r => r.data);
+    const { genres } = await axios.get('/tv/list', {
+      baseURL: this.baseURL,
+      params: {
+        api_key: this.apiKey,
+        language,
+      },
+    }).then(r => r.data);
 
     return this.tvGenres.set(language, { language, genres }).get(language) as GenresData;
   }
