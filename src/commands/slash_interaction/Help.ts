@@ -138,12 +138,10 @@ export default class Help extends SlashCommand {
       const { autocomplete, description, name, options } = <ApplicationCommandSubCommand>dataOptions[i];
 
       text = [
-        text,
-        ' ', index,
+        text, '\n ', index,
         `\`${name}\` - \`${description}\``,
         autocomplete ? ' | `Autocomplete`' : '',
         required ? ' | `Required`' : '',
-        '\n',
       ].join('').trim();
 
       if (options)
