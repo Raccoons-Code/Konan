@@ -33,7 +33,11 @@ export default class Help extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(this.t('helpText', { locale, user }))
+      .setDescription([
+        this.t('helpText', { locale, user }),
+        '',
+        '[Terms of Service & Privacy](https://github.com/Raccoons-Code/Konan/wiki/Terms-of-Service-&-Privacy)',
+      ].join('\n'))
       .setThumbnail(avatarURL)
       .setTitle(this.t('konanSupport', { locale }))];
 
