@@ -37,11 +37,14 @@ export default class Info extends ButtonComponentInteraction {
 
     const newStats = await this.client.fetchStats();
 
+    const { heapTotal, heapUsed } = process.memoryUsage();
+
     const stats = stripIndents(`
       Servers  : ${newStats.guilds ?? guilds.cache.size}
       Channels : ${newStats.channels ?? channels.cache.size}
       Members  : ${newStats.members ?? users.cache.size}
       Ping     : ${ws.ping} ms
+      Memory   : ${this.util.bytes(heapUsed).join(' ')} / ${this.util.bytes(heapTotal).join(' ')}
       Version  : ${npm_package_version}
       `);
 
