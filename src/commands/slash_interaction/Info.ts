@@ -61,11 +61,14 @@ export default class extends SlashCommand {
 
     const username = <string>guild?.me?.displayName ?? user?.username;
 
+    const { heapTotal, heapUsed } = process.memoryUsage();
+
     const stats = stripIndents(`
       Servers  : ${this.client.stats.guilds ?? guilds.cache.size}
       Channels : ${this.client.stats.channels ?? channels.cache.size}
       Members  : ${this.client.stats.members ?? users.cache.size}
       Ping     : ${ws.ping} ms
+      Memory   : ${this.util.bytes(heapUsed).join(' ')} / ${this.util.bytes(heapTotal).join(' ')}
       Version  : ${npm_package_version}
       `);
 
