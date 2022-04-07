@@ -6,6 +6,7 @@
   "automatic": "automatic",
   "backup404": "Could not find the backup.",
   "backupDeleted": "Backup successfully deleted.",
+  "backupError": "Error! Unable to backup!",
   "backupDone": "Backup successfully done.",
   "ban404": "This user is not banned!",
   "banError": "Error! Unable to ban this user.",

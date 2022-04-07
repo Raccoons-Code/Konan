@@ -30,7 +30,7 @@ export default class MessageCreate extends Event {
 
     if (!command) return;
 
-    if (!/(backup|deploy|throw)/.test(commandName))
+    if (!/(deploy|throw)/.test(commandName))
       await channel.sendTyping();
 
     try {

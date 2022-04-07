@@ -83,79 +83,92 @@ export default class extends SlashCommand {
 
     const dbUser = await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
-      include: { guilds: { include: { backups: true } }, backups: { where: { guildId: guildId } } },
+      include: {
+        guilds: { include: { backups: { where: { userId: guild.ownerId } } } },
+        backups: { where: { guildId: guildId, userId: guild.ownerId } },
+      },
     });
 
     const premium = Date.now() < (dbUser?.premium?.valueOf() ?? 0);
 
     if (!dbUser) {
-      const newbackup = await this.newUser(guild, { premium });
+      const newUser = await this.newUser(guild, { premium });
 
-      return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
+      if (!newUser) return await interaction.editReply(this.t('backupError', { locale }));
+
+      const [newBackup] = newUser.backups;
+
+      return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
     }
 
     const guilds = dbUser.guilds.filter(g => g.backups.length);
 
-    if (dbUser.guilds.every(g => g.id !== guildId) && (!guilds.length || premium && guilds.length < 5)) {
-      const newbackup = await this.newGuild(guild, { premium });
+    if (dbUser.guilds.every(g => g.id !== guildId) && (premium ? guilds.length < 5 : !guilds.length)) {
+      const newGuild = await this.newGuild(guild, { premium });
 
-      return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
+      if (!newGuild) return await interaction.editReply(this.t('backupError', { locale }));
+
+      const [newBackup] = newGuild.backups;
+
+      return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
     }
 
     const { backups } = dbUser;
 
-    if (dbUser.guilds.some(g => g.id === guildId) && premium ?
+    if (dbUser.guilds.some(g => g.id === guildId) && (premium ?
       backups.length ? backups.length < 5 : guilds.length < 5 :
-      !backups.length && !guilds.length) {
+      !(backups.length || guilds.length))) {
       const newbackup = await this.newBackup(guild, { premium });
+
+      if (!newbackup) return await interaction.editReply(this.t('backupError', { locale }));
 
       return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
     }
 
-    return await interaction.editReply(`${user}, ${this.t('alreadyHaveABackup', { locale })} ${this.t('doYouMean??', { locale, string: 'update' })}`);
+    return await interaction.editReply([
+      user,
+      this.t('alreadyHaveABackup', { locale }),
+      this.t('doYouMean??', { locale, string: 'update' }),
+    ].join(' '));
   }
 
   async delete(interaction: CommandInteraction): Promise<any> {
     const { guild, locale, options, user } = interaction;
 
-    const userId = guild?.ownerId ?? user.id;
-    const id = options.getString('id')?.split(' |')[0];
-    const key = options.getString('key')?.split(' |')[0] || '';
-
-    const dbUser = await this.prisma.user.findFirst({
-      where: { id: userId },
-      include: {
-        guilds: { where: { id } },
-        backups: { where: { id: key } },
-      },
-    });
-
-    if (!dbUser)
-      return await interaction.editReply(this.t('information404', { locale }));
-
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'server') {
-      if (!dbUser.guilds.length)
-        return await interaction.editReply(this.t('server404', { locale }));
+      const id = options.getString('id', true).split(' |')[0];
 
-      await this.prisma.backup.deleteMany({ where: { guildId: id } });
+      const userId = guild?.ownerId ?? user.id;
+
+      const deleted = await this.prisma.backup.deleteMany({
+        where: {
+          guildId: id,
+          userId,
+        },
+      });
+
+      if (!deleted)
+        return await interaction.editReply(this.t('server404', { locale }));
 
       return await interaction.editReply(this.t('backupDeleted', { locale }));
     }
 
     if (subcommand === 'backup') {
-      if (!dbUser.backups.length)
-        return await interaction.editReply(this.t('backup404', { locale }));
+      const key = options.getString('key', true).split(' |')[0];
 
-      await this.prisma.backup.delete({ where: { id: key } });
+      const deleted = await this.prisma.backup.delete({ where: { id: key } });
+
+      if (!deleted)
+        return await interaction.editReply(this.t('backup404', { locale }));
 
       return await interaction.editReply(this.t('backupDeleted', { locale }));
     }
   }
 
   async list(interaction: CommandInteraction): Promise<any> {
-    const { guild, locale, user } = interaction;
+    const { guild, guildId, locale, user } = interaction;
 
     const userId = guild?.ownerId ?? user.id;
 
@@ -172,8 +185,17 @@ export default class extends SlashCommand {
       if (!backup.data || typeof backup.data !== 'object' || Array.isArray(backup.data)) continue;
 
       embeds[0].addField(
-        [backup.data.id, ' | ', backup.data.name].join(''),
-        [backup.id, backup.premium ? ' - `Premium`' : ''].join(''),
+        [
+          backup.data.id,
+          ' | ',
+          backup.data.name,
+        ].join(''),
+        [
+          backup.id,
+          backup.data.guildID === guildId ? ` | ${this.t('currentServer', { locale })}` : '',
+          backup.premium ? ' - `Premium`' : '',
+        ].join(''),
+        true,
       );
 
       if (embeds[0].fields.length === 25) break;
@@ -190,17 +212,18 @@ export default class extends SlashCommand {
 
     const { guild, options } = interaction;
 
-    const key = options.getString('key')?.split(' |')[0];
+    const key = options.getString('key', true).split(' |')[0];
 
     const backup = await this.prisma.backup.findFirst({ where: { id: key } });
 
-    if (!backup || !backup.data) return;
+    if (!(backup && backup.data))
+      return await interaction.editReply(this.t('backup404', { locale }));
 
     const { data, premium } = backup;
 
-    const clear = <boolean>options.getBoolean('clear_server');
+    const clear = options.getBoolean('clear_server') ?? false;
 
-    await interaction.editReply(`${this.t('restoring'), { locale }}...`).catch(() => null);
+    await interaction.editReply(`${this.t('restoring'), { locale }}...`);
 
     try {
       await Backup.load(<string>data, guild, {
@@ -220,21 +243,23 @@ export default class extends SlashCommand {
     if (!interaction.inCachedGuild())
       return await interaction.editReply(this.t('onlyOnServer', { locale }));
 
-    const { guild, guildId, options } = interaction;
+    const { guild, options } = interaction;
 
-    const key = <string>options.getString('key')?.split(' |')[0];
+    const key = options.getString('key', true).split(' |')[0];
 
     const dbUser = await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
-      include: { backups: { where: { id: key } }, guilds: { where: { id: <string>guildId } } },
+      include: { backups: { where: { id: key } } },
     });
 
-    if (!dbUser || !dbUser.backups.length)
+    if (!(dbUser && dbUser.backups.length))
       return await interaction.editReply(this.t('backup404', { locale }));
 
     const premium = Date.now() < (dbUser.premium?.valueOf() ?? 0);
 
     const newbackup = await this.updatebackup(guild, key, { premium });
+
+    if (!newbackup) return await interaction.editReply(this.t('backupError', { locale }));
 
     return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
   }
@@ -253,13 +278,22 @@ export default class extends SlashCommand {
         where: { id: userId },
         include: {
           guilds: {
-            where: { backups: { some: { NOT: undefined } } },
-            include: { backups: true },
+            where: {
+              backups: {
+                some: {
+                  AND: [{
+                    userId,
+                    NOT: undefined,
+                  }],
+                },
+              },
+            },
+            include: { backups: { where: { userId } } },
           },
         },
       });
 
-      if (!dbUser || !dbUser.guilds) return await interaction.respond(res);
+      if (!(dbUser && dbUser.guilds)) return await interaction.respond(res);
 
       for (let i = 0; i < dbUser.guilds.length; i++) {
         const _guild = dbUser.guilds[i];
@@ -295,6 +329,7 @@ export default class extends SlashCommand {
         const nameProps = [
           backup.id,
           ' | ', backup.data.name,
+          backup.premium ? ' | Premium' : '',
           backup.guildId == guildId ? ` | ${this.t('currentServer', { locale })}` : '',
         ];
 
@@ -315,37 +350,7 @@ export default class extends SlashCommand {
 
     if (!interaction.inCachedGuild()) return await interaction.respond(res);
 
-    const { guildId, locale, options, user } = interaction;
-
-    const focused = options.getFocused(true);
-
-    if (focused.name === 'key') {
-      const backups = await this.prisma.backup.findMany({ where: { userId: user.id } });
-
-      if (!backups) return await interaction.respond(res);
-
-      for (let i = 0; i < backups.length; i++) {
-        const backup = backups[i];
-
-        if (!backup.data || typeof backup.data !== 'object' || Array.isArray(backup.data)) continue;
-
-        const nameProps = [
-          backup.id,
-          ' | ', backup.data.name,
-          backup.premium ? ' | Premium' : '',
-          backup.guildId === guildId ? ` | ${this.t('currentServer', { locale })}` : '',
-        ];
-
-        res.push({
-          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
-          value: `${backup.id}`,
-        });
-
-        if (i === 24) break;
-      }
-    }
-
-    await interaction.respond(res);
+    await this.deleteAutocomplete(interaction, res);
   }
 
   async updateAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
@@ -389,30 +394,90 @@ export default class extends SlashCommand {
 
     const { premium } = options;
 
-    const data = await Backup.create(guild,
-      { jsonBeautify: false, jsonSave: false, maxMessagesPerChannel: premium ? 20 : 0 }) as any;
+    const data = await Backup.create(guild, {
+      jsonBeautify: false,
+      jsonSave: false,
+      maxMessagesPerChannel: premium ? 20 : 0,
+    }) as any;
 
-    const newBackup = await this.prisma.backup.create({
-      data: { id: data.id, data, guildId: id, premium, userId: ownerId },
-    });
-
-    return newBackup;
+    try {
+      return await this.prisma.backup.create({
+        data: {
+          id: data.id,
+          data,
+          guildId: id,
+          premium,
+          userId: ownerId,
+        },
+      });
+    } catch {
+      return;
+    }
   }
 
   async newGuild(guild: Guild, options: { premium: boolean }) {
     const { id, ownerId } = guild;
 
-    await this.prisma.guild.create({ data: { id, userId: ownerId } });
+    const { premium } = options;
 
-    return await this.newBackup(guild, options);
+    const data = await Backup.create(guild, {
+      jsonBeautify: false,
+      jsonSave: false,
+      maxMessagesPerChannel: premium ? 20 : 0,
+    }) as any;
+
+    try {
+      return await this.prisma.guild.create({
+        data: {
+          id,
+          userId: ownerId,
+          backups: {
+            create: {
+              id: data.id,
+              data,
+              premium,
+              userId: ownerId,
+            },
+          },
+        },
+        include: { backups: { where: { id: data.id } } },
+      });
+    } catch {
+      return;
+    }
   }
 
   async newUser(guild: Guild, options: { premium: boolean }) {
     const { id, ownerId } = guild;
 
-    await this.prisma.user.create({ data: { id: ownerId, guilds: { create: { id } }, premium: Date() } });
+    const { premium } = options;
 
-    return await this.newBackup(guild, options);
+    const data = await Backup.create(guild, {
+      jsonBeautify: false,
+      jsonSave: false,
+      maxMessagesPerChannel: premium ? 20 : 0,
+    }) as any;
+
+    try {
+      return await this.prisma.user.create({
+        data: {
+          id: ownerId,
+          guilds: { create: { id } },
+          backups: {
+            create: {
+              id: data.id,
+              data,
+              guildId: id,
+              premium,
+            },
+          },
+          premium: new Date(),
+        },
+        include: { backups: { where: { id: data.id } } },
+      });
+    } catch {
+      return;
+    }
   }
 
   async updatebackup(guild: Guild, key: string, options: { premium: boolean }) {
@@ -426,9 +491,19 @@ export default class extends SlashCommand {
       maxMessagesPerChannel: premium ? 20 : 0,
     }) as any;
 
-    return await this.prisma.backup.update({
-      where: { id: key },
-      data: { id: data.id, data, guildId: id, premium, userId: ownerId },
-    });
+    try {
+      return await this.prisma.backup.update({
+        where: { id: key },
+        data: {
+          id: data.id,
+          data,
+          guildId: id,
+          premium,
+          userId: ownerId,
+        },
+      });
+    } catch {
+      return;
+    }
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "konan",
-  "version": "0.13.32",
+  "version": "0.14.0",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -27,7 +27,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
     "@discordjs/rest": "^0.3.0",
-    "@prisma/client": "^3.12.0",
+    "@prisma/client": "3.10.0",
     "@tsconfig/recommended": "^1.0.1",
     "@vitalets/google-translate-api": "^8.0.0",
     "axios": "^0.26.1",
@@ -53,7 +53,7 @@
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
     "eslint": "^8.12.0",
-    "prisma": "^3.12.0",
+    "prisma": "3.10.0",
     "typescript": "^4.6.3"
   },
   "engines": {
@@ -61,5 +61,11 @@
   },
   "prisma": {
     "schema": "./src/database/prisma/schema.prisma"
+  },
+  "yarn-upgrade-all": {
+    "ignore": [
+      "@prisma/client",
+      "prisma"
+    ]
   }
 }
