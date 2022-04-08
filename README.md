@@ -26,4 +26,4 @@ If you're interested, [click here](https://discord.com/api/oauth2/authorize?clie
 
 ## Information
 
-[Privacy](../../wiki/Terms-of-Service-&-Privacy)
+[Terms of Service & Privacy](../../wiki/Terms-of-Service-&-Privacy)
