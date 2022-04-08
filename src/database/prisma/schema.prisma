@@ -15,7 +15,7 @@ model User {
   ObjectId    String     @id @default(auto()) @map("_id") @db.ObjectId
   createdAt   DateTime   @default(now()) @db.Timestamp
   id          String     @unique
-  email       String?    @unique
+  email       String?
   premium     DateTime?  @db.Timestamp
   usedPremium Boolean?
   guilds      Guild[]
