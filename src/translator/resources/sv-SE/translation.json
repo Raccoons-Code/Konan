@@ -6,6 +6,7 @@
   "automatic": "automatisk",
   "backup404": "Kunde inte hitta säkerhetskopian.",
   "backupDeleted": "Säkerhetskopieringen har tagits bort.",
+  "backupError": "Fel! Kan inte säkerhetskopiera!",
   "backupDone": "Säkerhetskopiering slutförd.",
   "ban404": "Den här användaren är inte bannad!",
   "banError": "Fel! Kan inte bannlysa den här användaren.",
