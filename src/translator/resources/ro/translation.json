@@ -6,6 +6,7 @@
   "automatic": "automat",
   "backup404": "Copia de rezervă nu a putut fi găsită.",
   "backupDeleted": "Backup şters cu succes.",
+  "backupError": "Eroare! Nu se poate copia de rezervă!",
   "backupDone": "Backup realizat cu succes.",
   "ban404": "Acest utilizator nu este interzis!",
   "banError": "Eroare! Acest utilizator nu poate fi interzis.",
