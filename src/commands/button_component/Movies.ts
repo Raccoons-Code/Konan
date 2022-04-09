@@ -83,8 +83,8 @@ export default class Movies extends ButtonComponentInteraction {
         .setDescription(overview)
         .setFields([
           { name: 'Release date', value: release_date || '-', inline: true },
-          { name: 'Average of votes', value: `${vote_average || 0}`, inline: true },
-          { name: 'Count of votes', value: `${vote_count || 0}`, inline: true },
+          { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },
+          { name: 'Count of votes', value: `${vote_count ?? 0}`, inline: true },
           { name: 'Original language', value: lang || '-', inline: true },
         ])
         .setImage(backdrop_img)

@@ -121,12 +121,12 @@ export default class Jankenpon extends SlashCommand {
     if (subcommand === 'single') {
       const jankenpon = options.getString('jankenpon', true);
 
-      const result = this.util.jankenpon.spock(jankenpon);
+      const { player1, player2, result } = this.util.jankenpon.spock(jankenpon);
 
       embeds[0].addFields([
-        { name, value: result.player1, inline: true },
-        { name: 'Result', value: result.result, inline: true },
-        { name: 'Machine', value: result.player2, inline: true },
+        { name, value: `${this.emoji[player1]} ${player1}`, inline: true },
+        { name: 'Result', value: result, inline: true },
+        { name: 'Machine', value: `${this.emoji[player2]} ${player2}`, inline: true },
       ]);
 
       return await interaction.reply({ embeds });

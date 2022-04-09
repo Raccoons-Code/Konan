@@ -186,10 +186,10 @@ export default class Movies extends SlashCommand {
         .setColor('RANDOM')
         .setDescription(overview)
         .setFields([
-          { name: 'Release date', value: release_date, inline: true },
-          { name: 'Average of votes', value: `${vote_average}`, inline: true },
-          { name: 'Count of votes', value: `${vote_count}`, inline: true },
-          { name: 'Original language', value: lang, inline: true },
+          { name: 'Release date', value: release_date || '-', inline: true },
+          { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },
+          { name: 'Count of votes', value: `${vote_count ?? 0}`, inline: true },
+          { name: 'Original language', value: lang || '-', inline: true },
         ])
         .setImage(backdrop_img)
         .setThumbnail(poster_img)

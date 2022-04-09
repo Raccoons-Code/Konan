@@ -22,7 +22,7 @@ export = new class Jankenpon {
     };
   }
 
-  get rules(): { [k: string]: any } {
+  get rules(): { [k: string]: { [k: string]: number } } {
     return {
       rock: { rock: 0, scissors: 1, paper: 2, lizard: 1, spock: 2 },
       paper: { paper: 0, rock: 1, scissors: 2, spock: 1, lizard: 2 },
@@ -33,40 +33,30 @@ export = new class Jankenpon {
   }
 
   game(player1 = this.machine, player2: any = this.machine) {
-    if (typeof player1 === 'number') {
-      const res = this.rules[this.index[player1]][this.index[player2]];
+    if (typeof player1 === 'number')
+      player1 = this.index[player1];
 
-      return {
-        player1,
-        player2,
-        result: this.result[res],
-        res,
-      };
-    }
+    if (typeof player2 === 'number')
+      player2 = this.index[player2];
 
-    const res = this.rules[[player1][player2]];
+    const res = this.rules[player1][player2];
 
     return {
       player1,
       player2,
-      result: this.result[this.rules[player1][player2]],
+      result: this.result[res],
       res,
     };
   }
 
-  spock(player1 = this.machine, player2: any = this.machine) {
-    if (typeof player1 === 'number') {
-      const res = this.rules[this.index[player1]][this.index[player2]];
+  spock(player1 = this.machine, player2: any = this.machineSpock) {
+    if (typeof player1 === 'number')
+      player1 = this.index[player1];
 
-      return {
-        player1,
-        player2,
-        result: this.result[res],
-        res,
-      };
-    }
+    if (typeof player2 === 'number')
+      player2 = this.index[player2];
 
-    const res = this.rules[[player1][player2]];
+    const res = this.rules[player1][player2];
 
     return {
       player1,
