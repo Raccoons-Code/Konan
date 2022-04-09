@@ -6,6 +6,7 @@
   "automatic": "自动使用",
   "backup404": "找不到备份。",
   "backupDeleted": "备份已成功删除。",
+  "backupError": "错误！无法备份！",
   "backupDone": "备份成功完成。",
   "ban404": "此用户未被禁止！",
   "banError": "错误！无法封禁此用户。",

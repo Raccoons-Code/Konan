@@ -6,6 +6,7 @@
   "automatic": "automático",
   "backup404": "No se pudo encontrar la copia de seguridad.",
   "backupDeleted": "Copia de seguridad eliminada correctamente.",
+  "backupError": "¡Error! ¡No se puede hacer una copia de seguridad!",
   "backupDone": "Copia de seguridad realizada con éxito.",
   "ban404": "¡Este usuario no está bloqueado!",
   "banError": "¡Error! No se puede banear a este usuario.",

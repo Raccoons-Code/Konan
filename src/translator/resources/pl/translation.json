@@ -6,6 +6,7 @@
   "automatic": "automatyczny",
   "backup404": "Nie można znaleźć kopii zapasowej.",
   "backupDeleted": "Kopia zapasowa została usunięta.",
+  "backupError": "Błąd! Nie można utworzyć kopii zapasowej!",
   "backupDone": "Kopia zapasowa zakończona pomyślnie.",
   "ban404": "Ten użytkownik nie jest zbanowany!",
   "banError": "Błąd! Nie można zbanować tego użytkownika.",

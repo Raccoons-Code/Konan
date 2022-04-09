@@ -6,6 +6,7 @@
   "automatic": "automatisch",
   "backup404": "Sicherung konnte nicht gefunden werden.",
   "backupDeleted": "Sicherung erfolgreich gelöscht.",
+  "backupError": "Fehler! Sicherung nicht möglich!",
   "backupDone": "Sicherung erfolgreich abgeschlossen.",
   "ban404": "Dieser Benutzer ist nicht gesperrt!",
   "banError": "Fehler! Benutzer konnte nicht gesperrt werden.",

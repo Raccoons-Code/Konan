@@ -6,6 +6,7 @@
   "automatic": "automaattinen",
   "backup404": "Varmuuskopiota ei löytynyt.",
   "backupDeleted": "Varmuuskopiointi poistettu onnistuneesti.",
+  "backupError": "Virhe! Ei voitu varmuuskopioida!",
   "backupDone": "Varmuuskopiointi onnistui",
   "ban404": "Tätä käyttäjää ei ole estetty!",
   "banError": "Virhe! Tämän käyttäjän porttikielto ei onnistunut.",
