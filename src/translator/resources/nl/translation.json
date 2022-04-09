@@ -6,6 +6,7 @@
   "automatic": "automatisch",
   "backup404": "Kon de back-up niet vinden.",
   "backupDeleted": "Back-up met succes verwijderd.",
+  "backupError": "Fout! Kan geen back-up maken!",
   "backupDone": "Back-up succesvol voltooid.",
   "ban404": "Deze gebruiker is niet gebanned!",
   "banError": "Fout! Kan deze gebruiker niet verbannen.",

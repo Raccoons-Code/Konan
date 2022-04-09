@@ -6,6 +6,7 @@
   "automatic": "automatico",
   "backup404": "Impossibile trovare il backup.",
   "backupDeleted": "Backup eliminato con successo.",
+  "backupError": "Errore! Impossibile eseguire il backup!",
   "backupDone": "Backup completato con successo.",
   "ban404": "Questo utente non è bandito!",
   "banError": "Errore! Impossibile bandire questo utente.",

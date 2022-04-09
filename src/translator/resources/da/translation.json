@@ -6,6 +6,7 @@
   "automatic": "automatisk",
   "backup404": "Kunne ikke finde sikkerhedskopien.",
   "backupDeleted": "Backup slettet.",
+  "backupError": "Fejl! Kan ikke sikkerhedskopiere!",
   "backupDone": "Backup udført.",
   "ban404": "Denne bruger er ikke udelukket!",
   "banError": "Fejl! Denne bruger kan ikke udelukkes.",

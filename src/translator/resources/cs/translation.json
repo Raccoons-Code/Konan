@@ -6,6 +6,7 @@
   "automatic": "automatický",
   "backup404": "Zálohu nelze najít.",
   "backupDeleted": "Záloha byla úspěšně odstraněna.",
+  "backupError": "Chyba! Nelze zálohovat!",
   "backupDone": "Záloha byla úspěšně dokončena.",
   "ban404": "Tento uživatel není zabanovaný!",
   "banError": "Chyba! Nelze zabanovat tohoto uživatele.",
