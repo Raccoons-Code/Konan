@@ -6,6 +6,7 @@
   "automatic": "automatique",
   "backup404": "Impossible de trouver la sauvegarde.",
   "backupDeleted": "Sauvegarde supprimée avec succès.",
+  "backupError": "Erreur! Impossible de sauvegarder !",
   "backupDone": "Sauvegarde effectuée avec succès.",
   "ban404": "Cet utilisateur n'est pas banni !",
   "banError": "Erreur! Impossible de bannir cet utilisateur.",
