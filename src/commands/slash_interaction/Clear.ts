@@ -38,15 +38,19 @@ export default class Clear extends SlashCommand {
       channel.permissionsFor(member).missing(this.props?.userPermissions as PermissionString[]) ?? [];
 
     if (userPermissions.length)
-      return await interaction.editReply(this.t('missingUserChannelPermission',
-        { locale, PERMISSIONS: userPermissions }));
+      return await interaction.editReply(this.t('missingUserChannelPermission', {
+        locale,
+        PERMISSIONS: userPermissions,
+      }));
 
     const clientPermissions = channel.permissionsFor(<User>client.user)
       ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
 
     if (clientPermissions.length)
-      return await interaction.editReply(this.t('missingChannelPermission',
-        { locale, PERMISSIONS: clientPermissions }));
+      return await interaction.editReply(this.t('missingChannelPermission', {
+        locale,
+        PERMISSIONS: clientPermissions,
+      }));
 
     const limit = options.getInteger('amount', true);
 

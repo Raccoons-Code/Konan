@@ -27,37 +27,46 @@ export default class News extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('news')
-      .setDescription('Show news from a journal.')
+      .setDescription('Show news from a journal. Use `/news [category | language] <journal> <new>`')
       .addStringOption(option => option.setName('category')
         .setDescription('Category of the journal.')
-        .setAutocomplete(true))
-      .addStringOption(option => option.setName('journal')
-        .setDescription('Journal to show news from.')
         .setAutocomplete(true))
       .addStringOption(option => option.setName('language')
         .setDescription('Language of the journal.')
         .setAutocomplete(true))
+      .addStringOption(option => option.setName('journal')
+        .setDescription('Journal to show news from.')
+        .setAutocomplete(true))
       .addStringOption(option => option.setName('new')
-        .setDescription('New to search.')
+        .setDescription('New to search. Select a journal before.')
         .setAutocomplete(true));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
-    const { options } = interaction;
+    const { locale, options } = interaction;
 
     const _journal = options.getString('journal');
-    const journal = journals.find(j => j.name === _journal);
-
-    if (!journal) return;
 
     const _new = options.getString('new');
 
-    if (!_new) return;
+    if (!(_journal && _new))
+      return await interaction.editReply(this.t('requiredParams', {
+        locale,
+        params: [
+          _journal ? 'journal' : '',
+          _new ? 'new' : '',
+        ].join(', '),
+      }));
+
+    const journal = journals.find(j => j.name === _journal);
+
+    if (!journal)
+      return await interaction.editReply(this.t('journal404', { locale }));
 
     const news = await axios.get(journal.url).then(r => r.data) as any[];
 
