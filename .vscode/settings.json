@@ -1,17 +1,20 @@
 {
   "cSpell.words": [
+    "apikey",
     "autopost",
     "bannable",
     "buttonroles",
     "discordjs",
-    "Idjsn",
+    "idjsn",
+    "imdb",
     "jankenpon",
-    "Respawn",
-    "Respawned",
+    "respawn",
+    "respawned",
     "selectroles",
     "slowmode",
     "statcord",
     "subcommandgroup",
+    "tictactoe",
     "tmdb"
   ]
 }

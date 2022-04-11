@@ -1,6 +1,6 @@
 import { Base } from '.';
 
-export type ConfigurationOpitons = Base
+export type ConfigurationOptions = Base
 
 export interface GetLanguageProps {
   language: string

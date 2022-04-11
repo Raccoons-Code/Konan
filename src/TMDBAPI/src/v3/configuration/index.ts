@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiConfiguration, ConfigurationOpitons, Countries, GetLanguageProps, Jobs, Languages, PrimaryTranslations, Timezones } from '../typings';
+import { ApiConfiguration, ConfigurationOptions, Countries, GetLanguageProps, Jobs, Languages, PrimaryTranslations, Timezones } from '../typings';
 
 export default class Configuration {
   apiKey: string;
@@ -11,7 +11,7 @@ export default class Configuration {
   primaryTranslations!: PrimaryTranslations;
   timezones!: Timezones;
 
-  constructor(options: ConfigurationOpitons) {
+  constructor(options: ConfigurationOptions) {
     this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
     this.baseURL = `${options.baseURL}/configuration`;
 

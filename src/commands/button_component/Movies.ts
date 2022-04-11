@@ -2,7 +2,7 @@ import { ButtonInteraction, MessageActionRow, MessageButton, MessageEmbed } from
 import { ButtonComponentInteraction, Client } from '../../structures';
 import tmdbApi from '../../TMDBAPI';
 import { ResultsMovieData } from '../../TMDBAPI/src/v3/typings';
-import { MoviesCustomId } from '../../typings';
+import { MoviesCustomId } from '../../@types';
 
 const { configuration, discover, genres, Util: TmdbUtil } = tmdbApi;
 const { image, movie } = TmdbUtil;

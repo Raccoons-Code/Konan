@@ -5,7 +5,7 @@ import commands from '../commands';
 import { prisma } from '../database';
 import events from '../events';
 import { t } from '../translator';
-import { FetchStatsOptions, Stats } from '../typings';
+import { FetchStatsOptions, Stats } from '../@types';
 import * as util from '../util';
 
 const { env } = process;

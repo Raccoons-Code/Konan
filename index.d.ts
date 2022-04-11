@@ -17,3 +17,10 @@ declare namespace NodeJS {
     TOPGG_TOKEN?: string
   }
 }
+
+declare module 'discord-tictactoe' {
+  export default class TicTacToe {
+    constructor(options?: { language?: string })
+    handleInteraction(interaction: any): void
+  }
+}

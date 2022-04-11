@@ -1,6 +1,6 @@
 import { DiscordTogether } from 'discord-together';
 import DJS, { Collection, WebhookClient } from 'discord.js';
-import { Stats } from '../../typings';
+import { Stats } from '..';
 import { prisma } from '../database';
 import { t } from '../translator';
 import * as util from '../util';

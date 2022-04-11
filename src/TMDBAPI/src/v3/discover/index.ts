@@ -23,17 +23,26 @@ export default class Discover {
   }
 
   async fetchMovies(props: DiscoverMovieOptions = {}): Promise<SearchMoviesData> {
-    const { certification_country, certification, certificationgte, certificationlte,
+    const {
+      certification_country,
+      certification,
+      certificationgte,
+      certificationlte,
       include_adult = this.include_adult,
       include_video = this.include_video,
       language = this.language,
       page = this.page,
-      primary_release_year, primary_release_dategte, primary_release_datelte,
-      release_dategte, release_datelte,
+      primary_release_year,
+      primary_release_dategte,
+      primary_release_datelte,
+      release_dategte,
+      release_datelte,
       sort_by = this.sort_by,
       region,
-      vote_averagegte, vote_averagelte,
-      vote_countgte, vote_countlte,
+      vote_averagegte,
+      vote_averagelte,
+      vote_countgte,
+      vote_countlte,
       watch_region,
       with_cast,
       with_companies,
@@ -43,13 +52,15 @@ export default class Discover {
       with_original_language,
       with_people,
       with_release_type,
-      with_runtimegte, with_runtimelte,
+      with_runtimegte,
+      with_runtimelte,
       with_watch_monetization_types = this.with_watch_monetization_types,
       with_watch_providers,
       without_companies,
       without_genres,
       without_keywords,
-      year } = props;
+      year,
+    } = props;
 
     return await axios.get('/movie', {
       baseURL: this.baseURL,

@@ -1,6 +1,6 @@
 import { ButtonInteraction } from 'discord.js';
 import { ButtonComponentInteraction, Client } from '../../structures';
-import { ButtonRolesCustomId } from '../../typings';
+import { ButtonRolesCustomId } from '../../@types';
 
 export default class ButtonRoles extends ButtonComponentInteraction {
   constructor(client: Client) {
