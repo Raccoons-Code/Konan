@@ -20,7 +20,6 @@ const languages: { [k: string]: string } = {
 };
 
 export default class News extends SlashCommand {
-
   constructor(client: Client) {
     super(client, {
       category: 'Fun',

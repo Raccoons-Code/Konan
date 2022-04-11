@@ -1,1 +1,1 @@
- export = (array: any[]) => array.filter((v, i, a) => a.indexOf(v) !== i);
+export = (array: any[]) => array.filter((v, i, a) => a.indexOf(v) !== i);

@@ -10,12 +10,12 @@ export default class MessageCreate extends Event {
     });
   }
 
-  async execute(message: Message & { [k: string]: any, args: string[] }) {
+  async execute(message: Message) {
     const { author, channel, client, content, guild } = message;
 
     if (author.bot) return;
 
-    const { commands, user } = <Client>client;
+    const { commands, user } = client;
     const botRole = guild?.me?.roles.botRole ?? user;
     const pattern = RegExp(`^\\s*<@!?&?(?:${user?.id}|${botRole?.id})>([\\w\\W]*)$`);
     const matched = content.match(pattern);

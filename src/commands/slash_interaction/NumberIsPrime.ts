@@ -1,5 +1,6 @@
 import { codeBlock, SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { PrimeResolveOptions } from '../../@types';
 import { Client, SlashCommand } from '../../structures';
 
 export default class NumberIsPrime extends SlashCommand {
@@ -56,8 +57,4 @@ export default class NumberIsPrime extends SlashCommand {
 
     return [];
   }
-}
-
-interface PrimeResolveOptions {
-  all?: boolean
 }

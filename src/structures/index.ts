@@ -16,5 +16,14 @@ export * from './MessageContextMenu';
 export * from './SelectMenuComponentInteraction';
 export * from './SlashCommand';
 export * from './UserContextMenu';
-export { ButtonComponentInteraction, Client, Command, Event, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu };
+export {
+  ButtonComponentInteraction,
+  Client,
+  Command,
+  Event,
+  MessageContextMenu,
+  SelectMenuComponentInteraction,
+  SlashCommand,
+  UserContextMenu,
+};
 

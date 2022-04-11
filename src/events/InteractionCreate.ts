@@ -71,27 +71,27 @@ export default class InteractionCreate extends Event {
     return this[interaction.componentType]?.(<any>interaction);
   }
 
-  BUTTON(interaction: ButtonInteraction & { client: Client }): ButtonComponentInteraction {
+  BUTTON(interaction: ButtonInteraction): ButtonComponentInteraction {
     const { c, command } = JSON.parse(interaction.customId);
 
     return interaction.client.commands.button_component?.get(c ?? command);
   }
 
-  CHAT_INPUT(interaction: CommandInteraction & { client: Client }): SlashCommand | undefined {
+  CHAT_INPUT(interaction: CommandInteraction): SlashCommand | undefined {
     return interaction.client.commands.slash_interaction?.get(interaction.commandName);
   }
 
-  MESSAGE(interaction: MessageContextMenuInteraction & { client: Client }): MessageContextMenu {
+  MESSAGE(interaction: MessageContextMenuInteraction): MessageContextMenu {
     return interaction.client.commands.message_context?.get(interaction.commandName);
   }
 
-  SELECT_MENU(interaction: SelectMenuInteraction & { client: Client }): SelectMenuComponentInteraction {
+  SELECT_MENU(interaction: SelectMenuInteraction): SelectMenuComponentInteraction {
     const { c, command } = JSON.parse(interaction.customId);
 
     return interaction.client.commands.selectmenu_component?.get(c ?? command);
   }
 
-  USER(interaction: UserContextMenuInteraction & { client: Client }): UserContextMenu {
+  USER(interaction: UserContextMenuInteraction): UserContextMenu {
     return interaction.client.commands.user_context?.get(interaction.commandName);
   }
 }

@@ -1,7 +1,8 @@
 import { codeBlock } from '@discordjs/builders';
 import { DiscordTogether } from 'discord-together';
-import DJS, { ClientOptions, Collection, MessageEmbed, WebhookClient } from 'discord.js';
+import DJS, { ClientOptions, MessageEmbed, WebhookClient } from 'discord.js';
 import AutoPoster from 'topgg-autoposter';
+import { FetchStatsOptions, Stats } from '../@types';
 import commands from '../commands';
 import { prisma } from '../database';
 import events from '../events';
@@ -12,20 +13,10 @@ const { env } = process;
 const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
 
 export default class Client extends DJS.Client {
-  applicationCommandTypes: string[] = commands.applicationCommandTypes;
-  commandsByCategory!: { [k: string]: Collection<string, any> };
-  commandTypes: { [k: string]: string[] } | string[] = commands.commandTypes;
-  commands!: { [k: string]: Collection<string, any> };
+  applicationCommandTypes = commands.applicationCommandTypes;
+  commandTypes = commands.commandTypes;
 
-  pattern!: typeof util['pattern'];
-  t!: typeof t;
-  prisma!: typeof prisma;
-  util!: typeof util;
-
-  discordTogether!: DiscordTogether<{ [k: string]: string }>;
-  invite!: string;
   stats: Stats = {};
-  ERROR_WEBHOOK!: WebhookClient;
 
   constructor(options: ClientOptions) {
     super(options);
@@ -117,14 +108,4 @@ export default class Client extends DJS.Client {
     if (token)
       AutoPoster(token, this);
   }
-}
-
-export interface FetchStatsOptions {
-  loop?: boolean
-}
-
-export interface Stats {
-  channels?: number
-  guilds?: number
-  members?: number
 }

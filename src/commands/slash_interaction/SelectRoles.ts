@@ -1,21 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageEmbed, MessageSelectMenu, PermissionString, TextChannel, Util } from 'discord.js';
+import { SelectRolesItemOptionValue } from '../../@types';
 import { Client, SlashCommand } from '../../structures';
-
-export interface SelectRolesCustomId {
-  /** command */
-  c: string
-  count: number
-  /** date */
-  d: number
-}
-
-export interface SelectRolesItemOptionValue {
-  count: number
-  /** date */
-  d: number
-  roleId: string
-}
 
 export default class SelectRoles extends SlashCommand {
   constructor(client: Client) {

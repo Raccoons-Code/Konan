@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, time } from '@discordjs/builders';
-import { CommandInteraction, GuildMember, PermissionString } from 'discord.js';
+import { CommandInteraction, PermissionString } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 export default class Timeout extends SlashCommand {

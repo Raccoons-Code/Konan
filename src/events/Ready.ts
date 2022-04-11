@@ -31,7 +31,7 @@ export default class Ready extends Event {
     }).catch(() => null);
   }
 
-  async deleteMyGuilds(client = this.client) {
+  async deleteMyGuilds(client: Client) {
     const guilds = client.guilds.cache.filter(g => g.ownerId === client.user?.id);
 
     let multiplier = 0;
