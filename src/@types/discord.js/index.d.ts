@@ -1,9 +1,9 @@
 import { DiscordTogether } from 'discord-together';
 import { Collection } from 'discord.js';
 import { Stats } from '..';
-import { prisma } from '../database';
-import { t } from '../translator';
-import * as util from '../util';
+import { prisma } from '../../database';
+import { t } from '../../translator';
+import * as util from '../../util';
 
 declare module 'discord.js' {
   export interface Client {
