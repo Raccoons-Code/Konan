@@ -1,11 +1,11 @@
 import { codeBlock } from '@discordjs/builders';
 import DJS, { ClientOptions, MessageEmbed, WebhookClient } from 'discord.js';
 import AutoPoster from 'topgg-autoposter';
+import { FetchStatsOptions, Stats } from '../@types';
 import commands from '../commands';
 import { prisma } from '../database';
 import events from '../events';
 import { t } from '../translator';
-import { FetchStatsOptions, Stats } from '../@types';
 import * as util from '../util';
 
 const { env } = process;
@@ -14,8 +14,6 @@ const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
 export default class Client extends DJS.Client {
   applicationCommandTypes = commands.applicationCommandTypes;
   commandTypes = commands.commandTypes;
-
-  stats: Stats = {};
 
   constructor(options: ClientOptions) {
     super(options);
@@ -26,6 +24,8 @@ export default class Client extends DJS.Client {
       t: { value: t },
       util: { value: util },
     });
+
+    this.stats = {};
   }
 
   async login(token = this.token ?? undefined) {

@@ -19,9 +19,9 @@ export default class Ready extends Event {
       permissions: BigInt(545460321791),
     });
 
-    client.fetchStats();
     client.topggautoposter();
     this.deleteMyGuilds(client);
+    await client.fetchStats();
     this.setPresence(client);
   }
 

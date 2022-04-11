@@ -2,6 +2,7 @@
   "cSpell.words": [
     "apikey",
     "autopost",
+    "autoposter",
     "bannable",
     "buttonroles",
     "discordjs",
@@ -15,6 +16,8 @@
     "statcord",
     "subcommandgroup",
     "tictactoe",
-    "tmdb"
+    "tmdb",
+    "topgg",
+    "upsert"
   ]
 }

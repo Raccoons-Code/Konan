@@ -1,12 +1,12 @@
 import { DiscordTogether } from 'discord-together';
-import DJS, { Collection, WebhookClient } from 'discord.js';
+import { Collection } from 'discord.js';
 import { Stats } from '..';
 import { prisma } from '../database';
 import { t } from '../translator';
 import * as util from '../util';
 
 declare module 'discord.js' {
-  export interface Client extends DJS.Client {
+  export interface Client {
     applicationCommandTypes: string[];
     commands: { [k: string]: Collection<string, any> };
     commandsByCategory: { [k: string]: Collection<string, any> };
@@ -21,7 +21,7 @@ declare module 'discord.js' {
     util: typeof util;
   }
 
-  export interface Message extends DJS.Message {
+  export interface Message {
     args: string[];
     commandName: string;
   }
