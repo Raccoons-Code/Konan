@@ -1,6 +1,6 @@
-import { Options } from '.';
+import { Options } from './@types';
 
-export const defaults = {
+export const defaults: Options = {
   capitalize: undefined,
   interpolation: {
     prefix: '\\{\\{',
@@ -9,6 +9,9 @@ export const defaults = {
   plural: {
     pluralSuffix: '_other',
     singularSuffix: '_one',
+  },
+  translation: {
+    fallbackLocale: 'en',
   },
 };
 

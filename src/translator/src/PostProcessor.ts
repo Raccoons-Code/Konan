@@ -1,4 +1,4 @@
-import { Options } from '.';
+import { Options } from './@types';
 
 export default class PostProcessor {
   capitalize?: boolean;

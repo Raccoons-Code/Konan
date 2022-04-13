@@ -1,11 +1,12 @@
-import idjsn, { Options } from '.';
+import { Options } from './@types';
 import { defaults } from './Defaults';
+import idjsn from './Idjsn';
 
 export default class Interpolator {
-  prefix?: string;
-  suffix?: string;
   pattern: RegExp;
   patterng: RegExp;
+  prefix!: string;
+  suffix!: string;
 
   constructor(options: Options) {
     Object.assign(this, { ...defaults.interpolation, ...options.interpolation });
@@ -42,9 +43,4 @@ export default class Interpolator {
 
     return key;
   }
-}
-
-export interface InterpolationData {
-  prefix?: string
-  suffix?: string
 }

@@ -1,11 +1,12 @@
-import { Options, PluralData, Resources } from '.';
+import { Options, PluralData, Resources, TranslationData } from './@types';
 import { defaults } from './Defaults';
 
 export default class Translator {
   plural!: PluralData;
-  resources?: Resources;
   pluralSuffix?: string;
+  resources?: Resources;
   singularSuffix?: string;
+  translation!: TranslationData;
 
   constructor(options: Options) {
     Object.assign(this, { ...defaults, ...options });
@@ -18,13 +19,13 @@ export default class Translator {
 
     const resources = this.resources?.[locale] ?? this.resources?.[locale.split(/_|-/)[0]];
 
-    const en = this.resources?.en?.translation;
+    const fallbackLocale = this.resources?.[this.translation.fallbackLocale as string]?.translation;
 
     const translation = resources?.translation;
 
     const text = typeof options.count === 'number' ?
-      translation?.[pluralKey] ?? translation?.[key] ?? en?.[key] ?? key :
-      translation?.[key] ?? en?.[key] ?? key;
+      translation?.[pluralKey] ?? translation?.[key] ?? fallbackLocale?.[key] ?? key :
+      translation?.[key] ?? fallbackLocale?.[key] ?? key;
 
     return text;
   }
