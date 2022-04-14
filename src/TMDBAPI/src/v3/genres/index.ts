@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GenresData, GenresOptions, ParseGenresOptions, SearchGenresOptions } from '../typings';
+import { GenresData, GenresOptions, ParseGenresOptions, SearchGenresOptions } from '../@types';
 
 export default class Genres {
   apiKey: string;

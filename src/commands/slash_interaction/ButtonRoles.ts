@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable, MessageEmbed, PermissionString, TextChannel, Util } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
 import { ButtonRolesCustomId } from '../../@types';
+import { Client, SlashCommand } from '../../structures';
 
 export default class ButtonRoles extends SlashCommand {
   constructor(client: Client) {
@@ -21,7 +21,7 @@ export default class ButtonRoles extends SlashCommand {
         .addStringOption(option => option.setName('text')
           .setDescription('Text: Title {0,256} | Description {0,4096} - default: ButtonRoles'))
         .addStringOption(option => option.setName('button_name')
-          .setDescription('Button name {0,83} - default: <role>'))
+          .setDescription('Button name {0,63} - default: <role>'))
         .addStringOption(option => option.setName('button_emoji')
           .setDescription('Button emoji'))
         .addBooleanOption(option => option.setName('button_disabled')
@@ -64,7 +64,7 @@ export default class ButtonRoles extends SlashCommand {
           .addRoleOption(option => option.setName('role')
             .setDescription('Role'))
           .addStringOption(option => option.setName('button_name')
-            .setDescription('Button name {0,83}'))
+            .setDescription('Button name {0,63}'))
           .addStringOption(option => option.setName('button_style')
             .setDescription('Button style')
             .setChoices(this.ButtonStylesChoices))
@@ -88,7 +88,7 @@ export default class ButtonRoles extends SlashCommand {
             .setDescription('Role')
             .setRequired(true))
           .addStringOption(option => option.setName('button_name')
-            .setDescription('Button name {0,83} - default: <role>'))
+            .setDescription('Button name {0,63} - default: <role>'))
           .addStringOption(option => option.setName('button_style')
             .setDescription('Button style - default: PRIMARY')
             .setChoices(this.ButtonStylesChoices))
@@ -153,7 +153,7 @@ export default class ButtonRoles extends SlashCommand {
     const button_style = <MessageButtonStyleResolvable>options.getString('button_style') || 'PRIMARY';
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const role = options.getRole('role', true);
-    const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1] ?? role.name;
+    const button_name = (options.getString('button_name') ?? role.name).slice(0, 63);
 
     const emoji = <EmojiIdentifierResolvable>(button_emoji ? Util.resolvePartialEmoji(button_emoji) : null);
 
@@ -179,7 +179,8 @@ export default class ButtonRoles extends SlashCommand {
       await channel.send({ components, embeds });
 
       return await interaction.editReply(this.t('?created', { locale, string: 'Button Role' }));
-    } catch {
+    } catch (e) {
+      console.log(e);
       return await interaction.editReply(this.t('createError', { locale, string: 'Button Role' }));
     }
   }
@@ -227,16 +228,16 @@ export default class ButtonRoles extends SlashCommand {
 
       const button_disabled = options.getBoolean('button_disabled');
       const button_emoji = options.getString('button_emoji');
-      const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1];
+      const button_name = options.getString('button_name')?.slice(0, 63);
       const button_style = options.getString('button_style');
       const buttonId = options.getString('button', true);
 
       const emoji = button_emoji ? Util.resolvePartialEmoji(button_emoji) : null;
 
-      const components = message.components.map(row => {
+      message.components.map(row => {
         if (row.components[0].type !== 'BUTTON') return row;
 
-        row.components = row.components.map(button => {
+        row.components.map(button => {
           if (button.customId !== buttonId || button.type !== 'BUTTON') return button;
 
           const { c, count, d, roleId } = <ButtonRolesCustomId>JSON.parse(button.customId);
@@ -254,7 +255,7 @@ export default class ButtonRoles extends SlashCommand {
       });
 
       try {
-        await message.edit({ components });
+        await message.edit({ components: message.components });
 
         return await interaction.editReply(this.t('?edited', { locale, string: 'Button Role' }));
       } catch {
@@ -289,7 +290,7 @@ export default class ButtonRoles extends SlashCommand {
     if (subcommand === 'button') {
       const button_disabled = <boolean>options.getBoolean('button_disabled');
       const button_emoji = options.getString('button_emoji');
-      const button_name = options.getString('button_name')?.match(this.pattern.labelLimited)?.[1] ?? role.name;
+      const button_name = (options.getString('button_name') ?? role.name).slice(0, 63);
       const button_style = <MessageButtonStyleResolvable>options.getString('button_style') || 'PRIMARY';
 
       const emoji = <EmojiIdentifierResolvable>(button_emoji ? Util.resolvePartialEmoji(button_emoji) : null);
@@ -354,7 +355,7 @@ export default class ButtonRoles extends SlashCommand {
     if (subcommand === 'button') {
       const buttonId = options.getString('button', true);
 
-      message.components = message.components.map(row => {
+      message.components.map(row => {
         if (row.components[0].type !== 'BUTTON') return row;
 
         row.components = row.components.filter(button => button.customId !== buttonId);
@@ -407,7 +408,7 @@ export default class ButtonRoles extends SlashCommand {
 
         if (title || description)
           res.push({
-            name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
+            name: `${nameProps.join('').slice(0, 80)}`,
             value: `${id}`,
           });
 
@@ -451,7 +452,7 @@ export default class ButtonRoles extends SlashCommand {
 
           if (pattern.test(name))
             res.push({
-              name: `${name.match(this.pattern.label)?.[1]}`,
+              name: `${name.slice(0, 80)}`,
               value: `${customId}`,
             });
         }

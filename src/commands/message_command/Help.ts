@@ -31,7 +31,7 @@ export default class Help extends Command {
       .setEmoji('📮') // :postbox:
       .setLabel(this.t('inviteLink', { locale }))
       .setStyle('LINK')
-      .setURL(this.client.invite)];
+      .setURL(client.invite)];
 
     if (GUILD_INVITE)
       buttons.push(new MessageButton()

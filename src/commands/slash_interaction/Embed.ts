@@ -80,7 +80,7 @@ export default class Embed extends SlashCommand {
     const { client, locale, member, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
-    const [, content] = options.getString('content')?.match(this.pattern.content) ?? [];
+    const content = options.getString('content')?.slice(0, 4096);
     const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
     const image_url = <string>options.getString('image_url');
 
@@ -126,7 +126,7 @@ export default class Embed extends SlashCommand {
 
     if (subcommand === 'embed') {
       const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
-      const [, content] = options.getString('content')?.match(this.pattern.content) ?? [];
+      const content = options.getString('content')?.slice(0, 4096);
       const image_url = <string>options.getString('image_url');
 
       const embeds = [new MessageEmbed()
@@ -187,7 +187,7 @@ export default class Embed extends SlashCommand {
 
         if (title || description)
           res.push({
-            name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
+            name: `${nameProps.join('').slice(0, 100)}`,
             value: `${id}`,
           });
 

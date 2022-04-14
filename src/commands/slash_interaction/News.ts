@@ -73,8 +73,8 @@ export default class News extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setTitle(__new[journal.properties.title].match(this.pattern.embedTitle)?.[1])
-      .setDescription(__new[journal.properties.description].join('\n\n').match(this.pattern.content)?.[1])];
+      .setTitle(__new[journal.properties.title].slice(0, 256))
+      .setDescription(__new[journal.properties.description].join('\n\n').slice(0, 4096))];
 
     await interaction.editReply({ embeds });
   }
@@ -137,7 +137,7 @@ export default class News extends SlashCommand {
       ];
 
       res.push({
-        name: `${name.join('').trim().match(this.pattern.label)?.[1]}`,
+        name: `${name.join('').slice(0, 100)}`,
         value: `${_journal.name}`,
       });
 
@@ -192,7 +192,7 @@ export default class News extends SlashCommand {
       const _new = _news[i];
 
       res.push({
-        name: `${_new[journal.properties.title].trim().match(this.pattern.label)?.[1]}`,
+        name: `${_new[journal.properties.title].slice(0, 100)}`,
         value: `${i}`,
       });
     }

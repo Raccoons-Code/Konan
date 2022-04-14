@@ -45,7 +45,7 @@ export default class Help extends SlashCommand {
       .setEmoji('📮') // :postbox:
       .setLabel(this.t('inviteLink', { locale }))
       .setStyle('LINK')
-      .setURL(this.client.invite)];
+      .setURL(client.invite)];
 
     if (GUILD_INVITE)
       buttons.push(new MessageButton()
@@ -78,9 +78,9 @@ export default class Help extends SlashCommand {
   }
 
   async executeCommand(interaction: CommandInteraction, commandName: string): Promise<any> {
-    const { locale } = interaction;
+    const { client, locale } = interaction;
 
-    const { slash_interaction } = this.client.commands;
+    const { slash_interaction } = client.commands;
 
     const command = slash_interaction.get(commandName);
 
@@ -98,7 +98,7 @@ export default class Help extends SlashCommand {
   async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
     if (interaction.responded) return;
 
-    const { options } = interaction;
+    const { client, options } = interaction;
 
     const focused = options.getFocused(true);
 
@@ -107,16 +107,16 @@ export default class Help extends SlashCommand {
 
       const pattern = RegExp(commandName, 'i');
 
-      const { slash_interaction } = this.client.commands;
+      const { slash_interaction } = client.commands;
 
-      const slashcommands = slash_interaction.filter((c: any) =>
+      const slashCommands = slash_interaction.filter((c: any) =>
         c.data.defaultPermission !== false && (
           pattern.test(c.data.name) ||
           pattern.test(c.data.description)
         )).toJSON();
 
-      for (let i = 0; i < slashcommands.length; i++) {
-        const command = slashcommands[i];
+      for (let i = 0; i < slashCommands.length; i++) {
+        const command = slashCommands[i];
 
         const nameProps = [
           this.t(command.data.name),
@@ -125,7 +125,7 @@ export default class Help extends SlashCommand {
         ];
 
         res.push({
-          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
+          name: `${nameProps.join('').slice(0, 100)}`,
           value: `${command.data.name}`,
         });
 

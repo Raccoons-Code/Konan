@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiConfiguration, ConfigurationOptions, Countries, GetLanguageProps, Jobs, Languages, PrimaryTranslations, Timezones } from '../typings';
+import { ApiConfiguration, ConfigurationOptions, Countries, GetLanguageProps, Jobs, Languages, PrimaryTranslations, Timezones } from '../@types';
 
 export default class Configuration {
   apiKey: string;

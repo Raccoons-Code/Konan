@@ -8,7 +8,7 @@ import { ButtonComponentInteraction, Client } from '../../structures';
 export default class Jankenpon extends ButtonComponentInteraction {
   constructor(client: Client) {
     super(client, {
-      name: 'jankenpon',
+      name: 'jkp',
       description: 'Jankenpon',
     });
   }
@@ -39,18 +39,14 @@ export default class Jankenpon extends ButtonComponentInteraction {
     const { player2 } = players;
 
     if (db.get(`${message.id}.${player2}`))
-      return db.set(`${message.id}.${user.id}`, v) && this.mathPoint(interaction, players, parsedCustomId);
+      return db.set(`${message.id}.${user.id}`, v) && this.mathPoint(interaction, players);
 
     db.set(`${message.id}.${user.id}`, v);
 
     await interaction.deferUpdate();
   }
 
-  async mathPoint(
-    interaction: ButtonInteraction<'cached'>,
-    players: { [k: string]: any },
-    parsedCustomId: JkpCustomId,
-  ) {
+  async mathPoint(interaction: ButtonInteraction<'cached'>, players: { [k: string]: any }) {
     const { message } = interaction;
 
     const { changed, player1, player2 } = players;
@@ -62,7 +58,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
     const result = JKP.spock(value1, value2);
 
     message.embeds.map(embed => {
-      embed.fields = embed.fields?.map((field, i) => {
+      embed.fields.map((field, i) => {
         const { name, value } = field;
 
         if (name === 'Result') {
@@ -93,20 +89,6 @@ export default class Jankenpon extends ButtonComponentInteraction {
 
     db.delete(`${message.id}`);
 
-    message.components.map(row => {
-      if (row.components[0].type !== 'BUTTON') return row;
-
-      row.components.map(button => {
-        if (button.type !== 'BUTTON' || !button.customId) return button;
-
-        const { p, v } = parsedCustomId;
-
-        button.setCustomId(JSON.stringify({ c: 'jkp', p, v }));
-
-        return button;
-      });
-    });
-
-    await interaction.update({ components: message.components, embeds: message.embeds });
+    await interaction.update({ embeds: message.embeds });
   }
 }

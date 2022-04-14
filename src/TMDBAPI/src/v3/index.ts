@@ -4,10 +4,10 @@ import Discover from './discover';
 import Genres from './genres';
 import Movies from './movies';
 import Search from './search';
-import { TMDB_API_Options } from './typings';
+import { TMDB_API_Options } from './@types';
 import Util from './util';
 
-export * from './typings';
+export * from './@types';
 
 export default class TMDB_API_V3 {
   authentication: Authentication;

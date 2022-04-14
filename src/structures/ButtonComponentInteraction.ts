@@ -1,5 +1,6 @@
 import { ButtonInteraction } from 'discord.js';
-import Base, { ComponentInteractionData } from './Base';
+import { ComponentInteractionData } from '../@types';
+import Base from './Base';
 import Client from './Client';
 
 export default class ButtonComponentInteraction extends Base {

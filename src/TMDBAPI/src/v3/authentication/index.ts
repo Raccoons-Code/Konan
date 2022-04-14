@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { AuthenticationOptions, Delete, DeleteProps, Guest, Session, SessionProps, Sessionv4, Sessionv4Props, SessionWithLogin, SessionWithLoginProps, Token } from '../typings';
+import { AuthenticationOptions, Delete, DeleteProps, Guest, Session, SessionProps, Sessionv4, Sessionv4Props, SessionWithLogin, SessionWithLoginProps, Token } from '../@types';
 
 export default class Authentication {
   apiKey: string;

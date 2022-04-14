@@ -102,7 +102,7 @@ export default class Unban extends SlashCommand {
       ];
 
       res.push({
-        name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
+        name: `${nameProps.join('').slice(0, 100)}`,
         value: `${ban.user.id}`,
       });
 

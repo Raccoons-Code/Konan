@@ -1,8 +1,8 @@
 import { ButtonInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { MoviesCustomId } from '../../@types';
 import { ButtonComponentInteraction, Client } from '../../structures';
 import tmdbApi from '../../TMDBAPI';
-import { ResultsMovieData } from '../../TMDBAPI/src/v3/typings';
-import { MoviesCustomId } from '../../@types';
+import { ResultsMovieData } from '../../TMDBAPI/src/v3/@types';
 
 const { configuration, discover, genres, Util: TmdbUtil } = tmdbApi;
 const { image, movie } = TmdbUtil;
@@ -36,18 +36,20 @@ export default class Movies extends ButtonComponentInteraction {
     const a = page > 1 ? true : offset;
     const b = target < 1000;
 
-    const components = [new MessageActionRow().setComponents([
-      new MessageButton().setLabel('1...').setStyle(a ? 'PRIMARY' : 'SECONDARY').setDisabled(!a)
-        .setCustomId(JSON.stringify({ c, d: 0, o: offset, p: page, target: 1 })),
-      new MessageButton().setLabel('Back').setStyle(a ? 'PRIMARY' : 'SECONDARY').setDisabled(!a)
-        .setCustomId(JSON.stringify({ c, d: 1, o: offset, p: page, target: target - 1 })),
-      new MessageButton().setLabel(`${target}`).setStyle('SECONDARY').setDisabled(true)
-        .setCustomId(JSON.stringify({ c, d: 2, o: offset, p: page })),
-      new MessageButton().setLabel('Next').setStyle(b ? 'PRIMARY' : 'SECONDARY').setDisabled(!b)
-        .setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, target: target + 1 })),
-      new MessageButton().setLabel(`...${1000}`).setStyle(b ? 'PRIMARY' : 'SECONDARY').setDisabled(!b)
-        .setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, target: 1000 })),
-    ])];
+    const buttons = [
+      new MessageButton().setCustomId(JSON.stringify({ c, d: 0, o: offset, p: page, target: 1 }))
+        .setDisabled(!a).setLabel('1...').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
+      new MessageButton().setCustomId(JSON.stringify({ c, d: 1, o: offset, p: page, target: target - 1 }))
+        .setDisabled(!a).setLabel('Back').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
+      new MessageButton().setCustomId(JSON.stringify({ c, d: 2, o: offset, p: page }))
+        .setDisabled(true).setLabel(`${target}`).setStyle('SECONDARY'),
+      new MessageButton().setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, target: target + 1 }))
+        .setDisabled(!b).setLabel('Next').setStyle(b ? 'PRIMARY' : 'SECONDARY'),
+      new MessageButton().setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, target: 1000 }))
+        .setDisabled(!b).setLabel(`...${1000}`).setStyle(b ? 'PRIMARY' : 'SECONDARY'),
+    ];
+
+    const components = [new MessageActionRow().setComponents(buttons)];
 
     await interaction.update({ components, embeds });
   }
@@ -79,9 +81,9 @@ export default class Movies extends ButtonComponentInteraction {
       const lang = configuration.getLanguage({ language: original_language });
 
       embeds.push(new MessageEmbed()
-        .setAuthor({ name: genre_names.join(', ') })
+        .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
         .setColor('RANDOM')
-        .setDescription(overview)
+        .setDescription(overview.slice(0, 4096))
         .setFields([
           { name: 'Release date', value: release_date || '-', inline: true },
           { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },

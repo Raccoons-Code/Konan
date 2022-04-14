@@ -1,4 +1,11 @@
 export = new class pattern {
+  /** @pattern /([\w\W]{0,80})/ */
+  buttonLabel = /([\w\W]{0,80})/;
+  /**
+   * @description A label regex pattern with space for max safe integer value (2^53-1)
+   * @pattern /([\w\W]{0,63})/
+   */
+  buttonLabelLimited = /([\w\W]{0,63})/;
   /** @pattern /([\w\W]{0,4096})/ */
   content = /([\w\W]{0,4096})/;
   /** @pattern /(?:(?:([^|]{0,256}))(?:\|?([\w\W]{0,4096})))/ */

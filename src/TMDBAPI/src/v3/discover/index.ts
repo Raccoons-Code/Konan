@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DiscoverMovieOptions, DiscoverOptions, SearchMoviesData } from '../typings';
+import { DiscoverMovieOptions, DiscoverOptions, SearchMoviesData } from '../@types';
 
 export default class Discover {
   apiKey: string;

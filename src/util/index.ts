@@ -7,7 +7,6 @@ import hasDuplicatesInArray from './hasDuplicatesInArray';
 import isDuplicate from './isDuplicate';
 import isJSON from './isJSON';
 import isSameDate from './isSameDate';
-import jankenpon from './jankenpon';
 import keyGen from './keyGen';
 import mathRandom from './mathRandom';
 import parseJSON from './parseJSON';
@@ -30,7 +29,6 @@ export {
   isSameDate,
   isDuplicate,
   isJSON,
-  jankenpon,
   keyGen,
   mathRandom,
   parseJSON,

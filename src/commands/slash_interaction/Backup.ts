@@ -118,11 +118,11 @@ export default class extends SlashCommand {
     if (dbUser.guilds.some(g => g.id === guildId) && (premium ?
       backups.length ? backups.length < 5 : guilds.length < 5 :
       !(backups.length || guilds.length))) {
-      const newbackup = await this.newBackup(guild, { premium });
+      const newBackup = await this.newBackup(guild, { premium });
 
-      if (!newbackup) return await interaction.editReply(this.t('backupError', { locale }));
+      if (!newBackup) return await interaction.editReply(this.t('backupError', { locale }));
 
-      return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
+      return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
     }
 
     return await interaction.editReply([
@@ -257,11 +257,11 @@ export default class extends SlashCommand {
 
     const premium = Date.now() < (dbUser.premium?.valueOf() ?? 0);
 
-    const newbackup = await this.updatebackup(guild, key, { premium });
+    const newBackup = await this.updateBackup(guild, key, { premium });
 
-    if (!newbackup) return await interaction.editReply(this.t('backupError', { locale }));
+    if (!newBackup) return await interaction.editReply(this.t('backupError', { locale }));
 
-    return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newbackup.id}\``);
+    return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
   }
 
   async deleteAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
@@ -310,7 +310,7 @@ export default class extends SlashCommand {
         ];
 
         res.push({
-          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
+          name: `${nameProps.join('').slice(0, 100)}`,
           value: `${_guild.id}`,
         });
 
@@ -334,7 +334,7 @@ export default class extends SlashCommand {
         ];
 
         res.push({
-          name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
+          name: `${nameProps.join('').slice(0, 100)}`,
           value: `${backup.id}`,
         });
 
@@ -379,7 +379,7 @@ export default class extends SlashCommand {
       ];
 
       res.push({
-        name: `${nameProps.join('').match(this.pattern.label)?.[1]}`,
+        name: `${nameProps.join('').slice(0, 100)}`,
         value: `${backup.id}`,
       });
 
@@ -480,7 +480,7 @@ export default class extends SlashCommand {
     }
   }
 
-  async updatebackup(guild: Guild, key: string, options: { premium: boolean }) {
+  async updateBackup(guild: Guild, key: string, options: { premium: boolean }) {
     const { id, ownerId } = guild;
 
     const { premium } = options;

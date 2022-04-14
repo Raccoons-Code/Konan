@@ -42,7 +42,7 @@ export default class Help extends SelectMenuComponentInteraction {
       .setEmoji('📮') // :postbox:
       .setLabel(this.t('inviteLink', { locale }))
       .setStyle('LINK')
-      .setURL(this.client.invite)];
+      .setURL(client.invite)];
 
     if (GUILD_INVITE)
       buttons.push(new MessageButton()
@@ -69,16 +69,16 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   async commands(interaction: SelectMenuInteraction) {
-    const { locale } = interaction;
+    const { client, locale } = interaction;
 
-    const { slash_interaction } = this.client.commands;
+    const { slash_interaction } = client.commands;
 
-    const slashcommands = slash_interaction.filter((c: any) => c.data.defaultPermission !== false).toJSON();
+    const slashCommands = slash_interaction.filter((c: any) => c.data.defaultPermission !== false).toJSON();
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(`${this.convertCommandsToString(slashcommands).match(this.pattern.content)?.[1]}`)
-      .setFooter({ text: `Total: ${slashcommands.length}` })
+      .setDescription(codeBlock('properties', this.convertCommandsToString(slashCommands).slice(0, 4079)))
+      .setFooter({ text: `Total: ${slashCommands.length}` })
       .setTitle(this.t('konanSupport', { locale }))];
 
     const components = [
@@ -105,16 +105,16 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   async setCommandCategory(interaction: SelectMenuInteraction) {
-    const { locale, values } = interaction;
+    const { client, locale, values } = interaction;
 
-    const commands = this.client.commandsByCategory[values[0]] || this.client.commands.slash_interaction;
+    const commands = client.commandsByCategory[values[0]] || client.commands.slash_interaction;
 
-    const slashcommands = commands.filter((c: any) => c.data.defaultPermission !== false).toJSON();
+    const slashCommands = commands.filter((c: any) => c.data.defaultPermission !== false).toJSON();
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(`${this.convertCommandsToString(slashcommands).match(this.pattern.content)?.[1]}`)
-      .setFooter({ text: `Total: ${slashcommands.length}` })
+      .setDescription(codeBlock('properties', this.convertCommandsToString(slashCommands).slice(0, 4079)))
+      .setFooter({ text: `Total: ${slashCommands.length}` })
       .setTitle(this.t('konanSupport', { locale }))];
 
     const components = [
@@ -132,7 +132,7 @@ export default class Help extends SelectMenuComponentInteraction {
       text = `${text}/${data.name} - ${data.description}\n`;
     }
 
-    return codeBlock('properties', text);
+    return text;
   }
 
   setSelectMenu(i = 0) {

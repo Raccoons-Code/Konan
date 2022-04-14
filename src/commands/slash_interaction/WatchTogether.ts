@@ -74,7 +74,7 @@ export default class WatchTogether extends SlashCommand {
       if (error.name === 'SyntaxError')
         return await interaction.reply({ content: this.t('activity404', { locale }), ephemeral: true });
 
-      this.client.sendError(error);
+      client.sendError(error);
 
       await interaction.reply({
         content: this.t('There was an error while executing this command!', { locale }),

@@ -10,6 +10,6 @@ export default class GuildCreate extends Event {
   }
 
   async execute(guild: Guild) {
-    this.client.fetchStats();
+    guild.client.fetchStats();
   }
 }

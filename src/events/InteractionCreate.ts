@@ -1,15 +1,10 @@
 import { codeBlock } from '@discordjs/builders';
 import { AutocompleteInteraction, ButtonInteraction, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { InteractionTypes } from '../@types';
 import { ButtonComponentInteraction, Client, Event, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 const { env } = process;
 const { GUILD_INVITE } = env;
-
-type InteractionTypes =
-  AutocompleteInteraction |
-  CommandInteraction |
-  ContextMenuInteraction |
-  MessageComponentInteraction
 
 export default class InteractionCreate extends Event {
   constructor(client: Client) {
@@ -29,7 +24,7 @@ export default class InteractionCreate extends Event {
     try {
       await command.execute(<any>interaction);
     } catch (error: any) {
-      this.client.sendError(error);
+      client.sendError(error);
 
       const embeds = [new MessageEmbed()
         .setColor('DARK_RED')

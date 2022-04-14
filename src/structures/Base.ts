@@ -1,4 +1,3 @@
-import { PermissionString } from 'discord.js';
 import { prisma } from '../database';
 import { t } from '../translator';
 import * as util from '../util';
@@ -24,10 +23,4 @@ export default abstract class Base {
   }
 
   public async execute(...args: any[]) { }
-}
-
-export interface ComponentInteractionData {
-  name: string
-  description: string
-  clientPermissions?: PermissionString[]
 }

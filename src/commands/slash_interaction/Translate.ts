@@ -49,7 +49,7 @@ export default class Translate extends SlashCommand {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(`${codeBlock(translation.text).match(this.pattern.content)?.[0]}`)
+      .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
       .setTitle([
         'Translation from',
         languages[<'auto'>translation.from.language.iso],
@@ -141,7 +141,7 @@ export default class Translate extends SlashCommand {
     ];
 
     res.push({
-      name: `${nameProps.join('').match(this.pattern.label)?.[0]}`,
+      name: `${nameProps.join('').slice(0, 100)}`,
       value: varJson,
     });
 

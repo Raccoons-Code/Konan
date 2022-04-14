@@ -9,9 +9,11 @@
     "idjsn",
     "imdb",
     "jankenpon",
+    "konan",
     "patterng",
     "respawn",
     "respawned",
+    "selectmenu",
     "selectroles",
     "slowmode",
     "statcord",
@@ -19,6 +21,7 @@
     "tictactoe",
     "tmdb",
     "topgg",
+    "unban",
     "upsert"
   ]
 }

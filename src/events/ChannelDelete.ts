@@ -10,6 +10,6 @@ export default class ChannelDelete extends Event {
   }
 
   async execute(channel: NonThreadGuildBasedChannel) {
-    this.client.fetchStats();
+    channel.client.fetchStats();
   }
 }

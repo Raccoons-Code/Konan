@@ -10,6 +10,6 @@ export default class GuildDelete extends Event {
   }
 
   async execute(guild: Guild) {
-    this.client.fetchStats();
+    guild.client.fetchStats();
   }
 }

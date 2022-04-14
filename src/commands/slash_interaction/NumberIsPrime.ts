@@ -31,7 +31,7 @@ export default class NumberIsPrime extends SlashCommand {
       .setColor('RANDOM')
       .setTitle(prime.length ? `${number} is not prime.` : `${number} is prime!`)
       .setDescription(<string>(prime.length ?
-        `It is divisible by ${codeBlock(prime.join(', '))}` : '').match(this.pattern.content)?.[1])];
+        `It is divisible by ${codeBlock(prime.join(', ')).slice(0, 4070)}` : ''))];
 
     await interaction.editReply({ embeds });
   }

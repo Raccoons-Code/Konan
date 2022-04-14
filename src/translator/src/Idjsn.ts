@@ -33,7 +33,6 @@ class Idjsn {
   }
 
   t(key: string | string[], options: Options & { [k: string]: any } = {}) {
-    console.log(this);
     if (Array.isArray(key))
       return idjsn.ta(key, options);
 

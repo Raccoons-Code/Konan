@@ -3,7 +3,7 @@ import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInterac
 import ms from 'ms';
 import { Client, SlashCommand } from '../../structures';
 import tmdbApi from '../../TMDBAPI';
-import { SearchMoviesData } from '../../TMDBAPI/src/v3/typings';
+import { SearchMoviesData } from '../../TMDBAPI/src/v3/@types';
 
 const { NumberFormat } = Intl;
 const { configuration, discover, genres, movies, search, Util: TmdbUtil } = tmdbApi;
@@ -67,16 +67,19 @@ export default class Movies extends SlashCommand {
     const b = raw_page < 1000;
 
     const buttons = [
-      new MessageButton().setLabel('1...').setStyle(a ? 'PRIMARY' : 'SECONDARY').setDisabled(!a)
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 0, o: offset, p: page, target: 1 })),
-      new MessageButton().setLabel('Back').setStyle(a ? 'PRIMARY' : 'SECONDARY').setDisabled(!a)
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 1, o: offset, p: page, target: raw_page - 1 })),
-      new MessageButton().setLabel(`${raw_page}`).setStyle('SECONDARY').setDisabled(true)
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 2, o: offset, p: page })),
-      new MessageButton().setLabel('Next').setStyle(b ? 'PRIMARY' : 'SECONDARY').setDisabled(!b)
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 3, o: offset, p: page, target: raw_page + 1 })),
-      new MessageButton().setLabel(`...${1000}`).setStyle(b ? 'PRIMARY' : 'SECONDARY').setDisabled(!b)
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 4, o: offset, p: page, target: 1000 })),
+      new MessageButton().setCustomId(JSON.stringify({ c: this.data.name, d: 0, o: offset, p: page, target: 1 }))
+        .setDisabled(!a).setLabel('1...').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, d: 1, o: offset, p: page, target: raw_page - 1 }))
+        .setDisabled(!a).setLabel('Back').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
+      new MessageButton().setCustomId(JSON.stringify({ c: this.data.name, d: 2, o: offset, p: page }))
+        .setDisabled(true).setLabel(`${raw_page}`).setStyle('SECONDARY'),
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, d: 3, o: offset, p: page, target: raw_page + 1 }))
+        .setDisabled(!b).setLabel('Next').setStyle(b ? 'PRIMARY' : 'SECONDARY'),
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, d: 4, o: offset, p: page, target: 1000 }))
+        .setDisabled(!b).setLabel(`...${1000}`).setStyle(b ? 'PRIMARY' : 'SECONDARY'),
     ];
 
     const components = [new MessageActionRow().setComponents(buttons)];
@@ -104,9 +107,9 @@ export default class Movies extends SlashCommand {
     const numberFormat = NumberFormat(locale, { currency: 'USD', style: 'currency' });
 
     const embeds = [new MessageEmbed()
-      .setAuthor({ name: genre_names.join(', ') })
+      .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
       .setColor('RANDOM')
-      .setDescription(overview)
+      .setDescription(overview.slice(0, 4096))
       .setFields([
         { name: 'Release date', value: release_date || '-', inline: true },
         { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },
@@ -139,13 +142,13 @@ export default class Movies extends SlashCommand {
       const { id, title, vote_average } = results[i];
 
       const nameProps = [
-        id,
-        vote_average,
+        id, ' | ',
+        vote_average, ' | ',
         title,
       ];
 
       res.push({
-        name: `${nameProps.join(' | ').trim().match(this.pattern.label)?.[1]}`,
+        name: `${nameProps.join('').slice(0, 100)}`,
         value: `${id}`,
       });
 
@@ -182,9 +185,9 @@ export default class Movies extends SlashCommand {
       const lang = configuration.getLanguage({ language: original_language });
 
       embeds.push(new MessageEmbed()
-        .setAuthor({ name: genre_names.join(', ') })
+        .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
         .setColor('RANDOM')
-        .setDescription(overview)
+        .setDescription(overview.slice(0, 4096))
         .setFields([
           { name: 'Release date', value: release_date || '-', inline: true },
           { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },

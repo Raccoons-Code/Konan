@@ -11,12 +11,14 @@ export default class ChannelCreate extends Event {
   }
 
   async execute(channel: NonThreadGuildBasedChannel) {
-    this.client.fetchStats();
-
     const { client } = channel;
 
-    if (!(channel.isText() &&
-      channel.permissionsFor(<User>client.user)?.has(this.data.permissions as PermissionString[])))
+    client.fetchStats();
+
+    if (!(
+      channel.isText() &&
+      channel.permissionsFor(<User>client.user)?.has(this.data.permissions as PermissionString[])
+    ))
       return;
 
     await channel.send('First!').catch(() => null);

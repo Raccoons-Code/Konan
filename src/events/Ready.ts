@@ -12,25 +12,23 @@ export default class Ready extends Event {
   }
 
   async execute(client: Client) {
-    client.application?.fetch();
-
     console.log(`Ready! ${client.user?.tag} is on ${client.guilds.cache.size} servers.`);
+
+    await client.application?.fetch();
 
     client.invite = client.generateInvite({
       scopes: ['applications.commands', 'bot'],
       permissions: BigInt(545460321791),
     });
 
-    client.topggautoposter();
+    client.topggAutoposter();
     this.deleteMyGuilds(client);
     await client.fetchStats();
     this.setPresence(client);
   }
 
   async deleteGuild(guild: Guild) {
-    await guild.delete().then(async () => {
-      console.log(guild.name, 'deleted!');
-    }).catch(() => null);
+    await guild.delete().then(() => console.log(guild.name, 'deleted!')).catch(() => null);
   }
 
   async deleteMyGuilds(client: Client) {

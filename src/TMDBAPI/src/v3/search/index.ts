@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SearchMoviesData, SearchOptions, SearchQueryOptions } from '../typings';
+import { SearchMoviesData, SearchOptions, SearchQueryOptions } from '../@types';
 
 export default class Search {
   apiKey: string;

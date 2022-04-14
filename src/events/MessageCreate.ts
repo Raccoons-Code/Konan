@@ -36,7 +36,7 @@ export default class MessageCreate extends Event {
     try {
       await command.execute(message);
     } catch (error: any) {
-      this.client.sendError(error);
+      client.sendError(error);
     }
   }
 }

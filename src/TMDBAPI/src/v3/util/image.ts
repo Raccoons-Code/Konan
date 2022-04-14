@@ -1,4 +1,4 @@
-import { ImageURLOptions, UtilOptions } from '../typings';
+import { ImageURLOptions, UtilOptions } from '../@types';
 
 export default class Image {
   apiKey: string;

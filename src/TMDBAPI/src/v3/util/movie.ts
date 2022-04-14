@@ -1,4 +1,4 @@
-import { MovieURLOptions, UtilOptions } from '../typings';
+import { MovieURLOptions, UtilOptions } from '../@types';
 
 export default class Movie {
   apiKey: string;

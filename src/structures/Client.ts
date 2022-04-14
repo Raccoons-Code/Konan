@@ -64,7 +64,7 @@ export default class Client extends DJS.Client {
     const embeds = [new MessageEmbed()
       .setColor('RED')
       .setTitle(`${reason.name}: ${reason.message}`)
-      .setDescription(`${codeBlock(`${reason.stack}`).match(this.pattern.content)?.[1]}`)];
+      .setDescription(`${codeBlock(`${reason.stack}`.slice(0, 4089))}`)];
 
     try {
       await this.ERROR_WEBHOOK.send({
@@ -103,7 +103,7 @@ export default class Client extends DJS.Client {
     return this.stats;
   }
 
-  async topggautoposter(token = TOPGG_TOKEN) {
+  async topggAutoposter(token = TOPGG_TOKEN) {
     if (token)
       AutoPoster(token, this);
   }

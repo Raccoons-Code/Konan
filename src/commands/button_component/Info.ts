@@ -1,6 +1,7 @@
 import { codeBlock, time } from '@discordjs/builders';
 import { stripIndents } from 'common-tags';
 import { ButtonInteraction, MessageEmbed, version as discordjs_version } from 'discord.js';
+import { InfoCustomId } from '../../@types';
 import { ButtonComponentInteraction, Client } from '../../structures';
 
 const { versions, env } = process;
@@ -35,7 +36,7 @@ export default class Info extends ButtonComponentInteraction {
 
     const username = <string>guild?.me?.displayName ?? user?.username;
 
-    const newStats = await this.client.fetchStats();
+    const newStats = await client.fetchStats();
 
     const { heapTotal, heapUsed } = process.memoryUsage();
 
@@ -66,11 +67,4 @@ export default class Info extends ButtonComponentInteraction {
 
     await interaction.update({ embeds });
   }
-}
-
-interface InfoCustomId {
-  /** command */
-  c: string
-  /** sub command */
-  sc: string
 }

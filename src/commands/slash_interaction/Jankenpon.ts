@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import JKP from '../../JKP';
 import { Client, SlashCommand } from '../../structures';
 
 export default class Jankenpon extends SlashCommand {
@@ -70,7 +71,7 @@ export default class Jankenpon extends SlashCommand {
     if (subcommand === 'single') {
       const jankenpon = options.getString('jankenpon', true);
 
-      const { player1, player2, result } = this.util.jankenpon.game(jankenpon);
+      const { player1, player2, result } = JKP.game(jankenpon);
 
       embeds[0].addFields([
         { name, value: `${this.emoji[player1]} ${player1}`, inline: true },
@@ -95,12 +96,12 @@ export default class Jankenpon extends SlashCommand {
         ]);
 
       const buttons = [
-        new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
-          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
-        new MessageButton().setLabel('Paper').setEmoji('✋').setStyle(this.randomButtonStyle)
-          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 2 })),
-        new MessageButton().setLabel('Scissors').setEmoji('✌️').setStyle(this.randomButtonStyle)
-          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 3 })),
+        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 1 }))
+          .setEmoji('✊').setLabel('Rock').setStyle(this.randomButtonStyle),
+        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 2 }))
+          .setEmoji('✋').setLabel('Paper').setStyle(this.randomButtonStyle),
+        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 3 }))
+          .setEmoji('✌️').setLabel('Scissors').setStyle(this.randomButtonStyle),
       ];
 
       const components = [new MessageActionRow().setComponents(buttons)];
@@ -121,7 +122,7 @@ export default class Jankenpon extends SlashCommand {
     if (subcommand === 'single') {
       const jankenpon = options.getString('jankenpon', true);
 
-      const { player1, player2, result } = this.util.jankenpon.spock(jankenpon);
+      const { player1, player2, result } = JKP.spock(jankenpon);
 
       embeds[0].addFields([
         { name, value: `${this.emoji[player1]} ${player1}`, inline: true },
@@ -146,16 +147,16 @@ export default class Jankenpon extends SlashCommand {
         ]);
 
       const buttons = [
-        new MessageButton().setLabel('Rock').setEmoji('✊').setStyle(this.randomButtonStyle)
-          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 1 })),
-        new MessageButton().setLabel('Paper').setEmoji('✋').setStyle(this.randomButtonStyle)
-          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 2 })),
-        new MessageButton().setLabel('Scissors').setEmoji('✌️').setStyle(this.randomButtonStyle)
-          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 3 })),
-        new MessageButton().setLabel('Lizard').setEmoji('🦎').setStyle(this.randomButtonStyle)
-          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 4 })),
-        new MessageButton().setLabel('Spock').setEmoji('🖖').setStyle(this.randomButtonStyle)
-          .setCustomId(JSON.stringify({ c: this.data.name, p: [user.id, player2.id], v: 5 })),
+        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 1 }))
+          .setEmoji('✊').setLabel('Rock').setStyle(this.randomButtonStyle),
+        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 2 }))
+          .setEmoji('✋').setLabel('Paper').setStyle(this.randomButtonStyle),
+        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 3 }))
+          .setEmoji('✌️').setLabel('Scissors').setStyle(this.randomButtonStyle),
+        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 4 }))
+          .setEmoji('🦎').setLabel('Lizard').setStyle(this.randomButtonStyle),
+        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 5 }))
+          .setEmoji('🖖').setLabel('Spock').setStyle(this.randomButtonStyle),
       ];
 
       const components = [new MessageActionRow().setComponents(buttons)];
