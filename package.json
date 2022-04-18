@@ -26,7 +26,7 @@
   "homepage": "https://github.com/Raccoons-Code/Konan#readme",
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
-    "@discordjs/rest": "^0.3.0",
+    "@discordjs/rest": "^0.4.1",
     "@prisma/client": "3.10.0",
     "@tsconfig/recommended": "^1.0.1",
     "@vitalets/google-translate-api": "^8.0.0",
