@@ -667,9 +667,9 @@ discord-api-types@^0.26.0, discord-api-types@^0.26.1:
   integrity sha512-T5PdMQ+Y1MEECYMV5wmyi9VEYPagEDEi4S0amgsszpWY0VB9JJ/hEvM6BgLhbdnKky4gfmZEXtEEtojN8ZKJQQ==
 
 discord-api-types@^0.31.1:
-  version "0.31.1"
-  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.31.1.tgz#e83208fef3669c263bb48e68c9c84ecf3e286b01"
-  integrity sha512-QBWl1/x20ZyKAiY750wuWAWokudhlOnQzXhCTEkQsCNOOM9tU/HIqkpLgZqJI1EFmZMeWHdaRKzpiD7n7iCS+w==
+  version "0.31.2"
+  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.31.2.tgz#8d131e25340bd695815af3bb77128a6993c1b516"
+  integrity sha512-gpzXTvFVg7AjKVVJFH0oJGC0q0tO34iJGSHZNz9u3aqLxlD6LfxEs9wWVVikJqn9gra940oUTaPFizCkRDcEiA==
 
 discord-backup@^3.0.1:
   version "3.0.1"
