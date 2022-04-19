@@ -1,5 +1,5 @@
 import { userMention } from '@discordjs/builders';
-import { ButtonInteraction, MessageEmbed } from 'discord.js';
+import { ButtonInteraction } from 'discord.js';
 import db from 'quick.db';
 import { JkpCustomId } from '../../@types';
 import JKP from '../../JKP';
