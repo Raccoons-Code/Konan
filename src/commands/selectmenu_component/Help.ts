@@ -1,5 +1,4 @@
-import { codeBlock } from '@discordjs/builders';
-import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, SelectMenuInteraction } from 'discord.js';
+import { EmbedFieldData, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, SelectMenuInteraction } from 'discord.js';
 import { Client, SelectMenuComponentInteraction, SlashCommand } from '../../structures';
 
 const { env } = process;
@@ -14,7 +13,7 @@ export default class Help extends SelectMenuComponentInteraction {
     });
   }
 
-  async execute(interaction: SelectMenuInteraction) {
+  async execute(interaction: SelectMenuInteraction<'cached'>) {
     const { customId, values } = interaction;
 
     const { sc } = JSON.parse(customId);
@@ -22,8 +21,8 @@ export default class Help extends SelectMenuComponentInteraction {
     this[<'home'>sc || values[0]]?.(interaction);
   }
 
-  async home(interaction: SelectMenuInteraction) {
-    const { client, guild, locale, user } = <SelectMenuInteraction<'cached'>>interaction;
+  async home(interaction: SelectMenuInteraction<'cached'>) {
+    const { client, guild, locale, user } = interaction;
 
     const avatarURL = <string>guild?.me?.displayAvatarURL({ dynamic: true }) ??
       client.user?.displayAvatarURL({ dynamic: true });
@@ -69,7 +68,7 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   async commands(interaction: SelectMenuInteraction) {
-    const { client, locale } = interaction;
+    const { client, locale, message } = interaction;
 
     const { slash_interaction } = client.commands;
 
@@ -77,19 +76,27 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(codeBlock('properties', this.convertCommandsToString(slashCommands).slice(0, 4079)))
+      .setFields(this.convertCommandsToEmbedFields(slashCommands))
       .setFooter({ text: `Total: ${slashCommands.length}` })
       .setTitle(this.t('konanSupport', { locale }))];
 
-    const components = [
+    message.components = [
       new MessageActionRow().setComponents([this.setSelectCategory('general')]),
       new MessageActionRow().setComponents([this.setSelectMenu(1)]),
     ];
 
-    await interaction.update({ components, embeds });
+    if (slashCommands.length > 25)
+      message.components.unshift(new MessageActionRow()
+        .setComponents(this.setPageButtons({
+          category: 'general',
+          page: 0,
+          total: Math.floor(slashCommands.length / 25),
+        })));
+
+    await interaction.update({ components: message.components, embeds });
   }
 
-  async localization(interaction: SelectMenuInteraction) {
+  async localization(interaction: SelectMenuInteraction<'cached'>) {
     const { locale } = interaction;
 
     const embeds = [new MessageEmbed()
@@ -104,8 +111,8 @@ export default class Help extends SelectMenuComponentInteraction {
     await interaction.update({ components, embeds });
   }
 
-  async setCommandCategory(interaction: SelectMenuInteraction) {
-    const { client, locale, values } = interaction;
+  async setCommandCategory(interaction: SelectMenuInteraction<'cached'>) {
+    const { client, locale, message, values } = interaction;
 
     const commands = client.commandsByCategory[values[0]] || client.commands.slash_interaction;
 
@@ -113,16 +120,68 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const embeds = [new MessageEmbed()
       .setColor('RANDOM')
-      .setDescription(codeBlock('properties', this.convertCommandsToString(slashCommands).slice(0, 4079)))
+      .setFields(this.convertCommandsToEmbedFields(slashCommands))
       .setFooter({ text: `Total: ${slashCommands.length}` })
       .setTitle(this.t('konanSupport', { locale }))];
 
-    const components = [
+    message.components = [
       new MessageActionRow().setComponents(this.setSelectCategory(values[0])),
       new MessageActionRow().setComponents(this.setSelectMenu(1)),
     ];
 
-    await interaction.update({ components, embeds });
+    if (slashCommands.length > 25)
+      message.components.unshift(new MessageActionRow()
+        .setComponents(this.setPageButtons({
+          category: values[0],
+          page: 0,
+          total: Math.floor(slashCommands.length / 25),
+        })));
+
+    await interaction.update({ components: message.components, embeds });
+  }
+
+  setPageButtons({ category, page, total }: { category: string, page: number, total: number }) {
+    const buttons: MessageButton[] = [
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c: '' }))
+        .setDisabled(true)
+        .setStyle('SECONDARY')
+        .setLabel(`${page + 1}/${total + 1}`),
+    ];
+
+    if (page > 0)
+      buttons.unshift(new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, sc: 'commands', p: 0 }))
+        .setLabel('Back')
+        .setStyle('SECONDARY'));
+
+    if (page < total)
+      buttons.push(new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page + 1 }))
+        .setLabel('Next')
+        .setStyle('SECONDARY'));
+
+    return buttons;
+  }
+
+  convertCommandsToEmbedFields(
+    commands: SlashCommand[],
+    page = 0,
+    fields: EmbedFieldData[] = [],
+  ): EmbedFieldData[] {
+    for (let i = (page * 25); i < commands.length; i++) {
+      const { data } = commands[i];
+
+      fields.push({
+        name: `${data.name}`,
+        value: `${data.description}`,
+        inline: false,
+      });
+
+      if (fields.length === 25) break;
+    }
+
+    return fields;
   }
 
   convertCommandsToString(commands: SlashCommand[], text = '') {

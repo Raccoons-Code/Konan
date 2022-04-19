@@ -64,6 +64,13 @@ export interface EventData {
   permissions?: PermissionString[]
 }
 
+export interface HelpButtonCustomId {
+  c: string
+  cbc: string
+  sc: string
+  p: number
+}
+
 export interface JkpCustomId {
   /** command */
   c: string
