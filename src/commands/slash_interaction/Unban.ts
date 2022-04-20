@@ -69,11 +69,11 @@ export default class Unban extends SlashCommand {
     const reason = options.getString('reason') ?? undefined;
 
     try {
-      await guild.members.unban(id, reason);
+      await guild.bans.remove(id, reason);
 
-      await interaction.editReply(this.t('userBanned', { locale }));
+      await interaction.editReply(this.t('userUnbanned', { locale }));
     } catch {
-      await interaction.editReply(this.t('banError', { locale }));
+      await interaction.editReply(this.t('unbanError', { locale }));
     }
   }
 

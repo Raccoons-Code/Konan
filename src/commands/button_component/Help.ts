@@ -3,6 +3,8 @@ import { HelpButtonCustomId } from '../../@types';
 import { ButtonComponentInteraction, Client, SlashCommand } from '../../structures';
 
 export default class Help extends ButtonComponentInteraction {
+  limit = 25;
+
   constructor(client: Client) {
     super(client, {
       name: 'help',
@@ -39,7 +41,7 @@ export default class Help extends ButtonComponentInteraction {
       c.setComponents(this.setPageButtons({
         category: cbc,
         page: p,
-        total: Math.floor(slashCommands.length / 25),
+        total: Math.floor(slashCommands.length / this.limit),
       }));
 
       return c;
@@ -54,16 +56,16 @@ export default class Help extends ButtonComponentInteraction {
     page = 0,
     fields: EmbedFieldData[] = [],
   ): EmbedFieldData[] {
-    for (let i = (page * 25); i < commands.length; i++) {
+    for (let i = (page * this.limit); i < commands.length; i++) {
       const { data } = commands[i];
 
       fields.push({
         name: `${data.name}`,
-        value: `${data.description}`,
+        value: `${data.description}`.slice(0, 1024),
         inline: false,
       });
 
-      if (fields.length === 25) break;
+      if (fields.length === this.limit) break;
     }
 
     return fields;

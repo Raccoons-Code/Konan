@@ -6,6 +6,8 @@ const { DONATE_LINK, GUILD_INVITE } = env;
 const resetProps = { attachments: [], components: [], content: null, embeds: [], files: [] };
 
 export default class Help extends SelectMenuComponentInteraction {
+  limit = 25;
+
   constructor(client: Client) {
     super(client, {
       name: 'help',
@@ -85,12 +87,12 @@ export default class Help extends SelectMenuComponentInteraction {
       new MessageActionRow().setComponents([this.setSelectMenu(1)]),
     ];
 
-    if (slashCommands.length > 25)
+    if (slashCommands.length > this.limit)
       message.components.unshift(new MessageActionRow()
         .setComponents(this.setPageButtons({
           category: 'general',
           page: 0,
-          total: Math.floor(slashCommands.length / 25),
+          total: Math.floor(slashCommands.length / this.limit),
         })));
 
     await interaction.update({ components: message.components, embeds });
@@ -129,12 +131,12 @@ export default class Help extends SelectMenuComponentInteraction {
       new MessageActionRow().setComponents(this.setSelectMenu(1)),
     ];
 
-    if (slashCommands.length > 25)
+    if (slashCommands.length > this.limit)
       message.components.unshift(new MessageActionRow()
         .setComponents(this.setPageButtons({
           category: values[0],
           page: 0,
-          total: Math.floor(slashCommands.length / 25),
+          total: Math.floor(slashCommands.length / this.limit),
         })));
 
     await interaction.update({ components: message.components, embeds });
@@ -169,7 +171,7 @@ export default class Help extends SelectMenuComponentInteraction {
     page = 0,
     fields: EmbedFieldData[] = [],
   ): EmbedFieldData[] {
-    for (let i = (page * 25); i < commands.length; i++) {
+    for (let i = (page * this.limit); i < commands.length; i++) {
       const { data } = commands[i];
 
       fields.push({
@@ -178,12 +180,13 @@ export default class Help extends SelectMenuComponentInteraction {
         inline: false,
       });
 
-      if (fields.length === 25) break;
+      if (fields.length === this.limit) break;
     }
 
     return fields;
   }
 
+  /** @deprecated */
   convertCommandsToString(commands: SlashCommand[], text = '') {
     for (let i = 0; i < commands.length; i++) {
       const { data } = commands[i];

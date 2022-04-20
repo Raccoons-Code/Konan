@@ -12,6 +12,12 @@ export interface ApplicationCommandsCollection {
   )>
 }
 
+export interface BanCustomId {
+  c: string
+  sc: string
+  a: boolean
+}
+
 export interface ButtonRolesCustomId {
   /** command */
   c: string
