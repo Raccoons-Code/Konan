@@ -11,8 +11,8 @@ export default class extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('tictactoe')
       .setDescription('Play a game of TicTacToe with your friends! - Powered by Discord TicTacToe.')
-      /* .addUserOption(option => option.setName('opponent')
-        .setDescription('Choose your opponent')) */;
+      .addUserOption(option => option.setName('opponent')
+        .setDescription('Choose your opponent'));
   }
 
   async execute(interaction: CommandInteraction) {
