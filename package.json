@@ -1,11 +1,12 @@
 {
   "name": "konan",
-  "version": "0.14.17",
+  "version": "0.14.18",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
     "start:ts": "ts-node --transpileOnly .",
     "deploy_commands": "ts-node --transpileOnly ./src/deploy-commands",
+    "to_markdown": "ts-node --transpileOnly ./src/tomd",
     "start": "ts-node --transpileOnly .",
     "postinstall": "prisma generate"
   },

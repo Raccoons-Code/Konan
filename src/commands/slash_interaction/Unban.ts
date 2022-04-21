@@ -17,7 +17,7 @@ export default class Unban extends SlashCommand {
         .setAutocomplete(true)
         .setRequired(true))
       .addStringOption(option => option.setName('reason')
-        .setDescription('Reason'));
+        .setDescription('Reason to unban'));
   }
 
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {

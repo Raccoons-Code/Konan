@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, PermissionString } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
-export default class extends SlashCommand {
+export default class Ban extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Moderation',
@@ -109,7 +109,7 @@ export default class extends SlashCommand {
         .setDescription(usersArray.map(user => `<@${user}>`).join(' ').slice(0, 4096))
         .setTitle('Chunk of users to ban')
         .setFields([{
-          name: 'Reason',
+          name: 'Reason for ban',
           value: reason.slice(0, 1024),
         }, {
           name: 'Delete messages',

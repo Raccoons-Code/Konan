@@ -7,7 +7,9 @@ const { DONATE_LINK, GUILD_INVITE } = env;
 
 export default class Help extends SlashCommand {
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      category: 'General',
+    });
 
     this.data = new SlashCommandBuilder().setName('help')
       .setDescription('Replies with Help!')

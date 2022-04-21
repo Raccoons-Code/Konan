@@ -43,9 +43,9 @@ export default class Random extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('random')
-      .setDescription('Replies with random imagens.')
+      .setDescription('Replies with random images.')
       .addStringOption(option => option.setName('type')
-        .setDescription('Type')
+        .setDescription('Select a type')
         .setChoices(Choices.getChoices()));
   }
 

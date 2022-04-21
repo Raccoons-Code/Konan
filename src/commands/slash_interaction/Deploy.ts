@@ -6,7 +6,7 @@ import { Client, SlashCommand } from '../../structures';
 const { env } = process;
 const { GUILD_ID, OWNER_ID } = env;
 
-export default class extends SlashCommand {
+export default class Deploy extends SlashCommand {
   constructor(client: Client) {
     super(client);
 

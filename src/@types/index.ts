@@ -27,7 +27,7 @@ export interface ButtonRolesCustomId {
   roleId: string
 }
 
-export type CategoryTypes = 'Fun' | 'Game' | 'Moderation' | 'Utility';
+export type CategoryTypes = 'Fun' | 'Game' | 'General' | 'Moderation' | 'Utility';
 
 export interface CommandArgsData {
   name: string

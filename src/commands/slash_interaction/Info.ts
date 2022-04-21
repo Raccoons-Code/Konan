@@ -9,7 +9,7 @@ const { npm_package_dependencies_discord_js, npm_package_version } = env;
 const { node } = versions;
 const inline = true;
 
-export default class extends SlashCommand {
+export default class Info extends SlashCommand {
   [k: string]: any
 
   constructor(client: Client) {
