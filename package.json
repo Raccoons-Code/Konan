@@ -30,7 +30,7 @@
     "@prisma/client": "3.10.0",
     "@tsconfig/recommended": "^1.0.1",
     "@vitalets/google-translate-api": "^8.0.0",
-    "axios": "^0.26.1",
+    "axios": "^0.27.0",
     "common-tags": "^1.8.2",
     "discord-api-types": "^0.31.2",
     "discord-backup": "^3.0.1",
