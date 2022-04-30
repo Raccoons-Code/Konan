@@ -1,6 +1,6 @@
 import { MessageSelectOptionData, SelectMenuInteraction } from 'discord.js';
-import { Client, SelectMenuComponentInteraction } from '../../structures';
 import { RolesManager, SelectRolesCustomId, SelectRolesItemOptionValue } from '../../@types';
+import { Client, SelectMenuComponentInteraction } from '../../structures';
 
 export default class SelectRoles extends SelectMenuComponentInteraction {
   constructor(client: Client) {
@@ -12,7 +12,13 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
   }
 
   async execute(interaction: SelectMenuInteraction<'cached'>, roles: RolesManager = { add: [], remove: [] }) {
-    const { member, values } = interaction;
+    const { component, member, values } = interaction;
+
+    const item_default = component.options.find(option => option.default);
+
+    const { roleId: defaultRoleId } = <SelectRolesItemOptionValue>JSON.parse(item_default?.value ?? '{}');
+
+    roles.add.push(defaultRoleId);
 
     for (let i = 0; i < values.length; i++) {
       const value = values[i];
@@ -20,6 +26,8 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
       const { roleId } = <SelectRolesItemOptionValue>JSON.parse(value);
 
       const role = member.roles.resolve(roleId);
+
+      if (role?.id === defaultRoleId) continue;
 
       role ? roles.remove.push(role.id) : roles.add.push(roleId);
     }

@@ -22,6 +22,8 @@ export default class SelectRoles extends SlashCommand {
           .setDescription('Item name {0,83} - default: <role>'))
         .addStringOption(option => option.setName('item_description')
           .setDescription('Item description {0,100}'))
+        .addBooleanOption(option => option.setName('item_default')
+          .setDescription('Used to always add this role with other roles.'))
         .addStringOption(option => option.setName('item_emoji')
           .setDescription('Item emoji'))
         .addBooleanOption(option => option.setName('menu_disabled')
@@ -90,6 +92,8 @@ export default class SelectRoles extends SlashCommand {
             .setDescription('Item name {0,83}'))
           .addStringOption(option => option.setName('item_description')
             .setDescription('Item description {0,100}'))
+          .addBooleanOption(option => option.setName('item_default')
+            .setDescription('Used to always add this role with other roles.'))
           .addStringOption(option => option.setName('item_emoji')
             .setDescription('Item emoji'))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('add')
@@ -111,6 +115,8 @@ export default class SelectRoles extends SlashCommand {
             .setDescription('Item name {0,83} - default: <role>'))
           .addStringOption(option => option.setName('item_description')
             .setDescription('Item description {0,100}'))
+          .addBooleanOption(option => option.setName('item_default')
+            .setDescription('Used to always add this role with other roles.'))
           .addStringOption(option => option.setName('item_emoji')
             .setDescription('Item emoji'))
           .addBooleanOption(option => option.setName('menu_disabled')
@@ -213,6 +219,7 @@ export default class SelectRoles extends SlashCommand {
 
     const [, title, embed_description] = options.getString('text')?.match(this.pattern.embed) ?? [];
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+    const item_default = options.getBoolean('item_default') ?? false;
     const description = options.getString('item_description')?.slice(0, 100);
     const emoji = <EmojiIdentifierResolvable>options.getString('item_emoji');
     const menu_disabled = <boolean>options.getBoolean('menu_disabled');
@@ -236,6 +243,7 @@ export default class SelectRoles extends SlashCommand {
         }),
         description,
         emoji,
+        default: item_default,
       }])
       .setPlaceholder(menu_place_holder);
 
@@ -331,6 +339,7 @@ export default class SelectRoles extends SlashCommand {
       })) : false) return await interaction.editReply(this.t('itemAddError', { locale }));
 
       const description = options.getString('item_description')?.slice(0, 100);
+      const item_default = options.getBoolean('item_default');
       const emoji = options.getString('item_emoji');
       const label = options.getString('item_name')?.slice(0, 83);
 
@@ -345,6 +354,7 @@ export default class SelectRoles extends SlashCommand {
 
             const { count, d } = <SelectRolesItemOptionValue>JSON.parse(option.value);
 
+            option.default = typeof item_default === 'boolean' ? item_default : option.default;
             option.description = description ? description : option.description;
             option.emoji = emoji ? Util.resolvePartialEmoji(emoji) : <any>option.emoji;
             option.label = label ? `${label} ${count}` : option.label;
@@ -390,6 +400,7 @@ export default class SelectRoles extends SlashCommand {
       return element.options.some(option => JSON.parse(`${option.value}`).roleId === role?.id);
     }))) return await interaction.editReply(this.t('itemAddError', { locale }));
 
+    const item_default = options.getBoolean('item_default') ?? false;
     const description = options.getString('item_description')?.slice(0, 100);
     const emoji = <EmojiIdentifierResolvable>options.getString('item_emoji');
     const label = (options.getString('item_name') ?? role.name).slice(0, 83);
@@ -416,6 +427,7 @@ export default class SelectRoles extends SlashCommand {
           }),
           description,
           emoji,
+          default: item_default,
         }])
         .setPlaceholder(menu_place_holder);
 
@@ -447,6 +459,7 @@ export default class SelectRoles extends SlashCommand {
             }),
             description,
             emoji,
+            default: item_default,
           }])
             .setMaxValues(selectmenu.options.length);
 

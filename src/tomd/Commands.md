@@ -2,7 +2,7 @@
 
 # Commands
 
-Last modified: April 21, 2022
+Last modified: April 30, 2022
 
 ## Application Commands (/) - 24
 
@@ -176,6 +176,7 @@ Last modified: April 21, 2022
   - <`role`>: Role.
   - [`item_name`]: Item name {0,83} - default: <role>
   - [`item_description`]: Item description {0,100}
+  - [`item_default`]: Used to always add this role with other roles.
   - [`item_emoji`]: Item emoji
   - [`menu_disabled`]: Set menu disabled - default: false
   - [`menu_place_holder`]: Menu place holder {0,150}
@@ -204,6 +205,7 @@ Last modified: April 21, 2022
     - [`role`]: Select a role
     - [`item_name`]: Item name {0,83}
     - [`item_description`]: Item description {0,100}
+    - [`item_default`]: Used to always add this role with other roles.
     - [`item_emoji`]: Item emoji
 
 - {`add`}: Add to Select menu.
@@ -214,6 +216,7 @@ Last modified: April 21, 2022
     - <`role`>: Role.
     - [`item_name`]: Item name {0,83} - default: <role>
     - [`item_description`]: Item description {0,100}
+    - [`item_default`]: Used to always add this role with other roles.
     - [`item_emoji`]: Item emoji
     - [`menu_disabled`]: Set menu disabled - default: false
     - [`menu_place_holder`]: Menu place holder {0,150}
