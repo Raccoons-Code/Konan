@@ -1,5 +1,5 @@
 import { BackupData } from 'discord-backup/lib/types';
-import { filterObjectByKeys } from '../util';
+import Util from '../util';
 import { guild, roles } from './defaults';
 
 export default class Restore {
@@ -29,11 +29,11 @@ export default class Restore {
   }
 
   rolesDefaults(backup: any = this.backup) {
-    return backup.roles.map((role: any) => filterObjectByKeys(role, roles));
+    return backup.roles.map((role: any) => Util.filterObjectByKeys(role, roles));
   }
 
   guildDefaults(backup = this.backup) {
-    return filterObjectByKeys(backup, guild);
+    return Util.filterObjectByKeys(backup, guild);
   }
 
   static create(backup: any, options: any) {

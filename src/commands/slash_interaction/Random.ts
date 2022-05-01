@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import axios from 'axios';
 import { CommandInteraction, PermissionString } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
-import { capitalize, mathRandom } from '../../util';
+import Util from '../../util';
 
 const Choices = new class {
   choices: string[];
@@ -19,14 +19,14 @@ const Choices = new class {
   }
 
   getRandom() {
-    return this.choices.sort(() => mathRandom(3, -1))[mathRandom(this.choices.length, 0)];
+    return this.choices.sort(() => Util.mathRandom(3, -1))[Util.mathRandom(this.choices.length, 0)];
   }
 
   setChoices(array: [name: string, value: string][] = []) {
     for (let i = 0; i < this.choices.length; i++) {
       const choice = this.choices[i];
 
-      array[i] = [capitalize(choice), choice];
+      array[i] = [Util.capitalize(choice), choice];
     }
 
     return this._choices = array;

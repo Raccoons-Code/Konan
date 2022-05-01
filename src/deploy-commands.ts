@@ -41,6 +41,8 @@ const rest = new REST().setToken(DISCORD_TOKEN);
       continue;
     }
 
+    command_data.default_permission = true;
+
     reset || data.push(command_data);
   }
 

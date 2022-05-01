@@ -23,8 +23,8 @@ export = new class pattern {
    * @pattern /([\w\W]{0,83})/
    */
   labelLimited = /([\w\W]{0,83})/;
-  /** @pattern /(.+?)(?:\s(\d+))+?/ */
-  labelWithCount = /(.+?)(?:\s(\d+))+?/;
+  /** @pattern /(.+)(?:\s(\d+))/ */
+  labelWithCount = /(.+)(?:\s(\d+))/;
   /** @pattern /(on(?:ce)?)/ */
   listeners = /(on(?:ce)?)/;
   /** @pattern /<@!?&?(\d{17,})>/g */

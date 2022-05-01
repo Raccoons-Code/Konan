@@ -20,14 +20,16 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
 
     roles.add.push(defaultRoleId);
 
+    roles.default = member.roles.resolve(defaultRoleId)?.id;
+
     for (let i = 0; i < values.length; i++) {
       const value = values[i];
 
       const { roleId } = <SelectRolesItemOptionValue>JSON.parse(value);
 
-      const role = member.roles.resolve(roleId);
+      if (roles.add.includes(roleId)) continue;
 
-      if (role?.id === defaultRoleId) continue;
+      const role = member.roles.resolve(roleId);
 
       role ? roles.remove.push(role.id) : roles.add.push(roleId);
     }
@@ -51,10 +53,10 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
 
       const { count, d, roleId } = <SelectRolesItemOptionValue>JSON.parse(option.value);
 
-      const add2 = roles.add.includes(roleId) ? 1 : 0;
-      const rem2 = roles.remove.includes(roleId) ? -1 : 0;
+      const add = roles.add.includes(roleId) ? roleId === roles.default ? 0 : 1 : 0;
+      const rem = roles.remove.includes(roleId) ? -1 : 0;
 
-      let sum = add2 + rem2;
+      let sum = add + rem;
 
       if (sum > 0)
         sum = (count + sum > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER - count : sum);
@@ -77,7 +79,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
 
     const { c, count, d } = <SelectRolesCustomId>JSON.parse(customId);
 
-    let sum = roles.add.length - roles.remove.length;
+    let sum = roles.add.length - roles.remove.length - (roles.default ? 1 : 0);
 
     if (sum > 0)
       sum = (count + sum > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER - count : sum);

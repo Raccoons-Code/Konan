@@ -61,7 +61,7 @@ export default class Ready extends Event {
       ],
     });
 
-    await this.util.waitAsync(10000 * this.util.mathRandom(6, 1));
+    await this.Util.waitAsync(10000 * this.Util.mathRandom(6, 1));
 
     this.setPresence(client);
   }

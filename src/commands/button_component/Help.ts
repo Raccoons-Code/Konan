@@ -1,9 +1,10 @@
 import { ButtonInteraction, EmbedFieldData, MessageButton, MessageEmbed } from 'discord.js';
 import { HelpButtonCustomId } from '../../@types';
 import { ButtonComponentInteraction, Client, SlashCommand } from '../../structures';
+import Util from '../../util';
 
 export default class Help extends ButtonComponentInteraction {
-  limit = 25;
+  limit = Util.Constants.helpPageLimit;
 
   constructor(client: Client) {
     super(client, {

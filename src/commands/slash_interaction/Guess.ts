@@ -34,7 +34,7 @@ export default class Guess extends SlashCommand {
       .setTitle(this.t('guessNumber', { locale }))];
 
     if (!db.has(`${guildId}.${author.id}.guess`))
-      db.set(`${guildId}.${author.id}.guess`, { value: this.util.mathRandom(100, 1) });
+      db.set(`${guildId}.${author.id}.guess`, { value: this.Util.mathRandom(100, 1) });
 
     const { value, user = [] } = db.get(`${guildId}.${author.id}.guess`);
 
@@ -51,7 +51,7 @@ export default class Guess extends SlashCommand {
       return await interaction.editReply({ embeds });
     }
 
-    if (this.util.isDuplicate(user, number)) {
+    if (this.Util.isDuplicate(user, number)) {
       if (number < value)
         embeds[0]
           .setDescription(this.t('numberRepeatSmaller', { locale, author, number }));

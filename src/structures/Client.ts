@@ -6,7 +6,7 @@ import commands from '../commands';
 import { prisma } from '../database';
 import events from '../events';
 import { t } from '../translator';
-import * as util from '../util';
+import Util from '../util';
 
 const { env } = process;
 const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
@@ -19,17 +19,15 @@ export default class Client extends DJS.Client {
     super(options);
 
     Object.defineProperties(this, {
-      pattern: { value: util.pattern },
       prisma: { value: prisma },
       t: { value: t },
-      util: { value: util },
     });
 
     this.stats = {};
   }
 
   async login(token = this.token ?? undefined) {
-    process.on('unhandledRejection', this.sendError);
+    // process.on('unhandledRejection', this.sendError);
 
     commands.init(this);
 
@@ -95,7 +93,7 @@ export default class Client extends DJS.Client {
     }
 
     if (options.loop) {
-      await this.util.waitAsync(600000);
+      await Util.waitAsync(600000);
 
       return this.fetchStats(options);
     }

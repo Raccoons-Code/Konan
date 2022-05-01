@@ -1,6 +1,7 @@
 import bytes from './bytes';
 import capitalize from './capitalize';
 import composition from './composition';
+import Constants from './Constants';
 import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
 import hasDuplicatesInArray from './hasDuplicatesInArray';
@@ -19,25 +20,28 @@ import splitSelectMenu from './splitSelectMenu';
 import waitAsync from './waitAsyncV2';
 import waitSync from './waitSync';
 
-export {
-  bytes,
-  capitalize,
-  composition,
-  filterObjectByKeys,
-  findDuplicatesInArray,
-  hasDuplicatesInArray,
-  isSameDate,
-  isDuplicate,
-  isJSON,
-  keyGen,
-  mathRandom,
-  parseJSON,
-  pattern,
-  removeDuplicatesInArray,
-  removeFromArray,
-  splitArrayInGroups,
-  splitLimits,
-  splitSelectMenu,
-  waitAsync,
-  waitSync,
-};
+export default class Util {
+  static bytes = bytes;
+  static capitalize = capitalize;
+  static composition = composition;
+  static Constants = Constants;
+  static filterObjectByKeys = filterObjectByKeys;
+  static findDuplicatesInArray = findDuplicatesInArray;
+  static hasDuplicatesInArray = hasDuplicatesInArray;
+  static isDuplicate = isDuplicate;
+  static isJSON = isJSON;
+  static isSameDate = isSameDate;
+  static keyGen = keyGen;
+  static mathRandom = mathRandom;
+  static parseJSON = parseJSON;
+  static pattern = pattern;
+  static removeDuplicatesInArray = removeDuplicatesInArray;
+  static removeFromArray = removeFromArray;
+  static splitArrayInGroups = splitArrayInGroups;
+  static splitLimits = splitLimits;
+  static splitSelectMenu = splitSelectMenu;
+  static waitAsync = waitAsync;
+  static waitSync = waitSync;
+}
+
+export { Util };

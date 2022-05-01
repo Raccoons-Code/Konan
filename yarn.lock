@@ -681,12 +681,12 @@ discord-api-types@^0.32.0:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.32.0.tgz#e3880d6695372070b7ddbbd2899b2ed6ffd9dea0"
   integrity sha512-i6HyCwWRocvtIcM7hamI3eQTCxLN/UvWtm/JktaXRSWDmASfhHam2juhej+e4U/Q/Fni1uUlyloMCBTL04Dl6Q==
 
-discord-backup@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/discord-backup/-/discord-backup-3.0.1.tgz#4208ee7d33103f7a84e8c7cfad888e315c396bf8"
-  integrity sha512-V0KsDHJPVx+zjWPv11alWmHSQ/CO4Mnzko3afDotz6U45py37igjFOCfHCqV3Q3AT6kk7Hi4H5pgA3H7qPw2zw==
+discord-backup@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/discord-backup/-/discord-backup-3.1.0.tgz#25ebe920c72a9a72c0af82650e9a9d279cf39cbd"
+  integrity sha512-x7ZWe+r/EDd6bSY1ohI2cy74bYSpuTrtnS3Y0rtxfO0R0aaZ8R1YO9rJj2Cl+38mE/B8/J882DHzdmJ85dw+vA==
   dependencies:
-    discord.js "^13.0.1"
+    discord.js "^13.6.0"
 
 discord-tictactoe@^3.0.0:
   version "3.0.0"
@@ -703,7 +703,7 @@ discord-together@^1.3.3:
     discord.js "^13.1.0"
     node-fetch "^2.6.1"
 
-discord.js@^13.0.1, discord.js@^13.1.0, discord.js@^13.6.0:
+discord.js@^13.1.0, discord.js@^13.6.0:
   version "13.6.0"
   resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-13.6.0.tgz#d8a8a591dbf25cbcf9c783d5ddf22c4694860475"
   integrity sha512-tXNR8zgsEPxPBvGk3AQjJ9ljIIC6/LOPjzKwpwz8Y1Q2X66Vi3ZqFgRHYwnHKC0jC0F+l4LzxlhmOJsBZDNg9g==

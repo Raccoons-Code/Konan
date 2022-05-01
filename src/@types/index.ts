@@ -122,6 +122,7 @@ export interface PrimeResolveOptions {
 
 export interface RolesManager {
   add: string[]
+  default?: string
   remove: string[]
 }
 

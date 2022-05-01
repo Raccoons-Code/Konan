@@ -74,7 +74,7 @@ export default class Clear extends SlashCommand {
 
     const { size } = await channel.bulkDelete(limit, true);
 
-    size && await this.util.waitAsync(500);
+    size && await this.Util.waitAsync(500);
 
     const go = size && (number - size);
 

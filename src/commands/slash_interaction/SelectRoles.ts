@@ -144,6 +144,8 @@ export default class SelectRoles extends SlashCommand {
             .setDescription('Item name {0,83} - default: <role>'))
           .addStringOption(option => option.setName('item_description')
             .setDescription('Item description {0,100}'))
+          .addBooleanOption(option => option.setName('item_default')
+            .setDescription('Used to always add this role with other roles.'))
           .addStringOption(option => option.setName('item_emoji')
             .setDescription('Item emoji'))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('remove')

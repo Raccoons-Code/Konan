@@ -1,23 +1,23 @@
 import { prisma } from '../database';
 import { t } from '../translator';
-import * as util from '../util';
+import Util from '../util';
 import Client from './Client';
 
 export default abstract class Base {
   client!: Client;
-  pattern!: typeof util['pattern'];
+  pattern!: typeof Util['pattern'];
   t!: typeof t;
   prisma!: typeof prisma;
-  util!: typeof util;
+  Util!: typeof Util;
 
   constructor(client: Client) {
     if (client) {
       Object.defineProperties(this, {
         client: { value: client },
-        pattern: { value: util.pattern },
+        pattern: { value: Util.pattern },
         prisma: { value: prisma },
         t: { value: t },
-        util: { value: util },
+        Util: { value: Util },
       });
     }
   }

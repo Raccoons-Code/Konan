@@ -45,7 +45,7 @@ export default class Info extends ButtonComponentInteraction {
       Channels : ${newStats.channels ?? channels.cache.size}
       Members  : ${newStats.members ?? users.cache.size}
       Ping     : ${ws.ping} ms
-      Memory   : ${this.util.bytes(heapUsed).join(' ')} / ${this.util.bytes(heapTotal).join(' ')}
+      Memory   : ${this.Util.bytes(heapUsed).join(' ')} / ${this.Util.bytes(heapTotal).join(' ')}
       Version  : ${npm_package_version}
       `);
 
