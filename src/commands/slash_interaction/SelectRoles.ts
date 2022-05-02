@@ -463,7 +463,8 @@ export default class SelectRoles extends SlashCommand {
             emoji,
             default: item_default,
           }])
-            .setMaxValues(selectmenu.options.length);
+            .setMaxValues(selectmenu.options.length)
+            .options.sort((a, b) => a.default ? -1 : 1);
 
           return selectmenu;
         });
