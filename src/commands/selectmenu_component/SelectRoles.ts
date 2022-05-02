@@ -16,11 +16,13 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
 
     const item_default = component.options.find(option => option.default);
 
-    const { roleId: defaultRoleId } = <SelectRolesItemOptionValue>JSON.parse(item_default?.value ?? '{}');
+    if (item_default) {
+      const { roleId } = <SelectRolesItemOptionValue>JSON.parse(item_default.value);
 
-    roles.add.push(defaultRoleId);
+      roles.add.push(roleId);
 
-    roles.default = member.roles.resolve(defaultRoleId)?.id;
+      roles.default = member.roles.resolve(roleId)?.id;
+    }
 
     for (let i = 0; i < values.length; i++) {
       const value = values[i];
