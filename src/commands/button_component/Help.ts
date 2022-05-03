@@ -1,4 +1,4 @@
-import { ButtonInteraction, EmbedFieldData, MessageButton, MessageEmbed } from 'discord.js';
+import { ButtonInteraction, EmbedFieldData, MessageButton } from 'discord.js';
 import { HelpButtonCustomId } from '../../@types';
 import { ButtonComponentInteraction, Client, SlashCommand } from '../../structures';
 import Util from '../../util';
@@ -30,11 +30,10 @@ export default class Help extends ButtonComponentInteraction {
 
     const slashCommands = commands.filter((c: any) => c.data.defaultPermission !== false).toJSON();
 
-    const embeds = [new MessageEmbed()
+    message.embeds[0]
       .setColor('RANDOM')
       .setFields(this.convertCommandsToEmbedFields(slashCommands, p))
-      .setFooter({ text: `Total: ${slashCommands.length}` })
-      .setTitle(this.t('konanSupport', { locale }))];
+      .setTitle(this.t('konanSupport', { locale }));
 
     message.components.map(c => {
       if (c.components[0].type !== 'BUTTON') return c;
@@ -49,7 +48,7 @@ export default class Help extends ButtonComponentInteraction {
     });
 
 
-    await interaction.update({ components: message.components, embeds });
+    await interaction.update({ components: message.components, embeds: message.embeds });
   }
 
   convertCommandsToEmbedFields(
@@ -73,26 +72,22 @@ export default class Help extends ButtonComponentInteraction {
   }
 
   setPageButtons({ category, page, total }: { category: string, page: number, total: number }) {
-    const buttons: MessageButton[] = [
+    return [
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page - 1 }))
+        .setDisabled(page < 1)
+        .setLabel('Back')
+        .setStyle('SECONDARY'),
       new MessageButton()
         .setCustomId(JSON.stringify({ c: '' }))
         .setDisabled(true)
         .setStyle('SECONDARY')
         .setLabel(`${page + 1}/${total + 1}`),
-    ];
-
-    if (page > 0)
-      buttons.unshift(new MessageButton()
-        .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page - 1 }))
-        .setLabel('Back')
-        .setStyle('SECONDARY'));
-
-    if (page < total)
-      buttons.push(new MessageButton()
+      new MessageButton()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page + 1 }))
+        .setDisabled(page >= total)
         .setLabel('Next')
-        .setStyle('SECONDARY'));
-
-    return buttons;
+        .setStyle('SECONDARY'),
+    ];
   }
 }

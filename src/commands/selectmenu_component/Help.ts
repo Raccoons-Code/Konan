@@ -144,27 +144,23 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   setPageButtons({ category, page, total }: { category: string, page: number, total: number }) {
-    const buttons: MessageButton[] = [
+    return [
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page - 1 }))
+        .setDisabled(page < 1)
+        .setLabel('Back')
+        .setStyle('SECONDARY'),
       new MessageButton()
         .setCustomId(JSON.stringify({ c: '' }))
         .setDisabled(true)
         .setStyle('SECONDARY')
         .setLabel(`${page + 1}/${total + 1}`),
-    ];
-
-    if (page > 0)
-      buttons.unshift(new MessageButton()
-        .setCustomId(JSON.stringify({ c: this.data.name, sc: 'commands', p: 0 }))
-        .setLabel('Back')
-        .setStyle('SECONDARY'));
-
-    if (page < total)
-      buttons.push(new MessageButton()
+      new MessageButton()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page + 1 }))
+        .setDisabled(page >= total)
         .setLabel('Next')
-        .setStyle('SECONDARY'));
-
-    return buttons;
+        .setStyle('SECONDARY'),
+    ];
   }
 
   convertCommandsToEmbedFields(
