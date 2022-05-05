@@ -27,7 +27,7 @@ export default class Client extends DJS.Client {
   }
 
   async login(token = this.token ?? undefined) {
-    process.on('unhandledRejection', this.sendError);
+    /* process.on('unhandledRejection', this.sendError); */
 
     commands.init(this);
 

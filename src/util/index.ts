@@ -1,5 +1,6 @@
 import bytes from './bytes';
 import capitalize from './capitalize';
+import ComponentLink from './ComponentLink';
 import composition from './composition';
 import Constants from './Constants';
 import filterObjectByKeys from './filterObjectByKeys';
@@ -23,6 +24,7 @@ import waitSync from './waitSync';
 export default class Util {
   static bytes = bytes;
   static capitalize = capitalize;
+  static ComponentLink = ComponentLink;
   static composition = composition;
   static Constants = Constants;
   static filterObjectByKeys = filterObjectByKeys;
@@ -45,3 +47,4 @@ export default class Util {
 }
 
 export { Util };
+

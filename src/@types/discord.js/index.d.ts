@@ -25,5 +25,6 @@ declare module 'discord.js' {
   export interface Message {
     args: string[];
     commandName: string;
+    text: string;
   }
 }

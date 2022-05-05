@@ -8,7 +8,6 @@ export default class Help extends Command {
   constructor(client: Client) {
     super(client, {
       name: 'help',
-      aliases: ['h'],
       description: 'Help!',
     });
   }

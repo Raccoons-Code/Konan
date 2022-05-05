@@ -22,15 +22,19 @@ export default class MessageCreate extends Event {
 
     if (!matched) return;
 
-    message.args = matched[1].trim().split(/\s+/g);
+    message.text = matched[1];
 
-    const commandName = message.commandName = message.args.shift() || 'help';
+    message.args = message.text.split(/\s+/g);
+
+    const matchedComponentLink = matched[1].match(this.pattern.componentCommandNameLink) ?? [];
+
+    const commandName = message.commandName = matchedComponentLink[3] || message.args.shift() || 'help';
 
     const command = <Command>commands.message_command?.get(commandName);
 
     if (!command) return;
 
-    if (!/(deploy|throw)/.test(commandName))
+    if (!/(button|deploy|https?|throw)/.test(commandName))
       await channel.sendTyping();
 
     try {
