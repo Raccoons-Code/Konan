@@ -9,6 +9,7 @@ export = (amount: number, limit: limit = 100) => {
     if (amount2 >= limit) array.push(limit), amount2 -= limit;
     if (amount2 < limit) array.push(amount2), amount2 -= limit;
   }
+
   return array;
 };
 

@@ -22,7 +22,7 @@ export default class MessageCreate extends Event {
 
     if (!matched) return;
 
-    message.text = matched[1];
+    message.text = matched[1].trim();
 
     message.args = message.text.split(/\s+/g);
 
