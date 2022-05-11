@@ -325,7 +325,7 @@
   "embedSendChannelDescription": "Kanál k odeslání.",
   "embedSendContentName": "Obsah",
   "embedSendContentDescription": "Obsah k odeslání.",
-  "embedSendImageUrlName": "adresa URL obrázku",
+  "embedSendImageUrlName": "adresa_url_obrázku",
   "embedSendImageUrlDescription": "URL obrázku k odeslání.",
   "embedEditName": "upravit",
   "embedEditDescription": "Upravit vložený dokument.",
