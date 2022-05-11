@@ -27,7 +27,7 @@ export default class Client extends DJS.Client {
   }
 
   async login(token = this.token ?? undefined) {
-    /* process.on('unhandledRejection', this.sendError); */
+    process.on('unhandledRejection', this.sendError);
 
     commands.init(this);
 
@@ -57,16 +57,20 @@ export default class Client extends DJS.Client {
       return console.error(reason);
 
     if (!this.ERROR_WEBHOOK)
-      this.ERROR_WEBHOOK = new WebhookClient({ url: ERROR_WEBHOOK });
-
-    const embeds = [new MessageEmbed()
-      .setColor('RED')
-      .setTitle(`${reason.name}: ${reason.message}`)
-      .setDescription(`${codeBlock(`${reason.stack}`.slice(0, 4089))}`)];
+      try {
+        this.ERROR_WEBHOOK = new WebhookClient({ url: ERROR_WEBHOOK });
+      } catch (error) {
+        return console.error(reason);
+      }
 
     try {
       await this.ERROR_WEBHOOK.send({
-        embeds,
+        embeds: [
+          new MessageEmbed()
+            .setColor('RED')
+            .setDescription(`${codeBlock(`${reason.stack}`.slice(0, 4089))}`)
+            .setTitle(`${reason.name}: ${reason.message}`),
+        ],
         avatarURL: this.user.displayAvatarURL(),
         username: this.user.username,
       });

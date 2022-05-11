@@ -4,7 +4,7 @@ import Commands from '..';
 import { Client, SlashCommand } from '../../structures';
 
 const { env } = process;
-const { GUILD_ID, OWNER_ID } = env;
+const { DISCORD_TEST_GUILD_ID, OWNER_ID } = env;
 
 export default class Deploy extends SlashCommand {
   constructor(client: Client) {
@@ -12,22 +12,33 @@ export default class Deploy extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('deploy')
       .setDescription('Deploy commands (Restricted for bot\'owners).')
+      .setNameLocalizations(this.getLocalizations('deployName'))
+      .setDescriptionLocalizations(this.getLocalizations('deployDescription'))
       .setDefaultPermission(false)
       .addStringOption(option => option.setName('type')
-        .setDescription('Type of deploy')
-        .setChoices([
-          ['Global', 'global'],
-          ['Guild', 'guild'],
-        ])
+        .setDescription('The type of deploy.')
+        .setNameLocalizations(this.getLocalizations('deployTypeOptionName'))
+        .setDescriptionLocalizations(this.getLocalizations('deployTypeOptionDescription'))
+        .setChoices({
+          name: 'Global',
+          value: 'global',
+          name_localizations: this.getLocalizations('Global'),
+        }, {
+          name: 'Guild',
+          value: 'guild',
+          name_localizations: this.getLocalizations('Guild'),
+        })
         .setRequired(true))
       .addBooleanOption(option => option.setName('reset')
-        .setDescription('Reset all commands.'));
+        .setDescription('Whether to reset the commands.')
+        .setNameLocalizations(this.getLocalizations('deployResetOptionName'))
+        .setDescriptionLocalizations(this.getLocalizations('deployResetOptionDescription')));
   }
 
   async execute(interaction: CommandInteraction) {
     const { client, locale, options, user } = interaction;
 
-    const guilds = GUILD_ID?.split(',') ?? [];
+    const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
     const owners = OWNER_ID?.split(',');
 
     if (!owners?.includes(user.id)) return;
@@ -37,7 +48,7 @@ export default class Deploy extends SlashCommand {
     const type = options.getString('type');
     const reset = options.getBoolean('reset');
 
-    const data = [];
+    const data: any[] = [];
     const data_private: any[] = [];
     const commands: SlashCommand[] = [];
     const { applicationCommandTypes } = Commands;

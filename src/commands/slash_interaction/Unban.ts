@@ -11,13 +11,19 @@ export default class Unban extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('unban')
-      .setDescription('Revokes the ban from the selected user.')
+      .setDescription('Revoke a user\'s ban.')
+      .setNameLocalizations(this.getLocalizations('unbanName'))
+      .setDescriptionLocalizations(this.getLocalizations('unbanDescription'))
       .addStringOption(option => option.setName('user')
         .setDescription('User ID')
+        .setNameLocalizations(this.getLocalizations('unbanUserName'))
+        .setDescriptionLocalizations(this.getLocalizations('unbanUserDescription'))
         .setAutocomplete(true)
         .setRequired(true))
       .addStringOption(option => option.setName('reason')
-        .setDescription('Reason to unban'));
+        .setDescription('The reason to unban.')
+        .setNameLocalizations(this.getLocalizations('unbanReasonName'))
+        .setDescriptionLocalizations(this.getLocalizations('unbanReasonDescription')));
   }
 
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {

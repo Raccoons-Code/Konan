@@ -1,13 +1,18 @@
 declare namespace NodeJS {
   export interface ProcessEnv {
+    /** @deprecated use DISCORD_APPLICATION_ID */
     CLIENT_ID?: string
     CLIENT_SECRET?: string
     CROWDIN_KEY?: string
     CROWDIN_TOKEN?: string
     DATABASE_URL?: string
+    DISCORD_APPLICATION_ID?: string
+    DISCORD_PUBLIC_KEY?: string
+    DISCORD_TEST_GUILD_ID?: string
     DISCORD_TOKEN?: string
     DONATE_LINK?: string
     ERROR_WEBHOOK?: string
+    /** @deprecated use DISCORD_TEST_GUILD_ID */
     GUILD_ID?: string
     GUILD_INVITE?: string
     OWNER_ID?: string

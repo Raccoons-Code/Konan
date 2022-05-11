@@ -11,9 +11,9 @@ export default class Interpolator {
   constructor(options: Options) {
     Object.assign(this, { ...defaults.interpolation, ...options.interpolation });
 
-    this.pattern = RegExp([this.prefix, '(.*?)', this.suffix].join(''));
+    this.pattern = RegExp(`${this.prefix}(.*?)${this.suffix}`);
 
-    this.patterng = RegExp([this.prefix, '.*?', this.suffix].join(''), 'g');
+    this.patterng = RegExp(`${this.prefix}.*?${this.suffix}`, 'g');
   }
 
   interpolate(key: string, options: Options & { [k: string]: string[] }) {

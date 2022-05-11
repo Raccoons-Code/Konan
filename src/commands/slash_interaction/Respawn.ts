@@ -11,6 +11,8 @@ export default class Respawn extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('respawn')
       .setDescription('Respawn application (Restricted for bot\'owners).')
+      .setNameLocalizations(this.getLocalizations('respawnName'))
+      .setDescriptionLocalizations(this.getLocalizations('respawnDescription'))
       .setDefaultPermission(false);
   }
 

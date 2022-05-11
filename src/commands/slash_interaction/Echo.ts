@@ -12,9 +12,13 @@ export default class Echo extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('echo')
-      .setDescription('Replies with your message!')
+      .setDescription('Echo your message.')
+      .setNameLocalizations(this.getLocalizations('echoName'))
+      .setDescriptionLocalizations(this.getLocalizations('echoDescription'))
       .addStringOption(option => option.setName('message')
         .setDescription('Message to echo back.')
+        .setNameLocalizations(this.getLocalizations('echoMessageOptionName'))
+        .setDescriptionLocalizations(this.getLocalizations('echoMessageOptionDescription'))
         .setRequired(true));
   }
 
