@@ -9,17 +9,13 @@ const langs = readdirSync(`${__dirname}`).filter(f => statSync(`${__dirname}/${f
 for (let i = 0; i < langs.length; i++) {
   const lang = langs[i];
 
-  const { found } = new GlobSync(`${__dirname}/${lang}/translation*.json`);
+  const { found } = new GlobSync(`${__dirname}/${lang}/*.json`);
 
   translations[lang] = found.reduce((acc: any, value) => {
-    const [, matched] = value.match(RegExp(`(?:(?!${lang})/${lang}/(.+)\\.json)$`)) ?? [];
-
-    const key = <string>matched.split('.').pop();
-
-    if (!acc.translation && key === 'translation')
+    if (!acc.translation)
       return { translation: require(value) };
 
-    return acc.translation[key] = require(value);
+    return Object.assign(acc.translation, require(value));
   }, {});
 }
 

@@ -11,24 +11,52 @@ export default class Timeout extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('timeout')
-      .setDescription('Temporarily mutes a user.')
+      .setDescription('Temporarily mute a user.')
+      .setNameLocalizations(this.getLocalizations('timeoutName'))
+      .setDescriptionLocalizations(this.getLocalizations('timeoutDescription'))
       .addUserOption(option => option.setName('user')
-        .setDescription('The user to timeout.')
+        .setDescription('The user to mute.')
+        .setNameLocalizations(this.getLocalizations('timeoutUserName'))
+        .setDescriptionLocalizations(this.getLocalizations('timeoutUserDescription'))
         .setRequired(true))
       .addIntegerOption(option => option.setName('time')
-        .setDescription('Time to timeout the user.')
-        .setChoices([
-          ['Remove timeout', 0],
-          ['60 seconds', 1000 * 60],
-          ['5 minutes', 1000 * 60 * 5],
-          ['10 minutes', 1000 * 60 * 10],
-          ['1 hour', 1000 * 60 * 60],
-          ['1 day', 1000 * 60 * 60 * 24],
-          ['1 week', 1000 * 60 * 60 * 24 * 7],
-        ])
+        .setDescription('The time to mute the user for.')
+        .setNameLocalizations(this.getLocalizations('timeoutTimeName'))
+        .setDescriptionLocalizations(this.getLocalizations('timeoutTimeDescription'))
+        .setChoices({
+          name: 'Remove timeout',
+          value: 0,
+          name_localizations: this.getLocalizations('timeoutRemoveTimeoutOption'),
+        }, {
+          name: '60 seconds',
+          value: 1000 * 60,
+          name_localizations: this.getLocalizations('timeoutNSecondsOption', { n: 60 }),
+        }, {
+          name: '5 minutes',
+          value: 1000 * 60 * 5,
+          name_localizations: this.getLocalizations('timeoutNMinutesOption', { n: 5 }),
+        }, {
+          name: '10 minutes',
+          value: 1000 * 60 * 10,
+          name_localizations: this.getLocalizations('timeoutNMinutesOption', { n: 10 }),
+        }, {
+          name: '1 hour',
+          value: 1000 * 60 * 60,
+          name_localizations: this.getLocalizations('timeoutNHourOption', { n: 1 }),
+        }, {
+          name: '1 day',
+          value: 1000 * 60 * 60 * 24,
+          name_localizations: this.getLocalizations('timeoutNDayOption', { n: 1 }),
+        }, {
+          name: '1 week',
+          value: 1000 * 60 * 60 * 24 * 7,
+          name_localizations: this.getLocalizations('timeoutNWeekOption', { n: 1 }),
+        })
         .setRequired(true))
       .addStringOption(option => option.setName('reason')
-        .setDescription('Reason for timeout.'));
+        .setDescription('The reason to mute the user.')
+        .setNameLocalizations(this.getLocalizations('timeoutReasonName'))
+        .setDescriptionLocalizations(this.getLocalizations('timeoutReasonDescription')));
   }
 
   async execute(interaction: CommandInteraction): Promise<any> {

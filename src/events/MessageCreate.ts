@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Client, Command, Event } from '../structures';
+import { Client, Event } from '../structures';
 
 export default class MessageCreate extends Event {
   constructor(client: Client) {
@@ -11,7 +11,7 @@ export default class MessageCreate extends Event {
   }
 
   async execute(message: Message) {
-    const { author, channel, client, content, guild } = message;
+    /* const { author, channel, client, content, guild } = message;
 
     if (author.bot) return;
 
@@ -41,6 +41,6 @@ export default class MessageCreate extends Event {
       await command.execute(message);
     } catch (error: any) {
       client.sendError(error);
-    }
+    } */
   }
 }

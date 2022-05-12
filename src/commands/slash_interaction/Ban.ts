@@ -12,32 +12,60 @@ export default class Ban extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('ban')
       .setDescription('Bans a user from the server.')
+      .setNameLocalizations(this.getLocalizations('banName'))
+      .setDescriptionLocalizations(this.getLocalizations('banDescription'))
       .addSubcommand(subcommand => subcommand.setName('single')
-        .setDescription('Bans a user from the server.')
+        .setDescription('Bans a user.')
+        .setNameLocalizations(this.getLocalizations('banSingleName'))
+        .setDescriptionLocalizations(this.getLocalizations('banSingleDescription'))
         .addUserOption(option => option.setName('user')
-          .setDescription('The user to be banned.')
+          .setDescription('Select a user to ban.')
+          .setNameLocalizations(this.getLocalizations('banSingleUserName'))
+          .setDescriptionLocalizations(this.getLocalizations('banSingleUserDescription'))
           .setRequired(true))
         .addIntegerOption(option => option.setName('delete_messages')
           .setDescription('How much of that person\'s message history should be deleted.')
-          .setChoices([
-            ['Last 24 hours', 1],
-            ['Last 7 days', 7],
-          ]))
+          .setNameLocalizations(this.getLocalizations('banSingleDeleteMessagesName'))
+          .setDescriptionLocalizations(this.getLocalizations('banSingleDeleteMessagesDescription'))
+          .setChoices({
+            name: 'Last 24 hours',
+            value: 1,
+            name_localizations: this.getLocalizations('lastNHours', { n: 24 }),
+          }, {
+            name: 'Last 7 days',
+            value: 7,
+            name_localizations: this.getLocalizations('lastNDays', { n: 7 }),
+          }))
         .addStringOption(option => option.setName('reason')
-          .setDescription('The reason for banishment, if any.')))
+          .setDescription('The reason for the ban.')
+          .setNameLocalizations(this.getLocalizations('banSingleReasonName'))
+          .setDescriptionLocalizations(this.getLocalizations('banSingleReasonDescription'))))
       .addSubcommand(subcommand => subcommand.setName('chunk')
         .setDescription('Bans a chunk of users from the server.')
+        .setNameLocalizations(this.getLocalizations('banChunkName'))
+        .setDescriptionLocalizations(this.getLocalizations('banChunkDescription'))
         .addStringOption(option => option.setName('users')
-          .setDescription('The list of users to ban.')
+          .setDescription('Input a chunk of users to ban.')
+          .setNameLocalizations(this.getLocalizations('banChunkUsersName'))
+          .setDescriptionLocalizations(this.getLocalizations('banChunkUsersDescription'))
           .setRequired(true))
         .addIntegerOption(option => option.setName('delete_messages')
           .setDescription('How much of that person\'s message history should be deleted.')
-          .setChoices([
-            ['Last 24 hours', 1],
-            ['Last 7 days', 7],
-          ]))
+          .setNameLocalizations(this.getLocalizations('banChunkDeleteMessagesName'))
+          .setDescriptionLocalizations(this.getLocalizations('banChunkDeleteMessagesDescription'))
+          .setChoices({
+            name: 'Last 24 hours',
+            value: 1,
+            name_localizations: this.getLocalizations('lastNHours', { n: 24 }),
+          }, {
+            name: 'Last 7 days',
+            value: 7,
+            name_localizations: this.getLocalizations('lastNDays', { n: 7 }),
+          }))
         .addStringOption(option => option.setName('reason')
-          .setDescription('The reason for the ban, if any.')));
+          .setDescription('The reason for the ban.')
+          .setNameLocalizations(this.getLocalizations('banChunkReasonName'))
+          .setDescriptionLocalizations(this.getLocalizations('banChunkReasonDescription'))));
   }
 
   async execute(interaction: CommandInteraction): Promise<any> {

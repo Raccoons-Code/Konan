@@ -53,6 +53,13 @@
   "kickError": "Error! Unable to kick this user.",
   "kickHierarchyError": "You cannot kick members equal or superior to me or you.",
   "konanSupport": "Konan's support",
+  "LastNYears": "Last {{n}} years",
+  "LastNMonths": "Last {{n}} months",
+  "lastNWeeks": "Last {{n}} weeks",
+  "lastNDays": "Last {{n}} days",
+  "lastNHours": "Last {{n}} hours",
+  "lastNMinutes": "Last {{n}} minutes",
+  "lastNSeconds": "Last {{n}} seconds",
   "lettertile": "Letter League",
   "memberCount": "Member count",
   "members": "members",
@@ -93,7 +100,13 @@
   "slowmode": "slowmode",
   "supportServer": "Support server",
   "timeoutError": "Error! Unable to punish member!",
+  "timeoutNDayOption": "{{n}} days",
+  "timeoutNHourOption": "{{n}} hours",
+  "timeoutNMinutesOption": "{{n}} minutes",
+  "timeoutNSecondsOption": "{{n}} seconds",
+  "timeoutNWeekOption": "{{n}} weeks",
   "timeoutRemoved": "Successfully removed timeout.",
+  "timeoutRemoveTimeoutOption": "Remove timeout",
   "topic": "topic",
   "true": "true",
   "tryAgain1Min": "Please try again in 1 minute.",
@@ -164,5 +177,11 @@
     "VIEW_AUDIT_LOG": "View Audit Log",
     "VIEW_CHANNEL": "View Channel",
     "VIEW_GUILD_INSIGHTS": "View Server Insights"
-  }
+  },
+
+  "Rock": "Rock",
+  "Paper": "Paper",
+  "Scissors": "Scissors",
+  "Lizard": "Lizard",
+  "Spock": "Spock"
 }

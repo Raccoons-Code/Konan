@@ -10,8 +10,12 @@ export default class Avatar extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('avatar')
       .setDescription('Replies with the user\'s profile picture.')
+      .setNameLocalizations(this.getLocalizations('avatarName'))
+      .setDescriptionLocalizations(this.getLocalizations('avatarDescription'))
       .addUserOption(option => option.setName('user')
-        .setDescription('Select user.'));
+        .setDescription('Select a user to get their profile picture.')
+        .setNameLocalizations(this.getLocalizations('avatarUserName'))
+        .setDescriptionLocalizations(this.getLocalizations('avatarUserDescription')));
   }
 
   async execute(interaction: CommandInteraction) {

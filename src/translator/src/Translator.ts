@@ -15,17 +15,17 @@ export default class Translator {
   translate(key: string, options: Options) {
     const locale = options.locale || 'en';
 
-    const pluralKey = [key, options.count === 1 ? this.plural.singularSuffix : this.plural.pluralSuffix].join('');
+    const pluralKey = `${key}${options.count === 1 ? this.singularSuffix : this.pluralSuffix}`;
 
-    const resources = this.resources?.[locale] ?? this.resources?.[locale.split(/_|-/)[0]];
+    const noScape = options.translation?.noScape;
 
-    const fallbackLocale = this.resources?.[this.translation.fallbackLocale as string]?.translation;
+    const fallbackLocale = this.resources?.[this.translation.fallbackLocale!]?.translation;
 
-    const translation = resources?.translation;
+    const { translation } = this.resources?.[locale] ?? this.resources?.[locale.split(/_|-/)[0]] ?? {};
 
     const text = typeof options.count === 'number' ?
-      translation?.[pluralKey] ?? translation?.[key] ?? fallbackLocale?.[key] ?? key :
-      translation?.[key] ?? fallbackLocale?.[key] ?? key;
+      translation?.[pluralKey] ?? translation?.[key] ?? (noScape ? undefined : fallbackLocale?.[key] ?? key) :
+      translation?.[key] ?? (noScape ? undefined : fallbackLocale?.[key] ?? key);
 
     return text;
   }

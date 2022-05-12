@@ -9,7 +9,9 @@ export default class Ping extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('ping')
-      .setDescription('Replies with Pong!');
+      .setDescription('Replies with Pong!')
+      .setNameLocalizations(this.getLocalizations('pingName'))
+      .setDescriptionLocalizations(this.getLocalizations('pingDescription'));
   }
 
   async execute(interaction: CommandInteraction) {
@@ -17,14 +19,16 @@ export default class Ping extends SlashCommand {
 
     const ping = sent.createdTimestamp - interaction.createdTimestamp;
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setFields([
-        { name: ':signal_strength:', value: `**\`${interaction.client.ws.ping}\`ms**`, inline: true },
-        { name: ':robot:', value: `**\`${ping}\`ms**`, inline: true },
-      ])];
-
-    await interaction.editReply({ embeds });
+    await interaction.editReply({
+      embeds: [
+        new MessageEmbed()
+          .setColor('RANDOM')
+          .setFields([
+            { name: ':signal_strength:', value: `**\`${interaction.client.ws.ping}\`ms**`, inline: true },
+            { name: ':robot:', value: `**\`${ping}\`ms**`, inline: true },
+          ]),
+      ],
+    });
 
     console.log(`Ping: ${ping}ms`);
   }

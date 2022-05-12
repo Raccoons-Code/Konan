@@ -6,6 +6,7 @@
     "bannable",
     "buttonroles",
     "discordjs",
+    "Gorniaky",
     "idjsn",
     "imdb",
     "jankenpon",
@@ -22,6 +23,7 @@
     "tmdb",
     "topgg",
     "unban",
-    "upsert"
+    "upsert",
+    "vitalets"
   ]
 }

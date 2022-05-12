@@ -26,12 +26,14 @@ export default class InteractionCreate extends Event {
     } catch (error: any) {
       client.sendError(error);
 
-      const embeds = [new MessageEmbed()
-        .setColor('DARK_RED')
-        .setTitle(this.t('There was an error while executing this command!', { locale }))
-        .setDescription(codeBlock('properties', `${error.name}: ${error.message}`))
-        .setFooter({ text: command.data?.name || '-' })
-        .setTimestamp(Date.now())];
+      const embeds = [
+        new MessageEmbed()
+          .setColor('DARK_RED')
+          .setTitle(this.t('There was an error while executing this command!', { locale }))
+          .setDescription(codeBlock('properties', `${error.name}: ${error.message}`))
+          .setFooter({ text: command.data?.name || '-' })
+          .setTimestamp(Date.now()),
+      ];
 
       const components: MessageActionRow[] = [];
 
