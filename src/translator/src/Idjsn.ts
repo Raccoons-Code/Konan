@@ -32,16 +32,19 @@ class Idjsn {
     idjsn.translator = new Translator(idjsn);
   }
 
-  t(key: string | string[], options: Options & { [k: string]: any } = {}) {
+  t(key: string | string[], options: Options & { [k: string]: any } = {}): string {
     if (Array.isArray(key))
       return idjsn.ta(key, options);
 
-    key = idjsn.translator.translate(key, options);
+    key = <string>idjsn.translator.translate(key, options);
+
+    if (!key) return <string><unknown>undefined;
 
     if (typeof key === 'string') {
       key = idjsn.interpolator.interpolate(key, options);
 
-      if (typeof options.capitalize === 'boolean' || typeof idjsn.capitalize === 'boolean')
+      if (typeof options.capitalize === 'boolean' ||
+        (typeof options.capitalize === 'undefined' || typeof idjsn.capitalize === 'boolean'))
         key = idjsn.postProcessor.capitalization(key, options);
     }
 
@@ -49,7 +52,7 @@ class Idjsn {
   }
 
   protected ta(array: string[], options: Options) {
-    array = array.map(key => idjsn.t(key, options));
+    array = <string[]>array.map(key => idjsn.t(key, options));
 
     return array.join(' ').trim();
   }

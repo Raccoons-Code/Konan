@@ -12,14 +12,20 @@ export default class Clear extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('clear')
       .setDescription('Deletes up to 1000 channel messages at once.')
+      .setNameLocalizations(this.getLocalizations('clearName'))
+      .setDescriptionLocalizations(this.getLocalizations('clearDescription'))
       .addIntegerOption(option => option.setName('amount')
-        .setDescription('Amount of messages.')
+        .setDescription('The amount of messages to delete.')
+        .setNameLocalizations(this.getLocalizations('clearAmountOptionName'))
+        .setDescriptionLocalizations(this.getLocalizations('clearAmountOptionDescription'))
         .setMaxValue(1000)
         .setMinValue(1)
         .setRequired(true))
       .addChannelOption(option => option.setName('channel')
         .setDescription('Select a channel to clear.')
-        .addChannelTypes(this.GuildTextChannelTypes as any));
+        .setNameLocalizations(this.getLocalizations('clearChannelOptionName'))
+        .setDescriptionLocalizations(this.getLocalizations('clearChannelOptionDescription'))
+        .addChannelTypes(...this.GuildTextChannelTypes));
   }
 
   async execute(interaction: CommandInteraction): Promise<any> {

@@ -1,7 +1,7 @@
 import { codeBlock, SlashCommandBuilder } from '@discordjs/builders';
 import { CommandInteraction, MessageEmbed } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
 import { PrimeResolveOptions } from '../../@types';
+import { Client, SlashCommand } from '../../structures';
 
 export default class NumberIsPrime extends SlashCommand {
   constructor(client: Client) {
@@ -11,8 +11,12 @@ export default class NumberIsPrime extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('number_is_prime')
       .setDescription('Verify if number is prime.')
+      .setNameLocalizations(this.getLocalizations('numberIsPrimeName'))
+      .setDescriptionLocalizations(this.getLocalizations('numberIsPrimeDescription'))
       .addIntegerOption(option => option.setName('number')
         .setDescription('Write a integer. Below 1,000,000,000 shows all numbers.')
+        .setNameLocalizations(this.getLocalizations('numberIsPrimeNumberName'))
+        .setDescriptionLocalizations(this.getLocalizations('numberIsPrimeNumberDescription'))
         .setMaxValue(Number.MAX_SAFE_INTEGER)
         .setMinValue(2)
         .setRequired(true));

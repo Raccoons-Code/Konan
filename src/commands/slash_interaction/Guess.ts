@@ -11,8 +11,12 @@ export default class Guess extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('guess')
       .setDescription('You have 10 chances to guess the number from 1 to 100 that the bot set.')
+      .setNameLocalizations(this.getLocalizations('guessName'))
+      .setDescriptionLocalizations(this.getLocalizations('guessDescription'))
       .addIntegerOption(option => option.setName('number')
-        .setDescription('Integer')
+        .setDescription('Guess a number.')
+        .setNameLocalizations(this.getLocalizations('guessNumberName'))
+        .setDescriptionLocalizations(this.getLocalizations('guessNumberDescription'))
         .setMinValue(1)
         .setMaxValue(100)
         .setAutocomplete(true)

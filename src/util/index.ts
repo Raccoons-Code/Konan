@@ -5,6 +5,7 @@ import composition from './composition';
 import Constants from './Constants';
 import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
+import getLocalizations from './getLocalizations';
 import hasDuplicatesInArray from './hasDuplicatesInArray';
 import isDuplicate from './isDuplicate';
 import isJSON from './isJSON';
@@ -29,6 +30,7 @@ export default class Util {
   static Constants = Constants;
   static filterObjectByKeys = filterObjectByKeys;
   static findDuplicatesInArray = findDuplicatesInArray;
+  static getLocalizations = getLocalizations;
   static hasDuplicatesInArray = hasDuplicatesInArray;
   static isDuplicate = isDuplicate;
   static isJSON = isJSON;

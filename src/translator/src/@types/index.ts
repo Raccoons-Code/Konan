@@ -4,7 +4,7 @@ export interface InterpolationData {
 }
 
 export interface Options {
-  capitalize?: boolean
+  capitalize?: boolean | null
   count?: number
   interpolation?: InterpolationData
   locale?: string
@@ -22,4 +22,5 @@ export interface Resources { [k: string]: { translation: { [k: string]: string }
 
 export interface TranslationData {
   fallbackLocale?: string
+  noScape?: boolean
 }

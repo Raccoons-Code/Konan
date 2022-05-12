@@ -12,9 +12,13 @@ export default class Help extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('help')
-      .setDescription('Replies with Help!')
+      .setDescription('Show the help message.')
+      .setNameLocalizations(this.getLocalizations('helpName'))
+      .setDescriptionLocalizations(this.getLocalizations('helpDescription'))
       .addStringOption(option => option.setName('command')
-        .setDescription('Select a command')
+        .setDescription('The command to show the help message for.')
+        .setNameLocalizations(this.getLocalizations('helpCommandName'))
+        .setDescriptionLocalizations(this.getLocalizations('helpCommandDescription'))
         .setAutocomplete(true));
   }
 

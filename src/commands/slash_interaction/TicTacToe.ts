@@ -10,9 +10,13 @@ export default class extends SlashCommand {
     });
 
     this.data = new SlashCommandBuilder().setName('tictactoe')
-      .setDescription('Play a game of TicTacToe with your friends! - Powered by Discord TicTacToe.')
+      .setDescription('Play a game of Tic Tac Toe with your friends! - Powered by Discord TicTacToe.')
+      .setNameLocalizations(this.getLocalizations('tictactoeName'))
+      .setDescriptionLocalizations(this.getLocalizations('tictactoeDescription'))
       .addUserOption(option => option.setName('opponent')
-        .setDescription('Choose your opponent'));
+        .setDescription('Choose an opponent.')
+        .setNameLocalizations(this.getLocalizations('tictactoeOpponentName'))
+        .setDescriptionLocalizations(this.getLocalizations('tictactoeOpponentDescription')));
   }
 
   async execute(interaction: CommandInteraction) {

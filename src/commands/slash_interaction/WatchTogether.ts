@@ -1,10 +1,10 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { ChannelType } from 'discord-api-types/v10';
 import { DiscordTogether } from 'discord-together';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, Constants, PermissionString, User } from 'discord.js';
+import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, PermissionString, User } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
-const { ChannelTypes } = Constants;
-const { GUILD_VOICE } = ChannelTypes;
+const { GuildVoice } = ChannelType;
 
 export default class WatchTogether extends SlashCommand {
   discordTogether!: DiscordTogether<{ [k: string]: string }>;
@@ -24,13 +24,19 @@ export default class WatchTogether extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('party')
       .setDescription('Create an activity party together - Powered by Discord Together.')
+      .setNameLocalizations(this.getLocalizations('partyName'))
+      .setDescriptionLocalizations(this.getLocalizations('partyDescription'))
       .addStringOption(option => option.setName('activity')
-        .setDescription('Select activity.')
+        .setDescription('Select an activity.')
+        .setNameLocalizations(this.getLocalizations('partyActivityName'))
+        .setDescriptionLocalizations(this.getLocalizations('partyActivityDescription'))
         .setAutocomplete(true)
         .setRequired(true))
       .addChannelOption(option => option.setName('channel')
         .setDescription('Select a voice channel.')
-        .addChannelTypes(<any>[GUILD_VOICE]));
+        .setNameLocalizations(this.getLocalizations('partyChannelName'))
+        .setDescriptionLocalizations(this.getLocalizations('partyChannelDescription'))
+        .addChannelTypes(GuildVoice));
   }
 
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {

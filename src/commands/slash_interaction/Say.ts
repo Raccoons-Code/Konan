@@ -14,8 +14,12 @@ export default class Say extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('say')
       .setDescription('Say something in TTS. - Powered by Google TTS.')
+      .setNameLocalizations(this.getLocalizations('sayName'))
+      .setDescriptionLocalizations(this.getLocalizations('sayDescription'))
       .addStringOption(option => option.setName('message')
-        .setDescription('The message to say')
+        .setDescription('The message to say.')
+        .setNameLocalizations(this.getLocalizations('sayMessageName'))
+        .setDescriptionLocalizations(this.getLocalizations('sayMessageDescription'))
         .setRequired(true));
   }
 

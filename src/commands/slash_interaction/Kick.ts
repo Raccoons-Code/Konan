@@ -12,11 +12,17 @@ export default class Kick extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('kick')
       .setDescription('Kicks a user from the server.')
+      .setNameLocalizations(this.getLocalizations('kickName'))
+      .setDescriptionLocalizations(this.getLocalizations('kickDescription'))
       .addUserOption(option => option.setName('user')
         .setDescription('The user to kick.')
+        .setNameLocalizations(this.getLocalizations('kickUserName'))
+        .setDescriptionLocalizations(this.getLocalizations('kickUserDescription'))
         .setRequired(true))
       .addStringOption(option => option.setName('reason')
-        .setDescription('Reason for kick.'));
+        .setDescription('The reason to kick.')
+        .setNameLocalizations(this.getLocalizations('kickReasonName'))
+        .setDescriptionLocalizations(this.getLocalizations('kickReasonDescription')));
   }
 
   async execute(interaction: CommandInteraction): Promise<any> {

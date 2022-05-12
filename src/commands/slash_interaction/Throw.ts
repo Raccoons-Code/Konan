@@ -10,9 +10,13 @@ export default class Throw extends SlashCommand {
     super(client);
     this.data = new SlashCommandBuilder().setName('throw')
       .setDescription('Throw new error (Restricted for bot\'owners).')
+      .setNameLocalizations(this.getLocalizations('throwName'))
+      .setDescriptionLocalizations(this.getLocalizations('throwDescription'))
       .setDefaultPermission(false)
       .addStringOption(option => option.setName('error')
         .setDescription('Error message.')
+        .setNameLocalizations(this.getLocalizations('throwErrorName'))
+        .setDescriptionLocalizations(this.getLocalizations('throwErrorDescription'))
         .setRequired(true));
   }
 

@@ -5,15 +5,15 @@ import Commands from './commands';
 import { SlashCommand } from './structures';
 
 const { env } = process;
-const { CLIENT_ID, DISCORD_TOKEN, GUILD_ID } = env;
+const { DISCORD_APPLICATION_ID, DISCORD_TOKEN, DISCORD_TEST_GUILD_ID } = env;
 
 const GLOBAL = false;
 const reset = false;
 
-if (!CLIENT_ID || !DISCORD_TOKEN)
-  throw Error(`Missing required params:${CLIENT_ID ? '' : ' CLIENT_ID'}${DISCORD_TOKEN ? '' : ' DISCORD_TOKEN'}`);
+if (!DISCORD_APPLICATION_ID || !DISCORD_TOKEN)
+  throw Error(`Missing required params:${DISCORD_APPLICATION_ID ? '' : ' DISCORD_APPLICATION_ID'}${DISCORD_TOKEN ? '' : ' DISCORD_TOKEN'}`);
 
-const guilds = GUILD_ID?.split(',') ?? [];
+const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
 
 const data = [];
 const data_private: any[] = [];
@@ -50,12 +50,12 @@ const rest = new REST().setToken(DISCORD_TOKEN);
     console.log('Started refreshing application (/) commands.');
 
     if (GLOBAL) {
-      await rest.put(Routes.applicationCommands(CLIENT_ID), { body: data });
+      await rest.put(Routes.applicationCommands(DISCORD_APPLICATION_ID), { body: data });
 
       for (let i = 0; i < guilds.length; i++) {
         const id = guilds[i];
 
-        const guild_commands = await rest.get(Routes.applicationGuildCommands(CLIENT_ID, id)) as any[];
+        const guild_commands = await rest.get(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id)) as any[];
 
         const guild_commands_data = guild_commands.filter(guild_command =>
           !data_private.some(command => command.name === guild_command.name))
@@ -69,7 +69,7 @@ const rest = new REST().setToken(DISCORD_TOKEN);
 
         guild_commands_data.push(...data_private);
 
-        await rest.put(Routes.applicationGuildCommands(CLIENT_ID, id), { body: guild_commands });
+        await rest.put(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id), { body: guild_commands });
       }
 
       console.log('Successfully reloaded application (/) commands.');
@@ -77,7 +77,7 @@ const rest = new REST().setToken(DISCORD_TOKEN);
       for (let i = 0; i < guilds?.length; i++) {
         const id = guilds[i];
 
-        await rest.put(Routes.applicationGuildCommands(CLIENT_ID, id), { body: [...data, ...data_private] });
+        await rest.put(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id), { body: [...data, ...data_private] });
 
         console.log(`Successfully reloaded application (/) commands for guild ${id}.`);
       }
