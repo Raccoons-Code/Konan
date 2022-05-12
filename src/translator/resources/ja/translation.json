@@ -347,7 +347,7 @@
   "guessNumberDescription": "数字を推測します。",
   "helpName": "ヘルプ",
   "helpDescription": "ヘルプ メッセージを表示",
-  "helpCommandName": "(Command)",
+  "helpCommandName": "コマンド",
   "helpCommandDescription": "ヘルプメッセージを表示するコマンドです。",
   "infoName": "情報",
   "infoDescription": "情報メッセージを表示する。",
