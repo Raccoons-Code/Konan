@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageEmbed, MessageSelectMenu, PermissionString, TextChannel, Util } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageEmbed, MessageSelectMenu, TextChannel, Util } from 'discord.js';
 import { SelectRolesItemOptionValue } from '../../@types';
 import { Client, SlashCommand } from '../../structures';
 
@@ -319,7 +319,7 @@ export default class SelectRoles extends SlashCommand {
 
     const { memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
+    const userPermissions = memberPermissions.missing(this.props!.userPermissions!) ?? [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -375,10 +375,12 @@ export default class SelectRoles extends SlashCommand {
 
     const components = [new MessageActionRow().setComponents(selectMenu)];
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setDescription(embed_description ? embed_description.replace(/(\s{2})/g, '\n') : '')
-      .setTitle(title ? title : embed_description ? '' : 'SelectRoles')];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(embed_description ? embed_description.replace(/(\s{2})/g, '\n') : '')
+        .setTitle(title ? title : embed_description ? '' : 'SelectRoles'),
+    ];
 
     try {
       await channel.send({ components, embeds });
@@ -406,10 +408,12 @@ export default class SelectRoles extends SlashCommand {
     if (subcommand === 'message') {
       const [, title, description] = options.getString('text', true).match(this.pattern.embed) ?? [];
 
-      const embeds = [new MessageEmbed()
-        .setColor('RANDOM')
-        .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title || '')];
+      const embeds = [
+        new MessageEmbed()
+          .setColor('RANDOM')
+          .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
+          .setTitle(title || ''),
+      ];
 
       try {
         await message.edit({ embeds });
@@ -588,7 +592,7 @@ export default class SelectRoles extends SlashCommand {
             default: item_default,
           }])
             .setMaxValues(selectmenu.options.length)
-            .options.sort((a, b) => a.default ? -1 : 1);
+            .options.sort((a) => a.default ? -1 : 1);
 
           return selectmenu;
         });
@@ -665,14 +669,17 @@ export default class SelectRoles extends SlashCommand {
     }
   }
 
-  async editAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async editAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { client, guild, options } = <AutocompleteInteraction<'cached'>>interaction;
 
     const channelId = <string>options.get('channel', true).value;
 
-    const channel = await guild.channels.fetch(channelId) as TextChannel;
+    const channel = await guild.channels.fetch(channelId);
+
+    if (!(channel instanceof TextChannel))
+      return await interaction.respond(res);
 
     const focused = options.getFocused(true);
     const pattern = RegExp(`${focused.value}`, 'i');

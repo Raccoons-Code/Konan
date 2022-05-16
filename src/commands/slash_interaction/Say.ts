@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, PermissionString, TextChannel, User } from 'discord.js';
+import { CommandInteraction, TextChannel } from 'discord.js';
 import * as googleTTS from 'google-tts-api';
 import { Client, SlashCommand } from '../../structures';
 
@@ -36,7 +36,7 @@ export default class Say extends SlashCommand {
 
     const username = member?.displayName ?? user.username;
 
-    if (!channel?.permissionsFor(<User>client.user)?.has(this.props?.clientPermissions as PermissionString[])) {
+    if (!channel?.permissionsFor(client.user!)?.has(this.props!.clientPermissions!)) {
       return await interaction.reply({ content: `${user} says:`, files: [{ attachment: url, name: 'say.mp3' }] });
     }
 

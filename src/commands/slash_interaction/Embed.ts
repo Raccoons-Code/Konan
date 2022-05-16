@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, MessageEmbed, PermissionString, TextChannel, User } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, MessageEmbed, TextChannel } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 export default class Embed extends SlashCommand {
@@ -81,7 +81,7 @@ export default class Embed extends SlashCommand {
 
     const { memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
+    const userPermissions = memberPermissions.missing(this.props!.userPermissions!) ?? [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -110,20 +110,21 @@ export default class Embed extends SlashCommand {
     const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
     const image_url = <string>options.getString('image_url');
 
-    const clientPermissions = channel?.permissionsFor(<User>client.user)
-      ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
+    const clientPermissions = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
 
     if (clientPermissions.length)
       return await interaction.editReply(this.t('missingChannelPermission',
         { locale, PERMISSIONS: clientPermissions }));
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
-      .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
-      .setImage(image_url)
-      .setTimestamp(Date.now())
-      .setTitle(title)];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
+        .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
+        .setImage(image_url)
+        .setTimestamp(Date.now())
+        .setTitle(title),
+    ];
 
     if (!clientPermissions.includes('SEND_MESSAGES')) {
       try {
@@ -155,16 +156,17 @@ export default class Embed extends SlashCommand {
       const content = options.getString('content')?.slice(0, 4096);
       const image_url = <string>options.getString('image_url');
 
-      const embeds = [new MessageEmbed()
-        .setColor('RANDOM')
-        .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
-        .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
-        .setImage(image_url)
-        .setTimestamp(Date.now())
-        .setTitle(title)];
+      const embeds = [
+        new MessageEmbed()
+          .setColor('RANDOM')
+          .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
+          .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
+          .setImage(image_url)
+          .setTimestamp(Date.now())
+          .setTitle(title),
+      ];
 
-      const clientPermissions = channel.permissionsFor(<User>client.user)
-        ?.missing(this.props?.clientPermissions as PermissionString[]);
+      const clientPermissions = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
       if (!clientPermissions?.includes('SEND_MESSAGES')) {
         try {
@@ -178,14 +180,20 @@ export default class Embed extends SlashCommand {
     }
   }
 
-  async editAutocomplete(interaction: AutocompleteInteraction<'cached'>, res: ApplicationCommandOptionChoice[] = []) {
+  async editAutocomplete(
+    interaction: AutocompleteInteraction<'cached'>,
+    res: ApplicationCommandOptionChoiceData[] = [],
+  ) {
     if (interaction.responded) return;
 
     const { client, guild, options } = interaction;
 
     const channelId = <string>options.get('channel', true).value;
 
-    const channel = await guild.channels.fetch(channelId) as TextChannel;
+    const channel = await guild.channels.fetch(channelId);
+
+    if (!(channel instanceof TextChannel))
+      return await interaction.respond(res);
 
     const focused = options.getFocused(true);
     const pattern = RegExp(`${focused.value}`, 'i');

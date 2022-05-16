@@ -15,7 +15,7 @@ export default class Translator {
   translate(key: string, options: Options) {
     const locale = options.locale || 'en';
 
-    const pluralKey = `${key}${options.count === 1 ? this.singularSuffix : this.pluralSuffix}`;
+    const pluralKey = `${key}${options.count === 1 ? this.plural.singularSuffix : this.plural.pluralSuffix}`;
 
     const noScape = options.translation?.noScape;
 

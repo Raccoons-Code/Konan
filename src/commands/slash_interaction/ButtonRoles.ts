@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable, MessageEmbed, PermissionString, TextChannel, Util } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable, MessageEmbed, TextChannel, Util } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
 import { Client, SlashCommand } from '../../structures';
 
@@ -197,7 +197,7 @@ export default class ButtonRoles extends SlashCommand {
       return await interaction.editReply(this.t('onlyOnServer', { locale }));
     }
 
-    const userPermissions = memberPermissions?.missing(this.props?.userPermissions as PermissionString[]) ?? [];
+    const userPermissions = memberPermissions?.missing(this.props!.userPermissions!) ?? [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -244,10 +244,12 @@ export default class ButtonRoles extends SlashCommand {
 
     const components = [new MessageActionRow().setComponents([button])];
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-      .setTitle(title ? title : description ? '' : 'ButtonRoles')];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
+        .setTitle(title ? title : description ? '' : 'ButtonRoles'),
+    ];
 
     try {
       await channel.send({ components, embeds });
@@ -276,10 +278,12 @@ export default class ButtonRoles extends SlashCommand {
     if (subcommand === 'message') {
       const [, title, description] = options.getString('text', true).match(this.pattern.embed) ?? [];
 
-      const embeds = [new MessageEmbed()
-        .setColor('RANDOM')
-        .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title || '')];
+      const embeds = [
+        new MessageEmbed()
+          .setColor('RANDOM')
+          .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
+          .setTitle(title || ''),
+      ];
 
       try {
         await message.edit({ embeds });
@@ -447,14 +451,17 @@ export default class ButtonRoles extends SlashCommand {
     }
   }
 
-  async editAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async editAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { client, guild, options } = interaction;
 
     const channelId = <string>options.get('channel', true).value;
 
-    const channel = await guild?.channels.fetch(channelId) as TextChannel;
+    const channel = await guild?.channels.fetch(channelId);
+
+    if (!(channel instanceof TextChannel))
+      return await interaction.respond(res);
 
     const focused = options.getFocused(true);
     const pattern = RegExp(`${focused.value}`, 'i');
@@ -464,7 +471,7 @@ export default class ButtonRoles extends SlashCommand {
 
       const messages_array = messages.filter(m =>
         m.author.id === client.user?.id &&
-        m.components.some(c => RegExp(`"c":"${this.data.name}"`).test(<string>c.components[0].customId)) &&
+        m.components.some(c => RegExp(`"c":"${this.data.name}"`).test(c.components[0].customId!)) &&
         pattern.test(m.id)).toJSON();
 
       for (let i = 0; i < messages_array.length; i++) {

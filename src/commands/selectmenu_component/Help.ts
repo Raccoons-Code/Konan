@@ -30,21 +30,25 @@ export default class Help extends SelectMenuComponentInteraction {
     const avatarURL = <string>guild?.me?.displayAvatarURL({ dynamic: true }) ??
       client.user?.displayAvatarURL({ dynamic: true });
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setDescription([
-        this.t('helpText', { locale, user }),
-        '',
-        '[Terms of Service & Privacy](https://github.com/Raccoons-Code/Konan/wiki/Terms-of-Service-&-Privacy)',
-      ].join('\n'))
-      .setThumbnail(avatarURL)
-      .setTitle(this.t('konanSupport', { locale }))];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription([
+          this.t('helpText', { locale, user }),
+          '',
+          '[Terms of Service & Privacy](https://github.com/Raccoons-Code/Konan/wiki/Terms-of-Service-&-Privacy)',
+        ].join('\n'))
+        .setThumbnail(avatarURL)
+        .setTitle(this.t('konanSupport', { locale })),
+    ];
 
-    const buttons = [new MessageButton()
-      .setEmoji('📮') // :postbox:
-      .setLabel(this.t('inviteLink', { locale }))
-      .setStyle('LINK')
-      .setURL(client.invite)];
+    const buttons = [
+      new MessageButton()
+        .setEmoji('📮') // :postbox:
+        .setLabel(this.t('inviteLink', { locale }))
+        .setStyle('LINK')
+        .setURL(client.invite),
+    ];
 
     if (GUILD_INVITE)
       buttons.push(new MessageButton()
@@ -77,11 +81,13 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const slashCommands = slash_interaction.filter((c: any) => c.data.defaultPermission !== false).toJSON();
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setFields(this.convertCommandsToEmbedFields(slashCommands))
-      .setFooter({ text: `Total: ${slashCommands.length}` })
-      .setTitle(this.t('konanSupport', { locale }))];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setFields(this.convertCommandsToEmbedFields(slashCommands))
+        .setFooter({ text: `Total: ${slashCommands.length}` })
+        .setTitle(this.t('konanSupport', { locale })),
+    ];
 
     message.components = [
       new MessageActionRow().setComponents([this.setSelectCategory('general')]),
@@ -102,10 +108,12 @@ export default class Help extends SelectMenuComponentInteraction {
   async localization(interaction: SelectMenuInteraction<'cached'>) {
     const { locale } = interaction;
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setImage('https://badges.awesome-crowdin.com/translation-15144556-499220.png')
-      .setTitle(this.t('konanSupport', { locale }))];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setImage('https://badges.awesome-crowdin.com/translation-15144556-499220.png')
+        .setTitle(this.t('konanSupport', { locale })),
+    ];
 
     const menus = [this.setSelectMenu(2)];
 
@@ -121,11 +129,13 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const slashCommands = commands.filter((c: any) => c.data.defaultPermission !== false).toJSON();
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setFields(this.convertCommandsToEmbedFields(slashCommands))
-      .setFooter({ text: `Total: ${slashCommands.length}` })
-      .setTitle(this.t('konanSupport', { locale }))];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setFields(this.convertCommandsToEmbedFields(slashCommands))
+        .setFooter({ text: `Total: ${slashCommands.length}` })
+        .setTitle(this.t('konanSupport', { locale })),
+    ];
 
     message.components = [
       new MessageActionRow().setComponents(this.setSelectCategory(values[0])),

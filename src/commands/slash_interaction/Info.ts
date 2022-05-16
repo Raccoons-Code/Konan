@@ -106,11 +106,13 @@ export default class Info extends SlashCommand {
         { name: 'Uptime', value: `${time(<Date>readyAt)} ${time(<Date>readyAt, 'R')}` },
       ]);
 
-    const buttons = [new MessageButton()
-      .setCustomId(JSON.stringify({ c: this.data.name, sc: 'application' }))
-      .setEmoji('🔄')
-      .setLabel('Update')
-      .setStyle('SECONDARY')];
+    const buttons = [
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, sc: 'application' }))
+        .setEmoji('🔄')
+        .setLabel('Update')
+        .setStyle('SECONDARY'),
+    ];
 
     components[0].setComponents(buttons);
 
@@ -178,7 +180,7 @@ export default class Info extends SlashCommand {
 
     embeds[0].setTitle(name)
       .addFields([
-        { name: this.t('creationDate', { locale }), value: `${time(createdAt)} ${time(createdAt, 'R')}` },
+        { name: this.t('creationDate', { locale }), value: `${time(createdAt!)} ${time(createdAt!, 'R')}` },
       ]);
 
     if (topic)

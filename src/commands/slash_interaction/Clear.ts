@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, PermissionString, TextChannel, User } from 'discord.js';
+import { CommandInteraction, TextChannel } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 export default class Clear extends SlashCommand {
@@ -41,7 +41,7 @@ export default class Clear extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
 
     const userPermissions =
-      channel.permissionsFor(member).missing(this.props?.userPermissions as PermissionString[]) ?? [];
+      channel.permissionsFor(member).missing(this.props!.userPermissions!) ?? [];
 
     if (userPermissions.length)
       return await interaction.editReply(this.t('missingUserChannelPermission', {
@@ -49,8 +49,7 @@ export default class Clear extends SlashCommand {
         PERMISSIONS: userPermissions,
       }));
 
-    const clientPermissions = channel.permissionsFor(<User>client.user)
-      ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
+    const clientPermissions = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
 
     if (clientPermissions.length)
       return await interaction.editReply(this.t('missingChannelPermission', {
@@ -73,18 +72,18 @@ export default class Clear extends SlashCommand {
     }
   }
 
-  async bulkDelete(channel: TextChannel, number = 0, count = 0) {
-    if (number < 1) return count;
+  async bulkDelete(channel: TextChannel, amount = 0, count = 0) {
+    for (let i = 0; i < amount;) {
+      const limit = amount - count > 100 ? 100 : amount - count;
 
-    const limit = number > 100 ? 100 : number;
+      const { size } = await channel.bulkDelete(limit, true);
 
-    const { size } = await channel.bulkDelete(limit, true);
+      if (!size) break;
 
-    size && await this.Util.waitAsync(500);
+      i = count += size;
 
-    const go = size && (number - size);
-
-    count = go ? await this.bulkDelete(channel, (number - size), (count + size)) : count + size;
+      await this.Util.waitAsync(500);
+    }
 
     return count;
   }

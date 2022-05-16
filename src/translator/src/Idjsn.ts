@@ -43,8 +43,8 @@ class Idjsn {
     if (typeof key === 'string') {
       key = idjsn.interpolator.interpolate(key, options);
 
-      if (typeof options.capitalize === 'boolean' ||
-        (typeof options.capitalize === 'undefined' || typeof idjsn.capitalize === 'boolean'))
+      if (options.capitalize !== null &&
+        (typeof options.capitalize === 'boolean' || typeof idjsn.capitalize === 'boolean'))
         key = idjsn.postProcessor.capitalization(key, options);
     }
 

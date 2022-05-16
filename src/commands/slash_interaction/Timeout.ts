@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, time } from '@discordjs/builders';
-import { CommandInteraction, PermissionString } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 export default class Timeout extends SlashCommand {
@@ -69,7 +69,7 @@ export default class Timeout extends SlashCommand {
 
     const { guild, memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]);
+    const userPermissions = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPermissions.length)
       return await interaction.editReply(this.t('missingUserPermission', {
@@ -78,7 +78,7 @@ export default class Timeout extends SlashCommand {
       }));
 
     const clientPermissions =
-      guild.me?.permissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
+      guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
 
     if (clientPermissions.length)
       return await interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));

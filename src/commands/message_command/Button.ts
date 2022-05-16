@@ -34,8 +34,7 @@ export default class extends Command {
 
     const components: MessageActionRow[] = this.getButtons(componentLinks);
 
-    const avatarURL = member?.displayAvatarURL({ dynamic: true }) ??
-      author.displayAvatarURL({ dynamic: true });
+    const avatarURL = member?.displayAvatarURL({ dynamic: true }) ?? author.displayAvatarURL({ dynamic: true });
 
     const username = member?.displayName ?? author.username;
 
@@ -46,7 +45,7 @@ export default class extends Command {
     await webhook.send({ avatarURL, components, content, username });
   }
 
-  getButtons(buttons: MessageButton[], rows: MessageActionRow[] = []) {
+  getButtons(buttons: MessageButton[], rows: MessageActionRow[] = []): MessageActionRow[] {
     for (let i = 0; i < buttons.length; i += 5) {
       const mButtons = buttons.slice(i, i + 5);
 

@@ -16,20 +16,24 @@ export default class Avatar extends UserContextMenu {
     const user = options.getUser('user');
     const member = <GuildMember>options.getMember('user');
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setDescription(`${user}`)
-      .setImage(member?.displayAvatarURL({ dynamic: true, size: 512 }) ??
-        user?.displayAvatarURL({ dynamic: true, size: 512 }))];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(`${user}`)
+        .setImage(member?.displayAvatarURL({ dynamic: true, size: 512 }) ??
+          user?.displayAvatarURL({ dynamic: true, size: 512 })),
+    ];
 
-    const button = new MessageButton()
-      .setStyle('LINK')
-      .setLabel('Link')
-      .setEmoji('🖼')
-      .setURL(member?.displayAvatarURL({ dynamic: true, size: 4096 }) ??
-        user?.displayAvatarURL({ dynamic: true, size: 4096 }));
+    const buttons = [
+      new MessageButton()
+        .setStyle('LINK')
+        .setLabel('Link')
+        .setEmoji('🖼')
+        .setURL(member?.displayAvatarURL({ dynamic: true, size: 4096 }) ??
+          user?.displayAvatarURL({ dynamic: true, size: 4096 })),
+    ];
 
-    const components = [new MessageActionRow().setComponents(button)];
+    const components = [new MessageActionRow().setComponents(buttons)];
 
     await interaction.reply({ components, embeds });
   }

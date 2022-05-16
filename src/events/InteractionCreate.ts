@@ -1,5 +1,5 @@
 import { codeBlock } from '@discordjs/builders';
-import { AutocompleteInteraction, ButtonInteraction, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { AutocompleteInteraction, ButtonInteraction, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, ModalSubmitInteraction, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
 import { InteractionTypes } from '../@types';
 import { ButtonComponentInteraction, Client, Event, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
@@ -57,25 +57,27 @@ export default class InteractionCreate extends Event {
   }
 
   APPLICATION_COMMAND(interaction: CommandInteraction & ContextMenuInteraction) {
-    return this[interaction.targetType || 'CHAT_INPUT']?.(<any>interaction);
+    return this[interaction.targetType || 'TEXT_INPUT']?.(<any>interaction);
   }
 
   APPLICATION_COMMAND_AUTOCOMPLETE(interaction: AutocompleteInteraction) {
-    return this['CHAT_INPUT']?.(<any>interaction);
+    return this['TEXT_INPUT']?.(interaction);
   }
 
   MESSAGE_COMPONENT(interaction: MessageComponentInteraction) {
     return this[interaction.componentType]?.(<any>interaction);
   }
 
+  MODAL_SUBMIT(interaction: ModalSubmitInteraction) {
+    const { c, command } = this.Util.parseJSON(interaction.customId);
+
+    return interaction.client.commands.modal_component?.get(c ?? command);
+  }
+
   BUTTON(interaction: ButtonInteraction): ButtonComponentInteraction {
     const { c, command } = this.Util.parseJSON(interaction.customId);
 
     return interaction.client.commands.button_component?.get(c ?? command);
-  }
-
-  CHAT_INPUT(interaction: CommandInteraction): SlashCommand | undefined {
-    return interaction.client.commands.slash_interaction?.get(interaction.commandName);
   }
 
   MESSAGE(interaction: MessageContextMenuInteraction): MessageContextMenu {
@@ -86,6 +88,10 @@ export default class InteractionCreate extends Event {
     const { c, command } = this.Util.parseJSON(interaction.customId);
 
     return interaction.client.commands.selectmenu_component?.get(c ?? command);
+  }
+
+  TEXT_INPUT(interaction: CommandInteraction | AutocompleteInteraction): SlashCommand | undefined {
+    return interaction.client.commands.slash_interaction?.get(interaction.commandName);
   }
 
   USER(interaction: UserContextMenuInteraction): UserContextMenu {

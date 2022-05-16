@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import axios from 'axios';
 import { APIApplicationCommandOptionChoice } from 'discord-api-types/v10';
-import { CommandInteraction, PermissionString } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 import Util from '../../util';
 
@@ -61,8 +61,7 @@ export default class Random extends SlashCommand {
   async execute(interaction: CommandInteraction) {
     const { channel, client, locale, options } = <CommandInteraction<'cached'>>interaction;
 
-    const clientPermissions = channel?.permissionsFor(<string>client.user?.id)
-      ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
+    const clientPermissions = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
 
     if (clientPermissions.length)
       return await interaction.reply({

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import ms from 'ms';
 import { Client, SlashCommand } from '../../structures';
 import tmdbApi from '../../TMDBAPI';
@@ -116,28 +116,30 @@ export default class Movies extends SlashCommand {
 
     const numberFormat = NumberFormat(locale, { currency: 'USD', style: 'currency' });
 
-    const embeds = [new MessageEmbed()
-      .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
-      .setColor('RANDOM')
-      .setDescription(overview.slice(0, 4096))
-      .setFields([
-        { name: 'Release date', value: release_date || '-', inline: true },
-        { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },
-        { name: 'Count of votes', value: `${vote_count ?? 0}`, inline: true },
-        { name: 'Original language', value: lang || '-', inline: true },
-        { name: 'Budget', value: numberFormat.format(budget), inline: true },
-        { name: 'Revenue', value: numberFormat.format(revenue), inline: true },
-        { name: 'Runtime', value: `${ms((runtime ?? 0) * 60000)}`, inline: true },
-      ])
-      .setImage(backdrop_img)
-      .setThumbnail(poster_img)
-      .setTitle(title ?? original_title)
-      .setURL(movie_url)];
+    const embeds = [
+      new MessageEmbed()
+        .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
+        .setColor('RANDOM')
+        .setDescription(overview.slice(0, 4096))
+        .setFields([
+          { name: 'Release date', value: release_date || '-', inline: true },
+          { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },
+          { name: 'Count of votes', value: `${vote_count ?? 0}`, inline: true },
+          { name: 'Original language', value: lang || '-', inline: true },
+          { name: 'Budget', value: numberFormat.format(budget), inline: true },
+          { name: 'Revenue', value: numberFormat.format(revenue), inline: true },
+          { name: 'Runtime', value: `${ms((runtime ?? 0) * 60000)}`, inline: true },
+        ])
+        .setImage(backdrop_img)
+        .setThumbnail(poster_img)
+        .setTitle(title ?? original_title)
+        .setURL(movie_url),
+    ];
 
     await interaction.editReply({ embeds });
   }
 
-  async searchAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async searchAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { locale, options } = interaction;

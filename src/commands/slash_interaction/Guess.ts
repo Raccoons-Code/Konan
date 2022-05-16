@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
 import db from 'quick.db';
 import { Client, SlashCommand } from '../../structures';
 
@@ -33,9 +33,11 @@ export default class Guess extends SlashCommand {
 
     const number = options.getInteger('number', true);
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setTitle(this.t('guessNumber', { locale }))];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setTitle(this.t('guessNumber', { locale })),
+    ];
 
     if (!db.has(`${guildId}.${author.id}.guess`))
       db.set(`${guildId}.${author.id}.guess`, { value: this.Util.mathRandom(100, 1) });
@@ -108,7 +110,7 @@ export default class Guess extends SlashCommand {
     await interaction.editReply({ embeds });
   }
 
-  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { guildId, options, user } = interaction;

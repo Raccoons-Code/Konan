@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Client, Event } from '../structures';
+import { Client, Command, Event } from '../structures';
 
 export default class MessageCreate extends Event {
   constructor(client: Client) {
@@ -11,7 +11,7 @@ export default class MessageCreate extends Event {
   }
 
   async execute(message: Message) {
-    /* const { author, channel, client, content, guild } = message;
+    const { author, channel, client, content, guild } = message;
 
     if (author.bot) return;
 
@@ -26,7 +26,7 @@ export default class MessageCreate extends Event {
 
     message.args = message.text.split(/\s+/g);
 
-    const matchedComponentLink = matched[1].match(this.pattern.componentCommandNameLink) ?? [];
+    const matchedComponentLink = message.text.match(this.pattern.componentCommandNameLink) ?? [];
 
     const commandName = message.commandName = matchedComponentLink[3] || message.args.shift() || 'help';
 
@@ -41,6 +41,6 @@ export default class MessageCreate extends Event {
       await command.execute(message);
     } catch (error: any) {
       client.sendError(error);
-    } */
+    }
   }
 }

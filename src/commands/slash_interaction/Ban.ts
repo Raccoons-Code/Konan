@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, PermissionString } from 'discord.js';
+import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 export default class Ban extends SlashCommand {
@@ -78,7 +78,7 @@ export default class Ban extends SlashCommand {
 
     const { guild, memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions?.missing(this.props?.userPermissions as PermissionString[]) ?? [];
+    const userPermissions = memberPermissions?.missing(this.props!.userPermissions!) ?? [];
 
     if (userPermissions.length)
       return await interaction.editReply(this.t('missingUserPermission', {
@@ -87,7 +87,7 @@ export default class Ban extends SlashCommand {
       }));
 
     const clientPermissions =
-      guild.me?.permissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
+      guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
 
     if (clientPermissions.length)
       return await interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
@@ -145,19 +145,19 @@ export default class Ban extends SlashCommand {
         }]),
     ];
 
-    const button = new MessageButton()
-      .setCustomId(JSON.stringify({
-        c: 'ban',
-        sc: 'chunk',
-        a: true,
-      }))
-      .setEmoji('⚠')
-      .setLabel('Yes')
-      .setStyle('PRIMARY');
-
-    const components = [
-      new MessageActionRow().setComponents([button]),
+    const buttons = [
+      new MessageButton()
+        .setCustomId(JSON.stringify({
+          c: 'ban',
+          sc: 'chunk',
+          a: true,
+        }))
+        .setEmoji('⚠')
+        .setLabel('Yes')
+        .setStyle('PRIMARY'),
     ];
+
+    const components = [new MessageActionRow().setComponents(buttons)];
 
     await interaction.editReply({ components, embeds });
   }

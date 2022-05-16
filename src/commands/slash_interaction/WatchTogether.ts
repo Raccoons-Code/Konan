@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ChannelType } from 'discord-api-types/v10';
 import { DiscordTogether } from 'discord-together';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, PermissionString, User } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 const { GuildVoice } = ChannelType;
@@ -61,8 +61,7 @@ export default class WatchTogether extends SlashCommand {
         ephemeral: true,
       });
 
-    const clientPermissions = channel.permissionsFor(<User>client.user)
-      ?.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
+    const clientPermissions = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
 
     if (clientPermissions.length)
       return await interaction.reply({
@@ -106,7 +105,7 @@ export default class WatchTogether extends SlashCommand {
     await interaction.respond(res);
   }
 
-  setChoices(applications: any[], options: { locale: string }, res: ApplicationCommandOptionChoice[] = []) {
+  setChoices(applications: any[], options: { locale: string }, res: ApplicationCommandOptionChoiceData[] = []) {
     const { locale } = options;
 
     applications = applications.filter(app => !/(awkword|doodlecrew|lettertile|puttparty|dev$)/i.test(app));

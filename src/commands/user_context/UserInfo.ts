@@ -18,16 +18,18 @@ export default class UserInfo extends UserContextMenu {
 
     const { createdAt, id, tag } = user;
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setDescription(`${user}`)
-      .setFields(
-        { name: this.t('discordTag', { locale }), value: inlineCode(tag), inline: true },
-        { name: this.t('discordId', { locale }), value: inlineCode(id), inline: true },
-      )
-      .setFooter({ text: this.t(member ? 'joinedTheServerAt' : 'creationDate', { locale }) })
-      .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-      .setTimestamp(member?.joinedTimestamp ?? createdAt)];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(`${user}`)
+        .setFields(
+          { name: this.t('discordTag', { locale }), value: inlineCode(tag), inline: true },
+          { name: this.t('discordId', { locale }), value: inlineCode(id), inline: true },
+        )
+        .setFooter({ text: this.t(member ? 'joinedTheServerAt' : 'creationDate', { locale }) })
+        .setThumbnail(user.displayAvatarURL({ dynamic: true }))
+        .setTimestamp(member?.joinedTimestamp ?? createdAt),
+    ];
 
     if (member) {
       const { avatar, displayColor, permissions, roles } = member;

@@ -20,17 +20,21 @@ export default class Help extends Command {
     const avatarURL = <string>guild?.me?.displayAvatarURL({ dynamic: true }) ??
       client.user?.displayAvatarURL({ dynamic: true });
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setDescription(this.t('helpText', { locale, user }))
-      .setThumbnail(avatarURL)
-      .setTitle(this.t('konanSupport', { locale }))];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(this.t('helpText', { locale, user }))
+        .setThumbnail(avatarURL)
+        .setTitle(this.t('konanSupport', { locale })),
+    ];
 
-    const buttons = [new MessageButton()
-      .setEmoji('📮') // :postbox:
-      .setLabel(this.t('inviteLink', { locale }))
-      .setStyle('LINK')
-      .setURL(client.invite)];
+    const buttons = [
+      new MessageButton()
+        .setEmoji('📮') // :postbox:
+        .setLabel(this.t('inviteLink', { locale }))
+        .setStyle('LINK')
+        .setURL(client.invite),
+    ];
 
     if (GUILD_INVITE)
       buttons.push(new MessageButton()
@@ -46,13 +50,15 @@ export default class Help extends Command {
         .setStyle('LINK')
         .setURL(`${DONATE_LINK}`));
 
-    const menus = [new MessageSelectMenu()
-      .setCustomId(JSON.stringify({ c: this.data.name }))
-      .setOptions([
-        { label: '🏠 Home', value: 'home', default: true }, // :home:
-        { label: '🗃️ Commands', value: 'commands' }, // :card_box:
+    const menus = [
+      new MessageSelectMenu()
+        .setCustomId(JSON.stringify({ c: this.data.name }))
+        .setOptions([
+          { label: '🏠 Home', value: 'home', default: true }, // :home:
+          { label: '🗃️ Commands', value: 'commands' }, // :card_box:
         /* { label: `${['🌎', '🌏', '🌍'][this.Util.mathRandom(2, 0)]} Languages`, value: 'localization' }, */
-      ])];
+        ]),
+    ];
 
     const components = [
       new MessageActionRow().setComponents(buttons),

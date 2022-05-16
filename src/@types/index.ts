@@ -1,4 +1,4 @@
-import { AutocompleteInteraction, ButtonInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuInteraction, IntentsString, Interaction, MessageComponentInteraction, MessageContextMenuInteraction, PartialTypes, PermissionString, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { AutocompleteInteraction, ButtonInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuInteraction, IntentsString, Interaction, MessageComponentInteraction, MessageContextMenuInteraction, ModalSubmitInteraction, PartialTypes, PermissionString, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
 import { Command, SlashCommand } from '../structures';
 
 export interface ApplicationCommandsCollection {
@@ -7,6 +7,7 @@ export interface ApplicationCommandsCollection {
     ButtonInteraction |
     CommandInteraction |
     MessageContextMenuInteraction |
+    ModalSubmitInteraction |
     SelectMenuInteraction |
     UserContextMenuInteraction
   )>
@@ -97,7 +98,8 @@ export type InteractionTypes =
   AutocompleteInteraction |
   CommandInteraction |
   ContextMenuInteraction |
-  MessageComponentInteraction
+  MessageComponentInteraction |
+  ModalSubmitInteraction
 
 export type ListenerString = 'on' | 'once'
 

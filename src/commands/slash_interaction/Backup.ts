@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import Backup from 'discord-backup';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, Guild, MessageEmbed, PermissionString } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, Guild, MessageEmbed } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 export default class extends SlashCommand {
@@ -80,7 +80,7 @@ export default class extends SlashCommand {
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {
     const { locale, memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions?.missing(this.props?.userPermissions as PermissionString[]) ?? [];
+    const userPermissions = memberPermissions?.missing(this.props!.userPermissions!) ?? [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -292,7 +292,7 @@ export default class extends SlashCommand {
     return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
   }
 
-  async deleteAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async deleteAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { client, guild, guildId, locale, options, user } = interaction;
@@ -306,16 +306,7 @@ export default class extends SlashCommand {
         where: { id: userId },
         include: {
           guilds: {
-            where: {
-              backups: {
-                some: {
-                  AND: [{
-                    userId,
-                    NOT: undefined,
-                  }],
-                },
-              },
-            },
+            where: { backups: { some: { AND: [{ userId, NOT: undefined }] } } },
             include: { backups: { where: { userId } } },
           },
         },
@@ -373,15 +364,13 @@ export default class extends SlashCommand {
     await interaction.respond(res);
   }
 
-  async restoreAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
-    if (interaction.responded) return;
-
+  async restoreAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (!interaction.inCachedGuild()) return await interaction.respond(res);
 
     await this.deleteAutocomplete(interaction, res);
   }
 
-  async updateAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async updateAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     if (!interaction.inCachedGuild()) return await interaction.respond(res);
@@ -417,26 +406,26 @@ export default class extends SlashCommand {
     await interaction.respond(res);
   }
 
+  async createBackup(guild: Guild, options: { premium: boolean }) {
+    const { premium } = options;
+
+    return await Backup.create(guild, {
+      jsonBeautify: false,
+      jsonSave: false,
+      maxMessagesPerChannel: premium ? 20 : 0,
+    });
+  }
+
   async newBackup(guild: Guild, options: { premium: boolean }) {
     const { id, ownerId } = guild;
 
     const { premium } = options;
 
-    const data = await Backup.create(guild, {
-      jsonBeautify: false,
-      jsonSave: false,
-      maxMessagesPerChannel: premium ? 20 : 0,
-    }) as any;
+    const data = await this.createBackup(guild, options) as any;
 
     try {
       return await this.prisma.backup.create({
-        data: {
-          id: data.id,
-          data,
-          guildId: id,
-          premium,
-          userId: ownerId,
-        },
+        data: { id: data.id, data, guildId: id, premium, userId: ownerId },
       });
     } catch {
       return;
@@ -448,26 +437,11 @@ export default class extends SlashCommand {
 
     const { premium } = options;
 
-    const data = await Backup.create(guild, {
-      jsonBeautify: false,
-      jsonSave: false,
-      maxMessagesPerChannel: premium ? 20 : 0,
-    }) as any;
+    const data = await this.createBackup(guild, options) as any;
 
     try {
       return await this.prisma.guild.create({
-        data: {
-          id,
-          userId: ownerId,
-          backups: {
-            create: {
-              id: data.id,
-              data,
-              premium,
-              userId: ownerId,
-            },
-          },
-        },
+        data: { id, userId: ownerId, backups: { create: { id: data.id, data, premium, userId: ownerId } } },
         include: { backups: { where: { id: data.id } } },
       });
     } catch {
@@ -480,25 +454,14 @@ export default class extends SlashCommand {
 
     const { premium } = options;
 
-    const data = await Backup.create(guild, {
-      jsonBeautify: false,
-      jsonSave: false,
-      maxMessagesPerChannel: premium ? 20 : 0,
-    }) as any;
+    const data = await this.createBackup(guild, options) as any;
 
     try {
       return await this.prisma.user.create({
         data: {
           id: ownerId,
           guilds: { create: { id } },
-          backups: {
-            create: {
-              id: data.id,
-              data,
-              guildId: id,
-              premium,
-            },
-          },
+          backups: { create: { id: data.id, data, guildId: id, premium } },
           premium: new Date(),
         },
         include: { backups: { where: { id: data.id } } },
@@ -513,22 +476,12 @@ export default class extends SlashCommand {
 
     const { premium } = options;
 
-    const data = await Backup.create(guild, {
-      jsonBeautify: false,
-      jsonSave: false,
-      maxMessagesPerChannel: premium ? 20 : 0,
-    }) as any;
+    const data = await this.createBackup(guild, options) as any;
 
     try {
       return await this.prisma.backup.update({
         where: { id: key },
-        data: {
-          id: data.id,
-          data,
-          guildId: id,
-          premium,
-          userId: ownerId,
-        },
+        data: { id: data.id, data, guildId: id, premium, userId: ownerId },
       });
     } catch {
       return;

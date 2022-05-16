@@ -36,9 +36,7 @@ export default class Ban extends ButtonComponentInteraction {
       .then(bans => bans.filter(ban => ban));
 
     message.embeds[0]
-      .setDescription(failed.length ?
-        `Failed: ${failed.join(' ')}.`.slice(0, 4096) :
-        '')
+      .setDescription(failed.length ? `Failed: ${failed.join(' ')}.`.slice(0, 4096) : '')
       .setFields([{
         name: 'Amount of banned users',
         value: `${bannedUsers.length}/${usersId.length}`,

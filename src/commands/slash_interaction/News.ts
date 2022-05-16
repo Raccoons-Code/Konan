@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import axios from 'axios';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 const journals = [{
@@ -81,15 +81,17 @@ export default class News extends SlashCommand {
 
     const __new = news.find(_fnew => _fnew[journal.properties.title].match(_new));
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setTitle(__new[journal.properties.title].slice(0, 256))
-      .setDescription(__new[journal.properties.description].join('\n\n').slice(0, 4096))];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setTitle(__new[journal.properties.title].slice(0, 256))
+        .setDescription(__new[journal.properties.description].join('\n\n').slice(0, 4096)),
+    ];
 
     await interaction.editReply({ embeds });
   }
 
-  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const focused = interaction.options.getFocused(true);
@@ -99,7 +101,10 @@ export default class News extends SlashCommand {
     await interaction.respond(res);
   }
 
-  async categoryAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async categoryAutocomplete(
+    interaction: AutocompleteInteraction,
+    res: ApplicationCommandOptionChoiceData[] = [],
+  ) {
     const { options } = interaction;
 
     const journal = options.getString('journal');
@@ -125,7 +130,7 @@ export default class News extends SlashCommand {
     return res;
   }
 
-  async journalAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async journalAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     const { options } = interaction;
 
     const category = options.getString('category');
@@ -157,7 +162,10 @@ export default class News extends SlashCommand {
     return res;
   }
 
-  async languageAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async languageAutocomplete(
+    interaction: AutocompleteInteraction,
+    res: ApplicationCommandOptionChoiceData[] = [],
+  ) {
     const { options } = interaction;
 
     const category = options.getString('category');
@@ -183,7 +191,7 @@ export default class News extends SlashCommand {
     return res;
   }
 
-  async newAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async newAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     const { options } = interaction;
 
     const _journal = options.getString('journal');

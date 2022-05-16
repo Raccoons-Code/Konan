@@ -46,7 +46,7 @@ export default class Movies extends ButtonComponentInteraction {
       new MessageButton().setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, target: target + 1 }))
         .setDisabled(!b).setLabel('Next').setStyle(b ? 'PRIMARY' : 'SECONDARY'),
       new MessageButton().setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, target: 1000 }))
-        .setDisabled(!b).setLabel(`...${1000}`).setStyle(b ? 'PRIMARY' : 'SECONDARY'),
+        .setDisabled(!b).setLabel('...1000').setStyle(b ? 'PRIMARY' : 'SECONDARY'),
     ];
 
     const components = [new MessageActionRow().setComponents(buttons)];

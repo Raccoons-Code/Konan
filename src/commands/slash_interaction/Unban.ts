@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, PermissionString } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 export default class Unban extends SlashCommand {
@@ -37,7 +37,7 @@ export default class Unban extends SlashCommand {
 
     const { guild, memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props?.userPermissions as PermissionString[]) ?? [];
+    const userPermissions = memberPermissions.missing(this.props!.userPermissions!) ?? [];
 
     if (userPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -48,8 +48,7 @@ export default class Unban extends SlashCommand {
       });
     }
 
-    const clientPermissions =
-      guild.me?.permissions.missing(this.props?.clientPermissions as PermissionString[]) ?? [];
+    const clientPermissions = guild.me?.permissions.missing(this.props!.clientPermissions!) ?? [];
 
     if (clientPermissions.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -83,7 +82,7 @@ export default class Unban extends SlashCommand {
     }
   }
 
-  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { guild, options } = <AutocompleteInteraction<'cached'>>interaction;

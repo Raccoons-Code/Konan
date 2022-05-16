@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageEmbed, PermissionString, TextChannel, User } from 'discord.js';
+import { CommandInteraction, MessageEmbed, TextChannel } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 const dynamic = true;
@@ -31,22 +31,24 @@ export default class Echo extends SlashCommand {
 
     const username = member?.displayName ?? user.username;
 
-    if (!channel?.permissionsFor(<User>client.user)?.has(this.props?.clientPermissions as PermissionString[])) {
+    if (!channel?.permissionsFor(client.user!)?.has(this.props!.clientPermissions!)) {
       const [, title, description] = content.match(this.pattern.embed) ?? [];
 
-      const embeds = [new MessageEmbed()
-        .setColor(member?.displayColor || 'RANDOM')
-        .setFooter({ text: username, iconURL: avatarURL })
-        .setTimestamp(Date.now())
-        .setTitle(title)
-        .setDescription(description)];
+      const embeds = [
+        new MessageEmbed()
+          .setColor(member?.displayColor || 'RANDOM')
+          .setFooter({ text: username, iconURL: avatarURL })
+          .setTimestamp(Date.now())
+          .setTitle(title)
+          .setDescription(description),
+      ];
 
       return await interaction.reply({ embeds });
     }
 
     const webhook = await (<TextChannel>channel).fetchWebhooks()
       .then(w => w.find(v => v.name === client.user?.id)) ??
-      await (<TextChannel>channel).createWebhook(<string>client.user?.id);
+      await (<TextChannel>channel).createWebhook(client.user!.id);
 
     await webhook.send({ avatarURL, content, username });
 

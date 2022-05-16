@@ -1,6 +1,6 @@
 import { codeBlock, SlashCommandBuilder } from '@discordjs/builders';
 import translate, { languages } from '@vitalets/google-translate-api';
-import { ApplicationCommandOptionChoice, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
 import { Client, SlashCommand } from '../../structures';
 
 const Choices = <[string, string][]>Object.keys(languages)
@@ -55,20 +55,22 @@ export default class Translate extends SlashCommand {
 
     const translation = await translate(cache || text, { from, to });
 
-    const embeds = [new MessageEmbed()
-      .setColor('RANDOM')
-      .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
-      .setTitle([
-        'Translation from',
-        languages[<'auto'>translation.from.language.iso],
-        'to',
-        languages[to],
-      ].join(' '))];
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
+        .setTitle([
+          'Translation from',
+          languages[<'auto'>translation.from.language.iso],
+          'to',
+          languages[to],
+        ].join(' ')),
+    ];
 
     await interaction.editReply({ embeds });
   }
 
-  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { options } = interaction;
@@ -80,7 +82,7 @@ export default class Translate extends SlashCommand {
     await interaction.respond(res);
   }
 
-  async fromAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async fromAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     const { locale, options } = interaction;
 
     const focused = options.getFocused(true);
@@ -103,7 +105,7 @@ export default class Translate extends SlashCommand {
     return res;
   }
 
-  async toAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async toAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     const { locale, options } = interaction;
 
     const from = options.getString('from', true);
@@ -128,7 +130,7 @@ export default class Translate extends SlashCommand {
     return res;
   }
 
-  async textAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoice[] = []) {
+  async textAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     const { options, user } = interaction;
 
     const from = options.getString('from', true);

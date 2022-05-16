@@ -62,7 +62,7 @@ export default class Info extends ButtonComponentInteraction {
         { name: 'Library', value: codeBlock('properties', library), inline },
         { name: 'Engine', value: codeBlock('properties', engine), inline },
         { name: 'Stats', value: codeBlock('properties', stats) },
-        { name: 'Uptime', value: `${time(<Date>readyAt)} ${time(<Date>readyAt, 'R')}` },
+        { name: 'Uptime', value: `${time(readyAt!)} ${time(readyAt!, 'R')}` },
       ]);
 
     await interaction.update({ embeds });

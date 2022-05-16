@@ -3,9 +3,7 @@ import DJS, { ClientOptions, MessageEmbed, WebhookClient } from 'discord.js';
 import AutoPoster from 'topgg-autoposter';
 import { FetchStatsOptions, Stats } from '../@types';
 import commands from '../commands';
-import { prisma } from '../database';
 import events from '../events';
-import { t } from '../translator';
 import Util from '../util';
 
 const { env } = process;
@@ -18,11 +16,6 @@ export default class Client extends DJS.Client {
   constructor(options: ClientOptions) {
     super(options);
 
-    Object.defineProperties(this, {
-      prisma: { value: prisma },
-      t: { value: t },
-    });
-
     this.stats = {};
   }
 
@@ -31,11 +24,11 @@ export default class Client extends DJS.Client {
 
     commands.init(this);
 
-    events.init(this);
-
     this.commands = await commands.loadCommands();
 
     this.commandsByCategory = commands.commandsByCategory;
+
+    events.init(this);
 
     await events.loadEvents();
 
