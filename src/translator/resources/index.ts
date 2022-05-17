@@ -11,12 +11,7 @@ for (let i = 0; i < langs.length; i++) {
 
   const { found } = new GlobSync(`${__dirname}/${lang}/*.json`);
 
-  translations[lang] = found.reduce((acc: any, value) => {
-    if (!acc.translation)
-      return { translation: require(value) };
-
-    return Object.assign(acc.translation, require(value));
-  }, {});
+  translations[lang] = found.reduce((acc, value) => ({ ...acc, ...require(value) }), {});
 }
 
 export default { ...translations };

@@ -18,7 +18,7 @@ export interface PluralData {
   singularSuffix?: string
 }
 
-export interface Resources { [k: string]: { translation: { [k: string]: string } } }
+export interface Resources { [k: string]: { [k: string]: string } }
 
 export interface TranslationData {
   fallbackLocale?: string
