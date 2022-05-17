@@ -1,7 +1,7 @@
-export = (string: string): any => {
+export = <T = any>(string: string): T => {
   try {
     return JSON.parse(string);
   } catch {
-    return {};
+    return <T>{};
   }
 };

@@ -19,7 +19,7 @@ import removeFromArray from './removeFromArray';
 import splitArrayInGroups from './splitArrayInGroups';
 import splitLimits from './splitLimits';
 import splitSelectMenu from './splitSelectMenu';
-import waitAsync from './waitAsyncV2';
+import waitAsync from './waitAsync';
 import waitSync from './waitSync';
 
 export default class Util {

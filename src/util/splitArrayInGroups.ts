@@ -1,4 +1,4 @@
-export = (array: any[], length: length = 10) => {
+export = <T = any>(array: T[], length: length = 10) => {
   const groups = [];
 
   for (let i = 0; i < array.length; i += length)

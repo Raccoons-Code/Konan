@@ -26,13 +26,13 @@ export default class extends Command {
       .filter(v => typeof v !== 'undefined');
 
     const content = matchedComponentLink.reduce((acc, c) => {
-      if (/]\((button):/.test(c))
-        return `${acc.split(c).join('')}`;
+      if (/\]\((button):/.test(c))
+        return `${acc.split(c).join(' ')}`;
 
       return `${acc}`;
     }, text);
 
-    const components: MessageActionRow[] = this.getButtons(componentLinks);
+    const components = this.getButtons(componentLinks);
 
     const avatarURL = member?.displayAvatarURL({ dynamic: true }) ?? author.displayAvatarURL({ dynamic: true });
 

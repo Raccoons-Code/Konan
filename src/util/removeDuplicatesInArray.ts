@@ -1,1 +1,1 @@
-export = (array: any[]) => [...new Set(array)];
+export = <T = any>(array: T[]) => [...new Set(array)];
