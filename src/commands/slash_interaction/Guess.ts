@@ -76,7 +76,7 @@ export default class Guess extends SlashCommand {
 
     if (user?.length === 9) {
       embeds[0]
-        .setDescription(this.t('numberGameover', { locale, author, number }))
+        .setDescription(this.t('numberGameOver', { locale, author, number }))
         .addFields({
           name: `${this.t('previousGuesses', { locale })} ${user.length + 1}/10`,
           value: `${user.join(' ').trim()}`,

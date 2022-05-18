@@ -81,13 +81,13 @@ export default class Embed extends SlashCommand {
 
     const { memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props!.userPermissions!) ?? [];
+    const userPerms = memberPermissions.missing(this.props!.userPermissions!) ?? [];
 
-    if (userPermissions.length) {
+    if (userPerms.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
-        content: this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }),
+        content: this.t('missingUserPermission', { locale, permission: userPerms[0] }),
         ephemeral: true,
       });
     }
@@ -110,11 +110,13 @@ export default class Embed extends SlashCommand {
     const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
     const image_url = <string>options.getString('image_url');
 
-    const clientPermissions = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
+    const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
 
-    if (clientPermissions.length)
-      return await interaction.editReply(this.t('missingChannelPermission',
-        { locale, PERMISSIONS: clientPermissions }));
+    if (clientPerms.length)
+      return await interaction.editReply(this.t('missingChannelPermission', {
+        locale,
+        permission: clientPerms[0],
+      }));
 
     const embeds = [
       new MessageEmbed()
@@ -126,7 +128,7 @@ export default class Embed extends SlashCommand {
         .setTitle(title),
     ];
 
-    if (!clientPermissions.includes('SEND_MESSAGES')) {
+    if (!clientPerms.includes('SEND_MESSAGES')) {
       try {
         await channel.send({ content, embeds });
 
@@ -166,9 +168,9 @@ export default class Embed extends SlashCommand {
           .setTitle(title),
       ];
 
-      const clientPermissions = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
+      const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
-      if (!clientPermissions?.includes('SEND_MESSAGES')) {
+      if (!clientPerms?.includes('SEND_MESSAGES')) {
         try {
           await message.edit({ content, embeds });
 

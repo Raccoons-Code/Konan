@@ -319,13 +319,13 @@ export default class SelectRoles extends SlashCommand {
 
     const { memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props!.userPermissions!) ?? [];
+    const userPerms = memberPermissions.missing(this.props!.userPermissions!) ?? [];
 
-    if (userPermissions.length) {
+    if (userPerms.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
-        content: this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }),
+        content: this.t('missingUserPermission', { locale, permission: userPerms[0] }),
         ephemeral: true,
       });
     }

@@ -61,11 +61,11 @@ export default class WatchTogether extends SlashCommand {
         ephemeral: true,
       });
 
-    const clientPermissions = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
+    const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
 
-    if (clientPermissions.length)
+    if (clientPerms.length)
       return await interaction.reply({
-        content: `${member}, ${this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions })}`,
+        content: `${member}, ${this.t('missingChannelPermission', { locale, permission: clientPerms[0] })}`,
         ephemeral: true,
       });
 

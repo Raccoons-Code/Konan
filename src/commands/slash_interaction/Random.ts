@@ -61,11 +61,11 @@ export default class Random extends SlashCommand {
   async execute(interaction: CommandInteraction) {
     const { channel, client, locale, options } = <CommandInteraction<'cached'>>interaction;
 
-    const clientPermissions = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
+    const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
 
-    if (clientPermissions.length)
+    if (clientPerms.length)
       return await interaction.reply({
-        content: this.t('missingChannelPermission', { locale, PERMISSIONS: clientPermissions }),
+        content: this.t('missingChannelPermission', { locale, permission: clientPerms[0] }),
         ephemeral: true,
       });
 

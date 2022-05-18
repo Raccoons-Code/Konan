@@ -69,19 +69,16 @@ export default class Timeout extends SlashCommand {
 
     const { guild, memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions.missing(this.props!.userPermissions!);
+    const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
-    if (userPermissions.length)
-      return await interaction.editReply(this.t('missingUserPermission', {
-        locale,
-        PERMISSIONS: userPermissions,
-      }));
+    if (userPerms.length)
+      return await interaction.editReply(this.t('missingUserPermission', { locale, permission: userPerms[0] }));
 
-    const clientPermissions =
+    const clientPerms =
       guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
 
-    if (clientPermissions.length)
-      return await interaction.editReply(this.t('missingPermission', { locale, PERMISSIONS: clientPermissions }));
+    if (clientPerms.length)
+      return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
 
     const member = options.getMember('user', true);
     const timeout = options.getInteger('time', true);

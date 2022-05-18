@@ -189,7 +189,7 @@ export default class ButtonRoles extends SlashCommand {
   }
 
   async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
-    const { locale, memberPermissions, options } = interaction;
+    const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -197,13 +197,15 @@ export default class ButtonRoles extends SlashCommand {
       return await interaction.editReply(this.t('onlyOnServer', { locale }));
     }
 
-    const userPermissions = memberPermissions?.missing(this.props!.userPermissions!) ?? [];
+    const { memberPermissions, options } = interaction;
 
-    if (userPermissions.length) {
+    const userPerms = memberPermissions.missing(this.props!.userPermissions!) ?? [];
+
+    if (userPerms.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
-        content: this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }),
+        content: this.t('missingUserPermission', { locale, permission: userPerms[0] }),
         ephemeral: true,
       });
     }

@@ -80,13 +80,13 @@ export default class extends SlashCommand {
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {
     const { locale, memberPermissions, options } = interaction;
 
-    const userPermissions = memberPermissions?.missing(this.props!.userPermissions!) ?? [];
+    const userPerms = memberPermissions?.missing(this.props!.userPermissions!) ?? [];
 
-    if (userPermissions.length) {
+    if (userPerms.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
-        content: this.t('missingUserPermission', { locale, PERMISSIONS: userPermissions }),
+        content: this.t('missingUserPermission', { locale, permission: userPerms[0] }),
         ephemeral: true,
       });
     }
@@ -108,6 +108,11 @@ export default class extends SlashCommand {
       return await interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild, guildId, user } = interaction;
+
+    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
+
+    if (clientPerms.length)
+      return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
 
     const dbUser = await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
@@ -240,6 +245,11 @@ export default class extends SlashCommand {
 
     const { guild, options } = interaction;
 
+    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
+
+    if (clientPerms.length)
+      return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
+
     const key = options.getString('key', true).split(' |')[0];
 
     const backup = await this.prisma.backup.findFirst({ where: { id: key } });
@@ -272,6 +282,11 @@ export default class extends SlashCommand {
       return await interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild, options } = interaction;
+
+    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
+
+    if (clientPerms.length)
+      return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
 
     const key = options.getString('key', true).split(' |')[0];
 

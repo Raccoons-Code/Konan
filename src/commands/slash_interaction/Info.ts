@@ -197,7 +197,7 @@ export default class Info extends SlashCommand {
     const { color, mentionable, permissions, name } = role;
 
     const arrayPerms = permissions.toArray();
-    const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
+    const textPerms = arrayPerms.map(p => this.t(p, { locale })).join(', ') || '-';
 
     embeds[0].setColor(color || 'RANDOM')
       .setAuthor({ name, iconURL: <string>role.iconURL() })
@@ -253,7 +253,7 @@ export default class Info extends SlashCommand {
       const arrayRoles = roles.cache.map(role => role);
       const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') || '-';
       const arrayPerms = permissions.toArray();
-      const textPerms = arrayPerms.map(p => this.t('PERMISSION', { locale, PERMISSIONS: [p] })).join(', ') || '-';
+      const textPerms = arrayPerms.map(p => this.t(p, { locale })).join(', ') || '-';
 
       embeds[0].addFields(
         { name: this.t('role', { locale }), value: `${roles.highest}`, inline: true },
