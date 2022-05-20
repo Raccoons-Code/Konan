@@ -16,7 +16,7 @@ export default class SlashCommand extends Base {
     super(client);
   }
 
-  public async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> { }
+  public async execute(interaction: CommandInteraction | AutocompleteInteraction) { }
 
   buttonStyles: MessageButtonStyle[] = ['DANGER', 'PRIMARY', 'SECONDARY', 'SUCCESS'];
 

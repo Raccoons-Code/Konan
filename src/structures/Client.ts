@@ -52,7 +52,7 @@ export default class Client extends DJS.Client {
     if (!this.ERROR_WEBHOOK)
       try {
         this.ERROR_WEBHOOK = new WebhookClient({ url: ERROR_WEBHOOK });
-      } catch (error) {
+      } catch {
         return console.error(reason);
       }
 
@@ -61,8 +61,12 @@ export default class Client extends DJS.Client {
         embeds: [
           new MessageEmbed()
             .setColor('RED')
-            .setDescription(`${codeBlock(`${reason.stack}`.slice(0, 4089))}`)
-            .setTitle(`${reason.name}: ${reason.message}`),
+            .setDescription(codeBlock(`${reason.stack}`.slice(0, 4089)))
+            .setFields([{
+              name: 'Cause',
+              value: `${reason.cause} `.slice(0, 1024),
+            }])
+            .setTitle(`${reason.name}: ${reason.message}`.slice(0, 256)),
         ],
         avatarURL: this.user.displayAvatarURL(),
         username: this.user.username,
@@ -73,7 +77,7 @@ export default class Client extends DJS.Client {
   }
 
   async fetchStats(options: FetchStatsOptions = {}): Promise<Stats> {
-    const promises = [
+    const promises = <(Promise<number[]> | undefined)[]>[
       this.shard?.fetchClientValues('guilds.cache.size'),
       this.shard?.fetchClientValues('channels.cache.size'),
       this.shard?.broadcastEval(client => client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
@@ -82,11 +86,17 @@ export default class Client extends DJS.Client {
     try {
       const results = await Promise.all(promises);
 
-      this.stats.guilds = results[0]?.reduce((acc: number, guildCount: any) => acc + guildCount, 0);
-      this.stats.channels = results[1]?.reduce((acc: number, channelsCount: any) => acc + channelsCount, 0);
-      this.stats.members = results[2]?.reduce((acc: number, memberCount: any) => acc + memberCount, 0);
+      this.stats.guilds = results[0]?.reduce((acc, guildCount) => acc + guildCount, 0);
+      this.stats.channels = results[1]?.reduce((acc, channelsCount) => acc + channelsCount, 0);
+      this.stats.members = results[2]?.reduce((acc, memberCount) => acc + memberCount, 0);
     } catch {
-      return await this.fetchStats(options);
+      if (options.loop) {
+        await Util.waitAsync(10000);
+      } else {
+        await Util.waitAsync(1000);
+
+        return await this.fetchStats(options);
+      }
     }
 
     if (options.loop) {

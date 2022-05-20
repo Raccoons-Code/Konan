@@ -1,5 +1,5 @@
 import { AutocompleteInteraction, ButtonInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuInteraction, IntentsString, Interaction, MessageComponentInteraction, MessageContextMenuInteraction, ModalSubmitInteraction, PartialTypes, PermissionString, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
-import { Command, SlashCommand } from '../structures';
+import { ButtonComponentInteraction, Command, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 export interface ApplicationCommandsCollection {
   [k: string]: Collection<string, Interaction & (
@@ -13,15 +13,18 @@ export interface ApplicationCommandsCollection {
   )>
 }
 
-export interface BanCustomId {
-  c: string
-  sc: string
+export interface BanCustomId extends BaseComponentCustomId {
   a: boolean
 }
 
-export interface ButtonRolesCustomId {
+export interface BaseComponentCustomId {
   /** command */
   c: string
+  /** subcommand */
+  sc: string
+}
+
+export interface ButtonRolesCustomId extends BaseComponentCustomId {
   count: number
   /** date */
   d: number
@@ -53,6 +56,17 @@ export interface CommandChoicesData {
   value: any
 }
 
+export interface CommandCollectionTypes {
+  [k: string]: Collection<string,
+    ButtonComponentInteraction |
+    Command |
+    MessageContextMenu |
+    SelectMenuComponentInteraction |
+    SlashCommand |
+    UserContextMenu
+  >
+}
+
 export interface CommandsCollection {
   [k: string]: Collection<string, Command>
 }
@@ -71,28 +85,21 @@ export interface EventData {
   permissions?: PermissionString[]
 }
 
-export interface HelpButtonCustomId {
-  c: string
+export interface HelpButtonCustomId extends BaseComponentCustomId {
+  /** Commands by category */
   cbc: string
-  sc: string
+  /** page */
   p: number
 }
 
-export interface JkpCustomId {
-  /** command */
-  c: string
+export interface JkpCustomId extends BaseComponentCustomId {
   /** players id */
   p: string[]
   /** value */
   v: number
 }
 
-export interface InfoCustomId {
-  /** command */
-  c: string
-  /** sub command */
-  sc: string
-}
+export type InfoCustomId = BaseComponentCustomId
 
 export type InteractionTypes =
   AutocompleteInteraction |
@@ -107,9 +114,8 @@ export interface FetchStatsOptions {
   loop?: boolean
 }
 
-export interface MoviesCustomId {
-  /** command */
-  c: string
+export interface MoviesCustomId extends BaseComponentCustomId {
+  /** date */
   d: number
   /** offset */
   o: number
@@ -128,9 +134,7 @@ export interface RolesManager {
   remove: string[]
 }
 
-export interface SelectRolesCustomId {
-  /** command */
-  c: string
+export interface SelectRolesCustomId extends BaseComponentCustomId {
   count: number
   /** date */
   d: number

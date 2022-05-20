@@ -22,5 +22,5 @@ export default abstract class Base {
     });
   }
 
-  public async execute(...args: any[]) { }
+  public async execute(...args: any) { }
 }

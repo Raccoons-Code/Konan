@@ -15,7 +15,7 @@ declare module 'discord.js' {
 
     fetchStats(options?: FetchStatsOptions): Promise<Stats>
     sendError(reason: Error): Promise<void>
-    topggAutoposter(token?: string | undefined): void
+    topggAutoposter(token?: string | undefined): Promise<void>
   }
 
   export interface Message {

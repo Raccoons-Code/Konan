@@ -80,9 +80,9 @@ export default class extends SlashCommand {
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {
     const { locale, memberPermissions, options } = interaction;
 
-    const userPerms = memberPermissions?.missing(this.props!.userPermissions!) ?? [];
+    const userPerms = memberPermissions?.missing(this.props!.userPermissions!);
 
-    if (userPerms.length) {
+    if (userPerms?.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
@@ -109,9 +109,9 @@ export default class extends SlashCommand {
 
     const { guild, guildId, user } = interaction;
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
+    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
-    if (clientPerms.length)
+    if (clientPerms?.length)
       return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
 
     const dbUser = await this.prisma.user.findFirst({
@@ -171,7 +171,7 @@ export default class extends SlashCommand {
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'server') {
-      const id = options.getString('id', true).split(' |')[0];
+      const id = options.getString('id', true);
 
       const userId = guild?.ownerId ?? user.id;
 
@@ -189,7 +189,7 @@ export default class extends SlashCommand {
     }
 
     if (subcommand === 'backup') {
-      const key = options.getString('key', true).split(' |')[0];
+      const key = options.getString('key', true);
 
       const deleted = await this.prisma.backup.delete({ where: { id: key } });
 
@@ -245,16 +245,16 @@ export default class extends SlashCommand {
 
     const { guild, options } = interaction;
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
+    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
-    if (clientPerms.length)
+    if (clientPerms?.length)
       return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
 
-    const key = options.getString('key', true).split(' |')[0];
+    const key = options.getString('key', true);
 
     const backup = await this.prisma.backup.findFirst({ where: { id: key } });
 
-    if (!(backup && backup.data))
+    if (!backup?.data)
       return await interaction.editReply(this.t('backup404', { locale }));
 
     const { data, premium } = backup;
@@ -283,19 +283,19 @@ export default class extends SlashCommand {
 
     const { guild, options } = interaction;
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
+    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
-    if (clientPerms.length)
+    if (clientPerms?.length)
       return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
 
-    const key = options.getString('key', true).split(' |')[0];
+    const key = options.getString('key', true);
 
     const dbUser = await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
       include: { backups: { where: { id: key } } },
     });
 
-    if (!(dbUser && dbUser.backups.length))
+    if (!(dbUser?.backups.length))
       return await interaction.editReply(this.t('backup404', { locale }));
 
     const premium = Date.now() < (dbUser.premium?.valueOf() ?? 0);
@@ -327,7 +327,7 @@ export default class extends SlashCommand {
         },
       });
 
-      if (!(dbUser && dbUser.guilds)) return await interaction.respond(res);
+      if (!(dbUser?.guilds)) return await interaction.respond(res);
 
       for (let i = 0; i < dbUser.guilds.length; i++) {
         const _guild = dbUser.guilds[i];

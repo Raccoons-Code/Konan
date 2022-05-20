@@ -1,5 +1,5 @@
 export = (amount: number, limit: limit = 100) => {
-  const limits: number[] = [];
+  const limits = [];
 
   const forLimit = amount / limit;
 

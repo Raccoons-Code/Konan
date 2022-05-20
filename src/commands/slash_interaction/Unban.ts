@@ -37,7 +37,7 @@ export default class Unban extends SlashCommand {
 
     const { guild, memberPermissions, options } = interaction;
 
-    const userPerms = memberPermissions.missing(this.props!.userPermissions!) ?? [];
+    const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -48,9 +48,9 @@ export default class Unban extends SlashCommand {
       });
     }
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!) ?? [];
+    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
 
-    if (clientPerms.length) {
+    if (clientPerms?.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({

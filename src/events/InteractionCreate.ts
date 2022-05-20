@@ -1,7 +1,7 @@
 import { codeBlock } from '@discordjs/builders';
 import { AutocompleteInteraction, ButtonInteraction, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, ModalSubmitInteraction, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
 import { InteractionTypes } from '../@types';
-import { ButtonComponentInteraction, Client, Event, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
+import { ButtonComponentInteraction, Client, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 const { env } = process;
 const { GUILD_INVITE } = env;
@@ -68,7 +68,7 @@ export default class InteractionCreate extends Event {
     return this[interaction.componentType]?.(<any>interaction);
   }
 
-  MODAL_SUBMIT(interaction: ModalSubmitInteraction) {
+  MODAL_SUBMIT(interaction: ModalSubmitInteraction): ModalSubmit {
     const { c, command } = this.Util.parseJSON(interaction.customId);
 
     return interaction.client.commands.modal_component?.get(c ?? command);

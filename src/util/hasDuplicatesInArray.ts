@@ -1,1 +1,1 @@
-export = (array: any[]) => new Set(array).size !== array.length;
+export = <T = any>(array: T[]) => new Set(array).size !== array.length;

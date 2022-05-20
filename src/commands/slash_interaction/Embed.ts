@@ -81,7 +81,7 @@ export default class Embed extends SlashCommand {
 
     const { memberPermissions, options } = interaction;
 
-    const userPerms = memberPermissions.missing(this.props!.userPermissions!) ?? [];
+    const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -110,9 +110,9 @@ export default class Embed extends SlashCommand {
     const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
     const image_url = <string>options.getString('image_url');
 
-    const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!) ?? [];
+    const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
-    if (clientPerms.length)
+    if (clientPerms?.length)
       return await interaction.editReply(this.t('missingChannelPermission', {
         locale,
         permission: clientPerms[0],
@@ -128,7 +128,7 @@ export default class Embed extends SlashCommand {
         .setTitle(title),
     ];
 
-    if (!clientPerms.includes('SEND_MESSAGES')) {
+    if (!clientPerms?.includes('SEND_MESSAGES')) {
       try {
         await channel.send({ content, embeds });
 

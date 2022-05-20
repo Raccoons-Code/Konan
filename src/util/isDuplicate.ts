@@ -1,1 +1,1 @@
-export = (array: any[], target: any) => array.includes(target);
+export = <T = any>(array: T[], target: T) => array.includes(target);

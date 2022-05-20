@@ -319,7 +319,7 @@ export default class SelectRoles extends SlashCommand {
 
     const { memberPermissions, options } = interaction;
 
-    const userPerms = memberPermissions.missing(this.props!.userPermissions!) ?? [];
+    const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
@@ -720,9 +720,9 @@ export default class SelectRoles extends SlashCommand {
 
       const message = await channel.messages.fetch(message_id);
 
-      if (!message) return await interaction.respond([]);
+      if (!message) return await interaction.respond(res);
 
-      if (!message.editable) return await interaction.respond([]);
+      if (!message.editable) return await interaction.respond(res);
 
       for (let i = 0; i < message.components.length; i++) {
         const component = message.components[i];
@@ -758,9 +758,9 @@ export default class SelectRoles extends SlashCommand {
 
       const message = await channel.messages.fetch(message_id);
 
-      if (!message) return await interaction.respond([]);
+      if (!message) return await interaction.respond(res);
 
-      if (!message.editable) return await interaction.respond([]);
+      if (!message.editable) return await interaction.respond(res);
 
       for (let i = 0; i < message.components.length; i++) {
         const component = message.components[i];

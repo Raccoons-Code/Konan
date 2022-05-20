@@ -40,10 +40,9 @@ export default class Kick extends SlashCommand {
     if (userPerms.length)
       return await interaction.editReply(this.t('missingUserPermission', { locale, permission: userPerms[0] }));
 
-    const clientPerms =
-      guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
+    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
-    if (clientPerms.length)
+    if (clientPerms?.length)
       return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
 
     const member = options.getMember('user', true);

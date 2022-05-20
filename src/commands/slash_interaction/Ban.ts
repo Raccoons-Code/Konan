@@ -78,14 +78,14 @@ export default class Ban extends SlashCommand {
 
     const { guild, memberPermissions, options } = interaction;
 
-    const userPerms = memberPermissions.missing(this.props!.userPermissions!) ?? [];
+    const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
-    if (userPerms.length)
+    if (userPerms?.length)
       return await interaction.editReply(this.t('missingUserPermission', { locale, permission: userPerms[0] }));
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!) ?? [];
+    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
-    if (clientPerms.length)
+    if (clientPerms?.length)
       return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
 
     const command = <'chunk'>options.getSubcommand();
