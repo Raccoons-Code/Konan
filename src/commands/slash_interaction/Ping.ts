@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, Message, MessageEmbed } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { Client, CommandInteraction, Message, MessageEmbed } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 export default class Ping extends SlashCommand {
   constructor(client: Client) {

@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, MessageEmbed, TextChannel } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEmbed, TextChannel } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 export default class Embed extends SlashCommand {
   constructor(client: Client) {

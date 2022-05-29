@@ -6,26 +6,39 @@ export interface SearchOptions extends Base {
   page?: number
 }
 
-export interface SearchQueryOptions {
+export interface SearchMoviesProps {
+  /**
+   * @description Choose whether to inlcude adult (pornography) content in the results.
+   * @default false
+   */
   include_adult?: boolean
+  /**
+   * @description Pass a ISO 639-1 value to display translated data for the fields that support it.
+   * @minLength 2
+   * @maxLength 4
+   * @pattern ([a-z]{2})-([A-Z]{2})
+   * @default 'en-US'
+   */
   language?: string
+  /**
+   * @description Specify which page to query.
+   * @minimum 1
+   * @maximum 1000
+   * @default 1
+   */
   page?: number
+  /**
+   * @description Pass a text query to search. This value should be URI encoded.
+   * @minLength 1
+   */
   query: string
+  /**
+   * @description Specify a ISO 3166-1 code to filter release dates. Must be uppercase.
+   * @pattern ^[A-Z]{2}$
+   */
   region?: string
   year?: number
   primary_release_year?: number
-}
-
-export interface SearchDetailsOptions {
-  append_to_response?: string
-  language?: string
-  movie_id: number
-}
-
-export interface SearchPopularOptions {
-  language?: string
-  page?: number
-  region?: string
 }
 
 export interface SearchMoviesData {
@@ -33,15 +46,6 @@ export interface SearchMoviesData {
   results: ResultsMovieData[]
   total_pages: number
   total_results: number
-}
-
-export interface ESearchMoviesData extends SearchMoviesData {
-  dates: Dates
-}
-
-export interface Dates {
-  maximum: string
-  minimum: string
 }
 
 export interface ResultsMovieData {

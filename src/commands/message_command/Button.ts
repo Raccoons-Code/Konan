@@ -1,5 +1,5 @@
-import { Message, MessageActionRow, MessageButton, TextChannel } from 'discord.js';
-import { Client, Command } from '../../structures';
+import { Client, Message, MessageActionRow, MessageButton, TextChannel } from 'discord.js';
+import { Command } from '../../structures';
 
 export default class extends Command {
   constructor(client: Client) {

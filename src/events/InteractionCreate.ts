@@ -1,7 +1,7 @@
 import { codeBlock } from '@discordjs/builders';
-import { AutocompleteInteraction, ButtonInteraction, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, ModalSubmitInteraction, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { AutocompleteInteraction, ButtonInteraction, Client, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, ModalSubmitInteraction, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
 import { InteractionTypes } from '../@types';
-import { ButtonComponentInteraction, Client, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
+import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 const { env } = process;
 const { GUILD_INVITE } = env;

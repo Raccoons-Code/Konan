@@ -1,9 +1,11 @@
+import Constants from './Constants';
 import Image from './image';
 import Movie from './movie';
 
-export { Image, Movie };
+export { Constants, Image, Movie };
 
 export default class Util {
+  static Constants = Constants;
   static image: Image;
   static movie: Movie;
 }

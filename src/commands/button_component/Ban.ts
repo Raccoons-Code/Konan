@@ -1,6 +1,6 @@
-import { ButtonInteraction } from 'discord.js';
+import { ButtonInteraction, Client } from 'discord.js';
 import { BanCustomId } from '../../@types';
-import { ButtonComponentInteraction, Client } from '../../structures';
+import { ButtonComponentInteraction } from '../../structures';
 
 export default class Ban extends ButtonComponentInteraction {
   constructor(client: Client) {

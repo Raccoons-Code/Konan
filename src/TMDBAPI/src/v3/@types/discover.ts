@@ -5,12 +5,12 @@ export interface DiscoverOptions extends Base {
    * @description A filter and include or exclude adult movies.
    * @default false
    */
-  include_adult?: DiscoverMovieOptions['include_adult']
+  include_adult?: DiscoverMovieProps['include_adult']
   /**
    * @description A filter to include or exclude videos.
    * @default false
    */
-  include_video?: DiscoverMovieOptions['include_video']
+  include_video?: DiscoverMovieProps['include_video']
   /**
    * @description Specify a language to query translatable fields with.
    * @minLength 2
@@ -18,27 +18,27 @@ export interface DiscoverOptions extends Base {
    * @pattern ([a-z]{2})-([A-Z]{2})
    * @default 'en-US'
    */
-  language?: DiscoverMovieOptions['language']
+  language?: DiscoverMovieProps['language']
   /**
    * primary_release_date.gte
    * @description Filter and only include movies that have a primary release date that is greater or equal to the specified value.
    * @format date
    */
-  page?: DiscoverMovieOptions['page']
+  page?: DiscoverMovieProps['page']
   /**
    * @description Choose from one of the many available sort options.
    * @default 'popularity.desc'
    */
-  sort_by?: DiscoverMovieOptions['sort_by']
+  sort_by?: DiscoverMovieProps['sort_by']
   /**
    * @description In combination with watch_region, you can filter by monetization type.
    * @default 'flatrate'
    */
-  with_watch_monetization_types?: DiscoverMovieOptions['with_watch_monetization_types']
+  with_watch_monetization_types?: DiscoverMovieProps['with_watch_monetization_types']
 }
 
 /** url: /movie?api_key= */
-export interface DiscoverMovieOptions {
+export interface DiscoverMovieProps {
   /**
    * @description Used in conjunction with the certification filter, use this to specify a country with a valid certification.
    */

@@ -23,36 +23,36 @@ class Idjsn {
   }
 
   init(options: Options) {
-    Object.assign(idjsn, { ...options });
+    Object.assign(this, { ...options });
 
-    idjsn.interpolator = new Interpolator(idjsn);
+    this.interpolator = new Interpolator(this);
 
-    idjsn.postProcessor = new PostProcessor(idjsn);
+    this.postProcessor = new PostProcessor(this);
 
-    idjsn.translator = new Translator(idjsn);
+    this.translator = new Translator(this);
   }
 
   t(key: string | string[], options: Options & { [k: string]: any } = {}): string {
     if (Array.isArray(key))
-      return idjsn.ta(key, options);
+      return this.ta(key, options);
 
-    key = <string>idjsn.translator.translate(key, options);
+    key = this.translator.translate(key, options)!;
 
-    if (!key) return <string><unknown>undefined;
+    if (!key) return undefined!;
 
     if (typeof key === 'string') {
-      key = idjsn.interpolator.interpolate(key, options);
+      key = this.interpolator.interpolate(key, options);
 
       if (options.capitalize !== null &&
-        (typeof options.capitalize === 'boolean' || typeof idjsn.capitalize === 'boolean'))
-        key = idjsn.postProcessor.capitalization(key, options);
+        (typeof options.capitalize === 'boolean' || typeof this.capitalize === 'boolean'))
+        key = this.postProcessor.capitalization(key, options);
     }
 
     return key;
   }
 
   protected ta(array: string[], options: Options) {
-    array = <string[]>array.map(key => idjsn.t(key, options));
+    array = <string[]>array.map(key => this.t(key, options));
 
     return array.join(' ').trim();
   }

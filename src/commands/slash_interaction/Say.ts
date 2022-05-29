@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, TextChannel } from 'discord.js';
+import { Client, CommandInteraction, TextChannel } from 'discord.js';
 import * as googleTTS from 'google-tts-api';
-import { Client, SlashCommand } from '../../structures';
+import { SlashCommand } from '../../structures';
 
 const dynamic = true;
 

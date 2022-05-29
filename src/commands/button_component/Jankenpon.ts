@@ -1,9 +1,9 @@
 import { userMention } from '@discordjs/builders';
-import { ButtonInteraction } from 'discord.js';
+import { ButtonInteraction, Client } from 'discord.js';
 import db from 'quick.db';
 import { JkpCustomId } from '../../@types';
 import JKP from '../../JKP';
-import { ButtonComponentInteraction, Client } from '../../structures';
+import { ButtonComponentInteraction } from '../../structures';
 
 export default class Jankenpon extends ButtonComponentInteraction {
   constructor(client: Client) {

@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 export default class Unban extends SlashCommand {
   constructor(client: Client) {
@@ -26,7 +26,7 @@ export default class Unban extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('unbanReasonDescription')));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {

@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import axios from 'axios';
 import { APIApplicationCommandOptionChoice } from 'discord-api-types/v10';
-import { CommandInteraction } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { Client, CommandInteraction } from 'discord.js';
+import { SlashCommand } from '../../structures';
 import Util from '../../util';
 
 const Choices = new class {

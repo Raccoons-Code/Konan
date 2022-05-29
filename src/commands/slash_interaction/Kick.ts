@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { Client, CommandInteraction } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 export default class Kick extends SlashCommand {
   constructor(client: Client) {

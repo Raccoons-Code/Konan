@@ -1,8 +1,8 @@
 import { codeBlock, time } from '@discordjs/builders';
 import { stripIndents } from 'common-tags';
-import { ButtonInteraction, MessageEmbed, version as discordjs_version } from 'discord.js';
+import { ButtonInteraction, Client, MessageEmbed, version as djs_version } from 'discord.js';
 import { InfoCustomId } from '../../@types';
-import { ButtonComponentInteraction, Client } from '../../structures';
+import { ButtonComponentInteraction } from '../../structures';
 
 const { versions, env } = process;
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
@@ -50,7 +50,7 @@ export default class Info extends ButtonComponentInteraction {
       `);
 
     const library = stripIndents(`
-      Discord.js : ${(npm_package_dependencies_discord_js ?? discordjs_version).match(/(?:\D*)([\d\D]+)/)?.[1]}
+      Discord.js : ${(npm_package_dependencies_discord_js ?? djs_version).match(/(?:\D*)([\d\D]+)/)?.[1]}
       `);
 
     const engine = stripIndents(`

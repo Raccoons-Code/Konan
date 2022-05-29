@@ -12,7 +12,7 @@ export default class Configuration {
   timezones!: Timezones;
 
   constructor(options: ConfigurationOptions) {
-    this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
+    this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
     this.baseURL = `${options.baseURL}/configuration`;
 
     this.fetchConfiguration();
@@ -32,51 +32,60 @@ export default class Configuration {
   }
 
   private async fetchConfiguration() {
-    this.apiConfiguration = await this.fetchApiConfiguration();
-    this.countries = await this.fetchCountries();
-    this.jobs = await this.fetchJobs();
-    this.languages = await this.fetchLanguages();
-    this.primaryTranslations = await this.fetchPrimaryTranslations();
-    this.timezones = await this.fetchTimezones();
+    Promise.all([
+      this.fetchApiConfiguration(),
+      this.fetchCountries(),
+      this.fetchJobs(),
+      this.fetchLanguages(),
+      this.fetchPrimaryTranslations(),
+      this.fetchTimezones(),
+    ]).then(results => {
+      this.apiConfiguration = results[0];
+      this.countries = results[1];
+      this.jobs = results[2];
+      this.languages = results[3];
+      this.primaryTranslations = results[4];
+      this.timezones = results[5];
+    });
   }
 
   async fetchApiConfiguration(): Promise<ApiConfiguration> {
-    return await axios.get('', {
+    return axios.get('', {
       baseURL: this.baseURL,
       params: { api_key: this.apiKey },
     }).then(r => r.data);
   }
 
   async fetchCountries(): Promise<Countries> {
-    return await axios.get('/countries', {
+    return axios.get('/countries', {
       baseURL: this.baseURL,
       params: { api_key: this.apiKey },
     }).then(r => r.data);
   }
 
   async fetchJobs(): Promise<Jobs> {
-    return await axios.get('/jobs', {
+    return axios.get('/jobs', {
       baseURL: this.baseURL,
       params: { api_key: this.apiKey },
     }).then(r => r.data);
   }
 
   async fetchLanguages(): Promise<Languages> {
-    return await axios.get('/languages', {
+    return axios.get('/languages', {
       baseURL: this.baseURL,
       params: { api_key: this.apiKey },
     }).then(r => r.data);
   }
 
   private async fetchPrimaryTranslations(): Promise<PrimaryTranslations> {
-    return await axios.get('/primary_translations', {
+    return axios.get('/primary_translations', {
       baseURL: this.baseURL,
       params: { api_key: this.apiKey },
     }).then(r => r.data);
   }
 
   async fetchTimezones(): Promise<Timezones> {
-    return await axios.get('/timezones', {
+    return axios.get('/timezones', {
       baseURL: this.baseURL,
       params: { api_key: this.apiKey },
     }).then(r => r.data);

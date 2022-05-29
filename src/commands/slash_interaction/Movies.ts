@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import ms from 'ms';
-import { Client, SlashCommand } from '../../structures';
+import { SlashCommand } from '../../structures';
 import tmdbApi from '../../TMDBAPI';
 import { SearchMoviesData } from '../../TMDBAPI/src/v3/@types';
 
@@ -102,13 +102,13 @@ export default class Movies extends SlashCommand {
 
     const { backdrop_path, budget, genres: _genres, id, original_language, original_title, overview, poster_path, release_date, revenue, runtime, title, vote_average, vote_count } = await movies.fetchDetails({ movie_id, language: locale });
 
-    const backdrop_img = image.imageURL({ path: <string>backdrop_path });
+    const backdrop_img = image.imageURL({ path: backdrop_path! });
 
     const genre_names = _genres.map(genre => genre.name);
 
     const movie_url = movie.movieURL({ id });
 
-    const poster_img = image.imageURL({ path: <string>poster_path });
+    const poster_img = image.imageURL({ path: poster_path! });
 
     const lang = configuration.getLanguage({ language: original_language });
 

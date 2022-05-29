@@ -1,7 +1,7 @@
 import { codeBlock, SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { Client, CommandInteraction, MessageEmbed } from 'discord.js';
 import { PrimeResolveOptions } from '../../@types';
-import { Client, SlashCommand } from '../../structures';
+import { SlashCommand } from '../../structures';
 
 export default class NumberIsPrime extends SlashCommand {
   constructor(client: Client) {

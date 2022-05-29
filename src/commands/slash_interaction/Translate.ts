@@ -1,7 +1,7 @@
 import { codeBlock, SlashCommandBuilder } from '@discordjs/builders';
 import translate, { languages } from '@vitalets/google-translate-api';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEmbed } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 const Choices = <[string, string][]>Object.keys(languages)
   .filter(l => !/(isSupported|getCode)/.test(l))

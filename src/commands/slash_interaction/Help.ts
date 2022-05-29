@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandNonOptionsData, ApplicationCommandOptionChoiceData, ApplicationCommandSubCommand, AutocompleteInteraction, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { ApplicationCommandNonOptionsData, ApplicationCommandOptionChoiceData, ApplicationCommandSubCommand, AutocompleteInteraction, Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 const { env } = process;
 const { DONATE_LINK, GUILD_INVITE } = env;

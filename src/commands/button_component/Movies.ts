@@ -1,6 +1,6 @@
-import { ButtonInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { ButtonInteraction, Client, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { MoviesCustomId } from '../../@types';
-import { ButtonComponentInteraction, Client } from '../../structures';
+import { ButtonComponentInteraction } from '../../structures';
 import tmdbApi from '../../TMDBAPI';
 import { ResultsMovieData } from '../../TMDBAPI/src/v3/@types';
 

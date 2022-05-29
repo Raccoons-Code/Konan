@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ChannelType } from 'discord-api-types/v10';
 import { DiscordTogether } from 'discord-together';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 const { GuildVoice } = ChannelType;
 

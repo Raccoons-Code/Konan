@@ -1,5 +1,5 @@
-import { Message } from 'discord.js';
-import { Client, Command, Event } from '../structures';
+import { Client, Message } from 'discord.js';
+import { Command, Event } from '../structures';
 
 export default class MessageCreate extends Event {
   constructor(client: Client) {

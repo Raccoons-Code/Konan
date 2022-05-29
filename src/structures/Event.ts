@@ -10,5 +10,5 @@ export default class Event extends Base {
     data.listener = <ListenerString>data.listener?.match(/(on(ce)?)/)?.[1] || 'on';
   }
 
-  public async execute(...args: (ClientEvents | { [key: string]: [client: Client] })[keyof ClientEvents]) { }
+  public async execute(...args: (ClientEvents)[keyof ClientEvents]) { }
 }

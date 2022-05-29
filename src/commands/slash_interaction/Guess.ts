@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEmbed } from 'discord.js';
 import db from 'quick.db';
-import { Client, SlashCommand } from '../../structures';
+import { SlashCommand } from '../../structures';
 
 export default class Guess extends SlashCommand {
   constructor(client: Client) {

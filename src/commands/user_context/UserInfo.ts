@@ -1,6 +1,6 @@
 import { codeBlock, ContextMenuCommandBuilder, inlineCode, time } from '@discordjs/builders';
-import { GuildMember, MessageEmbed, UserContextMenuInteraction } from 'discord.js';
-import { Client, UserContextMenu } from '../../structures';
+import { Client, GuildMember, MessageEmbed, UserContextMenuInteraction } from 'discord.js';
+import { UserContextMenu } from '../../structures';
 
 export default class UserInfo extends UserContextMenu {
   constructor(client: Client) {

@@ -1,5 +1,5 @@
-import { Message, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
-import { Client, Command } from '../../structures';
+import { Client, Message, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
+import { Command } from '../../structures';
 
 const { env } = process;
 const { DONATE_LINK, GUILD_INVITE } = env;

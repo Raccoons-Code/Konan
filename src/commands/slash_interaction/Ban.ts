@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 export default class Ban extends SlashCommand {
   constructor(client: Client) {

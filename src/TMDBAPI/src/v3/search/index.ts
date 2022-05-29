@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SearchMoviesData, SearchOptions, SearchQueryOptions } from '../@types';
+import { SearchMoviesData, SearchMoviesProps, SearchOptions } from '../@types';
 
 export default class Search {
   apiKey: string;
@@ -9,14 +9,14 @@ export default class Search {
   page: number;
 
   constructor(options: SearchOptions) {
-    this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
+    this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
     this.baseURL = `${options.baseURL}/search`;
     this.include_adult = false;
-    this.language = options.language || 'en-US';
+    this.language = options.language ?? 'en-US';
     this.page = 1;
   }
 
-  async searchMovies(props: SearchQueryOptions): Promise<SearchMoviesData> {
+  async searchMovies(props: SearchMoviesProps): Promise<SearchMoviesData> {
     const { include_adult = this.include_adult,
       language = this.language,
       page = this.page,
@@ -25,7 +25,7 @@ export default class Search {
       region,
       year } = props;
 
-    return await axios.get('/movie', {
+    return axios.get('/movie', {
       baseURL: this.baseURL,
       params: {
         api_key: this.apiKey,

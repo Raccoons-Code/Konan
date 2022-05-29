@@ -1,5 +1,5 @@
-import { Guild } from 'discord.js';
-import { Client, Event } from '../structures';
+import { Client, Guild } from 'discord.js';
+import { Event } from '../structures';
 
 export default class Ready extends Event {
   ytURL = 'https://www.youtube.com/watch?v=';

@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable, MessageEmbed, TextChannel, Util } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable, MessageEmbed, TextChannel, Util } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
-import { Client, SlashCommand } from '../../structures';
+import { SlashCommand } from '../../structures';
 
 export default class ButtonRoles extends SlashCommand {
   constructor(client: Client) {

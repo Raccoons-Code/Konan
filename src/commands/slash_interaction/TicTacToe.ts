@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import TicTacToe from 'discord-tictactoe';
-import { CommandInteraction } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { Client, CommandInteraction } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 export default class extends SlashCommand {
   constructor(client: Client) {

@@ -1,6 +1,6 @@
 import { ContextMenuCommandBuilder } from '@discordjs/builders';
-import { GuildMember, MessageActionRow, MessageButton, MessageEmbed, UserContextMenuInteraction } from 'discord.js';
-import { Client, UserContextMenu } from '../../structures';
+import { Client, GuildMember, MessageActionRow, MessageButton, MessageEmbed, UserContextMenuInteraction } from 'discord.js';
+import { UserContextMenu } from '../../structures';
 
 export default class Avatar extends UserContextMenu {
   constructor(client: Client) {

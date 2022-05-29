@@ -1,6 +1,6 @@
-import { MessageSelectMenu, MessageSelectOptionData, SelectMenuInteraction } from 'discord.js';
+import { Client, MessageSelectMenu, MessageSelectOptionData, SelectMenuInteraction } from 'discord.js';
 import { RolesManager, SelectRolesCustomId, SelectRolesItemOptionValue } from '../../@types';
-import { Client, SelectMenuComponentInteraction } from '../../structures';
+import { SelectMenuComponentInteraction } from '../../structures';
 
 export default class SelectRoles extends SelectMenuComponentInteraction {
   constructor(client: Client) {

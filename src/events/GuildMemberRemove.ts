@@ -1,5 +1,5 @@
-import { GuildMember } from 'discord.js';
-import { Client, Event } from '../structures';
+import { Client, GuildMember } from 'discord.js';
+import { Event } from '../structures';
 
 export default class GuildMemberRemove extends Event {
   constructor(client: Client) {

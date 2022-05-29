@@ -1,8 +1,8 @@
 import { codeBlock, inlineCode, SlashCommandBuilder, time, userMention } from '@discordjs/builders';
 import { stripIndents } from 'common-tags';
-import { CategoryChannel, Channel, CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed, Role, StageChannel, TextChannel, ThreadChannel, version as discordjs_version, VoiceChannel } from 'discord.js';
+import { CategoryChannel, Channel, Client, CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed, Role, StageChannel, TextChannel, ThreadChannel, version as discordjs_version, VoiceChannel } from 'discord.js';
 import ms from 'ms';
-import { Client, SlashCommand } from '../../structures';
+import { SlashCommand } from '../../structures';
 
 const { versions, env } = process;
 const { npm_package_dependencies_discord_js, npm_package_version } = env;

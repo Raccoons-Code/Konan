@@ -1,4 +1,25 @@
-import { Base, Genre } from '.';
+import { Base, Genre, SearchMoviesData } from '.';
+
+export interface MoviesDetailsProps {
+  append_to_response?: string
+  language?: string
+  movie_id: number
+}
+
+export interface MoviesPopularProps {
+  language?: string
+  page?: number
+  region?: string
+}
+
+export interface MoviesPopularData extends SearchMoviesData {
+  dates: Dates
+}
+
+export interface Dates {
+  maximum: string
+  minimum: string
+}
 
 export interface MoviesOptions extends Base {
   language?: string

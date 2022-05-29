@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import JKP from '../../JKP';
-import { Client, SlashCommand } from '../../structures';
+import { SlashCommand } from '../../structures';
 
 export default class Jankenpon extends SlashCommand {
   emoji: { [k: string]: string } = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };

@@ -1,5 +1,5 @@
-import { EmbedFieldData, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, SelectMenuInteraction } from 'discord.js';
-import { Client, SelectMenuComponentInteraction, SlashCommand } from '../../structures';
+import { Client, EmbedFieldData, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, SelectMenuInteraction } from 'discord.js';
+import { SelectMenuComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
 
 const { env } = process;

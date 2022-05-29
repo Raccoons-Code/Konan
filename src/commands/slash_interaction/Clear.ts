@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, TextChannel } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { Client, CommandInteraction, TextChannel } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 export default class Clear extends SlashCommand {
   constructor(client: Client) {

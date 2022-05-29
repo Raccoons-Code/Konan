@@ -5,7 +5,7 @@ export default class Movie {
   baseURL: string;
 
   constructor(options: UtilOptions) {
-    this.apiKey = process.env.TMDB_APIKEY ?? options?.apiKey;
+    this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
     this.baseURL = 'https://www.themoviedb.org/movie';
   }
 

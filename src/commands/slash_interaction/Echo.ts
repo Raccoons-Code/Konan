@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, MessageEmbed, TextChannel } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { Client, CommandInteraction, MessageEmbed, TextChannel } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 const dynamic = true;
 

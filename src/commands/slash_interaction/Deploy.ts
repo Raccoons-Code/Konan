@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction } from 'discord.js';
+import { Client, CommandInteraction } from 'discord.js';
 import Commands from '..';
-import { Client, SlashCommand } from '../../structures';
+import { SlashCommand } from '../../structures';
 
 const { env } = process;
 const { DISCORD_TEST_GUILD_ID, OWNER_ID } = env;

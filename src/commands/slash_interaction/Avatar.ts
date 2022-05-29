@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
-import { Client, SlashCommand } from '../../structures';
+import { Client, CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { SlashCommand } from '../../structures';
 
 export default class Avatar extends SlashCommand {
   constructor(client: Client) {

@@ -1,5 +1,5 @@
-import { NonThreadGuildBasedChannel } from 'discord.js';
-import { Client, Event } from '../structures';
+import { Client, NonThreadGuildBasedChannel } from 'discord.js';
+import { Event } from '../structures';
 
 export default class ChannelDelete extends Event {
   constructor(client: Client) {

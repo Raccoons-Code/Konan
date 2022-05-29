@@ -20,7 +20,7 @@ export interface Genre {
   name: string
 }
 
-export interface SearchGenresOptions {
+export interface SearchGenresProps {
   /**
    * @description Pass a ISO 639-1 value to display translated data for the fields that support it.
    * @minLength 2

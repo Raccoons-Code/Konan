@@ -1,8 +1,8 @@
-import { Collection } from 'discord.js';
+import { Client, Collection } from 'discord.js';
 import { readdirSync, statSync } from 'fs';
 import { GlobSync } from 'glob';
 import { join } from 'path';
-import { Client, Command, SlashCommand } from '../structures';
+import { Command, SlashCommand } from '../structures';
 
 class Commands {
   private client!: Client;

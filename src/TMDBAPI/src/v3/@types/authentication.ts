@@ -25,7 +25,7 @@ export interface Session {
 }
 
 /** url: /session/convert/4?api_key= */
-export type Sessionv4 = Session
+export type SessionV4 = Session
 
 /** url: /token/validate_with_login?api_key= */
 export interface SessionWithLogin {
@@ -38,7 +38,7 @@ export interface SessionProps {
   body: { request_token: string }
 }
 
-export interface Sessionv4Props {
+export interface SessionV4Props {
   body: { access_token: string }
 }
 

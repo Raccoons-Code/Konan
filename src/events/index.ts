@@ -1,7 +1,7 @@
-import { Intents, IntentsString, PartialTypes } from 'discord.js';
+import { Client, Intents, IntentsString, PartialTypes } from 'discord.js';
 import { GlobSync } from 'glob';
 import { join } from 'path';
-import { Client, Event } from '../structures';
+import { Event } from '../structures';
 
 class Events {
   private client!: Client;

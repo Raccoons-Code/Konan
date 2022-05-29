@@ -1,6 +1,6 @@
-import { ButtonInteraction, EmbedFieldData, MessageButton } from 'discord.js';
+import { ButtonInteraction, Client, EmbedFieldData, MessageButton } from 'discord.js';
 import { HelpButtonCustomId } from '../../@types';
-import { ButtonComponentInteraction, Client, SlashCommand } from '../../structures';
+import { ButtonComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
 
 export default class Help extends ButtonComponentInteraction {

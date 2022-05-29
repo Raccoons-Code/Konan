@@ -1,28 +1,28 @@
 import axios from 'axios';
-import { DiscoverMovieOptions, DiscoverOptions, SearchMoviesData } from '../@types';
+import { DiscoverMovieProps, DiscoverOptions, SearchMoviesData } from '../@types';
 
 export default class Discover {
   apiKey: string;
   baseURL: string;
-  include_adult: DiscoverMovieOptions['include_adult'];
-  include_video: DiscoverMovieOptions['include_video'];
-  language: DiscoverMovieOptions['language'];
-  page: DiscoverMovieOptions['page'];
-  sort_by: DiscoverMovieOptions['sort_by'];
-  with_watch_monetization_types: DiscoverMovieOptions['with_watch_monetization_types'];
+  include_adult: DiscoverMovieProps['include_adult'];
+  include_video: DiscoverMovieProps['include_video'];
+  language: DiscoverMovieProps['language'];
+  page: DiscoverMovieProps['page'];
+  sort_by: DiscoverMovieProps['sort_by'];
+  with_watch_monetization_types: DiscoverMovieProps['with_watch_monetization_types'];
 
   constructor(options: DiscoverOptions) {
-    this.apiKey = process.env.TMDB_APIKEY ?? options.apiKey;
+    this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
     this.baseURL = `${options.baseURL}/discover`;
     this.include_adult = options.include_adult ?? false;
     this.include_video = options.include_video ?? false;
-    this.language = options.language || 'en-US';
+    this.language = options.language ?? 'en-US';
     this.page = options.page ?? 1;
-    this.sort_by = options.sort_by || 'popularity.desc';
-    this.with_watch_monetization_types = options.with_watch_monetization_types || 'flatrate';
+    this.sort_by = options.sort_by ?? 'popularity.desc';
+    this.with_watch_monetization_types = options.with_watch_monetization_types ?? 'flatrate';
   }
 
-  async fetchMovies(props: DiscoverMovieOptions = {}): Promise<SearchMoviesData> {
+  async fetchMovies(props: DiscoverMovieProps = {}): Promise<SearchMoviesData> {
     const {
       certification_country,
       certification,
@@ -62,7 +62,7 @@ export default class Discover {
       year,
     } = props;
 
-    return await axios.get('/movie', {
+    return axios.get('/movie', {
       baseURL: this.baseURL,
       params: {
         api_key: this.apiKey,
