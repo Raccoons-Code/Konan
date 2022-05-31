@@ -349,7 +349,7 @@ export default class SelectRoles extends SlashCommand {
     const description = options.getString('item_description')?.slice(0, 100);
     const emoji = <EmojiIdentifierResolvable>options.getString('item_emoji');
     const menu_disabled = <boolean>options.getBoolean('menu_disabled');
-    const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150) || '';
+    const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150) ?? '';
     const role = options.getRole('role', true);
     const label = (options.getString('item_name') ?? role.name).slice(0, 83);
 
@@ -428,7 +428,7 @@ export default class SelectRoles extends SlashCommand {
 
     if (subcommand === 'menu') {
       const menu_disabled = options.getBoolean('menu_disabled');
-      const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150);
+      const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150) ?? '';
 
       message.components.map(row => {
         if (row.components[0].type !== 'SELECT_MENU') return row;
@@ -439,7 +439,7 @@ export default class SelectRoles extends SlashCommand {
           const { disabled, placeholder } = selectmenu;
 
           selectmenu.setDisabled(typeof menu_disabled === 'boolean' ? menu_disabled : disabled)
-            .setPlaceholder(<string>menu_place_holder ?? placeholder);
+            .setPlaceholder(menu_place_holder ?? placeholder);
 
           return selectmenu;
         });
@@ -477,10 +477,26 @@ export default class SelectRoles extends SlashCommand {
         if (row.components[0].type !== 'SELECT_MENU') return row;
 
         row.components.map(selectmenu => {
-          if (selectmenu.customId !== menuId || selectmenu.type !== 'SELECT_MENU') return selectmenu;
+          if (selectmenu.type !== 'SELECT_MENU') return selectmenu;
+
+          if (selectmenu.customId !== menuId) {
+            if (typeof item_default === 'boolean')
+              selectmenu.options.map(option => {
+                option.default = false;
+
+                return option;
+              });
+
+            return selectmenu;
+          }
 
           selectmenu.options.map(option => {
-            if (option.value !== item) return option;
+            if (option.value !== item) {
+              if (typeof item_default === 'boolean')
+                option.default = false;
+
+              return option;
+            }
 
             const { count, d } = <SelectRolesItemOptionValue>JSON.parse(option.value);
 
@@ -491,7 +507,7 @@ export default class SelectRoles extends SlashCommand {
             option.value = role ? JSON.stringify({ count, d: d, roleId: role.id }) : option.value;
 
             return option;
-          });
+          }).sort((a) => a.default ? -1 : 1);
 
           return selectmenu;
         });
@@ -535,11 +551,30 @@ export default class SelectRoles extends SlashCommand {
     const emoji = <EmojiIdentifierResolvable>options.getString('item_emoji');
     const label = (options.getString('item_name') ?? role.name).slice(0, 83);
 
+    if (typeof item_default === 'boolean')
+      message.components.map(row => {
+        if (row.components[0].type !== 'SELECT_MENU') return row;
+
+        row.components.map(selectmenu => {
+          if (selectmenu.type !== 'SELECT_MENU') return selectmenu;
+
+          selectmenu.options.map(option => {
+            option.default = false;
+
+            return option;
+          });
+
+          return selectmenu;
+        });
+
+        return row;
+      });
+
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'menu') {
-      const menu_disabled = <boolean>options.getBoolean('menu_disabled');
-      const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150) || '';
+      const menu_disabled = options.getBoolean('menu_disabled')!;
+      const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150) ?? '';
 
       const selectMenu = new MessageSelectMenu()
         .setCustomId(JSON.stringify({
@@ -695,9 +730,7 @@ export default class SelectRoles extends SlashCommand {
       for (let i = 0; i < messages_array.length; i++) {
         const { embeds, id } = messages_array[i];
 
-        const [embed] = embeds;
-
-        const { title, description } = embed;
+        const { title, description } = embeds[0];
 
         const nameProps = [
           id,

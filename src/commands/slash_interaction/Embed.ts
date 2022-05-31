@@ -23,6 +23,10 @@ export default class Embed extends SlashCommand {
           .setNameLocalizations(this.getLocalizations('embedSendEmbedName'))
           .setDescriptionLocalizations(this.getLocalizations('embedSendEmbedDescription'))
           .setRequired(true))
+        .addAttachmentOption(option => option.setName('attachment')
+          .setDescription('The attachment to send.')
+          .setNameLocalizations(this.getLocalizations('embedSendAttachmentName'))
+          .setDescriptionLocalizations(this.getLocalizations('embedSendAttachmentDescription')))
         .addChannelOption(option => option.setName('channel')
           .setDescription('The channel to send.')
           .setNameLocalizations(this.getLocalizations('embedSendChannelName'))
@@ -31,11 +35,7 @@ export default class Embed extends SlashCommand {
         .addStringOption(option => option.setName('content')
           .setDescription('The content to send.')
           .setNameLocalizations(this.getLocalizations('embedSendContentName'))
-          .setDescriptionLocalizations(this.getLocalizations('embedSendContentDescription')))
-        .addStringOption(option => option.setName('image_url')
-          .setDescription('The image url to send.')
-          .setNameLocalizations(this.getLocalizations('embedSendImageUrlName'))
-          .setDescriptionLocalizations(this.getLocalizations('embedSendImageUrlDescription'))))
+          .setDescriptionLocalizations(this.getLocalizations('embedSendContentDescription'))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('edit')
         .setDescription('Edit an embed.')
         .setNameLocalizations(this.getLocalizations('embedEditName'))
@@ -56,6 +56,10 @@ export default class Embed extends SlashCommand {
             .setDescriptionLocalizations(this.getLocalizations('embedEditEmbedMessageIdDescription'))
             .setAutocomplete(true)
             .setRequired(true))
+          .addAttachmentOption(option => option.setName('attachment')
+            .setDescription('The attachment of the embed.')
+            .setNameLocalizations(this.getLocalizations('embedEditEmbedAttachmentName'))
+            .setDescriptionLocalizations(this.getLocalizations('embedEditEmbedAttachmentDescription')))
           .addStringOption(option => option.setName('embed')
             .setDescription('The embed to edit. Title {0,256} | Description {0,4096}')
             .setNameLocalizations(this.getLocalizations('embedEditEmbedEmbedName'))
@@ -63,11 +67,7 @@ export default class Embed extends SlashCommand {
           .addStringOption(option => option.setName('content')
             .setDescription('The content of the message.')
             .setNameLocalizations(this.getLocalizations('embedEditEmbedContentName'))
-            .setDescriptionLocalizations(this.getLocalizations('embedEditEmbedContentDescription')))
-          .addStringOption(option => option.setName('image_url')
-            .setDescription('The image url of the embed.')
-            .setNameLocalizations(this.getLocalizations('embedEditEmbedImageUrlName'))
-            .setDescriptionLocalizations(this.getLocalizations('embedEditEmbedImageUrlDescription')))));
+            .setDescriptionLocalizations(this.getLocalizations('embedEditEmbedContentDescription')))));
   }
 
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {
@@ -108,7 +108,7 @@ export default class Embed extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const content = options.getString('content')?.slice(0, 4096);
     const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
-    const image_url = <string>options.getString('image_url');
+    const attachment = options.getAttachment('attachment')!;
 
     const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
@@ -123,7 +123,7 @@ export default class Embed extends SlashCommand {
         .setColor('RANDOM')
         .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
         .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
-        .setImage(image_url)
+        .setImage(attachment.url)
         .setTimestamp(Date.now())
         .setTitle(title),
     ];
@@ -156,14 +156,14 @@ export default class Embed extends SlashCommand {
     if (subcommand === 'embed') {
       const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
       const content = options.getString('content')?.slice(0, 4096);
-      const image_url = <string>options.getString('image_url');
+      const attachment = options.getAttachment('attachment')!;
 
       const embeds = [
         new MessageEmbed()
           .setColor('RANDOM')
           .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
           .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
-          .setImage(image_url)
+          .setImage(attachment.url)
           .setTimestamp(Date.now())
           .setTitle(title),
       ];
@@ -211,9 +211,7 @@ export default class Embed extends SlashCommand {
       for (let i = 0; i < messages_array.length; i++) {
         const { embeds, id } = messages_array[i];
 
-        const [embed] = embeds;
-
-        const { title, description } = embed;
+        const { title, description } = embeds[0];
 
         const nameProps = [
           id,
