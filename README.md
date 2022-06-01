@@ -2,6 +2,7 @@
 
 # Konan
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5380af8f02dd4472b95694c9689c4c80)](https://app.codacy.com/gh/Raccoons-Code/Konan?utm_source=github.com&utm_medium=referral&utm_content=Raccoons-Code/Konan&utm_campaign=Badge_Grade_Settings)
 [![Discord Support Server](https://img.shields.io/discord/930290056600641586?label=Discord%20Support%20Server&logo=discord&logoColor=white)](https://discord.gg/YCRyk39Tqt)
 [![Discord Bots](https://top.gg/api/widget/status/930281485301317633.svg)](https://top.gg/bot/930281485301317633)
 [![Discord Bots](https://top.gg/api/widget/servers/930281485301317633.svg?noavatar=true)](https://top.gg/bot/930281485301317633)
