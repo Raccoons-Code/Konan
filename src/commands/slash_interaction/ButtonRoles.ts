@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable, MessageEmbed, TextChannel, Util } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable, MessageEmbed, Permissions, TextChannel, Util } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -13,6 +13,8 @@ export default class ButtonRoles extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('buttonroles')
       .setDescription('Manage button roles.')
+      .setDMPermission(false)
+      .setDefaultMemberPermissions(Permissions.FLAGS.MANAGE_ROLES)
       .setNameLocalizations(this.getLocalizations('buttonrolesName'))
       .setDescriptionLocalizations(this.getLocalizations('buttonrolesDescription'))
       .addSubcommand(subcommand => subcommand.setName('setup')
@@ -205,7 +207,10 @@ export default class ButtonRoles extends SlashCommand {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
-        content: this.t('missingUserPermission', { locale, permission: userPerms[0] }),
+        content: this.t('missingUserPermission', {
+          locale,
+          permission: this.t(userPerms[0], { locale }),
+        }),
         ephemeral: true,
       });
     }

@@ -8,13 +8,14 @@ const { DISCORD_TEST_GUILD_ID, OWNER_ID } = env;
 
 export default class Deploy extends SlashCommand {
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      ownerOnly: true,
+    });
 
     this.data = new SlashCommandBuilder().setName('deploy')
       .setDescription('Deploy commands (Restricted for bot\'owners).')
       .setNameLocalizations(this.getLocalizations('deployName'))
       .setDescriptionLocalizations(this.getLocalizations('deployDescription'))
-      .setDefaultPermission(false)
       .addStringOption(option => option.setName('type')
         .setDescription('The type of deploy.')
         .setNameLocalizations(this.getLocalizations('deployTypeOptionName'))
@@ -62,9 +63,7 @@ export default class Deploy extends SlashCommand {
 
       const command_data = command.data.toJSON();
 
-      if (command_data.default_permission === false) {
-        command_data.default_permission = true;
-
+      if (command.props?.ownerOnly) {
         data_private.push(command_data);
 
         continue;

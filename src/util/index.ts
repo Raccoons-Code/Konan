@@ -14,6 +14,7 @@ import keyGen from './keyGen';
 import mathRandom from './mathRandom';
 import parseJSON from './parseJSON';
 import pattern from './pattern';
+import randomizeArray from './randomizeArray';
 import removeDuplicatesInArray from './removeDuplicatesInArray';
 import removeFromArray from './removeFromArray';
 import splitArrayInGroups from './splitArrayInGroups';
@@ -39,6 +40,7 @@ export default class Util {
   static mathRandom = mathRandom;
   static parseJSON = parseJSON;
   static pattern = pattern;
+  static randomizeArray = randomizeArray;
   static removeDuplicatesInArray = removeDuplicatesInArray;
   static removeFromArray = removeFromArray;
   static splitArrayInGroups = splitArrayInGroups;

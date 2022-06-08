@@ -2,7 +2,7 @@
 
 # Commands
 
-Last modified: April 30, 2022
+Last modified: June 5, 2022
 
 ## Application Commands (/) - 24
 
@@ -16,8 +16,8 @@ Last modified: April 30, 2022
 
 #### help [`command`]
 
-> Replies with Help!
-- [`command`]: Select a command - `Autocomplete`
+> Show the help message.
+- [`command`]: The command to show the help message for. - `Autocomplete`
 
 ---
 
@@ -26,16 +26,16 @@ Last modified: April 30, 2022
 #### guess <`number`>
 
 > You have 10 chances to guess the number from 1 to 100 that the bot set.
-- <`number`>: Integer - `Autocomplete`
+- <`number`>: Guess a number. - `Autocomplete`
 
 #### jankenpon {`game`  | `spock`}
 
-> Play a game of Jankenpon with your opponent.
+> Play a game of Jankenpon with your friends
 
-- {`game`}: Play a game of Jankenpon with your friends!
+- {`game`}: The normal game to play.
 
   - {`single`}: Human vs machine.
-    - <`jankenpon`>: Jankenpon.
+    - <`jankenpon`>: The jankenpon to play.
 
   - {`multiplayer`}: Human vs human.
     - <`opponent`>: Choose your opponent.
@@ -43,15 +43,15 @@ Last modified: April 30, 2022
 - {`spock`}: A Spock version of Jankenpon.
 
   - {`single`}: Human vs machine.
-    - <`jankenpon`>: Jankenpon.
+    - <`jankenpon`>: The jankenpon to play.
 
   - {`multiplayer`}: Human vs human.
     - <`opponent`>: Choose your opponent.
 
 #### tictactoe [`opponent`]
 
-> Play a game of TicTacToe with your friends! - Powered by Discord TicTacToe.
-- [`opponent`]: Choose your opponent
+> Play a game of Tic Tac Toe with your friends! - Powered by Discord TicTacToe.
+- [`opponent`]: Choose an opponent.
 
 ---
 
@@ -59,36 +59,36 @@ Last modified: April 30, 2022
 
 #### echo <`message`>
 
-> Replies with your message!
+> Echo your message.
 - <`message`>: Message to echo back.
 
 #### movies {`list`  | `search`}
 
 > Search, list and see details of movies.
 
-- {`list`}: List movies.
-  - [`page`]: Page number.
+- {`list`}: List all movies.
+  - [`page`]: The page of the list.
 
-- {`search`}: Search movies.
-  - <`keyword`>: Search keyword. - `Autocomplete`
+- {`search`}: Search the movies.
+  - <`keyword`>: The keyword to search. - `Autocomplete`
 
 #### news [`category`] [`language`] [`journal`] [`new`]
 
 > Show news from a journal. Use `/news [category | language] <journal> <new>`
 - [`category`]: Category of the journal. - `Autocomplete`
 - [`language`]: Language of the journal. - `Autocomplete`
-- [`journal`]: Journal to show news from. - `Autocomplete`
-- [`new`]: New to search. Select a journal before. - `Autocomplete`
+- [`journal`]: Journal to show the news from. - `Autocomplete`
+- [`new`]: Show the new. Select a journal before. - `Autocomplete`
 
 #### random [`type`]
 
 > Replies with random images.
-- [`type`]: Select a type
+- [`type`]: Select the type of the random image.
 
 #### say <`message`>
 
 > Say something in TTS. - Powered by Google TTS.
-- <`message`>: The message to say
+- <`message`>: The message to say.
 
 ---
 
@@ -98,163 +98,164 @@ Last modified: April 30, 2022
 
 > Bans a user from the server.
 
-- {`single`}: Bans a user from the server.
-  - <`user`>: The user to be banned.
+- {`single`}: Bans a user.
+  - <`user`>: Select a user to ban.
   - [`delete_messages`]: How much of that person's message history should be deleted.
-  - [`reason`]: The reason for banishment, if any.
+  - [`reason`]: The reason for the ban.
 
 - {`chunk`}: Bans a chunk of users from the server.
-  - <`users`>: The list of users to ban.
+  - <`users`>: Input a chunk of users to ban.
   - [`delete_messages`]: How much of that person's message history should be deleted.
-  - [`reason`]: The reason for the ban, if any.
+  - [`reason`]: The reason for the ban.
 
 #### buttonroles {`setup`  | `edit`  | `add`  | `remove`}
 
-> A command to create a button role.
+> Manage button roles.
 
 - {`setup`}: Create a button role.
-  - <`role`>: Role.
-  - [`text`]: Text: Title {0,256} | Description {0,4096} - default: ButtonRoles
-  - [`button_name`]: Button name {0,63} - default: <role>
-  - [`button_emoji`]: Button emoji
-  - [`button_disabled`]: Set disabled - default: false
-  - [`button_style`]: Button style - default: PRIMARY
-  - [`channel`]: Channel - default: <current channel>
+  - <`role`>: Select the role to use.
+  - [`text`]: The text of the button. Title {0,256} | Description {0,4096} - default: ButtonRoles
+  - [`button_name`]: The name of the button. Button name {0,63} - default: <role>
+  - [`button_emoji`]: The emoji of the button.
+  - [`button_disabled`]: Whether the button is disabled.
+  - [`button_style`]: Select the style of the button. default: PRIMARY
+  - [`channel`]: Select the channel. default: <current channel>
 
 - {`edit`}: Edit a button role.
 
   - {`message`}: Edit a text in a Button role.
-    - <`channel`>: Select a channel
+    - <`channel`>: Select the channel.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`text`>: Text: Title {1,256} | Description {0,4096}
+    - <`text`>: Input new text. Title {0,256} | Description {0,4096}
 
   - {`button`}: Edit a button in a Button role.
-    - <`channel`>: Select a channel
+    - <`channel`>: Select the channel.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`button`>: Button - `Autocomplete`
-    - [`role`]: Select a role
-    - [`button_name`]: Button name {0,63}
-    - [`button_style`]: Button style
-    - [`button_emoji`]: Button emoji
-    - [`button_disabled`]: Set disabled
+    - <`button`>: Select the button. - `Autocomplete`
+    - [`role`]: Select a new role.
+    - [`button_name`]: Input a new name. {0,63}
+    - [`button_style`]: Select a new style.
+    - [`button_emoji`]: Input a new emoji.
+    - [`button_disabled`]: Whether the button is disabled.
 
 - {`add`}: Add to Button role.
 
-  - {`button`}: Add a new button in a Button role
-    - <`channel`>: Select a channel
+  - {`button`}: Add a new button in a Button role.
+    - <`channel`>: Select the channel.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`role`>: Select a role
-    - [`button_name`]: Button name {0,63} - default: <role>
-    - [`button_style`]: Button style - default: PRIMARY
-    - [`button_emoji`]: Button emoji
-    - [`button_disabled`]: Set disabled - default: false
+    - <`role`>: Select the role.
+    - [`button_name`]: Input the name of the button. {0,63} - default: <role>
+    - [`button_style`]: Select the style of the button. default: PRIMARY
+    - [`button_emoji`]: Input the emoji of the button.
+    - [`button_disabled`]: Whether the button is disabled.
 
 - {`remove`}: Remove from a Button role.
 
-  - {`button`}: Remove a button from a Button role
-    - <`channel`>: Select a channel
+  - {`button`}: Remove a button from a Button role.
+    - <`channel`>: Select the channel.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`button`>: Button - `Autocomplete`
+    - <`button`>: Select the button. - `Autocomplete`
 
 #### clear <`amount`> [`channel`]
 
 > Deletes up to 1000 channel messages at once.
-- <`amount`>: Amount of messages.
+- <`amount`>: The amount of messages to delete.
 - [`channel`]: Select a channel to clear.
 
 #### kick <`user`> [`reason`]
 
 > Kicks a user from the server.
 - <`user`>: The user to kick.
-- [`reason`]: Reason for kick.
+- [`reason`]: The reason to kick.
 
 #### selectroles {`setup`  | `edit`  | `add`  | `remove`}
 
-> A command to create a select menu for roles.
+> Manage roles with a select menu.
 
-- {`setup`}: Create a select menu for roles.
-  - <`role`>: Role.
-  - [`item_name`]: Item name {0,83} - default: <role>
-  - [`item_description`]: Item description {0,100}
+- {`setup`}: Create a select menu.
+  - <`role`>: Select a role to add to the select menu.
+  - [`item_name`]: The name of the item. {0,83} - default: <role>
+  - [`item_description`]: The description of the item. {0,100}
   - [`item_default`]: Used to always add this role with other roles.
-  - [`item_emoji`]: Item emoji
-  - [`menu_disabled`]: Set menu disabled - default: false
-  - [`menu_place_holder`]: Menu place holder {0,150}
-  - [`text`]: Text: Title {0,256} | Description {0,4096} - default: SelectRoles
-  - [`channel`]: Channel - default: <current channel>
+  - [`item_emoji`]: The emoji of the item.
+  - [`menu_disabled`]: Whether the setup is disabled.
+  - [`menu_place_holder`]: The placeholder of the menu. {0,150}
+  - [`text`]: The channel of the setup. Title {0,256} | Description {0,4096} - default: SelectRoles
+  - [`channel`]: The channel of the setup. default: <current channel>
 
-- {`edit`}: Edit a select menu for roles.
+- {`edit`}: Edit the Select roles.
 
-  - {`message`}: Edit a text in a Select menu role.
-    - <`channel`>: Select a channel
+  - {`message`}: Edit a text in a Select role.
+    - <`channel`>: Select the channel of the message.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`text`>: Text: Title {0,256} | Description {0,4096}
+    - <`text`>: The text of the message. Title {0,256} | Description {0,4096}
 
-  - {`menu`}: Edit a select menu.
-    - <`channel`>: Select a channel
+  - {`menu`}: Edit a select menu.Edit the menu of the Select roles.
+    - <`channel`>: Select the channel of the menu.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`menu`>: Select menu - `Autocomplete`
-    - [`menu_disabled`]: Set menu disabled
-    - [`menu_place_holder`]: Menu place holder {0,150}
+    - <`menu`>: Select the menu. - `Autocomplete`
+    - [`menu_disabled`]: Whether the menu is disabled.
+    - [`menu_place_holder`]: The place holder of the menu. {0,150}
 
-  - {`item`}: Edit a select menu item.
-    - <`channel`>: Select a channel
+  - {`item`}: Edit the item of the Select roles.
+    - <`channel`>: Select the channel of the item.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`menu`>: Select a menu. - `Autocomplete`
-    - <`item`>: Select a menu item. - `Autocomplete`
-    - [`role`]: Select a role
-    - [`item_name`]: Item name {0,83}
-    - [`item_description`]: Item description {0,100}
+    - <`menu`>: Select the menu of the item. - `Autocomplete`
+    - <`item`>: Select the item. - `Autocomplete`
+    - [`role`]: Select a new role.
+    - [`item_name`]: Input a new name for the item. {0,83}
+    - [`item_description`]: Input a new description for the item. {0,100}
     - [`item_default`]: Used to always add this role with other roles.
-    - [`item_emoji`]: Item emoji
+    - [`item_emoji`]: Input a new emoji for the item.
 
-- {`add`}: Add to Select menu.
+- {`add`}: Add to the Select roles.
 
-  - {`menu`}: Add a Select menu.
-    - <`channel`>: Select a channel
+  - {`menu`}: Add a menu to the Select roles.
+    - <`channel`>: Select the channel of the menu.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`role`>: Role.
-    - [`item_name`]: Item name {0,83} - default: <role>
-    - [`item_description`]: Item description {0,100}
+    - <`role`>: Select a role to add to the menu.
+    - [`item_name`]: The name of the item. {0,83} - default: <role>
+    - [`item_description`]: The description of the item. {0,100}
     - [`item_default`]: Used to always add this role with other roles.
-    - [`item_emoji`]: Item emoji
-    - [`menu_disabled`]: Set menu disabled - default: false
-    - [`menu_place_holder`]: Menu place holder {0,150}
+    - [`item_emoji`]: The emoji of the item.
+    - [`menu_disabled`]: Whether the menu is disabled.
+    - [`menu_place_holder`]: The place holder of the menu. {0,150}
 
-  - {`item`}: Add a item in a Select menu.
-    - <`channel`>: Select a channel
+  - {`item`}: Add an item to the Select roles.
+    - <`channel`>: Select the channel of the item.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`menu`>: Select a menu. - `Autocomplete`
-    - <`role`>: Select a role
-    - [`item_name`]: Item name {0,83} - default: <role>
-    - [`item_description`]: Item description {0,100}
-    - [`item_emoji`]: Item emoji
+    - <`menu`>: Select the menu of the item. - `Autocomplete`
+    - <`role`>: Select a role to add to the item.
+    - [`item_name`]: The name of the item. {0,83} - default: <role>
+    - [`item_description`]: The description of the item. {0,100}
+    - [`item_default`]: Used to always add this role with other roles.
+    - [`item_emoji`]: The emoji of the item.
 
-- {`remove`}: Remove from a Select menu.
+- {`remove`}: Remove from the Select roles.
 
-  - {`menu`}: Remove a Select menu.
-    - <`channel`>: Select a channel
+  - {`menu`}: Remove a menu from the Select roles.
+    - <`channel`>: Select the channel of the menu.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`menu`>: Select a menu. - `Autocomplete`
+    - <`menu`>: Select the menu to remove. - `Autocomplete`
 
-  - {`item`}: Remove a item in a Select menu.
-    - <`channel`>: Select a channel
+  - {`item`}: Remove an item from the Select roles.
+    - <`channel`>: Select the channel of the item.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`menu`>: Select a menu. - `Autocomplete`
-    - <`item`>: Select a menu item. - `Autocomplete`
+    - <`menu`>: Select the menu of the item. - `Autocomplete`
+    - <`item`>: Select the item to remove. - `Autocomplete`
 
 #### timeout <`user`> <`time`> [`reason`]
 
-> Temporarily mutes a user.
-- <`user`>: The user to timeout.
-- <`time`>: Time to timeout the user.
-- [`reason`]: Reason for timeout.
+> Temporarily mute a user.
+- <`user`>: The user to mute.
+- <`time`>: The time to mute the user for.
+- [`reason`]: The reason to mute the user.
 
 #### unban <`user`> [`reason`]
 
-> Revokes the ban from the selected user.
+> Revoke a user's ban.
 - <`user`>: User ID - `Autocomplete`
-- [`reason`]: Reason to unban
+- [`reason`]: The reason to unban.
 
 ---
 
@@ -263,7 +264,7 @@ Last modified: April 30, 2022
 #### avatar [`user`]
 
 > Replies with the user's profile picture.
-- [`user`]: Select user.
+- [`user`]: Select a user to get their profile picture.
 
 #### backup {`create`  | `delete`  | `list`  | `restore`  | `update`}
 
@@ -274,57 +275,57 @@ Last modified: April 30, 2022
 - {`delete`}: If you are on a server, you will manage server backups.
 
   - {`server`}: Delete backups from a server.
-    - <`id`>: Server ID - `Autocomplete`
+    - <`id`>: The id of the server to delete. - `Autocomplete`
 
-  - {`backup`}: Delete backup.
-    - <`key`>: Backup key - `Autocomplete`
+  - {`backup`}: Delete a backup.
+    - <`key`>: The key of the backup to delete. - `Autocomplete`
 
 - {`list`}: If you are on a server, this shows the backups for that server.
 
 - {`restore`}: If you are on a server, you will manage server backups.
 
-  - {`backup`}: Restore server
-    - <`key`>: Backup key - `Autocomplete`
-    - [`clear_server`]: Clear server before restore?
+  - {`backup`}: Restore a backup.
+    - <`key`>: The key of the backup to restore. - `Autocomplete`
+    - [`clear_server`]: Clear the server before restoring?
 
-- {`update`}: Update a backup of server. Only on server!
-  - <`key`>: Backup key - `Autocomplete`
+- {`update`}: Update a backup. Only on server!
+  - <`key`>: The key of the backup to update. - `Autocomplete`
 
 #### embed {`send`  | `edit`}
 
-> Send a embed message
+> Send a embed message.
 
-- {`send`}: Send a message
-  - <`embed`>: Set embed: Title {0,256} | Description {0,4096}
-  - [`channel`]: Select a channel
-  - [`content`]: Set content
-  - [`image_url`]: Image URL
+- {`send`}: Send an embed.
+  - <`embed`>: The embed to send. Title {0,256} | Description {0,4096}
+  - [`attachment`]: The attachment to send.
+  - [`channel`]: The channel to send.
+  - [`content`]: The content to send.
 
-- {`edit`}: Edit
+- {`edit`}: Edit an embed.
 
-  - {`embed`}: Edit a embed.
-    - <`channel`>: Select a channel
+  - {`embed`}: Edit an embed.
+    - <`channel`>: The channel of the embed.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - [`embed`]: Set embed: Title {0,256} | Description {0,4096}
-    - [`content`]: Set content
-    - [`image_url`]: Image URL
+    - [`attachment`]: The attachment of the embed.
+    - [`embed`]: The embed to edit. Title {0,256} | Description {0,4096}
+    - [`content`]: The content of the message.
 
 #### info {`application`  | `channel`  | `role`  | `server`  | `user`}
 
-> Server or user info.
+> Show the info message.
 
-- {`application`}: Bot info.
+- {`application`}: Show the bot info.
 
-- {`channel`}: Channel info.
-  - [`channel`]: Select channel.
+- {`channel`}: Show the channel info.
+  - [`channel`]: Select a channel to show the info for.
 
 - {`role`}: Role info.
-  - <`role`>: Select role.
+  - <`role`>: Select a role to show the info for.
 
-- {`server`}: Server info.
+- {`server`}: Show the server info.
 
-- {`user`}: User info.
-  - [`user`]: Select user.
+- {`user`}: Show the user info.
+  - [`user`]: Select a user to show the info for.
 
 #### number_is_prime <`number`>
 
@@ -345,5 +346,5 @@ Last modified: April 30, 2022
 #### party <`activity`> [`channel`]
 
 > Create an activity party together - Powered by Discord Together.
-- <`activity`>: Select activity. - `Autocomplete`
+- <`activity`>: Select an activity. - `Autocomplete`
 - [`channel`]: Select a voice channel.

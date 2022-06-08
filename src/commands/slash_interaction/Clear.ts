@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, TextChannel } from 'discord.js';
+import { Client, CommandInteraction, Permissions, TextChannel } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Clear extends SlashCommand {
@@ -12,6 +12,8 @@ export default class Clear extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('clear')
       .setDescription('Deletes up to 1000 channel messages at once.')
+      .setDMPermission(false)
+      .setDefaultMemberPermissions(Permissions.FLAGS.MANAGE_MESSAGES)
       .setNameLocalizations(this.getLocalizations('clearName'))
       .setDescriptionLocalizations(this.getLocalizations('clearDescription'))
       .addIntegerOption(option => option.setName('amount')
@@ -45,7 +47,7 @@ export default class Clear extends SlashCommand {
     if (userPerms.length)
       return await interaction.editReply(this.t('missingUserChannelPermission', {
         locale,
-        permission: userPerms[0],
+        permission: this.t(userPerms[0], { locale }),
       }));
 
     const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
@@ -53,7 +55,7 @@ export default class Clear extends SlashCommand {
     if (clientPerms?.length)
       return await interaction.editReply(this.t('missingChannelPermission', {
         locale,
-        permission: clientPerms[0],
+        permission: this.t(clientPerms[0], { locale }),
       }));
 
     const limit = options.getInteger('amount', true);

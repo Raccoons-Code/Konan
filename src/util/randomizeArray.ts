@@ -1,0 +1,1 @@
+export = <T = any>(array: T[]) => array.sort(() => Math.random() - 0.5);

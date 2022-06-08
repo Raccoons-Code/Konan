@@ -33,9 +33,7 @@ const rest = new REST().setToken(DISCORD_TOKEN);
 
     const command_data = command.data.toJSON();
 
-    if (command_data.default_permission === false) {
-      command_data.default_permission = true;
-
+    if (command.props?.ownerOnly) {
       data_private.push(command_data);
 
       continue;

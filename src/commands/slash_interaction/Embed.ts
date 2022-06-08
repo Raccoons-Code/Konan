@@ -87,7 +87,10 @@ export default class Embed extends SlashCommand {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
-        content: this.t('missingUserPermission', { locale, permission: userPerms[0] }),
+        content: this.t('missingUserPermission', {
+          locale,
+          permission: this.t(userPerms[0], { locale }),
+        }),
         ephemeral: true,
       });
     }
@@ -115,7 +118,7 @@ export default class Embed extends SlashCommand {
     if (clientPerms?.length)
       return await interaction.editReply(this.t('missingChannelPermission', {
         locale,
-        permission: clientPerms[0],
+        permission: this.t(clientPerms[0], { locale }),
       }));
 
     const embeds = [

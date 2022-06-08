@@ -17,8 +17,8 @@
   // }
   "Class event": {
     "body": [
-      "import { $3 } from 'discord.js';",
-      "import { Client, Event } from '../structures';",
+      "import { Client, $3 } from 'discord.js';",
+      "import { Event } from '../structures';",
       "",
       "export default class$4 extends Event {",
       "  constructor(client: Client) {",
@@ -38,8 +38,8 @@
   },
   "Class button component": {
     "body": [
-      "import { ButtonInteraction } from 'discord.js';",
-      "import { ButtonComponentInteraction, Client } from '../../structures';",
+      "import { ButtonInteraction, Client } from 'discord.js';",
+      "import { ButtonComponentInteraction } from '../../structures';",
       "",
       "export default class$3 extends ButtonComponentInteraction {",
       "  constructor(client: Client) {",
@@ -61,8 +61,8 @@
   "Class menu message context": {
     "body": [
       "import { ContextMenuCommandBuilder } from '@discordjs/builders';",
-      "import { MessageContextMenuInteraction } from 'discord.js';",
-      "import { Client, MessageContextMenu } from '../../structures';",
+      "import { Client, MessageContextMenuInteraction } from 'discord.js';",
+      "import { MessageContextMenu } from '../../structures';",
       "",
       "export default class$2 extends MessageContextMenu {",
       "  constructor(client: Client) {",
@@ -84,8 +84,8 @@
   "Class menu user context": {
     "body": [
       "import { ContextMenuCommandBuilder } from '@discordjs/builders';",
-      "import { UserContextMenuInteraction } from 'discord.js';",
-      "import { Client, UserContextMenu } from '../../structures';",
+      "import { Client, UserContextMenuInteraction } from 'discord.js';",
+      "import { UserContextMenu } from '../../structures';",
       "",
       "export default class$2 extends UserContextMenu {",
       "  constructor(client: Client) {",
@@ -106,8 +106,8 @@
   },
   "Class message command": {
     "body": [
-      "import { Message } from 'discord.js';",
-      "import { Client, Command } from '../../structures';",
+      "import { Client, Message } from 'discord.js';",
+      "import { Command } from '../../structures';",
       "",
       "export default class$3 extends Command {",
       "  constructor(client) {",
@@ -128,8 +128,8 @@
   },
   "Class select component": {
     "body": [
-      "import { SelectMenuInteraction } from 'discord.js';",
-      "import { Client, SelectMenuComponentInteraction } from '../../structures';",
+      "import { Client, SelectMenuInteraction } from 'discord.js';",
+      "import { SelectMenuComponentInteraction } from '../../structures';",
       "",
       "export default class$3 extends SelectMenuComponentInteraction {",
       "  constructor(client: Client) {",
@@ -151,8 +151,8 @@
   "Class slash command": {
     "body": [
       "import { SlashCommandBuilder } from '@discordjs/builders';",
-      "import { CommandInteraction } from 'discord.js';",
-      "import { Client, SlashCommand } from '../../structures';",
+      "import { Client, CommandInteraction } from 'discord.js';",
+      "import { SlashCommand } from '../../structures';",
       "",
       "export default class$4 extends SlashCommand {",
       "  constructor(client: Client) {",

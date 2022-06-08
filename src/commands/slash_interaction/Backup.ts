@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import Backup from 'discord-backup';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, Guild, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, Guild, MessageEmbed, Permissions } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class extends SlashCommand {
@@ -13,6 +13,7 @@ export default class extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('backup')
       .setDescription('Make backup for your server - Powered by Discord Backup.')
+      .setDefaultMemberPermissions(Permissions.FLAGS.ADMINISTRATOR)
       .setNameLocalizations(this.getLocalizations('backupName'))
       .setDescriptionLocalizations(this.getLocalizations('backupDescription'))
       .addSubcommand(subcommand => subcommand.setName('create')
@@ -86,7 +87,10 @@ export default class extends SlashCommand {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
-        content: this.t('missingUserPermission', { locale, permission: userPerms[0] }),
+        content: this.t('missingUserPermission', {
+          locale,
+          permission: this.t(userPerms[0], { locale }),
+        }),
         ephemeral: true,
       });
     }
@@ -112,7 +116,10 @@ export default class extends SlashCommand {
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
+      return await interaction.editReply(this.t('missingPermission', {
+        locale,
+        permission: this.t(clientPerms[0], { locale }),
+      }));
 
     const dbUser = await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
@@ -248,7 +255,10 @@ export default class extends SlashCommand {
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
+      return await interaction.editReply(this.t('missingPermission', {
+        locale,
+        permission: this.t(clientPerms[0], { locale }),
+      }));
 
     const key = options.getString('key', true);
 
@@ -264,7 +274,7 @@ export default class extends SlashCommand {
     await interaction.editReply(`${this.t('restoring'), { locale }}...`);
 
     try {
-      await Backup.load(<string>data, guild, {
+      await Backup.load(<string>data, <any>guild, {
         clearGuildBeforeRestore: clear,
         maxMessagesPerChannel: premium ? 20 : 0,
       });
@@ -286,7 +296,10 @@ export default class extends SlashCommand {
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
+      return await interaction.editReply(this.t('missingPermission', {
+        locale,
+        permission: this.t(clientPerms[0], { locale }),
+      }));
 
     const key = options.getString('key', true);
 
@@ -424,7 +437,7 @@ export default class extends SlashCommand {
   async createBackup(guild: Guild, options: { premium: boolean }) {
     const { premium } = options;
 
-    return await Backup.create(guild, {
+    return await Backup.create(<any>guild, {
       jsonBeautify: false,
       jsonSave: false,
       maxMessagesPerChannel: premium ? 20 : 0,
@@ -442,8 +455,8 @@ export default class extends SlashCommand {
       return await this.prisma.backup.create({
         data: { id: data.id, data, guildId: id, premium, userId: ownerId },
       });
-    } catch {
-      return;
+    } catch (e) {
+      return console.log(e);
     }
   }
 
@@ -459,8 +472,8 @@ export default class extends SlashCommand {
         data: { id, userId: ownerId, backups: { create: { id: data.id, data, premium, userId: ownerId } } },
         include: { backups: { where: { id: data.id } } },
       });
-    } catch {
-      return;
+    } catch (e) {
+      return console.log(e);
     }
   }
 
@@ -481,8 +494,8 @@ export default class extends SlashCommand {
         },
         include: { backups: { where: { id: data.id } } },
       });
-    } catch {
-      return;
+    } catch (e) {
+      return console.log(e);
     }
   }
 
@@ -498,8 +511,8 @@ export default class extends SlashCommand {
         where: { id: key },
         data: { id: data.id, data, guildId: id, premium, userId: ownerId },
       });
-    } catch {
-      return;
+    } catch (e) {
+      return console.log(e);
     }
   }
 }

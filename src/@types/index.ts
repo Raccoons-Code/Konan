@@ -1,6 +1,9 @@
 import { AutocompleteInteraction, ButtonInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuInteraction, IntentsString, Interaction, MessageComponentInteraction, MessageContextMenuInteraction, ModalSubmitInteraction, PartialTypes, PermissionString, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
 import { ButtonComponentInteraction, Command, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
+export * from './customid';
+export * from './quickdb';
+
 export interface ApplicationCommandsCollection {
   [k: string]: Collection<string, Interaction & (
     AutocompleteInteraction |
@@ -11,24 +14,6 @@ export interface ApplicationCommandsCollection {
     SelectMenuInteraction |
     UserContextMenuInteraction
   )>
-}
-
-export interface BanCustomId extends BaseComponentCustomId {
-  a: boolean
-}
-
-export interface BaseComponentCustomId {
-  /** command */
-  c: string
-  /** subcommand */
-  sc: string
-}
-
-export interface ButtonRolesCustomId extends BaseComponentCustomId {
-  count: number
-  /** date */
-  d: number
-  roleId: string
 }
 
 export type CategoryTypes = 'Fun' | 'Game' | 'General' | 'Moderation' | 'Utility';
@@ -85,22 +70,6 @@ export interface EventData {
   permissions?: PermissionString[]
 }
 
-export interface HelpButtonCustomId extends BaseComponentCustomId {
-  /** Commands by category */
-  cbc: string
-  /** page */
-  p: number
-}
-
-export interface JkpCustomId extends BaseComponentCustomId {
-  /** players id */
-  p: string[]
-  /** value */
-  v: number
-}
-
-export type InfoCustomId = BaseComponentCustomId
-
 export type InteractionTypes =
   AutocompleteInteraction |
   CommandInteraction |
@@ -114,16 +83,6 @@ export interface FetchStatsOptions {
   loop?: boolean
 }
 
-export interface MoviesCustomId extends BaseComponentCustomId {
-  /** date */
-  d: number
-  /** offset */
-  o: number
-  /** page */
-  p: number
-  target: number
-}
-
 export interface PrimeResolveOptions {
   all?: boolean
 }
@@ -132,12 +91,6 @@ export interface RolesManager {
   add: string[]
   default?: string
   remove: string[]
-}
-
-export interface SelectRolesCustomId extends BaseComponentCustomId {
-  count: number
-  /** date */
-  d: number
 }
 
 export interface SelectRolesItemOptionValue {
@@ -150,6 +103,7 @@ export interface SelectRolesItemOptionValue {
 export interface SlashCommandProps {
   category?: CategoryTypes;
   clientPermissions?: PermissionString[]
+  ownerOnly?: boolean
   userPermissions?: PermissionString[]
 }
 

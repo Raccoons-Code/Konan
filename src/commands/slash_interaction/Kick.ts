@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction } from 'discord.js';
+import { Client, CommandInteraction, Permissions } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Kick extends SlashCommand {
@@ -12,6 +12,8 @@ export default class Kick extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('kick')
       .setDescription('Kicks a user from the server.')
+      .setDMPermission(false)
+      .setDefaultMemberPermissions(Permissions.FLAGS.KICK_MEMBERS)
       .setNameLocalizations(this.getLocalizations('kickName'))
       .setDescriptionLocalizations(this.getLocalizations('kickDescription'))
       .addUserOption(option => option.setName('user')
@@ -38,12 +40,18 @@ export default class Kick extends SlashCommand {
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length)
-      return await interaction.editReply(this.t('missingUserPermission', { locale, permission: userPerms[0] }));
+      return await interaction.editReply(this.t('missingUserPermission', {
+        locale,
+        permission: this.t(userPerms[0], { locale }),
+      }));
 
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', { locale, permission: clientPerms[0] }));
+      return await interaction.editReply(this.t('missingPermission', {
+        locale,
+        permission: this.t(clientPerms[0], { locale }),
+      }));
 
     const member = options.getMember('user', true);
 

@@ -2,6 +2,7 @@
 
 # ignore average files with this pattern
 **/.ignore.*
+/test.ts
 
 # build
 build

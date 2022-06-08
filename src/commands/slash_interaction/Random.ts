@@ -65,7 +65,10 @@ export default class Random extends SlashCommand {
 
     if (clientPerms?.length)
       return await interaction.reply({
-        content: this.t('missingChannelPermission', { locale, permission: clientPerms[0] }),
+        content: this.t('missingChannelPermission', {
+          locale,
+          permission: this.t(clientPerms[0], { locale }),
+        }),
         ephemeral: true,
       });
 

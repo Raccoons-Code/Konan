@@ -17,7 +17,7 @@ export default class WatchTogether extends SlashCommand {
     });
 
     if (client) {
-      this.discordTogether = new DiscordTogether(client);
+      this.discordTogether = new DiscordTogether(<any>client);
       this.applications = Object.keys(this.discordTogether.applications);
       client.discordTogether = this.discordTogether;
     }
@@ -65,7 +65,10 @@ export default class WatchTogether extends SlashCommand {
 
     if (clientPerms?.length)
       return await interaction.reply({
-        content: `${member}, ${this.t('missingChannelPermission', { locale, permission: clientPerms[0] })}`,
+        content: `${member}, ${this.t('missingChannelPermission', {
+          locale,
+          permission: this.t(clientPerms[0], { locale }),
+        })}`,
         ephemeral: true,
       });
 

@@ -7,13 +7,15 @@ const { OWNER_ID } = env;
 
 export default class Respawn extends SlashCommand {
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      ownerOnly: true,
+    });
 
     this.data = new SlashCommandBuilder().setName('respawn')
       .setDescription('Respawn application (Restricted for bot\'owners).')
       .setNameLocalizations(this.getLocalizations('respawnName'))
       .setDescriptionLocalizations(this.getLocalizations('respawnDescription'))
-      .setDefaultPermission(false);
+      .setDefaultMemberPermissions(null);
   }
 
   async execute(interaction: CommandInteraction) {

@@ -1,7 +1,10 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEmbed } from 'discord.js';
-import db from 'quick.db';
+import { QuickDB } from 'quick.db';
+import { GuessGameData } from '../../@types';
 import { SlashCommand } from '../../structures';
+
+const quickDb = new QuickDB();
 
 export default class Guess extends SlashCommand {
   constructor(client: Client) {
@@ -39,10 +42,10 @@ export default class Guess extends SlashCommand {
         .setTitle(this.t('guessNumber', { locale })),
     ];
 
-    if (!db.has(`${guildId}.${author.id}.guess`))
-      db.set(`${guildId}.${author.id}.guess`, { value: this.Util.mathRandom(100, 1) });
+    if (!await quickDb.has(`${guildId}.${author.id}.guess`))
+      await quickDb.set(`${guildId}.${author.id}.guess`, { value: this.Util.mathRandom(100, 1) });
 
-    const { value, user = [] } = db.get(`${guildId}.${author.id}.guess`);
+    const { value, user = [] } = (await quickDb.get<GuessGameData>(`${guildId}.${author.id}.guess`))!;
 
     if (number === value) {
       embeds[0]
@@ -52,7 +55,7 @@ export default class Guess extends SlashCommand {
           value: `${user?.join(' ').trim() || '-'}`,
         });
 
-      db.delete(`${guildId}.${author.id}.guess`);
+      await quickDb.delete(`${guildId}.${author.id}.guess`);
 
       return await interaction.editReply({ embeds });
     }
@@ -82,7 +85,7 @@ export default class Guess extends SlashCommand {
           value: `${user.join(' ').trim()}`,
         });
 
-      db.delete(`${guildId}.${author.id}.guess`);
+      await quickDb.delete(`${guildId}.${author.id}.guess`);
 
       return await interaction.editReply({ embeds });
     }
@@ -105,7 +108,7 @@ export default class Guess extends SlashCommand {
 
     user.push(number);
 
-    db.set(`${guildId}.${author.id}.guess.user`, user);
+    await quickDb.set(`${guildId}.${author.id}.guess.user`, user);
 
     await interaction.editReply({ embeds });
   }
@@ -118,7 +121,7 @@ export default class Guess extends SlashCommand {
     const value = options.getFocused();
     const pattern = RegExp(`${value}`);
 
-    const guess = db.get(`${guildId}.${user.id}.guess`);
+    const guess = await quickDb.get<GuessGameData>(`${guildId}.${user.id}.guess`);
 
     for (let i = 1; i < 101; i++) {
       if (guess?.user?.includes(i)) continue;

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, Permissions } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Unban extends SlashCommand {
@@ -12,6 +12,8 @@ export default class Unban extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('unban')
       .setDescription('Revoke a user\'s ban.')
+      .setDMPermission(false)
+      .setDefaultMemberPermissions(Permissions.FLAGS.BAN_MEMBERS)
       .setNameLocalizations(this.getLocalizations('unbanName'))
       .setDescriptionLocalizations(this.getLocalizations('unbanDescription'))
       .addStringOption(option => option.setName('user')
@@ -43,7 +45,10 @@ export default class Unban extends SlashCommand {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
-        content: this.t('missingUserPermission', { locale, permission: userPerms[0] }),
+        content: this.t('missingUserPermission', {
+          locale,
+          permission: this.t(userPerms[0], { locale }),
+        }),
         ephemeral: true,
       });
     }
@@ -54,7 +59,10 @@ export default class Unban extends SlashCommand {
       if (interaction.isAutocomplete()) return await interaction.respond([]);
 
       return await interaction.reply({
-        content: this.t('missingPermission', { locale, permission: clientPerms[0] }),
+        content: this.t('missingPermission', {
+          locale,
+          permission: this.t(clientPerms[0], { locale }),
+        }),
         ephemeral: true,
       });
     }

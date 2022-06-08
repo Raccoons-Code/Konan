@@ -7,12 +7,14 @@ const { OWNER_ID } = env;
 
 export default class Throw extends SlashCommand {
   constructor(client: Client) {
-    super(client);
+    super(client, {
+      ownerOnly: true,
+    });
+
     this.data = new SlashCommandBuilder().setName('throw')
       .setDescription('Throw new error (Restricted for bot\'owners).')
       .setNameLocalizations(this.getLocalizations('throwName'))
       .setDescriptionLocalizations(this.getLocalizations('throwDescription'))
-      .setDefaultPermission(false)
       .addStringOption(option => option.setName('error')
         .setDescription('Error message.')
         .setNameLocalizations(this.getLocalizations('throwErrorName'))
