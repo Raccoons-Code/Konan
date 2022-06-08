@@ -1,4 +1,4 @@
-import { Client, ModalSubmitInteraction } from 'discord.js';
+import { Client, Guild, GuildMember, ModalSubmitInteraction } from 'discord.js';
 import { ModalSubmit } from '../../structures';
 
 export default class extends ModalSubmit {
@@ -16,7 +16,7 @@ export default class extends ModalSubmit {
 
     const user = await guild.members.fetch(userId);
 
-    if (!user.bannable)
+    if (!(user.bannable && this.isBannable({ author: member, guild, target: user })))
       return await interaction.reply({
         content: this.t('banHierarchyError', { locale }),
         ephemeral: true,

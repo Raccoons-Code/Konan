@@ -75,6 +75,7 @@
   "missingChannelPermission": "I don't have `{{permission}}` permission on this channel.",
   "missingUserPermission": "You don't have `{{permission}}` permission on this server.",
   "missingUserChannelPermission": "You don't have `{{permission}}` permission on this channel.",
+  "moderateHierarchyError": "You cannot moderate members equal or superior to me or you.",
   "noDeletedMessages": "No deleted messages!",
   "numberCorrect": "{{number}} is correct, congratulations!",
   "numberGameOver": "{{number}} is incorrect, game over!",
