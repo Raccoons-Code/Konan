@@ -126,6 +126,28 @@
     "prefix": "dcm",
     "scope": "javascript,typescript"
   },
+  "Class modal submit": {
+    "body": [
+      "import { Client, ModalSubmitInteraction } from 'discord.js';",
+      "import { ModalSubmit } from '../../structures';",
+      "",
+      "export default class$4 extends ModalSubmit {",
+      "  constructor(client: Client) {",
+      "    super(client, {",
+      "      name: '$1',",
+      "      description: '$2',",
+      "    });",
+      "  }",
+      "",
+      "  async execute(interaction: ModalSubmitInteraction) {",
+      "    $0",
+      "  }",
+      "}"
+    ],
+    "description": "class to slash command snippet",
+    "prefix": "dcci",
+    "scope": "javascript,typescript"
+  },
   "Class select component": {
     "body": [
       "import { Client, SelectMenuInteraction } from 'discord.js';",

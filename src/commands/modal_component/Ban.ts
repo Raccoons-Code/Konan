@@ -10,7 +10,7 @@ export default class extends ModalSubmit {
   }
 
   async execute(interaction: ModalSubmitInteraction<'cached'>): Promise<any> {
-    const { customId, fields, guild, locale } = interaction;
+    const { customId, fields, guild, locale, member } = interaction;
 
     const { userId } = JSON.parse(customId);
 
@@ -26,7 +26,7 @@ export default class extends ModalSubmit {
 
     const days = d > 0 ? Math.min(d, 7) : 0;
 
-    const reason = fields.getTextInputValue('reason');
+    const reason = `Author: ${member.displayName}. Reason: ${fields.getTextInputValue('reason') || '-'}`;
 
     try {
       await guild.bans.create(userId, { days, reason });
