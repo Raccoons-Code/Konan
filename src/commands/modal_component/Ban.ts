@@ -26,7 +26,7 @@ export default class extends ModalSubmit {
 
     const days = d > 0 ? Math.min(d, 7) : 0;
 
-    const reason = `Author: ${member.displayName}. Reason: ${fields.getTextInputValue('reason') || '-'}`;
+    const reason = `${member.displayName}: ${fields.getTextInputValue('reason') || '-'}`;
 
     try {
       await guild.bans.create(userId, { days, reason });

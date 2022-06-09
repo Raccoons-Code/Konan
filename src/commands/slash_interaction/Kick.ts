@@ -58,7 +58,7 @@ export default class Kick extends SlashCommand {
     if (!(user.kickable && this.isKickable({ author: member, guild, target: user })))
       return await interaction.editReply(this.t('kickHierarchyError', { locale }));
 
-    const reason = options.getString('reason') ?? undefined;
+    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
 
     try {
       await guild.members.kick(user, reason);

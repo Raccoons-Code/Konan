@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, Message, MessageEmbed } from 'discord.js';
+import { Client, CommandInteraction, MessageEmbed } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Ping extends SlashCommand {
@@ -14,8 +14,8 @@ export default class Ping extends SlashCommand {
       .setDescriptionLocalizations(this.getLocalizations('pingDescription'));
   }
 
-  async execute(interaction: CommandInteraction) {
-    const sent = await interaction.reply({ content: 'Pong!', ephemeral: true, fetchReply: true }) as Message;
+  async execute(interaction: CommandInteraction<'cached'>) {
+    const sent = await interaction.reply({ content: 'Pong!', ephemeral: true, fetchReply: true });
 
     const ping = sent.createdTimestamp - interaction.createdTimestamp;
 

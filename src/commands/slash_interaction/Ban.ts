@@ -111,7 +111,7 @@ export default class Ban extends SlashCommand {
 
     const days = options.getInteger('delete_messages') ?? 0;
 
-    const reason = `Author: ${member.displayName}. Reason: ${options.getString('reason') || '-'}`;
+    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
 
     try {
       await guild.bans.create(user, { days, reason });

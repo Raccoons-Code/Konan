@@ -36,9 +36,8 @@ export default class Say extends SlashCommand {
 
     const username = member?.displayName ?? user.username;
 
-    if (!channel?.permissionsFor(client.user!)?.has(this.props!.clientPermissions!)) {
+    if (!channel?.permissionsFor(client.user!)?.has(this.props!.clientPermissions!))
       return await interaction.reply({ content: `${user} says:`, files: [{ attachment: url, name: 'say.mp3' }] });
-    }
 
     const webhook = await (<TextChannel>channel).fetchWebhooks()
       .then(w => w.find(v => v.name === client.user?.id)) ??

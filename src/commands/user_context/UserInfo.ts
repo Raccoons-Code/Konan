@@ -1,5 +1,5 @@
 import { codeBlock, ContextMenuCommandBuilder, inlineCode, time } from '@discordjs/builders';
-import { Client, GuildMember, MessageEmbed, UserContextMenuInteraction } from 'discord.js';
+import { Client, MessageEmbed, UserContextMenuInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class UserInfo extends UserContextMenu {
@@ -10,29 +10,26 @@ export default class UserInfo extends UserContextMenu {
       .setType(2);
   }
 
-  async execute(interaction: UserContextMenuInteraction) {
-    const { locale, options } = interaction;
+  async execute(interaction: UserContextMenuInteraction<'cached'>) {
+    const { locale, targetMember, targetUser } = interaction;
 
-    const user = options.getUser('user', true);
-    const member = <GuildMember>options.getMember('user');
-
-    const { createdAt, id, tag } = user;
+    const { createdAt, id, tag } = targetUser;
 
     const embeds = [
       new MessageEmbed()
         .setColor('RANDOM')
-        .setDescription(`${user}`)
+        .setDescription(`${targetUser}`)
         .setFields(
           { name: this.t('discordTag', { locale }), value: inlineCode(tag), inline: true },
           { name: this.t('discordId', { locale }), value: inlineCode(id), inline: true },
         )
-        .setFooter({ text: this.t(member ? 'joinedTheServerAt' : 'creationDate', { locale }) })
-        .setThumbnail(user.displayAvatarURL({ dynamic: true }))
-        .setTimestamp(member?.joinedTimestamp ?? createdAt),
+        .setFooter({ text: this.t(targetMember ? 'joinedTheServerAt' : 'creationDate', { locale }) })
+        .setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
+        .setTimestamp(targetMember?.joinedTimestamp ?? createdAt),
     ];
 
-    if (member) {
-      const { avatar, displayColor, permissions, roles } = member;
+    if (targetMember) {
+      const { avatar, displayColor, permissions, roles } = targetMember;
 
       const arrayRoles = roles.cache.map(role => role);
       const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') || '-';
@@ -49,9 +46,9 @@ export default class UserInfo extends UserContextMenu {
         embeds[0].setColor(displayColor);
 
       if (avatar)
-        embeds[0].setThumbnail(member.displayAvatarURL({ dynamic: true }));
+        embeds[0].setThumbnail(targetMember.displayAvatarURL({ dynamic: true }));
     }
 
-    await interaction.reply({ ephemeral: true, embeds });
+    await interaction.reply({ embeds, ephemeral: true });
   }
 }

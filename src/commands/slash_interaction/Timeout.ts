@@ -93,7 +93,7 @@ export default class Timeout extends SlashCommand {
       return await interaction.editReply(this.t('moderateHierarchyError', { locale }));
 
     const timeout = options.getInteger('time', true);
-    const reason = options.getString('reason') ?? undefined;
+    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
 
     try {
       await user.timeout(timeout, reason);

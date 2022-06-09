@@ -238,18 +238,20 @@ export default class ButtonRoles extends SlashCommand {
 
     const emoji = <EmojiIdentifierResolvable>(button_emoji ? Util.resolvePartialEmoji(button_emoji) : null);
 
-    const button = new MessageButton()
-      .setCustomId(JSON.stringify({
-        c: this.data.name,
-        count: 0,
-        roleId: role.id,
-      }))
-      .setDisabled(button_disabled)
-      .setEmoji(emoji)
-      .setLabel([button_name, ' 0'].join(''))
-      .setStyle(button_style);
+    const buttons = [
+      new MessageButton()
+        .setCustomId(JSON.stringify({
+          c: this.data.name,
+          count: 0,
+          roleId: role.id,
+        }))
+        .setDisabled(button_disabled)
+        .setEmoji(emoji)
+        .setLabel([button_name, ' 0'].join(''))
+        .setStyle(button_style),
+    ];
 
-    const components = [new MessageActionRow().setComponents([button])];
+    const components = [new MessageActionRow().setComponents(buttons)];
 
     const embeds = [
       new MessageEmbed()
@@ -262,8 +264,7 @@ export default class ButtonRoles extends SlashCommand {
       await channel.send({ components, embeds });
 
       return await interaction.editReply(this.t('?created', { locale, string: 'Button Role' }));
-    } catch (e) {
-      console.log(e);
+    } catch {
       return await interaction.editReply(this.t('createError', { locale, string: 'Button Role' }));
     }
   }
@@ -380,16 +381,18 @@ export default class ButtonRoles extends SlashCommand {
 
       const emoji = <EmojiIdentifierResolvable>(button_emoji ? Util.resolvePartialEmoji(button_emoji) : null);
 
-      const button = new MessageButton()
-        .setCustomId(JSON.stringify({
-          c: this.data.name,
-          count: 0,
-          roleId: role.id,
-        }))
-        .setDisabled(button_disabled)
-        .setEmoji(emoji)
-        .setLabel([button_name, ' 0'].join(''))
-        .setStyle(button_style);
+      const buttons = [
+        new MessageButton()
+          .setCustomId(JSON.stringify({
+            c: this.data.name,
+            count: 0,
+            roleId: role.id,
+          }))
+          .setDisabled(button_disabled)
+          .setEmoji(emoji)
+          .setLabel([button_name, ' 0'].join(''))
+          .setStyle(button_style),
+      ];
 
       const buttonsLength = message.components.length ?
         message.components.reduce((acc: number[], row) => [
@@ -398,14 +401,14 @@ export default class ButtonRoles extends SlashCommand {
         ], []) : [];
 
       if (!buttonsLength.length || buttonsLength.every(v => v === 5)) {
-        message.components.push(new MessageActionRow().setComponents([button]));
+        message.components.push(new MessageActionRow().setComponents(buttons));
       } else {
         let index = 0;
 
         message.components.map(row => {
           if (row.components[0].type !== 'BUTTON' || row.components.length === 5 || index) return row;
 
-          row.addComponents(button);
+          row.addComponents(buttons);
 
           index++;
 
@@ -484,9 +487,7 @@ export default class ButtonRoles extends SlashCommand {
       for (let i = 0; i < messages_array.length; i++) {
         const { embeds, id } = messages_array[i];
 
-        const [embed] = embeds;
-
-        const { title, description } = embed;
+        const { title, description } = embeds[0];
 
         const nameProps = [
           id,

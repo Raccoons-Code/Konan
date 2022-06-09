@@ -37,7 +37,7 @@ export default class Unban extends SlashCommand {
       return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
     }
 
-    const { guild, memberPermissions, options } = interaction;
+    const { guild, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
@@ -79,7 +79,7 @@ export default class Unban extends SlashCommand {
     if (!ban)
       return await interaction.editReply(this.t('ban404', { locale }));
 
-    const reason = options.getString('reason') ?? undefined;
+    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
 
     try {
       await guild.bans.remove(id, reason);

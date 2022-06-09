@@ -34,16 +34,16 @@ export default class Echo extends SlashCommand {
     if (!channel?.permissionsFor(client.user!)?.has(this.props!.clientPermissions!)) {
       const [, title, description] = content.match(this.pattern.embed) ?? [];
 
-      const embeds = [
-        new MessageEmbed()
-          .setColor(member?.displayColor || 'RANDOM')
-          .setFooter({ text: username, iconURL: avatarURL })
-          .setTimestamp(Date.now())
-          .setTitle(title)
-          .setDescription(description),
-      ];
-
-      return await interaction.reply({ embeds });
+      return await interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setColor(member?.displayColor || 'RANDOM')
+            .setFooter({ text: username, iconURL: avatarURL })
+            .setTimestamp(Date.now())
+            .setTitle(title)
+            .setDescription(description),
+        ],
+      });
     }
 
     const webhook = await (<TextChannel>channel).fetchWebhooks()

@@ -24,24 +24,24 @@ export default class Avatar extends SlashCommand {
     const user = options.getUser('user') ?? interaction.user;
     const member = <GuildMember>options.getMember('user') ?? interaction.member;
 
-    const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
-        .setDescription(`${member ?? user}`)
-        .setImage(member?.displayAvatarURL({ dynamic: true, size: 512 }) ??
-          user.displayAvatarURL({ dynamic: true, size: 512 })),
-    ];
-
-    const buttons = [
-      new MessageButton()
-        .setLabel('Link')
-        .setStyle('LINK')
-        .setURL(member?.displayAvatarURL({ dynamic: true, size: 4096 }) ??
-          user.displayAvatarURL({ dynamic: true, size: 4096 })),
-    ];
-
-    const components = [new MessageActionRow().setComponents(buttons)];
-
-    await interaction.reply({ components, embeds });
+    await interaction.reply({
+      components: [
+        new MessageActionRow()
+          .setComponents([
+            new MessageButton()
+              .setLabel('Link')
+              .setStyle('LINK')
+              .setURL(member?.displayAvatarURL({ dynamic: true, size: 4096 }) ??
+                user.displayAvatarURL({ dynamic: true, size: 4096 })),
+          ]),
+      ],
+      embeds: [
+        new MessageEmbed()
+          .setColor('RANDOM')
+          .setDescription(`${member ?? user}`)
+          .setImage(member?.displayAvatarURL({ dynamic: true, size: 512 }) ??
+            user.displayAvatarURL({ dynamic: true, size: 512 })),
+      ],
+    });
   }
 }

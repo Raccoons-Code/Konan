@@ -22,7 +22,7 @@ export default class extends ModalSubmit {
         ephemeral: true,
       });
 
-    const reason = `Author: ${member.displayName}. Reason: ${fields.getTextInputValue('reason') || '-'}`;
+    const reason = `${member.displayName}: ${fields.getTextInputValue('reason') || '-'}`;
 
     try {
       await guild.members.kick(user, reason);

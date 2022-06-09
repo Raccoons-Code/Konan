@@ -13,15 +13,13 @@ export default class Ban extends UserContextMenu {
       .setDefaultMemberPermissions(Permissions.FLAGS.BAN_MEMBERS);
   }
 
-  async execute(interaction: UserContextMenuInteraction) {
-    const { options } = interaction;
-
-    const user = options.getUser('user', true);
+  async execute(interaction: UserContextMenuInteraction<'cached'>) {
+    const { targetMember } = interaction;
 
     await interaction.showModal(
       new Modal()
-        .setCustomId(JSON.stringify({ c: 'ban', userId: user.id }))
-        .setTitle(`Ban ${user.tag}`)
+        .setCustomId(JSON.stringify({ c: 'ban', userId: targetMember.id }))
+        .setTitle(`Ban ${targetMember.displayName}`)
         .setComponents(...[
           new MessageActionRow<TextInputComponent>()
             .setComponents([

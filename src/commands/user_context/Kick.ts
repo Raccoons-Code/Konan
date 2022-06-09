@@ -13,15 +13,13 @@ export default class Kick extends UserContextMenu {
       .setDefaultMemberPermissions(Permissions.FLAGS.KICK_MEMBERS);
   }
 
-  async execute(interaction: UserContextMenuInteraction) {
-    const { options } = interaction;
-
-    const user = options.getUser('user', true);
+  async execute(interaction: UserContextMenuInteraction<'cached'>) {
+    const { targetMember } = interaction;
 
     await interaction.showModal(
       new Modal()
-        .setCustomId(JSON.stringify({ c: 'kick', userId: user.id }))
-        .setTitle(`Kick ${user.tag}`)
+        .setCustomId(JSON.stringify({ c: 'kick', userId: targetMember.id }))
+        .setTitle(`Kick ${targetMember.displayName}`)
         .setComponents(...[
           new MessageActionRow<TextInputComponent>()
             .setComponents([

@@ -55,19 +55,19 @@ export default class Translate extends SlashCommand {
 
     const translation = await translate(cache || text, { from, to });
 
-    const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
-        .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
-        .setTitle([
-          'Translation from',
-          languages[<'auto'>translation.from.language.iso],
-          'to',
-          languages[to],
-        ].join(' ')),
-    ];
-
-    await interaction.editReply({ embeds });
+    await interaction.editReply({
+      embeds: [
+        new MessageEmbed()
+          .setColor('RANDOM')
+          .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
+          .setTitle([
+            'Translation from',
+            languages[<'auto'>translation.from.language.iso],
+            'to',
+            languages[to],
+          ].join(' ')),
+      ],
+    });
   }
 
   async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
