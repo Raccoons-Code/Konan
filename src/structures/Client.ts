@@ -46,7 +46,7 @@ export default class Client extends DJS.Client {
   }
 
   async sendError(reason: Error) {
-    if (!ERROR_WEBHOOK || !this.isReady())
+    if (!(ERROR_WEBHOOK && this.isReady()))
       return console.error(reason);
 
     if (!this.ERROR_WEBHOOK)

@@ -1,4 +1,4 @@
-import { Client, Guild, GuildMember, ModalSubmitInteraction } from 'discord.js';
+import { Client, ModalSubmitInteraction } from 'discord.js';
 import { ModalSubmit } from '../../structures';
 
 export default class extends ModalSubmit {
