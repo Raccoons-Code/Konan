@@ -9,7 +9,7 @@ export default class GuildUpdate extends Event {
     });
   }
 
-  async execute(oldGuild: Guild, newGuild: Guild): Promise<any> {
+  async execute(oldGuild: Guild, newGuild: Guild) {
     const oldOwner = await this.prisma.user.findFirst({
       where: {
         id: oldGuild.ownerId,

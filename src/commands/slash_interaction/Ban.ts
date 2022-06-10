@@ -70,7 +70,7 @@ export default class Ban extends SlashCommand {
           .setDescriptionLocalizations(this.getLocalizations('banChunkReasonDescription'))));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;
@@ -101,7 +101,7 @@ export default class Ban extends SlashCommand {
     await this[command]?.(interaction);
   }
 
-  async single(interaction: CommandInteraction<'cached'>): Promise<any> {
+  async single(interaction: CommandInteraction<'cached'>) {
     const { guild, locale, member, options } = interaction;
 
     const user = options.getMember('user', true);
@@ -122,7 +122,7 @@ export default class Ban extends SlashCommand {
     }
   }
 
-  async chunk(interaction: CommandInteraction<'cached'>): Promise<any> {
+  async chunk(interaction: CommandInteraction<'cached'>) {
     const { options } = interaction;
 
     const users = options.getString('users', true);

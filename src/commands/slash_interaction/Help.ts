@@ -22,7 +22,7 @@ export default class Help extends SlashCommand {
         .setAutocomplete(true));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: CommandInteraction) {
     if (interaction.isAutocomplete())
       return await this.executeAutocomplete(interaction);
 
@@ -89,7 +89,7 @@ export default class Help extends SlashCommand {
     await interaction.editReply({ components, embeds });
   }
 
-  async executeCommand(interaction: CommandInteraction, commandName: string): Promise<any> {
+  async executeCommand(interaction: CommandInteraction, commandName: string) {
     const { client, locale } = interaction;
 
     const { slash_interaction } = client.commands;

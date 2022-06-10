@@ -105,7 +105,7 @@ export default class extends SlashCommand {
     await this[command]?.(interaction);
   }
 
-  async create(interaction: CommandInteraction): Promise<any> {
+  async create(interaction: CommandInteraction) {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -172,7 +172,7 @@ export default class extends SlashCommand {
     ].join(' '));
   }
 
-  async delete(interaction: CommandInteraction): Promise<any> {
+  async delete(interaction: CommandInteraction) {
     const { guild, locale, options, user } = interaction;
 
     const subcommand = options.getSubcommand();
@@ -207,7 +207,7 @@ export default class extends SlashCommand {
     }
   }
 
-  async list(interaction: CommandInteraction): Promise<any> {
+  async list(interaction: CommandInteraction) {
     const { guild, guildId, locale, user } = interaction;
 
     const userId = guild?.ownerId ?? user.id;
@@ -244,7 +244,7 @@ export default class extends SlashCommand {
     await interaction.editReply({ embeds });
   }
 
-  async restore(interaction: CommandInteraction): Promise<any> {
+  async restore(interaction: CommandInteraction) {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -285,7 +285,7 @@ export default class extends SlashCommand {
     }
   }
 
-  async update(interaction: CommandInteraction): Promise<any> {
+  async update(interaction: CommandInteraction) {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())

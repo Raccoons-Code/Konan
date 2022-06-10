@@ -3,7 +3,7 @@ import Util from './Util';
 export default class JKP {
   readonly emoji: { [k: string]: string } = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };
 
-  readonly index = ['', 'rock', 'paper', 'scissors', 'lizard', 'spock'];
+  readonly index = ['rock', 'paper', 'scissors', 'lizard', 'spock'];
 
   readonly results = ['Draw', 'Won', 'Lost'];
 
@@ -23,7 +23,7 @@ export default class JKP {
     return ['rock', 'paper', 'scissors', 'lizard', 'spock'][Util.mathRandom(3, 0)];
   }
 
-  game(player1 = this.machine, player2 = this.machine) {
+  game(player1: number | string = this.machine, player2: number | string = this.machine) {
     if (typeof player1 === 'number')
       player1 = this.index[player1];
 
@@ -40,7 +40,7 @@ export default class JKP {
     };
   }
 
-  spock(player1 = this.machine, player2 = this.machineSpock) {
+  spock(player1: number | string = this.machine, player2: number | string = this.machineSpock) {
     if (typeof player1 === 'number')
       player1 = this.index[player1];
 

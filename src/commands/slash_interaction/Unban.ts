@@ -28,7 +28,7 @@ export default class Unban extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('unbanReasonDescription')));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {

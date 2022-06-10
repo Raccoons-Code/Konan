@@ -26,7 +26,7 @@ export default class Guess extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 

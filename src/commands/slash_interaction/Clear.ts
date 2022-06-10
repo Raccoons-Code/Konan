@@ -30,7 +30,7 @@ export default class Clear extends SlashCommand {
         .addChannelTypes(...this.GuildTextChannelTypes));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: CommandInteraction) {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;

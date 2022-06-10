@@ -1,9 +1,11 @@
 import { userMention } from '@discordjs/builders';
 import { ButtonInteraction, Client } from 'discord.js';
-import db from 'quick.db';
-import { JkpCustomId } from '../../@types';
+import { QuickDB } from 'quick.db';
+import { JkpCustomId, JKPGameData } from '../../@types';
 import JKP from '../../JKP';
 import { ButtonComponentInteraction } from '../../structures';
+
+const quickDb = new QuickDB();
 
 export default class Jankenpon extends ButtonComponentInteraction {
   constructor(client: Client) {
@@ -16,9 +18,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction<'cached'>) {
     const { customId, message, user } = interaction;
 
-    const parsedCustomId = <JkpCustomId>JSON.parse(customId);
-
-    const { p, v } = parsedCustomId;
+    const { p, v } = <JkpCustomId>JSON.parse(customId);
 
     const players = p.reduce((acc, value, i) => {
       if (value === user.id) {
@@ -33,15 +33,15 @@ export default class Jankenpon extends ButtonComponentInteraction {
       return acc;
     }, <{ [k: string]: any }>{});
 
-    if (!db.has(`${message.id}`))
-      db.set(`${message.id}`, { [user.id]: v, p });
+    if (!await quickDb.has(`${message.id}`))
+      await quickDb.set(`${message.id}`, { [user.id]: v });
 
     const { player2 } = players;
 
-    if (db.get(`${message.id}.${player2}`))
-      return db.set(`${message.id}.${user.id}`, v) && this.mathPoint(interaction, players);
+    if (await quickDb.get(`${message.id}.${player2}`))
+      return await quickDb.set(`${message.id}.${user.id}`, v) && this.mathPoint(interaction, players);
 
-    db.set(`${message.id}.${user.id}`, v);
+    await quickDb.set(`${message.id}.${user.id}`, v);
 
     await interaction.deferUpdate();
   }
@@ -51,11 +51,11 @@ export default class Jankenpon extends ButtonComponentInteraction {
 
     const { changed, player1, player2 } = players;
 
-    const values = db.get(`${message.id}`);
+    const values = await quickDb.get<JKPGameData>(`${message.id}`);
 
-    const value1 = values[player1];
-    const value2 = values[player2];
-    const result = JKP.spock(value1, value2);
+    const value1 = values![player1];
+    const value2 = values![player2];
+    const result = JKP.spock(value1 - 1, value2 - 1);
 
     message.embeds.map(embed => {
       embed.fields.map((field, i) => {
@@ -87,7 +87,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
       return embed;
     });
 
-    db.delete(`${message.id}`);
+    await quickDb.delete(`${message.id}`);
 
     await interaction.update({ embeds: message.embeds });
   }

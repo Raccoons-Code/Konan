@@ -9,7 +9,7 @@ export default class extends ModalSubmit {
     });
   }
 
-  async execute(interaction: ModalSubmitInteraction<'cached'>): Promise<any> {
+  async execute(interaction: ModalSubmitInteraction<'cached'>) {
     const { customId, fields, guild, locale, member } = interaction;
 
     const { userId } = JSON.parse(customId);
