@@ -4,7 +4,7 @@ import Util from '../../util';
 
 const { env } = process;
 const { DONATE_LINK, GUILD_INVITE } = env;
-const resetProps = { attachments: [], components: [], content: null, embeds: [], files: [] };
+/* const resetProps = { attachments: [], components: [], content: null, embeds: [], files: [] }; */
 
 export default class Help extends SelectMenuComponentInteraction {
   limit = Util.Constants.helpPageLimit;
@@ -205,7 +205,7 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   setSelectMenu(i = 0) {
-    const earth = ['🌍', '🌎', '🌏'][this.Util.mathRandom(2, 0)]; // :earth_africa: :earth_americas: :earth_asia:
+    // const earth = ['🌍', '🌎', '🌏'][this.Util.mathRandom(2, 0)]; :earth_africa: :earth_americas: :earth_asia:
 
     return new MessageSelectMenu()
       .setCustomId(JSON.stringify({ c: this.data.name }))

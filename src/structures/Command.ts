@@ -3,7 +3,7 @@ import { CommandData } from '../@types';
 import Base from './Base';
 import Client from './Client';
 
-export default class Command extends Base {
+export default abstract class Command extends Base {
   constructor(client: Client, public data: CommandData) {
     super(client);
 
@@ -15,5 +15,5 @@ export default class Command extends Base {
     return /^[\w-]{1,32}$/.test(string);
   }
 
-  public async execute(message: Message) { }
+  abstract execute(message: Message): Promise<any>;
 }

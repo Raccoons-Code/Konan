@@ -23,6 +23,8 @@ export default abstract class Base {
     });
   }
 
+  abstract execute(...args: any): Promise<any>;
+
   isManageable({ author, guild, target }: { author: GuildMember, guild: Guild, target: GuildMember }): boolean {
     if (target.id === guild.ownerId) return false;
     if (author.id === target.id) return false;
@@ -47,6 +49,4 @@ export default abstract class Base {
       author.permissions.has(Permissions.FLAGS.MODERATE_MEMBERS)
     );
   }
-
-  public async execute(...args: any) { }
 }

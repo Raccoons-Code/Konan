@@ -7,7 +7,7 @@ import Client from './Client';
 
 const { GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText } = ChannelType;
 
-export default class SlashCommand extends Base {
+export default abstract class SlashCommand extends Base {
   data!: SlashCommandBuilder |
     SlashCommandSubcommandsOnlyBuilder |
     Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
@@ -16,7 +16,7 @@ export default class SlashCommand extends Base {
     super(client);
   }
 
-  public async execute(interaction: CommandInteraction | AutocompleteInteraction) { }
+  abstract execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any>;
 
   buttonStyles: MessageButtonStyle[] = ['DANGER', 'PRIMARY', 'SECONDARY', 'SUCCESS'];
 

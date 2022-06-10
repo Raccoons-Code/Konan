@@ -89,7 +89,7 @@ export default class Translate extends SlashCommand {
     const pattern = RegExp(`${focused.value}`, 'i');
 
     const fromChoices = Choices.filter(([A, a]) => pattern.test(A) || pattern.test(a))
-      .sort(([A, a], [B, b]) => RegExp(`${a}|${b}`).test('auto') ? 1 : RegExp(a).test(locale) ? -1 : 1);
+      .sort((a, b) => RegExp(`${a[1]}|${b[1]}`).test('auto') ? 1 : RegExp(a[1]).test(locale) ? -1 : 1);
 
     for (let i = 0; i < fromChoices.length; i++) {
       const choice = fromChoices[i];
@@ -114,7 +114,7 @@ export default class Translate extends SlashCommand {
 
     const toChoices = Choices.filter(([A, a]) =>
       !RegExp(`${from}|auto`, 'i').test(a) && (pattern.test(A) || pattern.test(a)))
-      .sort(([A, a], [B, b]) => RegExp(a).test(locale) ? -1 : 1);
+      .sort((a) => RegExp(a[1]).test(locale) ? -1 : 1);
 
     for (let i = 0; i < toChoices.length; i++) {
       const choice = toChoices[i];

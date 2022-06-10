@@ -3,12 +3,12 @@ import { MessageContextMenuInteraction } from 'discord.js';
 import Base from './Base';
 import Client from './Client';
 
-export default class MessageContextMenu extends Base {
+export default abstract class MessageContextMenu extends Base {
   data!: ContextMenuCommandBuilder;
 
   constructor(client: Client) {
     super(client);
   }
 
-  public async execute(interaction: MessageContextMenuInteraction) { }
+  abstract execute(interaction: MessageContextMenuInteraction): Promise<any>;
 }
