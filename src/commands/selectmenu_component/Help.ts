@@ -79,7 +79,7 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const { slash_interaction } = client.commands;
 
-    const slashCommands = slash_interaction.filter((c: any) => c.data.defaultPermission !== false).toJSON();
+    const slashCommands = slash_interaction.filter((c: SlashCommand) => !c.props?.ownerOnly).toJSON();
 
     const embeds = [
       new MessageEmbed()

@@ -1,6 +1,6 @@
 {
   "name": "konan",
-  "version": "0.16.12",
+  "version": "0.16.13",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -52,7 +52,7 @@
     "@types/common-tags": "^1.8.1",
     "@types/glob": "^7.2.0",
     "@types/ms": "^0.7.31",
-    "@types/node": "^17.0.41",
+    "@types/node": "^17.0.42",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "eslint": "^8.17.0",

@@ -28,7 +28,7 @@ export default class Help extends ButtonComponentInteraction {
 
     const commands = client.commandsByCategory[cbc] || client.commands.slash_interaction;
 
-    const slashCommands = commands.filter((c: any) => c.data.defaultPermission !== false).toJSON();
+    const slashCommands = commands.filter((c: SlashCommand) => !c.props?.ownerOnly).toJSON();
 
     message.embeds[0]
       .setColor('RANDOM')
