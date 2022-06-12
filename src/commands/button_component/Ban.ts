@@ -23,14 +23,16 @@ export default class Ban extends ButtonComponentInteraction {
 
     const usersId = message.embeds[0].description?.match(/\d{17,}/g) ?? [];
 
-    const reason = `Author: ${member.displayName}. Reason: ${message.embeds[0].fields[0].value}`.slice(0, 512);
+    const reason = `${member.displayName}: ${message.embeds[0].fields[0].value}`.slice(0, 512);
 
     const days = parseInt(message.embeds[0].fields[1].value);
 
     const failed: string[] = [];
 
-    const banUsers = usersId.map(id => guild.bans.create(id, { days, reason })
-      .catch(() => failed.push(`<@${id}>`) && undefined));
+    const banUsers = usersId.map(id => guild.members.fetch(id).then(user =>
+      (user.bannable && this.isBannable({ author: member, guild, target: user })) ?
+        guild.bans.create(id, { days, reason }).catch(() => failed.push(`<@${id}>`) && undefined) :
+        failed.push(`<@${id}>`) && undefined));
 
     const bannedUsers = await Promise.all(banUsers)
       .then(bans => bans.filter(ban => ban));

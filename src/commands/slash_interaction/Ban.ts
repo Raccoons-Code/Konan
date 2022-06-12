@@ -127,10 +127,10 @@ export default class Ban extends SlashCommand {
 
     const users = options.getString('users', true);
 
-    const usersArray = users.match(/\d{17,}/g) ?? [];
+    const usersArray = users.match(/\d{17,}/g);
 
-    if (!usersArray.length)
-      return await interaction.editReply('No IDs were found in the users string.');
+    if (!usersArray?.length)
+      return await interaction.editReply('No IDs were found in the users input.');
 
     const days = options.getInteger('delete_messages') ?? 0;
 

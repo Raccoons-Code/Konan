@@ -69,10 +69,11 @@ export default class Guess extends SlashCommand {
         embeds[0]
           .setDescription(this.t('numberRepeatGreater', { locale, author, number }));
 
-      embeds[0].addFields({
-        name: `${this.t('previousGuesses', { locale })} ${user?.length}/10`,
-        value: `${user?.join(' ').trim() || '-'}`,
-      });
+      embeds[0]
+        .addFields({
+          name: `${this.t('previousGuesses', { locale })} ${user?.length}/10`,
+          value: `${user?.join(' ').trim() || '-'}`,
+        });
 
       return await interaction.editReply({ embeds });
     }
