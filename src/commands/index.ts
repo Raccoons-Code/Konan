@@ -72,7 +72,7 @@ class Commands {
 
         const command = this.isClass(commandFile) ? new commandFile(client) : commandFile;
 
-        if (!command.data || !command.execute) continue;
+        if (!(command.data && command.execute)) continue;
 
         if (command.props?.category) {
           if (!this.commandsByCategory[command.props.category])

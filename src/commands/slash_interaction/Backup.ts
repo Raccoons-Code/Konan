@@ -7,7 +7,7 @@ export default class extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Utility',
-      clientPermissions: ['BAN_MEMBERS', 'MANAGE_CHANNELS', 'MANAGE_EMOJIS_AND_STICKERS', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'MANAGE_ROLES', 'MANAGE_WEBHOOKS'],
+      clientPermissions: ['BAN_MEMBERS', 'MANAGE_CHANNELS', 'MANAGE_EMOJIS_AND_STICKERS', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'MANAGE_ROLES', 'MANAGE_WEBHOOKS', 'READ_MESSAGE_HISTORY', 'VIEW_CHANNEL'],
       userPermissions: ['ADMINISTRATOR'],
     });
 
@@ -81,7 +81,7 @@ export default class extends SlashCommand {
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {
     const { locale, memberPermissions, options } = interaction;
 
-    const userPerms = memberPermissions?.missing(this.props!.userPermissions!);
+    const userPerms = memberPermissions?.missing(this.props!.userPermissions!, true);
 
     if (userPerms?.length) {
       if (interaction.isAutocomplete()) return await interaction.respond([]);

@@ -1,4 +1,4 @@
-import { AutocompleteInteraction, ButtonInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuInteraction, IntentsString, Interaction, MessageComponentInteraction, MessageContextMenuInteraction, ModalSubmitInteraction, PartialTypes, PermissionString, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { AutocompleteInteraction, ButtonInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuInteraction, IntentsString, Interaction, MessageComponentInteraction, MessageContextMenuInteraction, ModalSubmitInteraction, PartialTypes, Permissions, PermissionString, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
 import { ButtonComponentInteraction, Command, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 export * from './customid';
@@ -102,9 +102,9 @@ export interface SelectRolesItemOptionValue {
 
 export interface SlashCommandProps {
   category?: CategoryTypes;
-  clientPermissions?: PermissionString[]
+  clientPermissions?: bigint | Permissions | PermissionString[]
   ownerOnly?: boolean
-  userPermissions?: PermissionString[]
+  userPermissions?: bigint | Permissions | PermissionString[]
 }
 
 export interface SlashCommandsCollection {
