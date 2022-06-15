@@ -1,4 +1,4 @@
-import { InterpolationData, Options, PluralData, Resources } from './@types';
+import { Options } from './@types';
 import { defaults } from './Defaults';
 import Interpolator from './Interpolator';
 import PostProcessor from './PostProcessor';
@@ -6,35 +6,30 @@ import Translator from './Translator';
 import Util from './Util';
 
 class Idjsn {
-  capitalize!: boolean;
-  count!: number;
-  interpolation!: InterpolationData;
   interpolator!: Interpolator;
-  locale!: string;
-  plural!: PluralData;
   postProcessor!: PostProcessor;
-  resources?: Resources;
   translator!: Translator;
+  options: Options;
 
-  constructor(options: Options = {}) {
-    Object.assign(this, { ...defaults, ...options });
+  constructor(options: Options = defaults) {
+    this.options = { ...defaults, ...options };
 
     Util.bindMemberFunctions(this);
   }
 
   init(options: Options) {
-    Object.assign(this, { ...options });
+    this.options = { ...defaults, ...options };
 
-    this.interpolator = new Interpolator(this);
+    this.interpolator = new Interpolator(this.options);
 
-    this.postProcessor = new PostProcessor(this);
+    this.postProcessor = new PostProcessor(this.options);
 
-    this.translator = new Translator(this);
+    this.translator = new Translator(this.options);
   }
 
-  t(key: string | string[], options: Options & { [k: string]: any } = {}): string {
+  t(key: string | string[], options: Options = {}): string {
     if (Array.isArray(key))
-      return this.ta(key, options);
+      return key.reduce((acc, k) => `${acc} ${this.t(k, options)}`, '');
 
     key = this.translator.translate(key, options)!;
 
@@ -44,17 +39,11 @@ class Idjsn {
       key = this.interpolator.interpolate(key, options);
 
       if (options.capitalize !== null &&
-        (typeof options.capitalize === 'boolean' || typeof this.capitalize === 'boolean'))
-        key = this.postProcessor.capitalization(key, options);
+        (typeof options.capitalize === 'boolean' || typeof this.options.capitalize === 'boolean'))
+        key = this.postProcessor.capitalize(key, options);
     }
 
     return key;
-  }
-
-  protected ta(array: string[], options: Options) {
-    array = <string[]>array.map(key => this.t(key, options));
-
-    return array.join(' ').trim();
   }
 }
 

@@ -78,7 +78,7 @@ export default class extends SlashCommand {
           .setRequired(true)));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
     const { locale, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions?.missing(this.props!.userPermissions!, true);
@@ -105,7 +105,7 @@ export default class extends SlashCommand {
     await this[command]?.(interaction);
   }
 
-  async create(interaction: CommandInteraction) {
+  async create(interaction: CommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -167,12 +167,11 @@ export default class extends SlashCommand {
 
     return await interaction.editReply([
       user,
-      this.t('alreadyHaveABackup', { locale }),
-      this.t('doYouMean??', { locale, string: 'update' }),
+      this.t(['alreadyHaveABackup', 'doYouMean??'], { locale, string: 'update' }),
     ].join(' '));
   }
 
-  async delete(interaction: CommandInteraction) {
+  async delete(interaction: CommandInteraction): Promise<any> {
     const { guild, locale, options, user } = interaction;
 
     const subcommand = options.getSubcommand();
@@ -207,7 +206,7 @@ export default class extends SlashCommand {
     }
   }
 
-  async list(interaction: CommandInteraction) {
+  async list(interaction: CommandInteraction): Promise<any> {
     const { guild, guildId, locale, user } = interaction;
 
     const userId = guild?.ownerId ?? user.id;
@@ -244,7 +243,7 @@ export default class extends SlashCommand {
     await interaction.editReply({ embeds });
   }
 
-  async restore(interaction: CommandInteraction) {
+  async restore(interaction: CommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -285,7 +284,7 @@ export default class extends SlashCommand {
     }
   }
 
-  async update(interaction: CommandInteraction) {
+  async update(interaction: CommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())

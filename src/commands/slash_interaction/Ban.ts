@@ -70,7 +70,7 @@ export default class Ban extends SlashCommand {
           .setDescriptionLocalizations(this.getLocalizations('banChunkReasonDescription'))));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;

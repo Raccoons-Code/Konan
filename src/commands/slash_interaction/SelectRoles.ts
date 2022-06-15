@@ -310,7 +310,7 @@ export default class SelectRoles extends SlashCommand {
             .setRequired(true))));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
@@ -396,7 +396,7 @@ export default class SelectRoles extends SlashCommand {
     }
   }
 
-  async edit(interaction: CommandInteraction) {
+  async edit(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
@@ -530,7 +530,7 @@ export default class SelectRoles extends SlashCommand {
     }
   }
 
-  async add(interaction: CommandInteraction) {
+  async add(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
@@ -650,7 +650,7 @@ export default class SelectRoles extends SlashCommand {
     }
   }
 
-  async remove(interaction: CommandInteraction) {
+  async remove(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);

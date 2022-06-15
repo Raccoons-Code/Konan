@@ -89,7 +89,7 @@ export default class Help extends SlashCommand {
     await interaction.editReply({ components, embeds });
   }
 
-  async executeCommand(interaction: CommandInteraction, commandName: string) {
+  async executeCommand(interaction: CommandInteraction, commandName: string): Promise<any> {
     const { client, locale } = interaction;
 
     const { slash_interaction } = client.commands;

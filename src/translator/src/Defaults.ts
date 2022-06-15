@@ -12,6 +12,8 @@ export const defaults: Options = {
   },
   translation: {
     fallbackLocale: 'en',
+    keySeparator: '.',
+    noScape: false,
   },
 };
 
@@ -20,7 +22,7 @@ export default class Defaults {
     return defaults;
   }
 
-  static merge(options: any): Options {
+  static merge(options: Options): Options {
     return { ...defaults, ...options };
   }
 }

@@ -1,14 +1,15 @@
 import { Options } from './@types';
+import { defaults } from './Defaults';
 
 export default class PostProcessor {
-  capitalize?: boolean | null;
+  options: Options;
 
   constructor(options: Options) {
-    this.capitalize = options.capitalize;
+    this.options = { ...defaults, ...options };
   }
 
-  capitalization(string: string, options: Options) {
-    if (options.capitalize ?? this.capitalize)
+  capitalize(string: string, options: Options) {
+    if (options.capitalize ?? this.options.capitalize)
       return `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
 
     return `${string.charAt(0).toLowerCase()}${string.slice(1)}`;

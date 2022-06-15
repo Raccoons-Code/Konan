@@ -17,7 +17,7 @@ export default class WatchTogether extends SlashCommand {
     });
 
     if (client) {
-      this.discordTogether = new DiscordTogether(<any>client);
+      this.discordTogether = new DiscordTogether(client);
       this.applications = Object.keys(this.discordTogether.applications);
       client.discordTogether = this.discordTogether;
     }

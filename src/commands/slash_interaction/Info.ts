@@ -208,7 +208,7 @@ export default class Info extends SlashCommand {
     await interaction.editReply({ embeds });
   }
 
-  async server(interaction: CommandInteraction, embeds: MessageEmbed[]) {
+  async server(interaction: CommandInteraction, embeds: MessageEmbed[]): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())

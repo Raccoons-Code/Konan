@@ -27,7 +27,7 @@ export default class Kick extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('kickReasonDescription')));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;

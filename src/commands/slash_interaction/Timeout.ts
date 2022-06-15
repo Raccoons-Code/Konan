@@ -61,7 +61,7 @@ export default class Timeout extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('timeoutReasonDescription')));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;

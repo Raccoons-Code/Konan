@@ -2,11 +2,11 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import ms from 'ms';
 import { SlashCommand } from '../../structures';
-import tmdbApi from '../../TMDBAPI';
-import { SearchMoviesData } from '../../TMDBAPI/src/v3/@types';
+import TMDBApi from '../../TMDBApi';
+import { SearchMoviesData } from '../../TMDBApi/src/v3/@types';
 
 const { NumberFormat } = Intl;
-const { configuration, discover, genres, movies, search, Util: TmdbUtil } = tmdbApi;
+const { configuration, discover, genres, movies, search, Util: TmdbUtil } = TMDBApi;
 const { image, movie } = TmdbUtil;
 
 export default class Movies extends SlashCommand {
@@ -54,7 +54,7 @@ export default class Movies extends SlashCommand {
     await this[subcommand]?.(interaction);
   }
 
-  async list(interaction: CommandInteraction) {
+  async list(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const raw_page = options.getInteger('page') ?? 1;

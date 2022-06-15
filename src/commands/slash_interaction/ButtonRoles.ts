@@ -190,7 +190,7 @@ export default class ButtonRoles extends SlashCommand {
             .setRequired(true))));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
@@ -225,7 +225,7 @@ export default class ButtonRoles extends SlashCommand {
     await this[subcommand]?.(interaction);
   }
 
-  async setup(interaction: CommandInteraction) {
+  async setup(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const [, title, description] = options.getString('text')?.match(this.pattern.embed) ?? [];
@@ -269,7 +269,7 @@ export default class ButtonRoles extends SlashCommand {
     }
   }
 
-  async edit(interaction: CommandInteraction) {
+  async edit(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
@@ -350,7 +350,7 @@ export default class ButtonRoles extends SlashCommand {
     }
   }
 
-  async add(interaction: CommandInteraction) {
+  async add(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
@@ -426,7 +426,7 @@ export default class ButtonRoles extends SlashCommand {
     }
   }
 
-  async remove(interaction: CommandInteraction) {
+  async remove(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);

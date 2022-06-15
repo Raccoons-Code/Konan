@@ -51,7 +51,7 @@ export default class News extends SlashCommand {
         .setAutocomplete(true));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 

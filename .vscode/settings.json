@@ -25,6 +25,7 @@
     "subcommandgroup",
     "tictactoe",
     "tmdb",
+    "TMDBAPI",
     "topgg",
     "unban",
     "upsert",

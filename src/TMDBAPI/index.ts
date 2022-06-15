@@ -1,5 +1,3 @@
-import TMDB_API_V3 from './src/v3';
+import TMDBApi from './src';
 
-const tmdbApi = new TMDB_API_V3();
-
-export default tmdbApi;
+export default TMDBApi;

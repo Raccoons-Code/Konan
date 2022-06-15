@@ -1,10 +1,10 @@
 import { ButtonInteraction, Client, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { MoviesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
-import tmdbApi from '../../TMDBAPI';
-import { ResultsMovieData } from '../../TMDBAPI/src/v3/@types';
+import TMDBApi from '../../TMDBApi';
+import { ResultsMovieData } from '../../TMDBApi/src/v3/@types';
 
-const { configuration, discover, genres, Util: TmdbUtil } = tmdbApi;
+const { configuration, discover, genres, Util: TmdbUtil } = TMDBApi;
 const { image, movie } = TmdbUtil;
 
 export default class Movies extends ButtonComponentInteraction {
