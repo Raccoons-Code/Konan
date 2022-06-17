@@ -87,7 +87,7 @@ export default class Client extends DJS.Client {
       const results = await Promise.all(promises);
 
       this.stats.guilds = results[0]?.reduce((acc, guildCount) => acc + guildCount, 0);
-      this.stats.channels = results[1]?.reduce((acc, channelsCount) => acc + channelsCount, 0);
+      this.stats.channels = results[1]?.reduce((acc, channelCount) => acc + channelCount, 0);
       this.stats.members = results[2]?.reduce((acc, memberCount) => acc + memberCount, 0);
     } catch {
       if (options.loop) {

@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { GenresData, GenresOptions, ParseGenresOptions, SearchGenresProps } from '../@types';
+import { Genre, GenresData, GenresOptions, ParseGenresOptions, SearchGenresProps } from '../@types';
 
 export default class Genres {
   apiKey: string;
   baseURL: string;
-  movieGenres: Map<string, GenresData> = new Map();
-  tvGenres: Map<string, GenresData> = new Map();
+  movieGenres = new Map<string, GenresData>();
+  tvGenres = new Map<string, GenresData>();
   language: string;
 
   constructor(options: GenresOptions) {
@@ -48,11 +48,23 @@ export default class Genres {
     return this.tvGenres.set(language, { language, genres }).get(language)!;
   }
 
-  async parseGenres(props: ParseGenresOptions) {
+  parseGenres({ genre_ids, genres }: { genre_ids: number[], genres: Genre[] }) {
+    return genre_ids.map(genre_id => genres.find(genre => genre.id === genre_id)?.name);
+  }
+
+  async parseMovieGenres(props: ParseGenresOptions) {
     const { genre_ids, language } = props;
 
     const { genres } = await this.fetchMovieGenres({ language });
 
-    return genre_ids.map(genre_id => genres.find(genre => genre.id === genre_id)?.name);
+    return this.parseGenres({ genre_ids, genres });
+  }
+
+  async parseTVGenres(props: ParseGenresOptions) {
+    const { genre_ids, language } = props;
+
+    const { genres } = await this.fetchTVGenres({ language });
+
+    return this.parseGenres({ genre_ids, genres });
   }
 }

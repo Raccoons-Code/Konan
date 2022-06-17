@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SearchMoviesData, SearchMoviesProps, SearchOptions } from '../@types';
+import { SearchMovieData, SearchMovieProps, SearchOptions } from '../@types';
 
 export default class Search {
   apiKey: string;
@@ -16,7 +16,7 @@ export default class Search {
     this.page = 1;
   }
 
-  async searchMovies(props: SearchMoviesProps): Promise<SearchMoviesData> {
+  async searchMovie(props: SearchMovieProps): Promise<SearchMovieData> {
     const { include_adult = this.include_adult,
       language = this.language,
       page = this.page,

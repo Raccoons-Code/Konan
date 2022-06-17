@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DiscoverMovieProps, DiscoverOptions, SearchMoviesData } from '../@types';
+import { DiscoverMovieProps, DiscoverOptions, SearchMovieData } from '../@types';
 
 export default class Discover {
   apiKey: string;
@@ -22,7 +22,7 @@ export default class Discover {
     this.with_watch_monetization_types = options.with_watch_monetization_types ?? 'flatrate';
   }
 
-  async fetchMovies(props: DiscoverMovieProps = {}): Promise<SearchMoviesData> {
+  async fetchMovies(props: DiscoverMovieProps = {}): Promise<SearchMovieData> {
     const {
       certification_country,
       certification,

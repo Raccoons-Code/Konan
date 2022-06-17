@@ -31,12 +31,16 @@ export default class NumberIsPrime extends SlashCommand {
 
     const prime = this.primeResolve(number, { all: number < 1000000000 }); // 1.000.000.000
 
+    const embedDescription = 'It is divisible by ';
+
+    const length = 4096 - (codeBlock('').length + embedDescription.length);
+
     const embeds = [
       new MessageEmbed()
         .setColor('RANDOM')
         .setTitle(prime.length ? `${number} is not prime.` : `${number} is prime!`)
-        .setDescription(<string>(prime.length ?
-          `It is divisible by ${codeBlock(prime.join(', ')).slice(0, 4070)}` : '')),
+        .setDescription(prime.length ?
+          `${embedDescription}${codeBlock(prime.join(', ').slice(0, length))}` : ''),
     ];
 
     await interaction.editReply({ embeds });

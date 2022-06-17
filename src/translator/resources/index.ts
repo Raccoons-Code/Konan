@@ -1,5 +1,5 @@
-import { readdirSync, statSync } from 'fs';
 import { GlobSync } from 'glob';
+import { readdirSync, statSync } from 'node:fs';
 import { Resources } from '../src';
 
 const translations: Resources = {};

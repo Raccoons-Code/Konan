@@ -1,6 +1,7 @@
 export * from './authentication';
 export * from './configuration';
 export * from './discover';
+export * from './find';
 export * from './genres';
 export * from './ISO-3166-1';
 export * from './ISO-639-1';

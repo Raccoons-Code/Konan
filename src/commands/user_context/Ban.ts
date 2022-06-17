@@ -1,5 +1,5 @@
 import { ContextMenuCommandBuilder } from '@discordjs/builders';
-import { Client, MessageActionRow, Modal, Permissions, TextInputComponent, UserContextMenuInteraction } from 'discord.js';
+import { Client, MessageActionRow, Modal, ModalActionRowComponent, Permissions, TextInputComponent, UserContextMenuInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class Ban extends UserContextMenu {
@@ -21,7 +21,7 @@ export default class Ban extends UserContextMenu {
         .setCustomId(JSON.stringify({ c: 'ban', userId: targetMember.id }))
         .setTitle(`Ban ${targetMember.displayName}`)
         .setComponents(...[
-          new MessageActionRow<TextInputComponent>()
+          new MessageActionRow<ModalActionRowComponent>()
             .setComponents([
               new TextInputComponent()
                 .setCustomId('reason')
@@ -29,7 +29,7 @@ export default class Ban extends UserContextMenu {
                 .setPlaceholder('Reason for ban...')
                 .setStyle('PARAGRAPH'),
             ]),
-          new MessageActionRow<TextInputComponent>()
+          new MessageActionRow<ModalActionRowComponent>()
             .setComponents([
               new TextInputComponent()
                 .setCustomId('days')

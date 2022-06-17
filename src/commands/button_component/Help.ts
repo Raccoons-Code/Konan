@@ -47,7 +47,6 @@ export default class Help extends ButtonComponentInteraction {
       return c;
     });
 
-
     await interaction.update({ components: message.components, embeds: message.embeds });
   }
 

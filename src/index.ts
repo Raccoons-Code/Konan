@@ -1,6 +1,6 @@
 import { ShardingManager } from 'discord.js';
 import 'dotenv/config';
-import { join } from 'path';
+import { join } from 'node:path';
 import { ShardingClient } from 'statcord.js';
 
 const { env, execArgv } = process;

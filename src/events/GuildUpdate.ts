@@ -10,22 +10,22 @@ export default class GuildUpdate extends Event {
   }
 
   async execute(oldGuild: Guild, newGuild: Guild) {
-    const oldOwner = await this.prisma.user.findFirst({
-      where: {
-        id: oldGuild.ownerId,
-      },
-      include: {
-        guilds: {
-          where: {
-            id: oldGuild.id,
+    if (oldGuild.ownerId !== newGuild.ownerId) {
+      const oldOwner = await this.prisma.user.findFirst({
+        where: {
+          id: oldGuild.ownerId,
+        },
+        include: {
+          guilds: {
+            where: {
+              id: oldGuild.id,
+            },
           },
         },
-      },
-    });
+      });
 
-    if (!oldOwner) return;
+      if (!oldOwner) return;
 
-    if (oldGuild.ownerId !== newGuild.ownerId) {
       await this.prisma.user.upsert({
         create: {
           id: newGuild.ownerId,

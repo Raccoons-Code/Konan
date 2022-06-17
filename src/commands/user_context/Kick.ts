@@ -1,5 +1,5 @@
 import { ContextMenuCommandBuilder } from '@discordjs/builders';
-import { Client, MessageActionRow, Modal, Permissions, TextInputComponent, UserContextMenuInteraction } from 'discord.js';
+import { Client, MessageActionRow, Modal, ModalActionRowComponent, Permissions, TextInputComponent, UserContextMenuInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class Kick extends UserContextMenu {
@@ -21,7 +21,7 @@ export default class Kick extends UserContextMenu {
         .setCustomId(JSON.stringify({ c: 'kick', userId: targetMember.id }))
         .setTitle(`Kick ${targetMember.displayName}`)
         .setComponents(...[
-          new MessageActionRow<TextInputComponent>()
+          new MessageActionRow<ModalActionRowComponent>()
             .setComponents([
               new TextInputComponent()
                 .setCustomId('reason')

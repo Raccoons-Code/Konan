@@ -6,7 +6,7 @@ export interface SearchOptions extends Base {
   page?: number
 }
 
-export interface SearchMoviesProps {
+export interface SearchMovieProps {
   /**
    * @description Choose whether to inlcude adult (pornography) content in the results.
    * @default false
@@ -41,7 +41,7 @@ export interface SearchMoviesProps {
   primary_release_year?: number
 }
 
-export interface SearchMoviesData {
+export interface SearchMovieData {
   page: number
   results: ResultsMovieData[]
   total_pages: number

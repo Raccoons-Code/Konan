@@ -1,1 +1,1 @@
-export = <s extends string>(s: s): Capitalize<s> => <Capitalize<s>>`${s.charAt(0).toUpperCase()}${s.slice(1)}`;
+export = <s extends string>(s: s) => <Capitalize<s>>`${s.charAt(0).toUpperCase()}${s.slice(1)}`;

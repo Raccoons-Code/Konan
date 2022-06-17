@@ -1,8 +1,8 @@
 import { ButtonInteraction, Client, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { MoviesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
-import TMDBApi from '../../TMDBApi';
-import { ResultsMovieData } from '../../TMDBApi/src/v3/@types';
+import TMDBApi from '../../TMDBAPI';
+import { ResultsMovieData } from '../../TMDBAPI/src/v3/@types';
 
 const { configuration, discover, genres, Util: TmdbUtil } = TMDBApi;
 const { image, movie } = TmdbUtil;
@@ -37,15 +37,20 @@ export default class Movies extends ButtonComponentInteraction {
     const b = target < 1000;
 
     const buttons = [
-      new MessageButton().setCustomId(JSON.stringify({ c, d: 0, o: offset, p: page, target: 1 }))
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c, d: 0, o: offset, p: page, target: 1 }))
         .setDisabled(!a).setLabel('1...').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton().setCustomId(JSON.stringify({ c, d: 1, o: offset, p: page, target: target - 1 }))
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c, d: 1, o: offset, p: page, target: target - 1 }))
         .setDisabled(!a).setLabel('Back').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton().setCustomId(JSON.stringify({ c, d: 2, o: offset, p: page }))
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c, d: 2, o: offset, p: page }))
         .setDisabled(true).setLabel(`${target}`).setStyle('SECONDARY'),
-      new MessageButton().setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, target: target + 1 }))
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, target: target + 1 }))
         .setDisabled(!b).setLabel('Next').setStyle(b ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton().setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, target: 1000 }))
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, target: 1000 }))
         .setDisabled(!b).setLabel('...1000').setStyle(b ? 'PRIMARY' : 'SECONDARY'),
     ];
 
@@ -70,13 +75,13 @@ export default class Movies extends ButtonComponentInteraction {
 
       const { backdrop_path, genre_ids, id, original_title, original_language, overview, poster_path, release_date, title, vote_average, vote_count } = result;
 
-      const backdrop_img = image.imageURL({ path: <string>backdrop_path });
+      const backdrop_img = image.imageURL({ path: backdrop_path! });
 
-      const genre_names = await genres.parseGenres({ genre_ids, language: locale });
+      const genre_names = await genres.parseMovieGenres({ genre_ids, language: locale });
 
       const movie_url = movie.movieURL({ id });
 
-      const poster_img = image.imageURL({ path: <string>poster_path });
+      const poster_img = image.imageURL({ path: poster_path! });
 
       const lang = configuration.getLanguage({ language: original_language });
 
@@ -92,7 +97,7 @@ export default class Movies extends ButtonComponentInteraction {
         ])
         .setImage(backdrop_img)
         .setThumbnail(poster_img)
-        .setTitle(title ?? original_title)
+        .setTitle(title || original_title)
         .setURL(movie_url),
       );
     }

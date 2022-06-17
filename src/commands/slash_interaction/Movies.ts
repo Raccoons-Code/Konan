@@ -2,8 +2,8 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import ms from 'ms';
 import { SlashCommand } from '../../structures';
-import TMDBApi from '../../TMDBApi';
-import { SearchMoviesData } from '../../TMDBApi/src/v3/@types';
+import TMDBApi from '../../TMDBAPI';
+import { SearchMovieData } from '../../TMDBAPI/src/v3/@types';
 
 const { NumberFormat } = Intl;
 const { configuration, discover, genres, movies, search, Util: TmdbUtil } = TMDBApi;
@@ -75,12 +75,14 @@ export default class Movies extends SlashCommand {
     const b = raw_page < 1000;
 
     const buttons = [
-      new MessageButton().setCustomId(JSON.stringify({ c: this.data.name, d: 0, o: offset, p: page, target: 1 }))
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, d: 0, o: offset, p: page, target: 1 }))
         .setDisabled(!a).setLabel('1...').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
       new MessageButton()
         .setCustomId(JSON.stringify({ c: this.data.name, d: 1, o: offset, p: page, target: raw_page - 1 }))
         .setDisabled(!a).setLabel('Back').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton().setCustomId(JSON.stringify({ c: this.data.name, d: 2, o: offset, p: page }))
+      new MessageButton()
+        .setCustomId(JSON.stringify({ c: this.data.name, d: 2, o: offset, p: page }))
         .setDisabled(true).setLabel(`${raw_page}`).setStyle('SECONDARY'),
       new MessageButton()
         .setCustomId(JSON.stringify({ c: this.data.name, d: 3, o: offset, p: page, target: raw_page + 1 }))
@@ -146,7 +148,7 @@ export default class Movies extends SlashCommand {
 
     if (!keyword) return await interaction.respond(res);
 
-    const { results } = await search.searchMovies({ query: keyword, language: locale });
+    const { results } = await search.searchMovie({ query: keyword, language: locale });
 
     for (let i = 0; i < results.length; i++) {
       const { id, title, vote_average } = results[i];
@@ -173,7 +175,7 @@ export default class Movies extends SlashCommand {
     return { offset, page };
   }
 
-  async setEmbeds(results: SearchMoviesData['results'], offset = 0, locale = 'en-US') {
+  async setEmbeds(results: SearchMovieData['results'], offset = 0, locale = 'en-US') {
     const embeds = [];
 
     for (let i = (offset * 10); i < (offset * 10) + 10; i++) {
@@ -185,7 +187,7 @@ export default class Movies extends SlashCommand {
 
       const backdrop_img = image.imageURL({ path: backdrop_path! });
 
-      const genre_names = await genres.parseGenres({ genre_ids, language: locale });
+      const genre_names = await genres.parseMovieGenres({ genre_ids, language: locale });
 
       const movie_url = movie.movieURL({ id });
 

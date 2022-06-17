@@ -1,7 +1,7 @@
 import { Client, Collection } from 'discord.js';
-import { readdirSync, statSync } from 'fs';
 import { GlobSync } from 'glob';
-import { join } from 'path';
+import { readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import { Command, SlashCommand } from '../structures';
 
 class Commands {

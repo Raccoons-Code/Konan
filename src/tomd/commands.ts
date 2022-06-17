@@ -1,6 +1,6 @@
 import { APIApplicationCommandOption } from 'discord-api-types/v10';
 import { ApplicationCommandAutocompleteOption, ApplicationCommandChannelOptionData, ApplicationCommandChoicesData, ApplicationCommandNonOptionsData, ApplicationCommandNumericOptionData, ApplicationCommandSubCommandData } from 'discord.js';
-import { writeFileSync } from 'fs';
+import { writeFileSync } from 'node:fs';
 import Commands from '../commands';
 import { SlashCommand } from '../structures';
 

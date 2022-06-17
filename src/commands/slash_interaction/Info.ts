@@ -1,10 +1,13 @@
 import { codeBlock, inlineCode, SlashCommandBuilder, time, userMention } from '@discordjs/builders';
 import { stripIndents } from 'common-tags';
-import { CategoryChannel, Channel, Client, CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed, Role, StageChannel, TextChannel, ThreadChannel, version as discordjs_version, VoiceChannel } from 'discord.js';
+import { CategoryChannel, Channel, Client, CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed, Role, StageChannel, TextChannel, ThreadChannel, version as djs_version, VoiceChannel } from 'discord.js';
 import ms from 'ms';
+import { cpus, totalmem, version } from 'node:os';
 import { SlashCommand } from '../../structures';
 
-const { versions, env } = process;
+const CPUs = cpus();
+const OS = version();
+const { env, memoryUsage, versions } = process;
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
 const { node } = versions;
 const inline = true;
@@ -77,33 +80,39 @@ export default class Info extends SlashCommand {
 
     const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ?? user?.displayAvatarURL({ dynamic: true });
 
-    const username = <string>guild?.me?.displayName ?? user?.username;
+    const username = guild?.me?.displayName ?? user?.username;
 
-    const { heapTotal, heapUsed } = process.memoryUsage();
+    const { heapUsed } = memoryUsage();
+
+    const engine = stripIndents(`
+      Node : ${node}
+      `);
+
+    const library = stripIndents(`
+      Discord.js : ${(npm_package_dependencies_discord_js ?? djs_version).match(/(?:\D*)([\d\D]+)/)?.[1]}
+      `);
+
+    const machine = stripIndents(`
+      CPU      : ${CPUs[0].model} (${CPUs.length} cores)
+      Memory   : ${this.Util.bytes(heapUsed).join(' ')} / ${this.Util.bytes(totalmem()).join(' ')}
+      OS       : ${OS}
+      `);
 
     const stats = stripIndents(`
       Servers  : ${client.stats.guilds ?? guilds.cache.size}
       Channels : ${client.stats.channels ?? channels.cache.size}
       Members  : ${client.stats.members ?? users.cache.size}
       Ping     : ${ws.ping} ms
-      Memory   : ${this.Util.bytes(heapUsed).join(' ')} / ${this.Util.bytes(heapTotal).join(' ')}
       Version  : ${npm_package_version}
       `);
 
-    const library = stripIndents(`
-      Discord.js : ${(npm_package_dependencies_discord_js ?? discordjs_version).match(/(?:\D*)([\d\D]+)/)?.[1]}
-      `);
-
-    const engine = stripIndents(`
-      Node : ${node}
-      `);
-
-    embeds[0].setAuthor({ name: username, iconURL: avatarURL })
+    embeds[0].setAuthor({ name: username!, iconURL: avatarURL })
       .setFields([
         { name: 'Library', value: codeBlock('properties', library), inline },
         { name: 'Engine', value: codeBlock('properties', engine), inline },
         { name: 'Stats', value: codeBlock('properties', stats) },
-        { name: 'Uptime', value: `${time(<Date>readyAt)} ${time(<Date>readyAt, 'R')}` },
+        { name: 'Machine', value: codeBlock('properties', machine) },
+        { name: 'Uptime', value: `${time(readyAt!)} ${time(readyAt!, 'R')}` },
       ]);
 
     const buttons = [
@@ -216,7 +225,7 @@ export default class Info extends SlashCommand {
 
     const { guild } = interaction;
 
-    embeds[0].setAuthor({ name: guild.name, iconURL: <string>guild.iconURL() })
+    embeds[0].setAuthor({ name: guild.name, iconURL: guild.iconURL()! })
       .setFields(
         { name: this.t('id', { locale }), value: inlineCode(guild.id), inline: true },
         { name: this.t('owner', { locale }), value: userMention(guild.ownerId), inline: true },
