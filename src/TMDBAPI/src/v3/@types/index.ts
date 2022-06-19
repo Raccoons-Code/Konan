@@ -1,4 +1,5 @@
 export * from './authentication';
+export * from './collections';
 export * from './configuration';
 export * from './discover';
 export * from './find';

@@ -10,7 +10,7 @@ const { DISCORD_APPLICATION_ID, DISCORD_TOKEN, DISCORD_TEST_GUILD_ID } = env;
 const GLOBAL = false;
 const reset = false;
 
-if (!DISCORD_APPLICATION_ID || !DISCORD_TOKEN)
+if (!(DISCORD_APPLICATION_ID && DISCORD_TOKEN))
   throw Error(`Missing required params:${DISCORD_APPLICATION_ID ? '' : ' DISCORD_APPLICATION_ID'}${DISCORD_TOKEN ? '' : ' DISCORD_TOKEN'}`);
 
 const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];

@@ -11,16 +11,16 @@ export interface GenresOptions extends Base {
   language?: string
 }
 
-export interface Genres {
-  genres: Genre[]
+export interface APIGenres {
+  genres: APIGenre[]
 }
 
-export interface Genre {
+export interface APIGenre {
   id: number
   name: string
 }
 
-export interface SearchGenresProps {
+export interface GetGenres {
   /**
    * @description Pass a ISO 639-1 value to display translated data for the fields that support it.
    * @minLength 2
@@ -31,7 +31,14 @@ export interface SearchGenresProps {
   language?: string
 }
 
-export interface GenresData extends Genres {
+export interface GenresData extends APIGenres {
+  /**
+   * @description Pass a ISO 639-1 value to display translated data for the fields that support it.
+   * @minLength 2
+   * @maxLength 4
+   * @pattern ([a-z]{2})-([A-Z]{2})
+   * @default 'en-US'
+   */
   language: string
 }
 

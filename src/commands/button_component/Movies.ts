@@ -2,7 +2,7 @@ import { ButtonInteraction, Client, MessageActionRow, MessageButton, MessageEmbe
 import { MoviesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 import TMDBApi from '../../TMDBAPI';
-import { ResultsMovieData } from '../../TMDBAPI/src/v3/@types';
+import { APISearchMoviesResults } from '../../TMDBAPI/src/v3/@types';
 
 const { configuration, discover, genres, Util: TmdbUtil } = TMDBApi;
 const { image, movie } = TmdbUtil;
@@ -65,7 +65,7 @@ export default class Movies extends ButtonComponentInteraction {
     return { offset, page };
   }
 
-  async setEmbeds(results: ResultsMovieData[], offset = 0, locale = 'en-US') {
+  async setEmbeds(results: APISearchMoviesResults[], offset = 0, locale = 'en-US') {
     const embeds = [];
 
     for (let i = (offset * 10); i < (offset * 10) + 10; i++) {

@@ -3,7 +3,7 @@ import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, Co
 import ms from 'ms';
 import { SlashCommand } from '../../structures';
 import TMDBApi from '../../TMDBAPI';
-import { SearchMovieData } from '../../TMDBAPI/src/v3/@types';
+import { APISearchMoviesResults } from '../../TMDBAPI/src/v3/@types';
 
 const { NumberFormat } = Intl;
 const { configuration, discover, genres, movies, search, Util: TmdbUtil } = TMDBApi;
@@ -175,7 +175,7 @@ export default class Movies extends SlashCommand {
     return { offset, page };
   }
 
-  async setEmbeds(results: SearchMovieData['results'], offset = 0, locale = 'en-US') {
+  async setEmbeds(results: APISearchMoviesResults[], offset = 0, locale = 'en-US') {
     const embeds = [];
 
     for (let i = (offset * 10); i < (offset * 10) + 10; i++) {

@@ -2,47 +2,66 @@ import { Base } from '.';
 
 export type AuthenticationOptions = Base
 
-/** url: /session?api_key= */
-export interface Delete {
+/**
+ * https://developers.themoviedb.org/3/authentication/delete-session
+ */
+export interface APIDeleteSession {
   success: boolean
 }
 
-export interface DeleteProps {
+/**
+ * https://developers.themoviedb.org/3/authentication/delete-session
+ */
+export interface DeleteDeleteSession {
   body: { session_id: string }
 }
 
-/** url: /guest_session/new?api_key= */
-export interface Guest {
+/**
+ * https://developers.themoviedb.org/3/authentication/create-guest-session
+ */
+export interface APIGuestSession {
   expires_at: string
   guest_session_id: string
   success: boolean
 }
 
-/** url: /session/new?api_key= */
-export interface Session {
+/**
+ * https://developers.themoviedb.org/3/authentication/create-session
+ */
+export interface APISession {
   session_id: string
   success: boolean
 }
 
-/** url: /session/convert/4?api_key= */
-export type SessionV4 = Session
+/**
+ * https://developers.themoviedb.org/3/authentication/create-session-from-v4-access-token
+ */
+export type APISessionV4 = APISession
 
-/** url: /token/validate_with_login?api_key= */
-export interface SessionWithLogin {
+/**
+ * https://developers.themoviedb.org/3/authentication/validate-request-token
+ */
+export interface APISessionWithLogin {
   expires_at: string
   request_token: string
   success: boolean
 }
 
-export interface SessionProps {
+/**
+ * https://developers.themoviedb.org/3/authentication/create-session
+ */
+export interface PostCreateSession {
   body: { request_token: string }
 }
 
-export interface SessionV4Props {
+/**
+ * https://developers.themoviedb.org/3/authentication/create-session-from-v4-access-token
+ */
+export interface PostCreateSessionV4 {
   body: { access_token: string }
 }
 
-export interface SessionWithLoginProps {
+export interface PostCreateSessionWithLogin {
   body: {
     username: string,
     password: string,
@@ -50,8 +69,10 @@ export interface SessionWithLoginProps {
   }
 }
 
-/** url: /token/new?api_key= */
-export interface Token {
+/**
+ * https://developers.themoviedb.org/3/authentication/create-request-token
+ */
+export interface APIRequestToken {
   expires_at: string
   request_token: string
   success: string

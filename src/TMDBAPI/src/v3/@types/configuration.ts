@@ -6,7 +6,10 @@ export interface GetLanguageProps {
   language: string
 }
 
-export interface ApiConfiguration {
+/**
+ * https://developers.themoviedb.org/3/configuration/get-api-configuration
+ */
+export interface APIConfiguration {
   change_keys: string[]
   images: {
     backdrop_sizes: string[]
@@ -19,21 +22,30 @@ export interface ApiConfiguration {
   }
 }
 
-export type Countries = Country[]
+/**
+ * https://developers.themoviedb.org/3/configuration/get-countries
+ */
+export type APICountries = Country[]
 
 export interface Country {
   english_name: string
   iso_3166_1: string
 }
 
-export type Jobs = Job[]
+/**
+ * https://developers.themoviedb.org/3/configuration/get-jobs
+ */
+export type APIJobs = Job[]
 
 export interface Job {
   department: string
   jobs: string[]
 }
 
-export type Languages = Language[]
+/**
+ * https://developers.themoviedb.org/3/configuration/get-languages
+ */
+export type APILanguages = Language[]
 
 export interface Language {
   english_name: string
@@ -41,9 +53,15 @@ export interface Language {
   name: string
 }
 
-export type PrimaryTranslations = string[]
+/**
+ * https://developers.themoviedb.org/3/configuration/get-primary-translations
+ */
+export type APIPrimaryTranslations = string[]
 
-export type Timezones = Timezone[]
+/**
+ * https://developers.themoviedb.org/3/configuration/get-timezones
+ */
+export type APITimezones = Timezone[]
 
 export interface Timezone {
   iso_3166_1: string

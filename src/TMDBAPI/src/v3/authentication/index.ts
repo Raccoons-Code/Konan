@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { AuthenticationOptions, Delete, DeleteProps, Guest, Session, SessionProps, SessionV4, SessionV4Props, SessionWithLogin, SessionWithLoginProps, Token } from '../@types';
+import { APIDeleteSession, APIGuestSession, APIRequestToken, APISession, APISessionV4, APISessionWithLogin, AuthenticationOptions, DeleteDeleteSession, PostCreateSession, PostCreateSessionV4, PostCreateSessionWithLogin } from '../@types';
+import Routes from '../Routes';
 
 export default class Authentication {
   apiKey: string;
@@ -7,27 +8,27 @@ export default class Authentication {
 
   constructor(options: AuthenticationOptions) {
     this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
-    this.baseURL = `${options.baseURL}/authentication`;
+    this.baseURL = options.baseURL;
   }
 
-  async createGuest(): Promise<Guest> {
-    return axios.get('/guest_session/new', {
+  async createGuestSession(): Promise<APIGuestSession> {
+    return axios.get(Routes.authenticationCreateGuestSession(), {
       baseURL: this.baseURL,
       params: { apikey: this.apiKey },
     }).then(r => r.data);
   }
 
-  async createToken(): Promise<Token> {
-    return axios.get('/token/new', {
+  async createRequestToken(): Promise<APIRequestToken> {
+    return axios.get(Routes.authenticationCreateRequestToken(), {
       baseURL: this.baseURL,
       params: { apikey: this.apiKey },
     }).then(r => r.data);
   }
 
-  async createSession(props: SessionProps): Promise<Session> {
+  async createSession(props: PostCreateSession): Promise<APISession> {
     const { body } = props;
 
-    return axios.post('/session/new', {
+    return axios.post(Routes.authenticationCreateSession(), {
       request_token: body.request_token,
     }, {
       baseURL: this.baseURL,
@@ -35,10 +36,10 @@ export default class Authentication {
     }).then(r => r.data);
   }
 
-  async createSessionV4(props: SessionV4Props): Promise<SessionV4> {
+  async createSessionV4(props: PostCreateSessionV4): Promise<APISessionV4> {
     const { body } = props;
 
-    return axios.post('/session/convert/4', {
+    return axios.post(Routes.authenticationSessionV4(), {
       access_token: body.access_token,
     }, {
       baseURL: this.baseURL,
@@ -47,10 +48,10 @@ export default class Authentication {
   }
 
 
-  async createSessionWithLogin(props: SessionWithLoginProps): Promise<SessionWithLogin> {
+  async createSessionWithLogin(props: PostCreateSessionWithLogin): Promise<APISessionWithLogin> {
     const { body } = props;
 
-    return axios.post('/token/validate_with_login', {
+    return axios.post(Routes.authenticationSessionWithLogin(), {
       password: body.password,
       request_token: body.request_token,
       username: body.username,
@@ -60,10 +61,10 @@ export default class Authentication {
     }).then(r => r.data);
   }
 
-  async deleteSession(props: DeleteProps): Promise<Delete> {
+  async deleteSession(props: DeleteDeleteSession): Promise<APIDeleteSession> {
     const { body } = props;
 
-    return axios.delete('/session', {
+    return axios.delete(Routes.authenticationSession(), {
       baseURL: this.baseURL,
       data: {
         session_id: body.session_id,

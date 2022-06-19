@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { Movie, MoviesDetailsProps, MoviesPopularData, MoviesPopularProps, MoviesOptions } from '../@types';
+import { APIMovieDetails, APINowPlaying, GetLatest, GetMovieDetails, GetNowPlaying, MoviesOptions } from '../@types';
+import Routes from '../Routes';
 
 export default class Movies {
   apiKey: string;
@@ -8,14 +9,14 @@ export default class Movies {
 
   constructor(options: MoviesOptions) {
     this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
-    this.baseURL = `${options.baseURL}/movie`;
+    this.baseURL = options.baseURL;
     this.language = options.language ?? 'en-US';
   }
 
-  async fetchDetails(props: MoviesDetailsProps): Promise<Movie> {
+  async fetchDetails(props: GetMovieDetails): Promise<APIMovieDetails> {
     const { append_to_response, movie_id, language = this.language } = props;
 
-    return axios.get(`/${movie_id}`, {
+    return axios.get(Routes.moviesDetails(movie_id), {
       baseURL: this.baseURL,
       params: {
         api_key: this.apiKey,
@@ -25,10 +26,10 @@ export default class Movies {
     }).then(r => r.data);
   }
 
-  async fetchLatest(props: { language?: string } = {}): Promise<Movie> {
+  async fetchLatest(props: GetLatest = {}): Promise<APIMovieDetails> {
     const { language = this.language } = props;
 
-    return axios.get('/latest', {
+    return axios.get(Routes.moviesLatest(), {
       baseURL: this.baseURL,
       params: {
         api_key: this.apiKey,
@@ -37,24 +38,10 @@ export default class Movies {
     }).then(r => r.data);
   }
 
-  async fetchNowPlaying(props: MoviesPopularProps = {}): Promise<MoviesPopularData> {
+  async fetchNowPlaying(props: GetNowPlaying = {}): Promise<APINowPlaying> {
     const { language = this.language, page = 1, region } = props;
 
-    return axios.get('/popular', {
-      baseURL: this.baseURL,
-      params: {
-        api_key: this.apiKey,
-        language,
-        page,
-        region,
-      },
-    }).then(r => r.data);
-  }
-
-  async fetchPopular(props: MoviesPopularProps = {}): Promise<MoviesPopularData> {
-    const { language = this.language, page = 1, region } = props;
-
-    return axios.get('/popular', {
+    return axios.get(Routes.moviesNowPlaying(), {
       baseURL: this.baseURL,
       params: {
         api_key: this.apiKey,

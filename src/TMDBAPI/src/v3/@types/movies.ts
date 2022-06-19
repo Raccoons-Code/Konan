@@ -1,37 +1,94 @@
-import { Base, Genre, SearchMoviesData } from '.';
+import { APIGenre, APISearchMovies, Base } from '.';
 
-export interface MoviesDetailsProps {
+/**
+ * https://developers.themoviedb.org/3/movies/get-latest-movie
+ */
+export interface GetLatest {
+  /**
+   * @description Pass a ISO 639-1 value to display translated data for the fields that support it.
+   * @minLength 2
+   * @pattern ([a-z]{2})-([A-Z]{2})
+   * @default: en-US
+   */
+  language?: string;
+}
+
+/**
+ * https://developers.themoviedb.org/3/movies/get-movie-details
+ */
+export interface GetMovieDetails {
+  /**
+* @description Append requests within the same namespace to the response.
+* @pattern ([\w]+)
+*/
   append_to_response?: string
+  /**
+   * @description Pass a ISO 639-1 value to display translated data for the fields that support it.
+   * @minLength 2
+   * @pattern ([a-z]{2})-([A-Z]{2})
+   * @default 'en-US'
+   */
   language?: string
   movie_id: number
 }
 
-export interface MoviesPopularProps {
+/**
+ * https://developers.themoviedb.org/3/movies/get-now-playing
+ */
+export interface GetNowPlaying {
+  /**
+* @description Pass a ISO 639-1 value to display translated data for the fields that support it.
+* @minLength 2
+* @pattern ([a-z]{2})-([A-Z]{2})
+* @default 'en-US'
+*/
   language?: string
+  /**
+   * @description Specify which page to query.
+   * @minimum 1
+   * @maximum 1000
+   * @default 1
+   */
   page?: number
+  /**
+   * @description Specify a ISO 3166-1 code to filter release dates. Must be uppercase.
+   * @pattern ^[A-Z]{2}$
+   */
   region?: string
 }
 
-export interface MoviesPopularData extends SearchMoviesData {
+export interface APINowPlaying extends APISearchMovies {
   dates: Dates
 }
 
 export interface Dates {
+  /**
+   * @format date
+   */
   maximum: string
+  /**
+   * @format date
+   */
   minimum: string
 }
 
 export interface MoviesOptions extends Base {
+  /**
+   * @description Pass a ISO 639-1 value to display translated data for the fields that support it.
+   * @minLength 2
+   * @pattern ([a-z]{2})-([A-Z]{2})
+   * @default 'en-US'
+   */
   language?: string
 }
 
-export interface Movie {
+export interface APIMovieDetails {
   adult: boolean
   backdrop_path: string | null
-  belongs_to_collection: object | null
+  belongs_to_collection: any[] | null
   budget: number
-  genres: Genre[]
-  homepage: string
+  genres: APIGenre[]
+  homepage: string | null
   id: number
   /**
    * @minLength 9

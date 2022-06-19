@@ -1,19 +1,20 @@
 import axios from 'axios';
-import { DiscoverMovieProps, DiscoverOptions, SearchMovieData } from '../@types';
+import { DiscoverOptions, GetDiscoverMovie, APISearchMovies } from '../@types';
+import Routes from '../Routes';
 
 export default class Discover {
   apiKey: string;
   baseURL: string;
-  include_adult: DiscoverMovieProps['include_adult'];
-  include_video: DiscoverMovieProps['include_video'];
-  language: DiscoverMovieProps['language'];
-  page: DiscoverMovieProps['page'];
-  sort_by: DiscoverMovieProps['sort_by'];
-  with_watch_monetization_types: DiscoverMovieProps['with_watch_monetization_types'];
+  include_adult: GetDiscoverMovie['include_adult'];
+  include_video: GetDiscoverMovie['include_video'];
+  language: GetDiscoverMovie['language'];
+  page: GetDiscoverMovie['page'];
+  sort_by: GetDiscoverMovie['sort_by'];
+  with_watch_monetization_types: GetDiscoverMovie['with_watch_monetization_types'];
 
   constructor(options: DiscoverOptions) {
     this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
-    this.baseURL = `${options.baseURL}/discover`;
+    this.baseURL = options.baseURL;
     this.include_adult = options.include_adult ?? false;
     this.include_video = options.include_video ?? false;
     this.language = options.language ?? 'en-US';
@@ -22,7 +23,7 @@ export default class Discover {
     this.with_watch_monetization_types = options.with_watch_monetization_types ?? 'flatrate';
   }
 
-  async fetchMovies(props: DiscoverMovieProps = {}): Promise<SearchMovieData> {
+  async fetchMovies(props: GetDiscoverMovie = {}): Promise<APISearchMovies> {
     const {
       certification_country,
       certification,
@@ -62,7 +63,7 @@ export default class Discover {
       year,
     } = props;
 
-    return axios.get('/movie', {
+    return axios.get(Routes.discoverMovie(), {
       baseURL: this.baseURL,
       params: {
         api_key: this.apiKey,

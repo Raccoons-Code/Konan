@@ -6,9 +6,72 @@ export interface SearchOptions extends Base {
   page?: number
 }
 
-export interface SearchMovieProps {
+export interface GetSearchCollections {
   /**
-   * @description Choose whether to inlcude adult (pornography) content in the results.
+   * @description Pass a ISO 639-1 value to display translated data for the fields that support it.
+   * @minLength 2
+   * @pattern ([a-z]{2})-([A-Z]{2})
+   * @default 'en-US'
+   */
+  language?: string
+  /**
+   * @description Specify the page to query.
+   * @minimum 1
+   * @maximum 1000
+   * @default 1
+   */
+  page?: number
+  /**
+   * @description Pass a text query to search. This value should be URI encoded.
+   * @minLength 1
+   */
+  query: string
+}
+
+export interface APISearchCollections {
+  page: number
+  total_pages: number
+  total_results: number
+  results: APISearchCollectionsResults[]
+}
+
+export interface APISearchCollectionsResults {
+  id: number
+  name: string
+  backdrop_path: string | null
+  poster_path: string | null
+}
+
+export interface GetSearchKeywords {
+  /**
+   * @description Pass a text query to search. This value should be URI encoded.
+   * @minLength 1
+   */
+  query: string
+  /**
+   * @description Specify the page of results to query.
+   * @minimum 1
+   * @maximum 1000
+   * @default 1
+   */
+  page?: number
+}
+
+export interface APISearchKeywords {
+  page: number
+  results: APISearchKeywordsResults[]
+  total_pages: number
+  total_results: number
+}
+
+export interface APISearchKeywordsResults {
+  id: number
+  name: string
+}
+
+export interface GetSearchMovies {
+  /**
+   * @description Choose whether to include adult (pornography) content in the results.
    * @default false
    */
   include_adult?: boolean
@@ -41,14 +104,14 @@ export interface SearchMovieProps {
   primary_release_year?: number
 }
 
-export interface SearchMovieData {
+export interface APISearchMovies {
   page: number
-  results: ResultsMovieData[]
+  results: APISearchMoviesResults[]
   total_pages: number
   total_results: number
 }
 
-export interface ResultsMovieData {
+export interface APISearchMoviesResults {
   adult: boolean
   backdrop_path: string | null
   genre_ids: number[]

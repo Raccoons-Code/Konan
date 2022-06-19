@@ -4,7 +4,12 @@ export interface FindOptions extends Base {
   language?: string
 }
 
-export interface FindProps {
+/**
+ * https://developers.themoviedb.org/3/find/find-by-id
+ */
+export interface GetFindById {
+  external_id: string
+  external_source: ExternalSourceTypes
   /**
    * @description Pass a ISO 639-1 value to display translated data for the fields that support it.
    * @minLength 2
@@ -12,7 +17,6 @@ export interface FindProps {
    * @default 'en-US'
    */
   language?: string
-  external_source: ExternalSourceTypes
 }
 
 export type ExternalSourceTypes =
@@ -25,14 +29,18 @@ export type ExternalSourceTypes =
   'twitter_id' |
   'instagram_id'
 
-export interface FindData {
-  movie_results: MovieResults[]
-  tv_results: TVResults[]
+/**
+ * https://developers.themoviedb.org/3/find/find-by-id
+ */
+export interface APIFindById {
+  movie_results: APIFindByIdMovieResults[]
+  person_results: APIFindByIdPersonResults[]
+  tv_results: APIFindByIdTVResults[]
   tv_episode_results?: any[]
   tv_season_results?: any[]
 }
 
-export interface MovieResults {
+export interface APIFindByIdMovieResults {
   adult: boolean
   backdrop_path: string | null
   id: number
@@ -49,7 +57,7 @@ export interface MovieResults {
   vote_count: number
 }
 
-export interface PersonResults {
+export interface APIFindByIdPersonResults {
   adult: boolean
   id: number
   known_for: KnownForMovie | KnownForTV
@@ -58,7 +66,7 @@ export interface PersonResults {
   profile_path: string | null
 }
 
-export interface TVResults {
+export interface APIFindByIdTVResults {
   backdrop_path: string | null
   first_air_date: string
   id: number
@@ -74,10 +82,10 @@ export interface TVResults {
   vote_count: number
 }
 
-export interface KnownForMovie extends MovieResults {
-  media_type: string
+export interface KnownForMovie extends APIFindByIdMovieResults {
+  media_type: 'movie'
 }
 
-export interface KnownForTV extends TVResults {
-  media_type: string
+export interface KnownForTV extends APIFindByIdTVResults {
+  media_type: 'tv'
 }

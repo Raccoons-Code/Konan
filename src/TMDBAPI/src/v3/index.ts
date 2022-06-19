@@ -9,6 +9,7 @@ import Search from './search';
 import Util from './util';
 
 export * from './@types';
+export * from './Routes';
 
 export default class TMDB_API_V3 {
   authentication: Authentication;
