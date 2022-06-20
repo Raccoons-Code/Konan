@@ -2,7 +2,7 @@
 
 # Commands
 
-Last modified: June 5, 2022
+Last modified: June 20, 2022
 
 ## Application Commands (/) - 24
 
@@ -108,11 +108,11 @@ Last modified: June 5, 2022
   - [`delete_messages`]: How much of that person's message history should be deleted.
   - [`reason`]: The reason for the ban.
 
-#### buttonroles {`setup`  | `edit`  | `add`  | `remove`}
+#### buttonroles {`create`  | `edit`  | `add`  | `remove`}
 
 > Manage button roles.
 
-- {`setup`}: Create a button role.
+- {`create`}: Create a button role.
   - <`role`>: Select the role to use.
   - [`text`]: The text of the button. Title {0,256} | Description {0,4096} - default: ButtonRoles
   - [`button_name`]: The name of the button. Button name {0,63} - default: <role>
@@ -168,19 +168,19 @@ Last modified: June 5, 2022
 - <`user`>: The user to kick.
 - [`reason`]: The reason to kick.
 
-#### selectroles {`setup`  | `edit`  | `add`  | `remove`}
+#### selectroles {`create`  | `edit`  | `add`  | `remove`}
 
 > Manage roles with a select menu.
 
-- {`setup`}: Create a select menu.
+- {`create`}: Create a select menu.
   - <`role`>: Select a role to add to the select menu.
   - [`item_name`]: The name of the item. {0,83} - default: <role>
   - [`item_description`]: The description of the item. {0,100}
   - [`item_default`]: Used to always add this role with other roles.
   - [`item_emoji`]: The emoji of the item.
-  - [`menu_disabled`]: Whether the setup is disabled.
+  - [`menu_disabled`]: Whether the button is disabled.
   - [`menu_place_holder`]: The placeholder of the menu. {0,150}
-  - [`text`]: The channel of the setup. Title {0,256} | Description {0,4096} - default: SelectRoles
+  - [`text`]: The text of the message. Title {0,256} | Description {0,4096} - default: SelectRoles
   - [`channel`]: The channel of the setup. default: <current channel>
 
 - {`edit`}: Edit the Select roles.
