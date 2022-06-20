@@ -9,5 +9,3 @@ export const TVSeasons = new class TVSeasons {
     return `/tv/${tvId}/season/${seasonNumber}`;
   }
 };
-
-export default TVSeasons;

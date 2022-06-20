@@ -160,5 +160,3 @@ export const Movies = new class Movies {
     return '/movie/upcoming';
   }
 };
-
-export default Movies;

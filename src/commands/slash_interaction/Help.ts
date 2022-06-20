@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandNonOptionsData, ApplicationCommandOptionChoiceData, ApplicationCommandSubCommand, AutocompleteInteraction, Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
+import { env } from 'node:process';
 import { SlashCommand } from '../../structures';
 
-const { env } = process;
 const { DONATE_LINK, GUILD_INVITE } = env;
 
 export default class Help extends SlashCommand {

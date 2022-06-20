@@ -49,5 +49,3 @@ export const Authentication = new class Authentication {
     return '/authentication/token/validate_with_login';
   }
 };
-
-export default Authentication;

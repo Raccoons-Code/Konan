@@ -41,5 +41,3 @@ export const Configuration = new class Configuration {
     return '/configuration/timezones';
   }
 };
-
-export default Configuration;

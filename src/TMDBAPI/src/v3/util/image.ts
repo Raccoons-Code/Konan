@@ -1,12 +1,11 @@
-import { ImageURLOptions, UtilOptions } from '../@types';
+import { ImageURLOptions } from '../@types';
+import http from './http';
 
-export default class Image {
-  apiKey: string;
+export const image = new class Image {
   baseURL: string;
 
-  constructor(options: UtilOptions) {
-    this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
-    this.baseURL = 'https://image.tmdb.org/t/p';
+  constructor() {
+    this.baseURL = http.image;
   }
 
   imageURL(props: ImageURLOptions) {
@@ -20,4 +19,4 @@ export default class Image {
 
     return imageURLProps.join('');
   }
-}
+};

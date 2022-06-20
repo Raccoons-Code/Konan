@@ -1,9 +1,9 @@
 import { ShardingManager } from 'discord.js';
 import 'dotenv/config';
 import { join } from 'node:path';
+import { env, execArgv } from 'node:process';
 import { ShardingClient } from 'statcord.js';
 
-const { env, execArgv } = process;
 const { STATCORD_KEY } = env;
 
 const manager = new ShardingManager(join(__dirname, 'bot.ts'), { execArgv });

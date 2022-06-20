@@ -10,10 +10,10 @@ import Util from './util';
 
 export * from './@types';
 export * from './Routes';
+export { Util };
 
 export default class TMDB_API_V3 {
   authentication: Authentication;
-  apiKey: string;
   baseURL: string;
   configuration: Configuration;
   discover: Discover;
@@ -23,10 +23,9 @@ export default class TMDB_API_V3 {
   search: Search;
   Util = Util;
 
-  constructor(options: TMDB_API_Options = { apiKey: process.env.TMDB_APIKEY }) {
-    if (options.apiKey) process.env.TMDB_APIKEY = options.apiKey;
+  constructor(options: TMDB_API_Options = { apiKey: Util.Constants.apiKey }) {
+    if (options.apiKey) this.apiKey = options.apiKey;
 
-    this.apiKey = options.apiKey!;
     this.baseURL = Util.Constants.baseURL;
 
     this.authentication = new Authentication(this);
@@ -36,5 +35,14 @@ export default class TMDB_API_V3 {
     this.genres = new Genres(this);
     this.movies = new Movies(this);
     this.search = new Search(this);
+  }
+
+  get apiKey(): string {
+    return Util.Constants.apiKey;
+  }
+
+  set apiKey(apiKey: string) {
+    process.env.TMDB_APIKEY = apiKey;
+    Util.Constants.apiKey = apiKey;
   }
 }

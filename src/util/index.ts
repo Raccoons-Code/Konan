@@ -7,6 +7,7 @@ import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
 import getLocalizations from './getLocalizations';
 import hasDuplicatesInArray from './hasDuplicatesInArray';
+import isClass from './isClass';
 import isDuplicate from './isDuplicate';
 import isJSON from './isJSON';
 import isSameDate from './isSameDate';
@@ -33,6 +34,7 @@ export default class Util {
   static findDuplicatesInArray = findDuplicatesInArray;
   static getLocalizations = getLocalizations;
   static hasDuplicatesInArray = hasDuplicatesInArray;
+  static isClass = isClass;
   static isDuplicate = isDuplicate;
   static isJSON = isJSON;
   static isSameDate = isSameDate;

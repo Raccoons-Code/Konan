@@ -1,7 +1,8 @@
 import { Client, Intents, IntentsString, PartialTypes } from 'discord.js';
 import { GlobSync } from 'glob';
-import { join } from 'node:path';
+import { posix } from 'node:path';
 import { Event } from '../structures';
+import Util from '../util';
 
 class Events {
   private client!: Client;
@@ -9,6 +10,7 @@ class Events {
   private _events!: Event[];
   intents?: number;
   partials?: PartialTypes[];
+  errors: Error[] = [];
 
   constructor() {
     this.eventFiles = this.getEventFiles();
@@ -29,14 +31,16 @@ class Events {
   }
 
   getEventFiles() {
-    return new GlobSync(join(__dirname, '*.@(j|t)s'), { ignore: ['**/index.@(j|t)s'] }).found;
+    return new GlobSync(posix.resolve('src', 'events', '*.@(j|t)s'), { ignore: ['**/index.@(j|t)s'] }).found;
   }
 
   async getEvents(events: Event[] = []) {
     for (let i = 0; i < this.eventFiles.length; i++) {
-      const eventFile = await import(`${this.eventFiles[i]}`);
+      const importedFile = await import(`${this.eventFiles[i]}`);
 
-      const event = new (eventFile.default ?? eventFile)() as Event;
+      const eventFile = importedFile.default ?? importedFile;
+
+      const event = <Event>(Util.isClass(eventFile) ? new eventFile() : eventFile);
 
       events.push(event);
     }
@@ -50,11 +54,13 @@ class Events {
     if (!this._events) await this.getEvents();
 
     for (let i = 0; i < this.eventFiles.length; i++) {
-      const eventFile = await import(`${this.eventFiles[i]}`);
+      const importedFile = await import(`${this.eventFiles[i]}`);
 
-      const event = new (eventFile.default ?? eventFile)(client) as Event;
+      const eventFile = importedFile.default ?? importedFile;
 
-      client[event.data.listener || 'on']?.(event.data.name, (...args: any) => event.execute(...args));
+      const event = <Event>(Util.isClass(eventFile) ? new eventFile() : eventFile);
+
+      client[event.data.listener!]?.(event.data.name, (...args: any) => event.execute(...args));
     }
   }
 

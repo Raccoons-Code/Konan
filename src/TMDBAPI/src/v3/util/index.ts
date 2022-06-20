@@ -1,14 +1,14 @@
 import Constants from './Constants';
-import Image from './image';
-import Movie from './movie';
+import { http } from './http';
+import { image } from './image';
+import { movie } from './movie';
 
-export { Constants, Image, Movie };
+export * from './http';
+export * from './movie';
 
 export default class Util {
   static Constants = Constants;
-  static image: Image;
-  static movie: Movie;
+  static http = http;
+  static image = image;
+  static movie = movie;
 }
-
-Util.image = new Image({ apiKey: <string>process.env.TMDB_APIKEY });
-Util.movie = new Movie({ apiKey: <string>process.env.TMDB_APIKEY });

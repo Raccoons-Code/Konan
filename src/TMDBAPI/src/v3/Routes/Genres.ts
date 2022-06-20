@@ -13,5 +13,3 @@ export const Genres = new class Genres {
     return '/genre/tv/list';
   }
 };
-
-export default Genres;

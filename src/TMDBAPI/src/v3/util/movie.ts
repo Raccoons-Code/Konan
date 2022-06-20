@@ -1,22 +1,13 @@
-import { MovieURLOptions, UtilOptions } from '../@types';
+import http from './http';
 
-export default class Movie {
-  apiKey: string;
+export const movie = new class Movie {
   baseURL: string;
 
-  constructor(options: UtilOptions) {
-    this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
-    this.baseURL = 'https://www.themoviedb.org/movie';
+  constructor() {
+    this.baseURL = http.movie;
   }
 
-  movieURL(props: MovieURLOptions) {
-    const { id } = props;
-
-    const movieURLProps = [
-      this.baseURL,
-      '/', id,
-    ];
-
-    return movieURLProps.join('');
+  movieURL(id: number) {
+    return `${this.baseURL}/${id}`;
   }
-}
+};

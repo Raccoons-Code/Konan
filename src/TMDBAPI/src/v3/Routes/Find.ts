@@ -6,5 +6,3 @@ export const Find = new class Find {
     return `/find/${externalId}`;
   }
 };
-
-export default Find;

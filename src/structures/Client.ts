@@ -1,12 +1,12 @@
 import { codeBlock } from '@discordjs/builders';
 import DJS, { ClientOptions, MessageEmbed, WebhookClient } from 'discord.js';
+import { env } from 'node:process';
 import AutoPoster from 'topgg-autoposter';
 import { FetchStatsOptions, Stats } from '../@types';
 import commands from '../commands';
 import events from '../events';
 import Util from '../util';
 
-const { env } = process;
 const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
 
 export default class Client extends DJS.Client {

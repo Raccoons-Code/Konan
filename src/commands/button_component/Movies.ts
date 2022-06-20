@@ -1,11 +1,7 @@
 import { ButtonInteraction, Client, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import { MoviesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
-import TMDBApi from '../../TMDBAPI';
-import { APISearchMoviesResults } from '../../TMDBAPI/src/v3/@types';
-
-const { configuration, discover, genres, Util: TmdbUtil } = TMDBApi;
-const { image, movie } = TmdbUtil;
+import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../TMDBAPI';
 
 export default class Movies extends ButtonComponentInteraction {
   constructor(client: Client) {
@@ -22,7 +18,7 @@ export default class Movies extends ButtonComponentInteraction {
 
     const { offset, page } = this.getPage(target);
 
-    const { results } = await discover.fetchMovies({
+    const { results } = await TMDBApi.discover.fetchMovies({
       include_video: true,
       language: locale,
       page: page ? page : 1,
@@ -75,15 +71,15 @@ export default class Movies extends ButtonComponentInteraction {
 
       const { backdrop_path, genre_ids, id, original_title, original_language, overview, poster_path, release_date, title, vote_average, vote_count } = result;
 
-      const backdrop_img = image.imageURL({ path: backdrop_path! });
+      const backdrop_img = TMDBUtil.image.imageURL({ path: backdrop_path! });
 
-      const genre_names = await genres.parseMovieGenres({ genre_ids, language: locale });
+      const genre_names = await TMDBApi.genres.parseMovieGenres({ genre_ids, language: locale });
 
-      const movie_url = movie.movieURL({ id });
+      const movie_url = TMDBUtil.movie.movieURL(id);
 
-      const poster_img = image.imageURL({ path: poster_path! });
+      const poster_img = TMDBUtil.image.imageURL({ path: poster_path! });
 
-      const lang = configuration.getLanguage({ language: original_language });
+      const lang = TMDBApi.configuration.getLanguage({ language: original_language });
 
       embeds.push(new MessageEmbed()
         .setAuthor({ name: genre_names.join(', ').slice(0, 256) })

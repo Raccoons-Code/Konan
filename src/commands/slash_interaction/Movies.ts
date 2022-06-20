@@ -2,12 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
 import ms from 'ms';
 import { SlashCommand } from '../../structures';
-import TMDBApi from '../../TMDBAPI';
-import { APISearchMoviesResults } from '../../TMDBAPI/src/v3/@types';
-
-const { NumberFormat } = Intl;
-const { configuration, discover, genres, movies, search, Util: TmdbUtil } = TMDBApi;
-const { image, movie } = TmdbUtil;
+import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../TMDBAPI';
 
 export default class Movies extends SlashCommand {
   constructor(client: Client) {
@@ -60,7 +55,7 @@ export default class Movies extends SlashCommand {
     const raw_page = options.getInteger('page') ?? 1;
     const { offset, page } = this.getPage(raw_page);
 
-    const { results } = await discover.fetchMovies({
+    const { results } = await TMDBApi.discover.fetchMovies({
       include_video: true,
       language: locale,
       page,
@@ -102,19 +97,21 @@ export default class Movies extends SlashCommand {
 
     const movie_id = parseInt(options.getString('keyword', true));
 
-    const { backdrop_path, budget, genres: _genres, id, original_language, original_title, overview, poster_path, release_date, revenue, runtime, title, vote_average, vote_count } = await movies.fetchDetails({ movie_id, language: locale });
+    const { backdrop_path, budget, genres, id, original_language, original_title, overview, poster_path, release_date, revenue, runtime, title, vote_average, vote_count, belongs_to_collection } = await TMDBApi.movies.fetchDetails({ movie_id, language: locale });
 
-    const backdrop_img = image.imageURL({ path: backdrop_path! });
+    console.log(belongs_to_collection);
 
-    const genre_names = _genres.map(genre => genre.name);
+    const backdrop_img = TMDBUtil.image.imageURL({ path: backdrop_path! });
 
-    const movie_url = movie.movieURL({ id });
+    const genre_names = genres.map(genre => genre.name);
 
-    const poster_img = image.imageURL({ path: poster_path! });
+    const movie_url = TMDBUtil.movie.movieURL(id);
 
-    const lang = configuration.getLanguage({ language: original_language });
+    const poster_img = TMDBUtil.image.imageURL({ path: poster_path! });
 
-    const numberFormat = NumberFormat(locale, { currency: 'USD', style: 'currency' });
+    const lang = TMDBApi.configuration.getLanguage({ language: original_language });
+
+    const numberFormat = Intl.NumberFormat(locale, { currency: 'USD', style: 'currency' });
 
     const embeds = [
       new MessageEmbed()
@@ -148,7 +145,7 @@ export default class Movies extends SlashCommand {
 
     if (!keyword) return await interaction.respond(res);
 
-    const { results } = await search.searchMovie({ query: keyword, language: locale });
+    const { results } = await TMDBApi.search.searchMovie({ query: keyword, language: locale });
 
     for (let i = 0; i < results.length; i++) {
       const { id, title, vote_average } = results[i];
@@ -185,15 +182,15 @@ export default class Movies extends SlashCommand {
 
       const { backdrop_path, genre_ids, id, original_title, original_language, overview, poster_path, release_date, title, vote_average, vote_count } = result;
 
-      const backdrop_img = image.imageURL({ path: backdrop_path! });
+      const backdrop_img = TMDBUtil.image.imageURL({ path: backdrop_path! });
 
-      const genre_names = await genres.parseMovieGenres({ genre_ids, language: locale });
+      const genre_names = await TMDBApi.genres.parseMovieGenres({ genre_ids, language: locale });
 
-      const movie_url = movie.movieURL({ id });
+      const movie_url = TMDBUtil.movie.movieURL(id);
 
-      const poster_img = image.imageURL({ path: poster_path! });
+      const poster_img = TMDBUtil.image.imageURL({ path: poster_path! });
 
-      const lang = configuration.getLanguage({ language: original_language });
+      const lang = TMDBApi.configuration.getLanguage({ language: original_language });
 
       embeds.push(new MessageEmbed()
         .setAuthor({ name: genre_names.join(', ').slice(0, 256) })

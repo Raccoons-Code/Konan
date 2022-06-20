@@ -12,9 +12,9 @@ export default class Search {
   constructor(options: SearchOptions) {
     this.apiKey = options.apiKey ?? process.env.TMDB_APIKEY;
     this.baseURL = options.baseURL;
-    this.include_adult = false;
+    this.include_adult = options.include_adult ?? false;
     this.language = options.language ?? 'en-US';
-    this.page = 1;
+    this.page = options.page ?? 1;
   }
 
   async searchMovie(props: GetSearchMovies): Promise<APISearchMovies> {

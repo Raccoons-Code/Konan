@@ -1,14 +1,16 @@
 import { Client, Collection } from 'discord.js';
 import { GlobSync } from 'glob';
 import { readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, posix } from 'node:path';
 import { Command, SlashCommand } from '../structures';
+import Util from '../util';
 
 class Commands {
   private client!: Client;
   private _applicationCommandTypes!: string[];
   private _commandTypes!: { [k: string]: string[] } | string[];
-  commandsByCategory: { [k: string]: Collection<string, Command | SlashCommand> } = {};
+  commandsByCategory: { [k: string]: Collection<string, SlashCommand> } = {};
+  errors: Error[] = [];
 
   init(client: Client) {
     Object.defineProperties(this, { client: { value: client } });
@@ -50,11 +52,6 @@ class Commands {
     return commandTypes;
   }
 
-  isClass(value?: any) {
-    return typeof value === 'function' &&
-      /^((?:class\s*)(\s+(?!extends)\S+\s*)?(?:(?:\s+extends)(\s+\S+\s*))?){/.test(value.toString());
-  }
-
   async loadCommands(commandTypes = this.commandTypes, commands: any = {}, client = this.client) {
     const dirs = Object.values(commandTypes).flat();
 
@@ -63,14 +60,28 @@ class Commands {
 
       commands[dir] = new Collection();
 
-      const { found } = new GlobSync(join(__dirname, dir, '*.@(j|t)s'), { ignore: ['**/.ignore_*'] });
+      const { found } = new GlobSync(posix.resolve('src', 'commands', dir, '*.@(j|t)s'), {
+        ignore: ['**/.ignore_*'],
+      });
+
+      const promises = [];
 
       for (let j = 0; j < found.length; j++) {
-        const importedFile = await import(`${found[j]}`);
+        promises.push(import(`${found[j]}`).catch(error => {
+          this.errors.push(error);
+        }));
+      }
+
+      const importedFiles = await Promise.all(promises);
+
+      for (let j = 0; j < importedFiles.length; j++) {
+        const importedFile = importedFiles[j];
+
+        if (!importedFile) continue;
 
         const commandFile = importedFile.default ?? importedFile;
 
-        const command = this.isClass(commandFile) ? new commandFile(client) : commandFile;
+        const command = Util.isClass(commandFile) ? new commandFile(client) : commandFile;
 
         if (!(command.data && command.execute)) continue;
 

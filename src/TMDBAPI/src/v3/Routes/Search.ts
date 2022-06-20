@@ -48,5 +48,3 @@ export const Search = new class Search {
     return '/search/tv';
   }
 };
-
-export default Search;

@@ -1,7 +1,7 @@
-export = <T = any>(string: string): T => {
+export = <T = any[] | Record<any, any>>(string: string): T | undefined => {
   try {
     return JSON.parse(string);
   } catch {
-    return <T>{};
+    return;
   }
 };

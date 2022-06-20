@@ -1,9 +1,9 @@
 import { codeBlock } from '@discordjs/builders';
 import { AutocompleteInteraction, ButtonInteraction, Client, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, ModalSubmitInteraction, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { env } from 'node:process';
 import { InteractionTypes } from '../@types';
 import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
-const { env } = process;
 const { GUILD_INVITE } = env;
 
 export default class InteractionCreate extends Event {
@@ -69,13 +69,13 @@ export default class InteractionCreate extends Event {
   }
 
   MODAL_SUBMIT(interaction: ModalSubmitInteraction): ModalSubmit {
-    const { c, command } = this.Util.parseJSON(interaction.customId);
+    const { c, command } = this.Util.parseJSON(interaction.customId) ?? {};
 
     return interaction.client.commands.modal_component?.get(c ?? command);
   }
 
   BUTTON(interaction: ButtonInteraction): ButtonComponentInteraction {
-    const { c, command } = this.Util.parseJSON(interaction.customId);
+    const { c, command } = this.Util.parseJSON(interaction.customId) ?? {};
 
     return interaction.client.commands.button_component?.get(c ?? command);
   }
@@ -85,7 +85,7 @@ export default class InteractionCreate extends Event {
   }
 
   SELECT_MENU(interaction: SelectMenuInteraction): SelectMenuComponentInteraction {
-    const { c, command } = this.Util.parseJSON(interaction.customId);
+    const { c, command } = this.Util.parseJSON(interaction.customId) ?? {};
 
     return interaction.client.commands.selectmenu_component?.get(c ?? command);
   }

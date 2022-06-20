@@ -15,6 +15,7 @@ declare namespace NodeJS {
     /** @deprecated use DISCORD_TEST_GUILD_ID */
     GUILD_ID?: string
     GUILD_INVITE?: string
+    NODE_ENV?: 'development' | 'production';
     OWNER_ID?: string
     PAYPAL_DONATE_LINK?: string
     STATCORD_KEY?: string

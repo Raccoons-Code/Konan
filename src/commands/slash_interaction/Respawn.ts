@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Client, CommandInteraction } from 'discord.js';
+import { env } from 'node:process';
 import { SlashCommand } from '../../structures';
 
-const { env } = process;
 const { OWNER_ID } = env;
 
 export default class Respawn extends SlashCommand {

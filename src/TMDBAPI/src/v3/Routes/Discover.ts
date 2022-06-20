@@ -13,5 +13,3 @@ export const Discover = new class Discover {
     return '/discover/tv';
   }
 };
-
-export default Discover;

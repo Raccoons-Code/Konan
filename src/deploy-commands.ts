@@ -1,10 +1,10 @@
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
 import 'dotenv/config';
+import { env } from 'node:process';
 import Commands from './commands';
 import { SlashCommand } from './structures';
 
-const { env } = process;
 const { DISCORD_APPLICATION_ID, DISCORD_TOKEN, DISCORD_TEST_GUILD_ID } = env;
 
 const GLOBAL = false;

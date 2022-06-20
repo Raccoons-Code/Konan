@@ -1,9 +1,9 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Client, CommandInteraction } from 'discord.js';
+import { env } from 'node:process';
 import Commands from '..';
 import { SlashCommand } from '../../structures';
 
-const { env } = process;
 const { DISCORD_TEST_GUILD_ID, OWNER_ID } = env;
 
 export default class Deploy extends SlashCommand {

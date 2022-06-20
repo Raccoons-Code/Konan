@@ -1,15 +1,14 @@
 import { codeBlock, time } from '@discordjs/builders';
 import { stripIndents } from 'common-tags';
-import { ButtonInteraction, Client, MessageEmbed, version as djs_version } from 'discord.js';
+import { ButtonInteraction, Client, MessageEmbed, version as djsVersion } from 'discord.js';
 import { cpus, totalmem, version } from 'node:os';
+import { env, memoryUsage, versions } from 'node:process';
 import { InfoCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
 const CPUs = cpus();
 const OS = version();
-const { env, memoryUsage, versions } = process;
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
-const { node } = versions;
 const inline = true;
 
 export default class Info extends ButtonComponentInteraction {
@@ -44,17 +43,17 @@ export default class Info extends ButtonComponentInteraction {
     const { heapUsed } = memoryUsage();
 
     const engine = stripIndents(`
-      Node : ${node}
+      Node : ${versions.node}
       `);
 
     const library = stripIndents(`
-      Discord.js : ${(npm_package_dependencies_discord_js ?? djs_version).match(/(?:\D*)([\d\D]+)/)?.[1]}
+      Discord.js : ${(npm_package_dependencies_discord_js ?? djsVersion).match(/(?:\D*)([\d\D]+)/)?.[1]}
       `);
 
     const machine = stripIndents(`
-      CPU      : ${CPUs[0].model} (${CPUs.length} cores)
-      Memory   : ${this.Util.bytes(heapUsed).join(' ')} / ${this.Util.bytes(totalmem()).join(' ')}
-      OS       : ${OS}
+      CPU    : ${CPUs[0].model} (${CPUs.length} cores)
+      Memory : ${this.Util.bytes(heapUsed).join(' ')} / ${this.Util.bytes(totalmem()).join(' ')}
+      OS     : ${OS}
       `);
 
     const stats = stripIndents(`
