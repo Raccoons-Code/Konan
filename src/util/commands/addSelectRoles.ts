@@ -11,45 +11,43 @@ export function addSelectRoles(
     const component = components[i];
 
     if (!component) {
-      components[i] = new MessageActionRow()
+      const array = roles.splice(0, 25);
+
+      components.push(new MessageActionRow()
         .setComponents(new MessageSelectMenu()
           .setCustomId(JSON.stringify({
             c: 'selectroles',
             count: 0,
           }))
-          .setOptions(roles.slice(0, 25).map(role => ({
+          .setOptions(array.map(role => ({
             label: `${role.name.slice(0, 83)} 0`,
             value: JSON.stringify({
               count: 0,
               roleId: role.id,
             }),
           })))
-          .setMaxValues(roles.slice(0, 25).length)
-          .setPlaceholder(menuPlaceholder ?? ''));
-
-      roles = roles.slice(25);
+          .setMaxValues(array.length)
+          .setPlaceholder(menuPlaceholder ?? '')));
 
       continue;
     }
 
     if (component.components[0].type !== 'SELECT_MENU') continue;
 
-    components[i] = component.addComponents(new MessageSelectMenu()
-      .setCustomId(JSON.stringify({
-        c: 'selectroles',
-        count: 0,
-      }))
-      .setOptions(roles.slice(0, 25 - component.components[0].options.length).map(role => ({
+    const array = roles.splice(0, 25 - component.components[0].options.length);
+
+    component.components[0]
+      .addOptions(array.map(role => ({
         label: `${role.name.slice(0, 83)} 0`,
         value: JSON.stringify({
           count: 0,
           roleId: role.id,
         }),
       })))
-      .setMaxValues(roles.slice(0, 25).length)
-      .setPlaceholder(menuPlaceholder ?? ''));
+      .setMaxValues(component.components[0].options.length)
+      .setPlaceholder(menuPlaceholder ?? '');
 
-    roles = roles.slice(component.components[0].options.length - 1);
+    components[i] = component;
   }
 
   return <MessageActionRow[]>components;
