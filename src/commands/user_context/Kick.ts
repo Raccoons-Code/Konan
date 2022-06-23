@@ -16,7 +16,7 @@ export default class Kick extends UserContextMenu {
   async execute(interaction: UserContextMenuInteraction<'cached'>) {
     const { targetMember } = interaction;
 
-    await interaction.showModal(
+    return interaction.showModal(
       new Modal()
         .setCustomId(JSON.stringify({ c: 'kick', userId: targetMember.id }))
         .setTitle(`Kick ${targetMember.displayName}`)

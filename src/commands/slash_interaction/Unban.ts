@@ -32,9 +32,9 @@ export default class Unban extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
+      return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
     }
 
     const { guild, member, memberPermissions, options } = interaction;
@@ -42,9 +42,9 @@ export default class Unban extends SlashCommand {
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.reply({
+      return interaction.reply({
         content: this.t('missingUserPermission', {
           locale,
           permission: this.t(userPerms[0], { locale }),
@@ -56,9 +56,9 @@ export default class Unban extends SlashCommand {
     const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.reply({
+      return interaction.reply({
         content: this.t('missingPermission', {
           locale,
           permission: this.t(clientPerms[0], { locale }),
@@ -68,7 +68,7 @@ export default class Unban extends SlashCommand {
     }
 
     if (interaction.isAutocomplete())
-      return await this.executeAutocomplete(interaction);
+      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -77,16 +77,16 @@ export default class Unban extends SlashCommand {
     const ban = await guild.bans.fetch(id);
 
     if (!ban)
-      return await interaction.editReply(this.t('ban404', { locale }));
+      return interaction.editReply(this.t('ban404', { locale }));
 
     const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
 
     try {
       await guild.bans.remove(id, reason);
 
-      await interaction.editReply(this.t('userUnbanned', { locale }));
+      return interaction.editReply(this.t('userUnbanned', { locale }));
     } catch {
-      await interaction.editReply(this.t('unbanError', { locale }));
+      return interaction.editReply(this.t('unbanError', { locale }));
     }
   }
 
@@ -122,6 +122,6 @@ export default class Unban extends SlashCommand {
       if (i === 24) break;
     }
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 }

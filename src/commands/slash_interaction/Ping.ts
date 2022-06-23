@@ -19,7 +19,7 @@ export default class Ping extends SlashCommand {
 
     const ping = sent.createdTimestamp - interaction.createdTimestamp;
 
-    await interaction.editReply({
+    return interaction.editReply({
       embeds: [
         new MessageEmbed()
           .setColor('RANDOM')
@@ -29,7 +29,5 @@ export default class Ping extends SlashCommand {
           ]),
       ],
     });
-
-    console.log(`Ping: ${ping}ms`);
   }
 }

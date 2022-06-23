@@ -20,6 +20,8 @@ const languages: { [k: string]: string } = {
 };
 
 export default class News extends SlashCommand {
+  [k: string]: any;
+
   constructor(client: Client) {
     super(client, {
       category: 'Fun',
@@ -64,7 +66,7 @@ export default class News extends SlashCommand {
     const _new = options.getString('new');
 
     if (!(_journal && _new))
-      return await interaction.editReply(this.t('requiredParams', {
+      return interaction.editReply(this.t('requiredParams', {
         locale,
         params: [
           _journal ? 'journal' : '',
@@ -75,7 +77,7 @@ export default class News extends SlashCommand {
     const journal = journals.find(j => j.name === _journal);
 
     if (!journal)
-      return await interaction.editReply(this.t('journal404', { locale }));
+      return interaction.editReply(this.t('journal404', { locale }));
 
     const news = await axios.get(journal.url).then(r => r.data) as any[];
 
@@ -88,7 +90,7 @@ export default class News extends SlashCommand {
         .setDescription(__new[journal.properties.description].join('\n\n').slice(0, 4096)),
     ];
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 
   async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
@@ -96,9 +98,9 @@ export default class News extends SlashCommand {
 
     const focused = interaction.options.getFocused(true);
 
-    res = await this[`${<'category' | 'journal' | 'language' | 'new'>focused.name}Autocomplete`]?.(interaction);
+    res = await this[`${focused.name}Autocomplete`]?.(interaction);
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 
   async categoryAutocomplete(

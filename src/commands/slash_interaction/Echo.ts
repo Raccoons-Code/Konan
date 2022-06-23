@@ -34,7 +34,7 @@ export default class Echo extends SlashCommand {
     if (!channel?.permissionsFor(client.user!)?.has(this.props!.clientPermissions!)) {
       const [, title, description] = content.match(this.pattern.embed) ?? [];
 
-      return await interaction.reply({
+      return interaction.reply({
         embeds: [
           new MessageEmbed()
             .setColor(member?.displayColor || 'RANDOM')
@@ -52,6 +52,6 @@ export default class Echo extends SlashCommand {
 
     await webhook.send({ avatarURL, content, username });
 
-    await interaction.reply({ content: ':heavy_check_mark:⠀', ephemeral: true });
+    return interaction.reply({ content: '☑️', ephemeral: true }).catch(() => null);
   }
 }

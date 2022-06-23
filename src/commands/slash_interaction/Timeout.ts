@@ -67,14 +67,14 @@ export default class Timeout extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length)
-      return await interaction.editReply(this.t('missingUserPermission', {
+      return interaction.editReply(this.t('missingUserPermission', {
         locale,
         permission: this.t(userPerms[0], { locale }),
       }));
@@ -82,7 +82,7 @@ export default class Timeout extends SlashCommand {
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', {
+      return interaction.editReply(this.t('missingPermission', {
         locale,
         permission: this.t(clientPerms[0], { locale }),
       }));
@@ -90,7 +90,7 @@ export default class Timeout extends SlashCommand {
     const user = options.getMember('user', true);
 
     if (!(user.moderatable && this.isModeratable({ author: member, guild, target: user })))
-      return await interaction.editReply(this.t('moderateHierarchyError', { locale }));
+      return interaction.editReply(this.t('moderateHierarchyError', { locale }));
 
     const timeout = options.getInteger('time', true);
     const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
@@ -99,13 +99,13 @@ export default class Timeout extends SlashCommand {
       await user.timeout(timeout, reason);
 
       if (!timeout)
-        return await interaction.editReply(this.t('timeoutRemoved', { locale }));
+        return interaction.editReply(this.t('timeoutRemoved', { locale }));
 
       const t = Math.floor(((Date.now() + timeout) / 1000));
 
-      await interaction.editReply(this.t('userTimedOut', { locale, time: time(t), timeR: time(t, 'R') }));
+      return interaction.editReply(this.t('userTimedOut', { locale, time: time(t), timeR: time(t, 'R') }));
     } catch {
-      await interaction.editReply(this.t('timeoutError', { locale }));
+      return interaction.editReply(this.t('timeoutError', { locale }));
     }
   }
 }

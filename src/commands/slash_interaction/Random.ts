@@ -10,7 +10,7 @@ const Choices = new class {
   _choices!: APIApplicationCommandOptionChoice<string>[];
 
   constructor() {
-    this.choices = ['cat'];
+    this.choices = ['Cat'];
 
     this.setChoices();
   }
@@ -39,7 +39,7 @@ const Choices = new class {
 };
 
 export default class Random extends SlashCommand {
-  [k: string]: any
+  [k: string]: any;
 
   constructor(client: Client) {
     super(client, {
@@ -64,7 +64,7 @@ export default class Random extends SlashCommand {
     const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.reply({
+      return interaction.reply({
         content: this.t('missingChannelPermission', {
           locale,
           permission: this.t(clientPerms[0], { locale }),
@@ -76,12 +76,12 @@ export default class Random extends SlashCommand {
 
     const string = options.getString('type');
 
-    await this[`execute${string ?? Choices.getRandom()}`]?.(interaction);
+    return this[`execute${string ?? Choices.getRandom()}`]?.(interaction);
   }
 
-  async executecat(interaction: CommandInteraction) {
+  async executeCat(interaction: CommandInteraction): Promise<any> {
     const { file } = await axios.get('https://aws.random.cat/meow').then(r => r.data);
 
-    await interaction.editReply({ files: [file] });
+    return interaction.editReply({ files: [file] });
   }
 }

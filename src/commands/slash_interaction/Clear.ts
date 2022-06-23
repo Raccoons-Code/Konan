@@ -36,7 +36,7 @@ export default class Clear extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return await interaction.editReply({ content: this.t('onlyOnServer', { locale }) });
+      return interaction.editReply({ content: this.t('onlyOnServer', { locale }) });
 
     const { client, member, options } = interaction;
 
@@ -45,7 +45,7 @@ export default class Clear extends SlashCommand {
     const userPerms = channel.permissionsFor(member).missing(this.props!.userPermissions!);
 
     if (userPerms.length)
-      return await interaction.editReply(this.t('missingUserChannelPermission', {
+      return interaction.editReply(this.t('missingUserChannelPermission', {
         locale,
         permission: this.t(userPerms[0], { locale }),
       }));
@@ -53,7 +53,7 @@ export default class Clear extends SlashCommand {
     const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingChannelPermission', {
+      return interaction.editReply(this.t('missingChannelPermission', {
         locale,
         permission: this.t(clientPerms[0], { locale }),
       }));
@@ -63,13 +63,13 @@ export default class Clear extends SlashCommand {
     try {
       const size = await this.bulkDelete(channel, limit);
 
-      await interaction.editReply(this.t(size ? 'messageDeleted' : 'noDeletedMessages', {
+      return interaction.editReply(this.t(size ? 'messageDeleted' : 'noDeletedMessages', {
         count: size,
         locale,
         size,
       }));
     } catch {
-      await interaction.editReply(this.t('messageDeleteError', { locale }));
+      return interaction.editReply(this.t('messageDeleteError', { locale }));
     }
   }
 

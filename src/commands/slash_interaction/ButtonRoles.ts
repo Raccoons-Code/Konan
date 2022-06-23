@@ -1,9 +1,11 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable, MessageEmbed, Permissions, TextChannel, Util } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageButton, MessageButtonStyleResolvable, MessageEmbed, Permissions, Role, TextChannel, Util } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
 import { SlashCommand } from '../../structures';
 
 export default class ButtonRoles extends SlashCommand {
+  [k: string]: any;
+
   constructor(client: Client) {
     super(client, {
       category: 'Moderation',
@@ -27,7 +29,7 @@ export default class ButtonRoles extends SlashCommand {
           .setDescriptionLocalizations(this.getLocalizations('buttonrolesCreateRoleDescription'))
           .setRequired(true))
         .addStringOption(option => option.setName('text')
-          .setDescription('The text of the button. Title {0,256} | Description {0,4096} - default: ButtonRoles')
+          .setDescription('The Button Role text. Title {0,256} | Description {0,4096} - default: ButtonRoles')
           .setNameLocalizations(this.getLocalizations('buttonrolesCreateTextName'))
           .setDescriptionLocalizations(this.getLocalizations('buttonrolesCreateTextDescription')))
         .addStringOption(option => option.setName('button_name')
@@ -118,8 +120,8 @@ export default class ButtonRoles extends SlashCommand {
           .setDescriptionLocalizations(this.getLocalizations('buttonrolesEditButtonButtonEmojiDescription'))
           .addBooleanOption(option => option.setName('button_disabled')
             .setDescription('Whether the button is disabled.')
-            .setNameLocalizations(this.getLocalizations('buttonrolesEditButtonButtonDisabledName'))
-            .setDescriptionLocalizations(this.getLocalizations('buttonrolesEditButtonButtonDisabledDescription')))))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesEditButtonButtonDisabledDescription'))
+            .setNameLocalizations(this.getLocalizations('buttonrolesEditButtonButtonDisabledName')))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('add')
         .setDescription('Add to Button role.')
         .setNameLocalizations(this.getLocalizations('buttonrolesAddName'))
@@ -187,6 +189,70 @@ export default class ButtonRoles extends SlashCommand {
             .setNameLocalizations(this.getLocalizations('buttonrolesRemoveButtonButtonName'))
             .setDescriptionLocalizations(this.getLocalizations('buttonrolesRemoveButtonButtonDescription'))
             .setAutocomplete(true)
+            .setRequired(true))))
+      .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('bulk')
+        .setDescription('Bulk manage Button roles.')
+        .setNameLocalizations(this.getLocalizations('buttonrolesBulkName'))
+        .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkDescription'))
+        .addSubcommand(subcommand => subcommand.setName('create')
+          .setDescription('Create a bulk of buttons in a Button role.')
+          .setNameLocalizations(this.getLocalizations('buttonrolesBulkCreateName'))
+          .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkCreateDescription'))
+          .addStringOption(option => option.setName('roles')
+            .setDescription('Input the roles.')
+            .setNameLocalizations(this.getLocalizations('buttonrolesBulkCreateRolesName'))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkCreateRolesDescription'))
+            .setRequired(true))
+          .addStringOption(option => option.setName('text')
+            .setDescription('The Button Role text. Title {0,256} | Description {0,4096} - default: ButtonRoles')
+            .setNameLocalizations(this.getLocalizations('buttonrolesBulkCreateTextName'))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkCreateTextDescription')))
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Select the channel. default: <current channel>')
+            .setNameLocalizations(this.getLocalizations('buttonrolesBulkCreateChannelName'))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkCreateChannelDescription'))
+            .addChannelTypes(...this.GuildTextChannelTypes)))
+        .addSubcommand(subcommand => subcommand.setName('add')
+          .setDescription('Add to a bulk of buttons in a Button role.')
+          .setNameLocalizations(this.getLocalizations('buttonrolesBulkAddName'))
+          .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkAddDescription'))
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Select the channel.')
+            .setNameLocalizations(this.getLocalizations('buttonrolesBulkAddChannelName'))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkAddChannelDescription'))
+            .addChannelTypes(...this.GuildTextChannelTypes)
+            .setRequired(true))
+          .addStringOption(option => option.setName('message_id')
+            .setDescription('Message ID | Message URL')
+            .setNameLocalizations(this.getLocalizations('buttonrolesBulkAddMessageIdName'))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkAddMessageIdDescription'))
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addStringOption(option => option.setName('roles')
+            .setDescription('Input the roles.')
+            .setNameLocalizations(this.getLocalizations('buttonrolesBulkAddRolesName'))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkAddRolesDescription'))
+            .setRequired(true)))
+        .addSubcommand(subcommand => subcommand.setName('remove')
+          .setDescription('Remove from a bulk of buttons in a Button role.')
+          .setNameLocalizations(this.getLocalizations('buttonrolesBulkRemoveName'))
+          .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkRemoveDescription'))
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Select the channel.')
+            .setNameLocalizations(this.getLocalizations('buttonrolesBulkRemoveChannelName'))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkRemoveChannelDescription'))
+            .addChannelTypes(...this.GuildTextChannelTypes)
+            .setRequired(true))
+          .addStringOption(option => option.setName('message_id')
+            .setDescription('Message ID | Message URL')
+            .setNameLocalizations(this.getLocalizations('buttonrolesBulkRemoveMessageIdName'))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkRemoveMessageIdDescription'))
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addStringOption(option => option.setName('roles')
+            .setDescription('Input the roles.')
+            .setNameLocalizations(this.getLocalizations('buttonrolesBulkRemoveRolesName'))
+            .setDescriptionLocalizations(this.getLocalizations('buttonrolesBulkRemoveRolesDescription'))
             .setRequired(true))));
   }
 
@@ -194,9 +260,9 @@ export default class ButtonRoles extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
     }
 
     const { memberPermissions, options } = interaction;
@@ -204,9 +270,9 @@ export default class ButtonRoles extends SlashCommand {
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.reply({
+      return interaction.reply({
         content: this.t('missingUserPermission', {
           locale,
           permission: this.t(userPerms[0], { locale }),
@@ -215,14 +281,14 @@ export default class ButtonRoles extends SlashCommand {
       });
     }
 
-    const subcommand = <'edit'>options.getSubcommandGroup(false) ?? options.getSubcommand();
+    const subcommand = options.getSubcommandGroup(false) ?? options.getSubcommand();
 
     if (interaction.isAutocomplete())
-      return await this[`${subcommand}Autocomplete`]?.(interaction);
+      return this[`${subcommand}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
-    await this[subcommand]?.(interaction);
+    return this[subcommand]?.(interaction);
   }
 
   async create(interaction: CommandInteraction): Promise<any> {
@@ -263,9 +329,9 @@ export default class ButtonRoles extends SlashCommand {
     try {
       await channel.send({ components, embeds });
 
-      return await interaction.editReply(this.t('?created', { locale, string: 'Button Role' }));
+      return interaction.editReply(this.t('?created', { locale, string: 'Button Role' }));
     } catch {
-      return await interaction.editReply(this.t('createError', { locale, string: 'Button Role' }));
+      return interaction.editReply(this.t('createError', { locale, string: 'Button Role' }));
     }
   }
 
@@ -277,9 +343,9 @@ export default class ButtonRoles extends SlashCommand {
 
     const message = await channel.messages.fetch(message_id);
 
-    if (!message) return await interaction.editReply(this.t('message404', { locale }));
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     const subcommand = options.getSubcommand();
 
@@ -296,9 +362,9 @@ export default class ButtonRoles extends SlashCommand {
       try {
         await message.edit({ embeds });
 
-        return await interaction.editReply(this.t('?edited', { locale, string: 'Button Role' }));
+        return interaction.editReply(this.t('?edited', { locale, string: 'Button Role' }));
       } catch {
-        return await interaction.editReply(this.t('editError', { locale, string: 'Button Role' }));
+        return interaction.editReply(this.t('editError', { locale, string: 'Button Role' }));
       }
     }
 
@@ -310,7 +376,7 @@ export default class ButtonRoles extends SlashCommand {
           return JSON.parse(`${element.customId}`).roleId === role.id;
 
         return element.options.some(option => JSON.parse(`${option.value}`).roleId === role?.id);
-      })) : false) return await interaction.editReply(this.t('itemAddError', { locale }));
+      })) : false) return interaction.editReply(this.t('itemAddError', { locale }));
 
       const button_disabled = options.getBoolean('button_disabled');
       const button_emoji = options.getString('button_emoji');
@@ -343,9 +409,9 @@ export default class ButtonRoles extends SlashCommand {
       try {
         await message.edit({ components: message.components });
 
-        return await interaction.editReply(this.t('?edited', { locale, string: 'Button Role' }));
+        return interaction.editReply(this.t('?edited', { locale, string: 'Button Role' }));
       } catch {
-        return await interaction.editReply(this.t('editError', { locale, string: 'Button Role' }));
+        return interaction.editReply(this.t('editError', { locale, string: 'Button Role' }));
       }
     }
   }
@@ -358,9 +424,9 @@ export default class ButtonRoles extends SlashCommand {
 
     const message = await channel.messages.fetch(message_id);
 
-    if (!message) return await interaction.editReply(this.t('message404', { locale }));
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     const role = options.getRole('role', true);
 
@@ -369,7 +435,7 @@ export default class ButtonRoles extends SlashCommand {
         return JSON.parse(`${element.customId}`).roleId === role?.id;
 
       return element.options.some(option => JSON.parse(`${option.value}`).roleId === role?.id);
-    }))) return await interaction.editReply(this.t('itemAddError', { locale }));
+    }))) return interaction.editReply(this.t('itemAddError', { locale }));
 
     const subcommand = options.getSubcommand();
 
@@ -419,9 +485,9 @@ export default class ButtonRoles extends SlashCommand {
       try {
         await message.edit({ components: message.components });
 
-        return await interaction.editReply(this.t('buttonAdded', { locale }));
+        return interaction.editReply(this.t('buttonAdded', { locale }));
       } catch {
-        return await interaction.editReply(this.t('buttonAddError', { locale }));
+        return interaction.editReply(this.t('buttonAddError', { locale }));
       }
     }
   }
@@ -434,9 +500,9 @@ export default class ButtonRoles extends SlashCommand {
 
     const message = await channel.messages.fetch(message_id);
 
-    if (!message) return await interaction.editReply(this.t('message404', { locale }));
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     const subcommand = options.getSubcommand();
 
@@ -454,24 +520,27 @@ export default class ButtonRoles extends SlashCommand {
       try {
         await message.edit({ components: message.components });
 
-        return await interaction.editReply(this.t('buttonRemoved', { locale }));
+        return interaction.editReply(this.t('buttonRemoved', { locale }));
       } catch {
-        return await interaction.editReply(this.t('buttonRemoveError', { locale }));
+        return interaction.editReply(this.t('buttonRemoveError', { locale }));
       }
     }
   }
 
-  async editAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
+  async editAutocomplete(
+    interaction: AutocompleteInteraction<'cached'>,
+    res: ApplicationCommandOptionChoiceData[] = [],
+  ) {
     if (interaction.responded) return;
 
     const { client, guild, options } = interaction;
 
     const channelId = <string>options.get('channel', true).value;
 
-    const channel = await guild?.channels.fetch(channelId);
+    const channel = await guild.channels.fetch(channelId);
 
     if (!(channel instanceof TextChannel))
-      return await interaction.respond(res);
+      return interaction.respond(res);
 
     const focused = options.getFocused(true);
     const pattern = RegExp(`${focused.value}`, 'i');
@@ -510,9 +579,9 @@ export default class ButtonRoles extends SlashCommand {
 
       const message = await channel.messages.fetch(message_id);
 
-      if (!message) return await interaction.respond(res);
+      if (!message) return interaction.respond(res);
 
-      if (!message.editable) return await interaction.respond(res);
+      if (!message.editable) return interaction.respond(res);
 
       for (let i = 0; i < message.components.length; i++) {
         const component = message.components[i];
@@ -548,14 +617,141 @@ export default class ButtonRoles extends SlashCommand {
       }
     }
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 
-  async addAutocomplete(interaction: AutocompleteInteraction) {
-    await this.editAutocomplete(interaction);
+  async addAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
   }
 
-  async removeAutocomplete(interaction: AutocompleteInteraction) {
-    await this.editAutocomplete(interaction);
+  async removeAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
+  }
+
+  async bulk(interaction: CommandInteraction): Promise<any> {
+    const { options } = interaction;
+
+    const subcommand = options.getSubcommand();
+
+    return this[`bulk_${subcommand}`]?.(interaction);
+  }
+
+  async bulk_create(interaction: CommandInteraction<'cached'>): Promise<any> {
+    const { guild, locale, options } = interaction;
+
+    const rolesId = options.getString('roles', true).match(/\d{17,}/g)
+      ?.map(id => guild.roles.fetch(id));
+
+    if (!rolesId)
+      return interaction.editReply('No IDs were found in the roles input.');
+
+    const rolesArray = await Promise.all(rolesId)
+      .then(roles => <Role[]>roles.filter(role => role));
+
+    if (!rolesArray.length)
+      return interaction.editReply('No roles were found in the roles input.');
+
+    const rolesGroups = this.Util.splitArrayInGroups(rolesArray.slice(0, 25), 5);
+
+    const components = this.Util.createButtonRoles(rolesGroups);
+
+    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+
+    const [, title, description] = options.getString('text')?.match(this.pattern.embed) ?? [];
+
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
+        .setTitle(title ? title : description ? '' : 'ButtonRoles'),
+    ];
+
+    try {
+      await channel.send({ components, embeds });
+
+      return interaction.editReply(this.t('?created', { locale, string: 'Button Role' }));
+    } catch {
+      return interaction.editReply(this.t('createError', { locale, string: 'Button Role' }));
+    }
+  }
+
+  async bulk_add(interaction: CommandInteraction<'cached'>): Promise<any> {
+    const { guild, locale, options } = interaction;
+
+    let rolesId = options.getString('roles', true).match(/\d{17,}/g);
+
+    if (!rolesId)
+      return interaction.editReply('No IDs were found in the roles input.');
+
+    const channel = <TextChannel>options.getChannel('channel', true);
+    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+
+    const message = await channel.messages.fetch(message_id);
+
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
+
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
+
+    rolesId = this.Util.filterRolesId(message.components, rolesId);
+
+    const rolesArray = await Promise.all(rolesId.map(id => guild.roles.fetch(id)))
+      .then(roles => <Role[]>roles.filter(role => role));
+
+    if (!rolesArray.length)
+      return interaction.editReply('No roles were found in the roles input.');
+
+    message.components = this.Util.addButtonRoles(rolesArray, message.components).slice(0, 5);
+
+    try {
+      await message.edit({ components: message.components });
+
+      return interaction.editReply(this.t('buttonAdded', { locale }));
+    } catch {
+      return interaction.editReply(this.t('buttonAddError', { locale }));
+    }
+  }
+
+  async bulk_remove(interaction: CommandInteraction<'cached'>): Promise<any> {
+    const { locale, options } = interaction;
+
+    const rolesId = options.getString('roles', true).match(/\d{17,}/g);
+
+    if (!rolesId)
+      return interaction.editReply('No IDs were found in the roles input.');
+
+    const channel = <TextChannel>options.getChannel('channel', true);
+    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+
+    const message = await channel.messages.fetch(message_id);
+
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
+
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
+
+    message.components = this.Util.removeButtonRoles(rolesId, message.components);
+
+    try {
+      await message.edit({ components: message.components });
+
+      return interaction.editReply(this.t('buttonRemoved', { locale }));
+    } catch {
+      return interaction.editReply(this.t('buttonRemoveError', { locale }));
+    }
+  }
+
+  async bulkAutocomplete(interaction: AutocompleteInteraction): Promise<any> {
+    const { options } = interaction;
+
+    const subcommand = options.getSubcommand();
+
+    return this[`bulk_${subcommand}Autocomplete`]?.(interaction);
+  }
+
+  async bulk_addAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
+  }
+
+  async bulk_removeAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
   }
 }

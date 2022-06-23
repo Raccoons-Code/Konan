@@ -24,7 +24,7 @@ export default class Avatar extends SlashCommand {
     const user = options.getUser('user') ?? interaction.user;
     const member = <GuildMember>options.getMember('user') ?? interaction.member;
 
-    await interaction.reply({
+    return interaction.reply({
       components: [
         new MessageActionRow()
           .setComponents([

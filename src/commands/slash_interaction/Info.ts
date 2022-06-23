@@ -12,7 +12,7 @@ const { npm_package_dependencies_discord_js, npm_package_version } = env;
 const inline = true;
 
 export default class Info extends SlashCommand {
-  [k: string]: any
+  [k: string]: any;
 
   constructor(client: Client) {
     super(client, {
@@ -69,10 +69,14 @@ export default class Info extends SlashCommand {
 
     const components = [new MessageActionRow()];
 
-    await this[subcommand]?.(interaction, embeds, components);
+    return this[subcommand]?.(interaction, embeds, components);
   }
 
-  async application(interaction: CommandInteraction, embeds: MessageEmbed[], components: MessageActionRow[]) {
+  async application(
+    interaction: CommandInteraction,
+    embeds: MessageEmbed[],
+    components: MessageActionRow[],
+  ): Promise<any> {
     const { client, guild } = interaction;
 
     const { channels, guilds, readyAt, user, users, ws } = client;
@@ -125,10 +129,10 @@ export default class Info extends SlashCommand {
 
     components[0].setComponents(buttons);
 
-    await interaction.editReply({ components, embeds });
+    return interaction.editReply({ components, embeds });
   }
 
-  async channel(interaction: CommandInteraction, embeds: MessageEmbed[]) {
+  async channel(interaction: CommandInteraction, embeds: MessageEmbed[]): Promise<any> {
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel') ?? interaction.channel;
@@ -196,10 +200,10 @@ export default class Info extends SlashCommand {
     if (topic)
       embeds[0].addField(this.t('topic', { locale }), topic, true);
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 
-  async role(interaction: CommandInteraction, embeds: MessageEmbed[]) {
+  async role(interaction: CommandInteraction, embeds: MessageEmbed[]): Promise<any> {
     const { locale, options } = interaction;
 
     const role = <Role>options.getRole('role', true);
@@ -217,14 +221,14 @@ export default class Info extends SlashCommand {
         { name: `${this.t('permissions', { locale })} [${arrayPerms.length}]`, value: codeBlock(textPerms) },
       ]);
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 
   async server(interaction: CommandInteraction, embeds: MessageEmbed[]): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild } = interaction;
 
@@ -240,10 +244,10 @@ export default class Info extends SlashCommand {
       .setThumbnail(guild.iconURL()!)
       .setTimestamp(guild.createdTimestamp);
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 
-  async user(interaction: CommandInteraction, embeds: MessageEmbed[]) {
+  async user(interaction: CommandInteraction, embeds: MessageEmbed[]): Promise<any> {
     const { locale, options } = interaction;
 
     const user = options.getUser('user') ?? interaction.user;
@@ -283,6 +287,6 @@ export default class Info extends SlashCommand {
         embeds[0].setThumbnail(member.displayAvatarURL({ dynamic: true }));
     }
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 }

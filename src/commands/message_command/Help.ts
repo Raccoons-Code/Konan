@@ -65,6 +65,6 @@ export default class Help extends Command {
       new MessageActionRow().setComponents(menus),
     ];
 
-    await message.reply({ components, embeds });
+    return message.reply({ components, embeds });
   }
 }

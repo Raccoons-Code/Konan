@@ -53,7 +53,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
 
     await Promise.all(promises);
 
-    await this.setComponents(interaction, roles);
+    return this.setComponents(interaction, roles);
   }
 
   async setComponents(interaction: SelectMenuInteraction<'cached'>, roles: RolesManager) {
@@ -107,6 +107,6 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
     }))
       .setOptions(<MessageSelectOptionData[]>component.options);
 
-    await interaction.update({ components: message.components });
+    return interaction.update({ components: message.components });
   }
 }

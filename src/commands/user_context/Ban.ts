@@ -16,7 +16,7 @@ export default class Ban extends UserContextMenu {
   async execute(interaction: UserContextMenuInteraction<'cached'>) {
     const { targetMember } = interaction;
 
-    await interaction.showModal(
+    return interaction.showModal(
       new Modal()
         .setCustomId(JSON.stringify({ c: 'ban', userId: targetMember.id }))
         .setTitle(`Ban ${targetMember.displayName}`)

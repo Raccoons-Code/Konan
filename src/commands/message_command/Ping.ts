@@ -14,8 +14,6 @@ export default class Ping extends Command {
 
     const ping = sent.createdTimestamp - message.createdTimestamp;
 
-    await sent.edit(`Pong! \`API: ${message.client.ws.ping}ms\`, \`BOT: ${ping}ms\``);
-
-    console.log(`Ping: ${ping}ms`);
+    return sent.edit(`Pong! \`API: ${message.client.ws.ping}ms\`, \`BOT: ${ping}ms\``);
   }
 }

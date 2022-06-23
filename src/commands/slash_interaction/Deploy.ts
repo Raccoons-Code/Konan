@@ -36,7 +36,7 @@ export default class Deploy extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('deployResetOptionDescription')));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     const { client, locale, options, user } = interaction;
 
     const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
@@ -106,13 +106,13 @@ export default class Deploy extends SlashCommand {
         await guild.commands.set([...data, ...data_private]);
       }
 
-      await interaction.editReply(`${this.t(['reloadedAppCommands', 'type'], { locale })} ${type}`);
-
       console.log('Successfully reloaded application (/) commands.');
+
+      return interaction.editReply(`${this.t(['reloadedAppCommands', 'type'], { locale })} ${type}`);
     } catch (error) {
       console.error(error);
 
-      await interaction.editReply(`${this.t(['reloadAppCommandsError', 'type'], { locale })} ${type}`);
+      return interaction.editReply(`${this.t(['reloadAppCommandsError', 'type'], { locale })} ${type}`);
     }
   }
 }

@@ -1,12 +1,13 @@
 import { Client, EmbedFieldData, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, SelectMenuInteraction } from 'discord.js';
+import { env } from 'node:process';
 import { SelectMenuComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
 
-const { env } = process;
 const { DONATE_LINK, GUILD_INVITE } = env;
 /* const resetProps = { attachments: [], components: [], content: null, embeds: [], files: [] }; */
 
 export default class Help extends SelectMenuComponentInteraction {
+  [k: string]: any;
   limit = Util.Constants.helpPageLimit;
 
   constructor(client: Client) {
@@ -21,7 +22,7 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const { sc } = JSON.parse(customId);
 
-    this[<'home'>sc || values[0]]?.(interaction);
+    this[sc || values[0]]?.(interaction);
   }
 
   async home(interaction: SelectMenuInteraction<'cached'>) {
@@ -71,7 +72,7 @@ export default class Help extends SelectMenuComponentInteraction {
       new MessageActionRow().setComponents(menus),
     ];
 
-    await interaction.update({ components, embeds });
+    return interaction.update({ components, embeds });
   }
 
   async commands(interaction: SelectMenuInteraction) {
@@ -102,7 +103,7 @@ export default class Help extends SelectMenuComponentInteraction {
           total: Math.floor(slashCommands.length / this.limit),
         })));
 
-    await interaction.update({ components: message.components, embeds });
+    return interaction.update({ components: message.components, embeds });
   }
 
   async localization(interaction: SelectMenuInteraction<'cached'>) {
@@ -119,7 +120,7 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const components = [new MessageActionRow().setComponents(menus)];
 
-    await interaction.update({ components, embeds });
+    return interaction.update({ components, embeds });
   }
 
   async setCommandCategory(interaction: SelectMenuInteraction<'cached'>) {
@@ -150,7 +151,7 @@ export default class Help extends SelectMenuComponentInteraction {
           total: Math.floor(slashCommands.length / this.limit),
         })));
 
-    await interaction.update({ components: message.components, embeds });
+    return interaction.update({ components: message.components, embeds });
   }
 
   setPageButtons({ category, page, total }: { category: string, page: number, total: number }) {

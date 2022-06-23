@@ -11,7 +11,7 @@ export default class extends Command {
     });
   }
 
-  async execute(message: Message) {
+  async execute(message: Message): Promise<any> {
     message.delete().catch(() => null);
 
     const { author, channel, client, member, text } = message;
@@ -42,7 +42,7 @@ export default class extends Command {
       .then(w => w.find(v => v.name === client.user?.id)) ??
       await (<TextChannel>channel).createWebhook(client.user!.id);
 
-    await webhook.send({ avatarURL, components, content, username });
+    return webhook.send({ avatarURL, components, content, username });
   }
 
   getButtons(buttons: MessageButton[], rows: MessageActionRow[] = []): MessageActionRow[] {

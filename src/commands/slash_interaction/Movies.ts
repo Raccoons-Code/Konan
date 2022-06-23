@@ -5,6 +5,8 @@ import { SlashCommand } from '../../structures';
 import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../TMDBAPI';
 
 export default class Movies extends SlashCommand {
+  [k: string]: any;
+
   constructor(client: Client) {
     super(client, {
       category: 'Fun',
@@ -39,14 +41,14 @@ export default class Movies extends SlashCommand {
   async execute(interaction: CommandInteraction | AutocompleteInteraction) {
     const { options } = interaction;
 
-    const subcommand = <'search'>options.getSubcommand();
+    const subcommand = options.getSubcommand();
 
     if (interaction.isAutocomplete())
-      return await this[`${subcommand}Autocomplete`]?.(interaction);
+      return this[`${subcommand}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true, fetchReply: true });
 
-    await this[subcommand]?.(interaction);
+    return this[subcommand]?.(interaction);
   }
 
   async list(interaction: CommandInteraction): Promise<any> {
@@ -62,7 +64,7 @@ export default class Movies extends SlashCommand {
     });
 
     if (!results)
-      return await interaction.editReply('Sorry! I didn\'t find your request.');
+      return interaction.editReply('Sorry! I didn\'t find your request.');
 
     const { embeds } = await this.setEmbeds(results, offset, locale);
 
@@ -89,10 +91,10 @@ export default class Movies extends SlashCommand {
 
     const components = [new MessageActionRow().setComponents(buttons)];
 
-    await interaction.editReply({ components, embeds });
+    return interaction.editReply({ components, embeds });
   }
 
-  async search(interaction: CommandInteraction) {
+  async search(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const movie_id = parseInt(options.getString('keyword', true));
@@ -133,7 +135,7 @@ export default class Movies extends SlashCommand {
         .setURL(movie_url),
     ];
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 
   async searchAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
@@ -143,7 +145,7 @@ export default class Movies extends SlashCommand {
 
     const keyword = options.getString('keyword');
 
-    if (!keyword) return await interaction.respond(res);
+    if (!keyword) return interaction.respond(res);
 
     const { results } = await TMDBApi.search.searchMovie({ query: keyword, language: locale });
 
@@ -163,7 +165,7 @@ export default class Movies extends SlashCommand {
       if (i === 24) break;
     }
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 
   getPage(raw_page = 1) {

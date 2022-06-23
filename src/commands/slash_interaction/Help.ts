@@ -24,7 +24,7 @@ export default class Help extends SlashCommand {
 
   async execute(interaction: CommandInteraction) {
     if (interaction.isAutocomplete())
-      return await this.executeAutocomplete(interaction);
+      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -32,7 +32,7 @@ export default class Help extends SlashCommand {
 
     const commandName = options.getString('command')?.split(' |')[0].toLowerCase();
 
-    if (commandName) return await this.executeCommand(interaction, commandName);
+    if (commandName) return this.executeCommand(interaction, commandName);
 
     const avatarURL = <string>guild?.me?.displayAvatarURL({ dynamic: true }) ??
       client.user?.displayAvatarURL({ dynamic: true });
@@ -86,7 +86,7 @@ export default class Help extends SlashCommand {
       new MessageActionRow().setComponents(menus),
     ];
 
-    await interaction.editReply({ components, embeds });
+    return interaction.editReply({ components, embeds });
   }
 
   async executeCommand(interaction: CommandInteraction, commandName: string): Promise<any> {
@@ -97,7 +97,7 @@ export default class Help extends SlashCommand {
     const command = slash_interaction.get(commandName);
 
     if (!command)
-      return await interaction.editReply(this.t('command404', { locale }));
+      return interaction.editReply(this.t('command404', { locale }));
 
     const embeds = [
       new MessageEmbed()
@@ -106,7 +106,7 @@ export default class Help extends SlashCommand {
         .setDescription(this.convertOptionsToString(command.data.options)),
     ];
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 
   async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
@@ -147,7 +147,7 @@ export default class Help extends SlashCommand {
       }
     }
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 
   convertOptionsToString(dataOptions: any[], text = '', index = '') {

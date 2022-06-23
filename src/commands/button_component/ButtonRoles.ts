@@ -20,11 +20,11 @@ export default class ButtonRoles extends ButtonComponentInteraction {
       if (member.roles.resolve(roleId)) {
         await member.roles.remove(roleId);
 
-        await this.setComponents(interaction, false);
+        return this.setComponents(interaction, false);
       } else {
         await member.roles.add(roleId);
 
-        await this.setComponents(interaction, true);
+        return this.setComponents(interaction, true);
       }
     } catch {
       await interaction.deferUpdate();
@@ -49,6 +49,6 @@ export default class ButtonRoles extends ButtonComponentInteraction {
 
     component.setLabel([label, newCustomId.count].join(' ').trim());
 
-    await interaction.update({ components: message.components });
+    return interaction.update({ components: message.components });
   }
 }

@@ -13,7 +13,7 @@ export default class Avatar extends UserContextMenu {
   async execute(interaction: UserContextMenuInteraction<'cached'>) {
     const { targetMember, targetUser } = interaction;
 
-    await interaction.reply({
+    return interaction.reply({
       components: [
         new MessageActionRow()
           .setComponents([

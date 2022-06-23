@@ -4,6 +4,7 @@ import { ButtonComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
 
 export default class Help extends ButtonComponentInteraction {
+  [k: string]: any;
   limit = Util.Constants.helpPageLimit;
 
   constructor(client: Client) {
@@ -18,7 +19,7 @@ export default class Help extends ButtonComponentInteraction {
 
     const { sc } = JSON.parse(customId);
 
-    this[<'commands'>sc]?.(interaction);
+    this[sc]?.(interaction);
   }
 
   async commands(interaction: ButtonInteraction<'cached'>) {
@@ -47,7 +48,7 @@ export default class Help extends ButtonComponentInteraction {
       return c;
     });
 
-    await interaction.update({ components: message.components, embeds: message.embeds });
+    return interaction.update({ components: message.components, embeds: message.embeds });
   }
 
   convertCommandsToEmbedFields(

@@ -1,9 +1,11 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageEmbed, MessageSelectMenu, Permissions, TextChannel, Util } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, EmojiIdentifierResolvable, MessageActionRow, MessageEmbed, MessageSelectMenu, Permissions, Role, TextChannel, Util } from 'discord.js';
 import { SelectRolesItemOptionValue } from '../../@types';
 import { SlashCommand } from '../../structures';
 
 export default class SelectRoles extends SlashCommand {
+  [k: string]: any;
+
   constructor(client: Client) {
     super(client, {
       category: 'Moderation',
@@ -43,7 +45,7 @@ export default class SelectRoles extends SlashCommand {
           .setNameLocalizations(this.getLocalizations('selectrolesCreateItemEmojiName'))
           .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateItemEmojiDescription')))
         .addBooleanOption(option => option.setName('menu_disabled')
-          .setDescription('Whether the button is disabled.')
+          .setDescription('Whether the menu is disabled.')
           .setNameLocalizations(this.getLocalizations('selectrolesCreateMenuDisabledName'))
           .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateMenuDisabledDescription')))
         .addStringOption(option => option.setName('menu_place_holder')
@@ -307,6 +309,86 @@ export default class SelectRoles extends SlashCommand {
             .setNameLocalizations(this.getLocalizations('selectrolesRemoveItemItemName'))
             .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveItemItemDescription'))
             .setAutocomplete(true)
+            .setRequired(true))))
+      .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('bulk')
+        .setDescription('Bulk manage Select roles.')
+        .setNameLocalizations(this.getLocalizations('selectrolesBulkName'))
+        .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkDescription'))
+        .addSubcommand(subcommand => subcommand.setName('create')
+          .setDescription('Create a bulk of options in a Select role.')
+          .setNameLocalizations(this.getLocalizations('selectrolesBulkCreateName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkCreateDescription'))
+          .addStringOption(option => option.setName('roles')
+            .setDescription('Input the roles.')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkCreateRolesName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkCreateRolesDescription'))
+            .setRequired(true))
+          .addStringOption(option => option.setName('text')
+            .setDescription('The Select Role text. Title {0,256} | Description {0,4096} - default: SelectRoles')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkCreateTextName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkCreateTextDescription')))
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Select the channel. default: <current channel>')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkCreateChannelName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkCreateChannelDescription'))
+            .addChannelTypes(...this.GuildTextChannelTypes))
+          .addRoleOption(option => option.setName('default_role')
+            .setDescription('Select the default role.')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkCreateDefaultRoleName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkCreateDefaultRoleDescription')))
+          .addStringOption(option => option.setName('menu_place_holder')
+            .setDescription('The menu place holder. {0,150}')
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkCreateMenuPlaceHolderDescription'))
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkCreateMenuPlaceHolderName'))))
+        .addSubcommand(subcommand => subcommand.setName('add')
+          .setDescription('Add to a bulk of options in a Select role.')
+          .setNameLocalizations(this.getLocalizations('selectrolesBulkAddName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkAddDescription'))
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Select the channel.')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkAddChannelName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkAddChannelDescription'))
+            .addChannelTypes(...this.GuildTextChannelTypes)
+            .setRequired(true))
+          .addStringOption(option => option.setName('message_id')
+            .setDescription('Message ID | Message URL')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkAddMessageIdName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkAddMessageIdDescription'))
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addStringOption(option => option.setName('roles')
+            .setDescription('Input the roles.')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkAddRolesName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkAddRolesDescription'))
+            .setRequired(true))
+          .addRoleOption(option => option.setName('default_role')
+            .setDescription('Select the default role.')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkAddDefaultRoleName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkAddDefaultRoleDescription')))
+          .addStringOption(option => option.setName('menu_place_holder')
+            .setDescription('The menu place holder. {0,150}')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkAddMenuPlaceHolderName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkAddMenuPlaceHolderDescription'))))
+        .addSubcommand(subcommand => subcommand.setName('remove')
+          .setDescription('Remove from a bulk of options in a Select role.')
+          .setNameLocalizations(this.getLocalizations('selectrolesBulkRemoveName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkRemoveDescription'))
+          .addChannelOption(option => option.setName('channel')
+            .setDescription('Select the channel.')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkRemoveChannelName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkRemoveChannelDescription'))
+            .addChannelTypes(...this.GuildTextChannelTypes)
+            .setRequired(true))
+          .addStringOption(option => option.setName('message_id')
+            .setDescription('Message ID | Message URL')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkRemoveMessageIdName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkRemoveMessageIdDescription'))
+            .setAutocomplete(true)
+            .setRequired(true))
+          .addStringOption(option => option.setName('roles')
+            .setDescription('Input the roles.')
+            .setNameLocalizations(this.getLocalizations('selectrolesBulkRemoveRolesName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesBulkRemoveRolesDescription'))
             .setRequired(true))));
   }
 
@@ -314,9 +396,9 @@ export default class SelectRoles extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
     }
 
     const { memberPermissions, options } = interaction;
@@ -324,9 +406,9 @@ export default class SelectRoles extends SlashCommand {
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.reply({
+      return interaction.reply({
         content: this.t('missingUserPermission', {
           locale,
           permission: this.t(userPerms[0], { locale }),
@@ -335,17 +417,17 @@ export default class SelectRoles extends SlashCommand {
       });
     }
 
-    const subcommand = <'edit'>options.getSubcommandGroup(false) ?? options.getSubcommand();
+    const subcommand = options.getSubcommandGroup(false) ?? options.getSubcommand();
 
     if (interaction.isAutocomplete())
-      return await this[`${subcommand}Autocomplete`]?.(interaction);
+      return this[`${subcommand}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
-    await this[subcommand]?.(interaction);
+    return this[subcommand]?.(interaction);
   }
 
-  async create(interaction: CommandInteraction) {
+  async create(interaction: CommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const [, title, embed_description] = options.getString('text')?.match(this.pattern.embed) ?? [];
@@ -390,9 +472,9 @@ export default class SelectRoles extends SlashCommand {
     try {
       await channel.send({ components, embeds });
 
-      await interaction.editReply(this.t('?created', { locale, string: 'Select Role' }));
+      return interaction.editReply(this.t('?created', { locale, string: 'Select Role' }));
     } catch {
-      await interaction.editReply(this.t('createError', { locale, string: 'Select Role' }));
+      return interaction.editReply(this.t('createError', { locale, string: 'Select Role' }));
     }
   }
 
@@ -404,9 +486,9 @@ export default class SelectRoles extends SlashCommand {
 
     const message = await channel.messages.fetch(message_id);
 
-    if (!message) return await interaction.editReply(this.t('message404', { locale }));
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     const subcommand = options.getSubcommand();
 
@@ -423,9 +505,9 @@ export default class SelectRoles extends SlashCommand {
       try {
         await message.edit({ embeds });
 
-        return await interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
+        return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
       } catch {
-        return await interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
+        return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
       }
     }
 
@@ -455,9 +537,9 @@ export default class SelectRoles extends SlashCommand {
       try {
         await message.edit({ components: message.components });
 
-        return await interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
+        return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
       } catch {
-        return await interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
+        return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
       }
     }
 
@@ -471,7 +553,7 @@ export default class SelectRoles extends SlashCommand {
           return JSON.parse(`${element.customId}`).roleId === role?.id;
 
         return element.options.some(option => JSON.parse(`${option.value}`).roleId === role?.id);
-      })) : false) return await interaction.editReply(this.t('itemAddError', { locale }));
+      })) : false) return interaction.editReply(this.t('itemAddError', { locale }));
 
       const description = options.getString('item_description')?.slice(0, 100);
       const item_default = options.getBoolean('item_default');
@@ -523,9 +605,9 @@ export default class SelectRoles extends SlashCommand {
       try {
         await message.edit({ components: message.components });
 
-        return await interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
+        return interaction.editReply(this.t('?edited', { locale, string: 'Select Role' }));
       } catch {
-        return await interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
+        return interaction.editReply(this.t('editError', { locale, string: 'Select Role' }));
       }
     }
   }
@@ -538,9 +620,9 @@ export default class SelectRoles extends SlashCommand {
 
     const message = await channel.messages.fetch(message_id);
 
-    if (!message) return await interaction.editReply(this.t('message404', { locale }));
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     const role = options.getRole('role', true);
 
@@ -549,7 +631,7 @@ export default class SelectRoles extends SlashCommand {
         return JSON.parse(`${element.customId}`).roleId === role?.id;
 
       return element.options.some(option => JSON.parse(`${option.value}`).roleId === role?.id);
-    }))) return await interaction.editReply(this.t('itemAddError', { locale }));
+    }))) return interaction.editReply(this.t('itemAddError', { locale }));
 
     const item_default = options.getBoolean('item_default') ?? false;
     const description = options.getString('item_description')?.slice(0, 100);
@@ -606,9 +688,9 @@ export default class SelectRoles extends SlashCommand {
       try {
         await message.edit({ components: message.components });
 
-        return await interaction.editReply(this.t('itemAdded', { locale }));
+        return interaction.editReply(this.t('itemAdded', { locale }));
       } catch {
-        return await interaction.editReply(this.t('itemAddError', { locale }));
+        return interaction.editReply(this.t('itemAddError', { locale }));
       }
     }
 
@@ -643,9 +725,9 @@ export default class SelectRoles extends SlashCommand {
       try {
         await message.edit({ components: message.components });
 
-        return await interaction.editReply(this.t('itemAdded', { locale }));
+        return interaction.editReply(this.t('itemAdded', { locale }));
       } catch {
-        return await interaction.editReply(this.t('itemAddError', { locale }));
+        return interaction.editReply(this.t('itemAddError', { locale }));
       }
     }
   }
@@ -658,9 +740,9 @@ export default class SelectRoles extends SlashCommand {
 
     const message = await channel.messages.fetch(message_id);
 
-    if (!message) return await interaction.editReply(this.t('message404', { locale }));
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     const subcommand = options.getSubcommand();
 
@@ -674,9 +756,9 @@ export default class SelectRoles extends SlashCommand {
       try {
         await message.edit({ components: message.components });
 
-        return await interaction.editReply(this.t('itemRemoved', { locale }));
+        return interaction.editReply(this.t('itemRemoved', { locale }));
       } catch {
-        return await interaction.editReply(this.t('itemRemoveError', { locale }));
+        return interaction.editReply(this.t('itemRemoveError', { locale }));
       }
     }
 
@@ -702,24 +784,27 @@ export default class SelectRoles extends SlashCommand {
       try {
         await message.edit({ components: message.components });
 
-        return await interaction.editReply(this.t('itemRemoved', { locale }));
+        return interaction.editReply(this.t('itemRemoved', { locale }));
       } catch {
-        return await interaction.editReply(this.t('itemRemoveError', { locale }));
+        return interaction.editReply(this.t('itemRemoveError', { locale }));
       }
     }
   }
 
-  async editAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
+  async editAutocomplete(
+    interaction: AutocompleteInteraction<'cached'>,
+    res: ApplicationCommandOptionChoiceData[] = [],
+  ) {
     if (interaction.responded) return;
 
-    const { client, guild, options } = <AutocompleteInteraction<'cached'>>interaction;
+    const { client, guild, options } = interaction;
 
     const channelId = <string>options.get('channel', true).value;
 
     const channel = await guild.channels.fetch(channelId);
 
     if (!(channel instanceof TextChannel))
-      return await interaction.respond(res);
+      return interaction.respond(res);
 
     const focused = options.getFocused(true);
     const pattern = RegExp(`${focused.value}`, 'i');
@@ -729,7 +814,7 @@ export default class SelectRoles extends SlashCommand {
 
       const messages_array = messages.filter(m =>
         m.author.id === client.user?.id &&
-        m.components.some(c => RegExp(`"c":"${this.data.name}"`).test(<string>c.components[0].customId)) &&
+        m.components.some(c => RegExp(`"c":"${this.data.name}"`).test(c.components[0].customId!)) &&
         pattern.test(m.id)).toJSON();
 
       for (let i = 0; i < messages_array.length; i++) {
@@ -758,9 +843,9 @@ export default class SelectRoles extends SlashCommand {
 
       const message = await channel.messages.fetch(message_id);
 
-      if (!message) return await interaction.respond(res);
+      if (!message) return interaction.respond(res);
 
-      if (!message.editable) return await interaction.respond(res);
+      if (!message.editable) return interaction.respond(res);
 
       for (let i = 0; i < message.components.length; i++) {
         const component = message.components[i];
@@ -796,9 +881,9 @@ export default class SelectRoles extends SlashCommand {
 
       const message = await channel.messages.fetch(message_id);
 
-      if (!message) return await interaction.respond(res);
+      if (!message) return interaction.respond(res);
 
-      if (!message.editable) return await interaction.respond(res);
+      if (!message.editable) return interaction.respond(res);
 
       for (let i = 0; i < message.components.length; i++) {
         const component = message.components[i];
@@ -838,14 +923,151 @@ export default class SelectRoles extends SlashCommand {
       }
     }
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 
-  async addAutocomplete(interaction: AutocompleteInteraction) {
-    return await this.editAutocomplete(interaction);
+  async addAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
   }
 
-  async removeAutocomplete(interaction: AutocompleteInteraction) {
-    return await this.editAutocomplete(interaction);
+  async removeAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
+  }
+
+  async bulk(interaction: CommandInteraction): Promise<any> {
+    const { options } = interaction;
+
+    const subcommand = options.getSubcommand();
+
+    return this[`bulk_${subcommand}`]?.(interaction);
+  }
+
+  async bulk_create(interaction: CommandInteraction<'cached'>): Promise<any> {
+    const { guild, locale, options } = interaction;
+
+    const rolesId = options.getString('roles', true).match(/\d{17,}/g)
+      ?.map(id => guild.roles.fetch(id));
+
+    if (!rolesId)
+      return interaction.editReply('No IDs were found in the roles input.');
+
+    const rolesArray = await Promise.all(rolesId)
+      .then(roles => <Role[]>roles.filter(role => role));
+
+    if (!rolesArray.length)
+      return interaction.editReply('No roles were found in the roles input.');
+
+    const defaultRole = options.getRole('default_role');
+    const menuPlaceholder = options.getString('menu_place_holder');
+
+    const roles = this.Util.splitArrayInGroups(rolesArray.slice(0, 125), 25);
+
+    const components = this.Util.createSelectRoles({ roles, defaultRole, menuPlaceholder });
+
+    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+
+    const [, title, description] = options.getString('text')?.match(this.pattern.embed) ?? [];
+
+    const embeds = [
+      new MessageEmbed()
+        .setColor('RANDOM')
+        .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
+        .setTitle(title ? title : description ? '' : 'SelectRoles'),
+    ];
+
+    try {
+      await channel.send({ components, embeds });
+
+      return interaction.editReply(this.t('?created', { locale, string: 'Select Role' }));
+    } catch {
+      return interaction.editReply(this.t('createError', { locale, string: 'Select Role' }));
+    }
+  }
+
+  async bulk_add(interaction: CommandInteraction<'cached'>) {
+    const { guild, locale, options } = interaction;
+
+    let rolesId = options.getString('roles', true).match(/\d{17,}/g);
+
+    if (!rolesId)
+      return interaction.editReply('No IDs were found in the roles input.');
+
+    const channel = <TextChannel>options.getChannel('channel', true);
+    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+
+    const message = await channel.messages.fetch(message_id);
+
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
+
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
+
+    rolesId = this.Util.filterRolesId(message.components, rolesId);
+
+    const rolesArray = await Promise.all(rolesId.map(id => guild.roles.fetch(id)))
+      .then(roles => <Role[]>roles.filter(role => role).slice(0, 125));
+
+    if (!rolesArray.length)
+      return interaction.editReply('No roles were found in the roles input.');
+
+    const menuPlaceholder = options.getString('menu_place_holder');
+
+    message.components = this.Util.addSelectRoles(rolesArray, message.components, menuPlaceholder).slice(0, 5);
+
+    const defaultRole = options.getRole('default_role');
+
+    if (defaultRole)
+      message.components = this.Util.setDefaultRole(message.components, defaultRole);
+
+    try {
+      await message.edit({ components: message.components });
+
+      return interaction.editReply(this.t('itemAdded', { locale }));
+    } catch {
+      return interaction.editReply(this.t('itemAddError', { locale }));
+    }
+  }
+
+  async bulk_remove(interaction: CommandInteraction<'cached'>): Promise<any> {
+    const { locale, options } = interaction;
+
+    const rolesId = options.getString('roles', true).match(/\d{17,}/g);
+
+    if (!rolesId)
+      return interaction.editReply('No IDs were found in the roles input.');
+
+    const channel = <TextChannel>options.getChannel('channel', true);
+    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+
+    const message = await channel.messages.fetch(message_id);
+
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
+
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
+
+    message.components = this.Util.removeSelectRoles(rolesId, message.components);
+
+    try {
+      await message.edit({ components: message.components });
+
+      return interaction.editReply(this.t('itemRemoved', { locale }));
+    } catch {
+      return interaction.editReply(this.t('itemRemoveError', { locale }));
+    }
+  }
+
+  async bulkAutocomplete(interaction: AutocompleteInteraction): Promise<any> {
+    const { options } = interaction;
+
+    const subcommand = options.getSubcommand();
+
+    return this[`bulk_${subcommand}Autocomplete`]?.(interaction);
+  }
+
+  async bulk_addAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
+  }
+
+  async bulk_removeAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
   }
 }

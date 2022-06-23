@@ -49,6 +49,6 @@ export default class UserInfo extends UserContextMenu {
         embeds[0].setThumbnail(targetMember.displayAvatarURL({ dynamic: true }));
     }
 
-    await interaction.reply({ embeds, ephemeral: true });
+    return interaction.reply({ embeds, ephemeral: true });
   }
 }

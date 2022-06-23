@@ -3,6 +3,8 @@ import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, Co
 import { SlashCommand } from '../../structures';
 
 export default class Embed extends SlashCommand {
+  [k: string]: any;
+
   constructor(client: Client) {
     super(client, {
       category: 'Utility',
@@ -74,9 +76,9 @@ export default class Embed extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
+      return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
     }
 
     const { memberPermissions, options } = interaction;
@@ -84,9 +86,9 @@ export default class Embed extends SlashCommand {
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.reply({
+      return interaction.reply({
         content: this.t('missingUserPermission', {
           locale,
           permission: this.t(userPerms[0], { locale }),
@@ -95,14 +97,14 @@ export default class Embed extends SlashCommand {
       });
     }
 
-    const subcommand = <'edit'>options.getSubcommandGroup(false) ?? options.getSubcommand();
+    const subcommand = options.getSubcommandGroup(false) ?? options.getSubcommand();
 
     if (interaction.isAutocomplete())
-      return await this[`${subcommand}Autocomplete`]?.(interaction);
+      return this[`${subcommand}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
-    await this[subcommand]?.(interaction);
+    return this[subcommand]?.(interaction);
   }
 
   async send(interaction: CommandInteraction<'cached'>) {
@@ -116,7 +118,7 @@ export default class Embed extends SlashCommand {
     const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingChannelPermission', {
+      return interaction.editReply(this.t('missingChannelPermission', {
         locale,
         permission: this.t(clientPerms[0], { locale }),
       }));
@@ -135,9 +137,9 @@ export default class Embed extends SlashCommand {
       try {
         await channel.send({ content, embeds });
 
-        return await interaction.editReply(':heavy_check_mark:⠀');
+        return interaction.editReply('☑️').catch(() => null);
       } catch (error) {
-        return await interaction.editReply(':x:⠀');
+        return interaction.editReply('❌').catch(() => null);
       }
     }
   }
@@ -150,9 +152,9 @@ export default class Embed extends SlashCommand {
 
     const message = await channel.messages.fetch(message_id);
 
-    if (!message) return await interaction.editReply(this.t('message404', { locale }));
+    if (!message) return interaction.editReply(this.t('message404', { locale }));
 
-    if (!message.editable) return await interaction.editReply(this.t('messageNotEditable', { locale }));
+    if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     const subcommand = options.getSubcommand();
 
@@ -177,9 +179,9 @@ export default class Embed extends SlashCommand {
         try {
           await message.edit({ content, embeds });
 
-          return await interaction.editReply(':heavy_check_mark:⠀');
+          return interaction.editReply('❌');
         } catch (error) {
-          return await interaction.editReply(':x:⠀');
+          return interaction.editReply('❌');
         }
       }
     }
@@ -198,7 +200,7 @@ export default class Embed extends SlashCommand {
     const channel = await guild.channels.fetch(channelId);
 
     if (!(channel instanceof TextChannel))
-      return await interaction.respond(res);
+      return interaction.respond(res);
 
     const focused = options.getFocused(true);
     const pattern = RegExp(`${focused.value}`, 'i');
@@ -232,6 +234,6 @@ export default class Embed extends SlashCommand {
       }
     }
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 }

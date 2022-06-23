@@ -53,10 +53,10 @@ const rest = new REST().setToken(DISCORD_TOKEN);
       for (let i = 0; i < guilds.length; i++) {
         const id = guilds[i];
 
-        const guild_commands = await rest.get(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id)) as any[];
+        const guildCommands = await rest.get(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id)) as any[];
 
-        const guild_commands_data = guild_commands.filter(guild_command =>
-          !data_private.some(command => command.name === guild_command.name))
+        const guild_commands_data = guildCommands.filter(guildCommand =>
+          !data_private.some(command => command.name === guildCommand.name))
           .reduce((acc, command) => [...acc, {
             name: command.name,
             defaultPermission: command.defaultPermission,
@@ -67,7 +67,7 @@ const rest = new REST().setToken(DISCORD_TOKEN);
 
         guild_commands_data.push(...data_private);
 
-        await rest.put(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id), { body: guild_commands });
+        await rest.put(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id), { body: guildCommands });
       }
 
       console.log('Successfully reloaded application (/) commands.');

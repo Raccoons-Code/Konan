@@ -25,7 +25,7 @@ export default class Movies extends ButtonComponentInteraction {
     });
 
     if (!results)
-      return await interaction.reply({ content: 'Sorry! I didn\'t find this page.', ephemeral: true });
+      return interaction.reply({ content: 'Sorry! I didn\'t find this page.', ephemeral: true });
 
     const { embeds } = await this.setEmbeds(results, offset, locale);
 
@@ -52,7 +52,7 @@ export default class Movies extends ButtonComponentInteraction {
 
     const components = [new MessageActionRow().setComponents(buttons)];
 
-    await interaction.update({ components, embeds });
+    return interaction.update({ components, embeds });
   }
 
   getPage(raw_page = 1) {

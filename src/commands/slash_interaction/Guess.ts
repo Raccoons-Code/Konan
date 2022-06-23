@@ -57,7 +57,7 @@ export default class Guess extends SlashCommand {
 
       await quickDb.delete(`${guildId}.${author.id}.guess`);
 
-      return await interaction.editReply({ embeds });
+      return interaction.editReply({ embeds });
     }
 
     if (this.Util.isDuplicate(user, number)) {
@@ -75,7 +75,7 @@ export default class Guess extends SlashCommand {
           value: `${user?.join(' ').trim() || '-'}`,
         });
 
-      return await interaction.editReply({ embeds });
+      return interaction.editReply({ embeds });
     }
 
     if (user?.length === 9) {
@@ -88,7 +88,7 @@ export default class Guess extends SlashCommand {
 
       await quickDb.delete(`${guildId}.${author.id}.guess`);
 
-      return await interaction.editReply({ embeds });
+      return interaction.editReply({ embeds });
     }
 
     if (number < value)
@@ -111,7 +111,7 @@ export default class Guess extends SlashCommand {
 
     await quickDb.set(`${guildId}.${author.id}.guess.user`, user);
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 
   async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
@@ -136,6 +136,6 @@ export default class Guess extends SlashCommand {
       if (res.length === 25) break;
     }
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 }

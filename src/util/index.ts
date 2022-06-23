@@ -1,6 +1,6 @@
 import bytes from './bytes';
 import capitalize from './capitalize';
-import ComponentLink from './ComponentLink';
+import { addButtonRoles, addSelectRoles, ComponentLink, createButtonRoles, createSelectRoles, filterRolesId, removeButtonRoles, removeSelectRoles, setDefaultRole } from './commands';
 import composition from './composition';
 import Constants from './Constants';
 import filterObjectByKeys from './filterObjectByKeys';
@@ -20,14 +20,12 @@ import removeDuplicatesInArray from './removeDuplicatesInArray';
 import removeFromArray from './removeFromArray';
 import splitArrayInGroups from './splitArrayInGroups';
 import splitLimits from './splitLimits';
-import splitSelectMenu from './splitSelectMenu';
 import waitAsync from './waitAsync';
 import waitSync from './waitSync';
 
-export default class Util {
+export default abstract class Util {
   static bytes = bytes;
   static capitalize = capitalize;
-  static ComponentLink = ComponentLink;
   static composition = composition;
   static Constants = Constants;
   static filterObjectByKeys = filterObjectByKeys;
@@ -47,9 +45,19 @@ export default class Util {
   static removeFromArray = removeFromArray;
   static splitArrayInGroups = splitArrayInGroups;
   static splitLimits = splitLimits;
-  static splitSelectMenu = splitSelectMenu;
   static waitAsync = waitAsync;
   static waitSync = waitSync;
+
+  // Commands utils
+  static addButtonRoles = addButtonRoles;
+  static addSelectRoles = addSelectRoles;
+  static ComponentLink = ComponentLink;
+  static createButtonRoles = createButtonRoles;
+  static createSelectRoles = createSelectRoles;
+  static filterRolesId = filterRolesId;
+  static removeButtonRoles = removeButtonRoles;
+  static removeSelectRoles = removeSelectRoles;
+  static setDefaultRole = setDefaultRole;
 }
 
 export { Util };

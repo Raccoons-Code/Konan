@@ -22,7 +22,7 @@ export default class NumberIsPrime extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { options } = interaction;
@@ -43,7 +43,7 @@ export default class NumberIsPrime extends SlashCommand {
           `${embedDescription}${codeBlock(prime.join(', ').slice(0, length))}` : ''),
     ];
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 
   primeResolve(number: number, options: PrimeResolveOptions = {}): number[] {

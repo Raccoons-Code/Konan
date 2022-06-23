@@ -17,7 +17,7 @@ export default class extends ModalSubmit {
     const user = await guild.members.fetch(userId);
 
     if (!(user.bannable && this.isBannable({ author: member, guild, target: user })))
-      return await interaction.reply({
+      return interaction.reply({
         content: this.t('banHierarchyError', { locale }),
         ephemeral: true,
       });
@@ -31,12 +31,12 @@ export default class extends ModalSubmit {
     try {
       await guild.bans.create(userId, { days, reason });
 
-      await interaction.reply({
+      return interaction.reply({
         content: this.t('userBanned', { locale }),
         ephemeral: true,
       });
     } catch {
-      await interaction.reply({
+      return interaction.reply({
         content: this.t('banError', { locale }),
         ephemeral: true,
       });

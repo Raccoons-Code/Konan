@@ -43,20 +43,20 @@ export default class WatchTogether extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.reply(this.t('onlyOnServer', { locale }));
+      return interaction.reply(this.t('onlyOnServer', { locale }));
     }
 
     if (interaction.isAutocomplete())
-      return await this.executeAutocomplete(interaction);
+      return this.executeAutocomplete(interaction);
 
     const { client, member, options } = interaction;
 
     const channel = options.getChannel('channel') ?? member.voice.channel;
 
     if (!channel || channel.type !== 'GUILD_VOICE')
-      return await interaction.reply({
+      return interaction.reply({
         content: `${member}, ${this.t('userMustBeOnVoiceChannel', { locale })}`,
         ephemeral: true,
       });
@@ -64,7 +64,7 @@ export default class WatchTogether extends SlashCommand {
     const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.reply({
+      return interaction.reply({
         content: `${member}, ${this.t('missingChannelPermission', {
           locale,
           permission: this.t(clientPerms[0], { locale }),
@@ -77,14 +77,14 @@ export default class WatchTogether extends SlashCommand {
     try {
       const invite = await this.discordTogether.createTogetherCode(channel.id, activity);
 
-      await interaction.reply({ content: `${invite.code}`, fetchReply: true });
+      return interaction.reply({ content: `${invite.code}`, fetchReply: true });
     } catch (error: any) {
       if (error.name === 'SyntaxError')
-        return await interaction.reply({ content: this.t('activity404', { locale }), ephemeral: true });
+        return interaction.reply({ content: this.t('activity404', { locale }), ephemeral: true });
 
       client.sendError(error);
 
-      await interaction.reply({
+      return interaction.reply({
         content: this.t('There was an error while executing this command!', { locale }),
         ephemeral: true,
       });
@@ -105,7 +105,7 @@ export default class WatchTogether extends SlashCommand {
 
     const res = this.setChoices(applications, { locale });
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 
   setChoices(applications: any[], options: { locale: string }, res: ApplicationCommandOptionChoiceData[] = []) {

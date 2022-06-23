@@ -12,6 +12,8 @@ const { npm_package_dependencies_discord_js, npm_package_version } = env;
 const inline = true;
 
 export default class Info extends ButtonComponentInteraction {
+  [k: string]: any;
+
   constructor(client: Client) {
     super(client, {
       name: 'info',
@@ -26,7 +28,7 @@ export default class Info extends ButtonComponentInteraction {
 
     const embeds = [new MessageEmbed().setColor('RANDOM')];
 
-    this[<'application'>sc]?.(interaction, embeds);
+    this[sc]?.(interaction, embeds);
   }
 
   async application(interaction: ButtonInteraction, embeds: MessageEmbed[]) {
@@ -73,6 +75,6 @@ export default class Info extends ButtonComponentInteraction {
         { name: 'Uptime', value: `${time(readyAt!)} ${time(readyAt!, 'R')}` },
       ]);
 
-    await interaction.update({ embeds });
+    return interaction.update({ embeds });
   }
 }

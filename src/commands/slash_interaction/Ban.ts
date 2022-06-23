@@ -3,6 +3,8 @@ import { Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmb
 import { SlashCommand } from '../../structures';
 
 export default class Ban extends SlashCommand {
+  [k: string]: any;
+
   constructor(client: Client) {
     super(client, {
       category: 'Moderation',
@@ -76,14 +78,14 @@ export default class Ban extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms?.length)
-      return await interaction.editReply(this.t('missingUserPermission', {
+      return interaction.editReply(this.t('missingUserPermission', {
         locale,
         permission: this.t(userPerms[0], { locale }),
       }));
@@ -91,14 +93,14 @@ export default class Ban extends SlashCommand {
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', {
+      return interaction.editReply(this.t('missingPermission', {
         locale,
         permission: this.t(clientPerms[0], { locale }),
       }));
 
-    const command = <'chunk'>options.getSubcommand();
+    const command = options.getSubcommand();
 
-    await this[command]?.(interaction);
+    return this[command]?.(interaction);
   }
 
   async single(interaction: CommandInteraction<'cached'>) {
@@ -107,7 +109,7 @@ export default class Ban extends SlashCommand {
     const user = options.getMember('user', true);
 
     if (!(user.bannable && this.isBannable({ author: member, guild, target: user })))
-      return await interaction.editReply(this.t('banHierarchyError', { locale }));
+      return interaction.editReply(this.t('banHierarchyError', { locale }));
 
     const days = options.getInteger('delete_messages') ?? 0;
 
@@ -116,21 +118,21 @@ export default class Ban extends SlashCommand {
     try {
       await guild.bans.create(user, { days, reason });
 
-      await interaction.editReply(this.t('userBanned', { locale }));
+      return interaction.editReply(this.t('userBanned', { locale }));
     } catch {
-      await interaction.editReply(this.t('banError', { locale }));
+      return interaction.editReply(this.t('banError', { locale }));
     }
   }
 
   async chunk(interaction: CommandInteraction<'cached'>) {
     const { options } = interaction;
 
-    const users = options.getString('users', true);
+    const usersId = options.getString('users', true);
 
-    const usersArray = users.match(/\d{17,}/g);
+    const usersMentions = usersId.match(/\d{17,}/g)?.map(user => `<@${user}>`);
 
-    if (!usersArray?.length)
-      return await interaction.editReply('No IDs were found in the users input.');
+    if (!usersMentions)
+      return interaction.editReply('No IDs were found in the users input.');
 
     const days = options.getInteger('delete_messages') ?? 0;
 
@@ -138,7 +140,7 @@ export default class Ban extends SlashCommand {
 
     const embeds = [
       new MessageEmbed()
-        .setDescription(usersArray.map(user => `<@${user}>`).join(' ').slice(0, 4096))
+        .setDescription(usersMentions.join(' ').slice(0, 4096))
         .setTitle('Chunk of users to ban')
         .setFields([{
           name: 'Reason for ban',
@@ -163,6 +165,6 @@ export default class Ban extends SlashCommand {
 
     const components = [new MessageActionRow().setComponents(buttons)];
 
-    await interaction.editReply({ components, embeds });
+    return interaction.editReply({ components, embeds });
   }
 }

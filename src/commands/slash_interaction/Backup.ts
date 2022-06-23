@@ -4,6 +4,8 @@ import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, Co
 import { SlashCommand } from '../../structures';
 
 export default class extends SlashCommand {
+  [k: string]: any;
+
   constructor(client: Client) {
     super(client, {
       category: 'Utility',
@@ -84,9 +86,9 @@ export default class extends SlashCommand {
     const userPerms = memberPermissions?.missing(this.props!.userPermissions!, true);
 
     if (userPerms?.length) {
-      if (interaction.isAutocomplete()) return await interaction.respond([]);
+      if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return await interaction.reply({
+      return interaction.reply({
         content: this.t('missingUserPermission', {
           locale,
           permission: this.t(userPerms[0], { locale }),
@@ -95,28 +97,28 @@ export default class extends SlashCommand {
       });
     }
 
-    const command = <'update'>options.getSubcommandGroup(false) ?? options.getSubcommand();
+    const command = options.getSubcommandGroup(false) ?? options.getSubcommand();
 
     if (interaction.isAutocomplete())
-      return await this[`${command}Autocomplete`]?.(interaction);
+      return this[`${command}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true, fetchReply: true });
 
-    await this[command]?.(interaction);
+    return this[command]?.(interaction);
   }
 
   async create(interaction: CommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild, guildId, user } = interaction;
 
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', {
+      return interaction.editReply(this.t('missingPermission', {
         locale,
         permission: this.t(clientPerms[0], { locale }),
       }));
@@ -134,11 +136,11 @@ export default class extends SlashCommand {
     if (!dbUser) {
       const newUser = await this.newUser(guild, { premium });
 
-      if (!newUser) return await interaction.editReply(this.t('backupError', { locale }));
+      if (!newUser) return interaction.editReply(this.t('backupError', { locale }));
 
       const [newBackup] = newUser.backups;
 
-      return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
+      return interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
     }
 
     const guilds = dbUser.guilds.filter(g => g.backups.length);
@@ -146,11 +148,11 @@ export default class extends SlashCommand {
     if (dbUser.guilds.every(g => g.id !== guildId) && (premium ? guilds.length < 5 : !guilds.length)) {
       const newGuild = await this.newGuild(guild, { premium });
 
-      if (!newGuild) return await interaction.editReply(this.t('backupError', { locale }));
+      if (!newGuild) return interaction.editReply(this.t('backupError', { locale }));
 
       const [newBackup] = newGuild.backups;
 
-      return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
+      return interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
     }
 
     const { backups } = dbUser;
@@ -160,12 +162,12 @@ export default class extends SlashCommand {
       !(backups.length || guilds.length))) {
       const newBackup = await this.newBackup(guild, { premium });
 
-      if (!newBackup) return await interaction.editReply(this.t('backupError', { locale }));
+      if (!newBackup) return interaction.editReply(this.t('backupError', { locale }));
 
-      return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
+      return interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
     }
 
-    return await interaction.editReply([
+    return interaction.editReply([
       user,
       this.t(['alreadyHaveABackup', 'doYouMean??'], { locale, string: 'update' }),
     ].join(' '));
@@ -189,9 +191,9 @@ export default class extends SlashCommand {
       });
 
       if (!deleted)
-        return await interaction.editReply(this.t('server404', { locale }));
+        return interaction.editReply(this.t('server404', { locale }));
 
-      return await interaction.editReply(this.t('backupDeleted', { locale }));
+      return interaction.editReply(this.t('backupDeleted', { locale }));
     }
 
     if (subcommand === 'backup') {
@@ -200,9 +202,9 @@ export default class extends SlashCommand {
       const deleted = await this.prisma.backup.delete({ where: { id: key } });
 
       if (!deleted)
-        return await interaction.editReply(this.t('backup404', { locale }));
+        return interaction.editReply(this.t('backup404', { locale }));
 
-      return await interaction.editReply(this.t('backupDeleted', { locale }));
+      return interaction.editReply(this.t('backupDeleted', { locale }));
     }
   }
 
@@ -214,7 +216,7 @@ export default class extends SlashCommand {
     const backups = await this.prisma.backup.findMany({ where: { userId } });
 
     if (!backups.length)
-      return await interaction.editReply(this.t('You don\'t have backups in the database', { locale }));
+      return interaction.editReply(this.t('You don\'t have backups in the database', { locale }));
 
     const embeds = [new MessageEmbed().setColor('RANDOM')];
 
@@ -240,21 +242,21 @@ export default class extends SlashCommand {
       if (embeds[0].fields.length === 25) break;
     }
 
-    await interaction.editReply({ embeds });
+    return interaction.editReply({ embeds });
   }
 
   async restore(interaction: CommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild, options } = interaction;
 
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', {
+      return interaction.editReply(this.t('missingPermission', {
         locale,
         permission: this.t(clientPerms[0], { locale }),
       }));
@@ -264,7 +266,7 @@ export default class extends SlashCommand {
     const backup = await this.prisma.backup.findFirst({ where: { id: key } });
 
     if (!backup?.data)
-      return await interaction.editReply(this.t('backup404', { locale }));
+      return interaction.editReply(this.t('backup404', { locale }));
 
     const { data, premium } = backup;
 
@@ -278,9 +280,9 @@ export default class extends SlashCommand {
         maxMessagesPerChannel: premium ? 20 : 0,
       });
 
-      await interaction.editReply(':heavy_check_mark:⠀').catch(() => null);
+      return interaction.editReply('☑️').catch(() => null);
     } catch {
-      await interaction.editReply(`${this.t('restoreError', { locale })}`).catch(() => null);
+      return interaction.editReply(`${this.t('restoreError', { locale })}`).catch(() => null);
     }
   }
 
@@ -288,14 +290,14 @@ export default class extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild, options } = interaction;
 
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', {
+      return interaction.editReply(this.t('missingPermission', {
         locale,
         permission: this.t(clientPerms[0], { locale }),
       }));
@@ -308,15 +310,15 @@ export default class extends SlashCommand {
     });
 
     if (!(dbUser?.backups.length))
-      return await interaction.editReply(this.t('backup404', { locale }));
+      return interaction.editReply(this.t('backup404', { locale }));
 
     const premium = Date.now() < (dbUser.premium?.valueOf() ?? 0);
 
     const newBackup = await this.updateBackup(guild, key, { premium });
 
-    if (!newBackup) return await interaction.editReply(this.t('backupError', { locale }));
+    if (!newBackup) return interaction.editReply(this.t('backupError', { locale }));
 
-    return await interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
+    return interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
   }
 
   async deleteAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
@@ -339,7 +341,7 @@ export default class extends SlashCommand {
         },
       });
 
-      if (!(dbUser?.guilds)) return await interaction.respond(res);
+      if (!(dbUser?.guilds)) return interaction.respond(res);
 
       for (let i = 0; i < dbUser.guilds.length; i++) {
         const _guild = dbUser.guilds[i];
@@ -388,19 +390,19 @@ export default class extends SlashCommand {
       }
     }
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 
   async restoreAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
-    if (!interaction.inCachedGuild()) return await interaction.respond(res);
+    if (!interaction.inCachedGuild()) return interaction.respond(res);
 
-    await this.deleteAutocomplete(interaction, res);
+    return this.deleteAutocomplete(interaction, res);
   }
 
   async updateAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
-    if (!interaction.inCachedGuild()) return await interaction.respond(res);
+    if (!interaction.inCachedGuild()) return interaction.respond(res);
 
     const { guild, guildId } = interaction;
 
@@ -409,7 +411,7 @@ export default class extends SlashCommand {
       include: { backups: { where: { guildId } } },
     });
 
-    if (!dbUser) return await interaction.respond(res);
+    if (!dbUser) return interaction.respond(res);
 
     for (let i = 0; i < dbUser.backups.length; i++) {
       const backup = dbUser.backups[i];
@@ -430,7 +432,7 @@ export default class extends SlashCommand {
       if (i === 24) break;
     }
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 
   async createBackup(guild: Guild, options: { premium: boolean }) {

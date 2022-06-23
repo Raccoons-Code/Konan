@@ -17,6 +17,6 @@ export default class ChannelCreate extends Event {
 
     if (!(channel.isText() && channel.permissionsFor(client.user!)?.has(this.data.permissions!))) return;
 
-    await channel.send('First!').catch(() => null);
+    channel.send('First!').catch(() => null);
   }
 }

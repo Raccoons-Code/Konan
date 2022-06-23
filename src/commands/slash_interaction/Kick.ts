@@ -33,14 +33,14 @@ export default class Kick extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return await interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.editReply(this.t('onlyOnServer', { locale }));
 
     const { guild, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length)
-      return await interaction.editReply(this.t('missingUserPermission', {
+      return interaction.editReply(this.t('missingUserPermission', {
         locale,
         permission: this.t(userPerms[0], { locale }),
       }));
@@ -48,7 +48,7 @@ export default class Kick extends SlashCommand {
     const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
 
     if (clientPerms?.length)
-      return await interaction.editReply(this.t('missingPermission', {
+      return interaction.editReply(this.t('missingPermission', {
         locale,
         permission: this.t(clientPerms[0], { locale }),
       }));
@@ -56,16 +56,16 @@ export default class Kick extends SlashCommand {
     const user = options.getMember('user', true);
 
     if (!(user.kickable && this.isKickable({ author: member, guild, target: user })))
-      return await interaction.editReply(this.t('kickHierarchyError', { locale }));
+      return interaction.editReply(this.t('kickHierarchyError', { locale }));
 
     const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
 
     try {
       await guild.members.kick(user, reason);
 
-      await interaction.editReply(this.t('userKicked', { locale }));
+      return interaction.editReply(this.t('userKicked', { locale }));
     } catch {
-      await interaction.editReply(this.t('kickError', { locale }));
+      return interaction.editReply(this.t('kickError', { locale }));
     }
   }
 }

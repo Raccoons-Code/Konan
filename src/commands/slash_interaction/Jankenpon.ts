@@ -4,6 +4,7 @@ import JKP from '../../JKP';
 import { SlashCommand } from '../../structures';
 
 export default class Jankenpon extends SlashCommand {
+  [k: string]: any;
   emoji: { [k: string]: string } = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };
 
   constructor(client: Client) {
@@ -98,9 +99,9 @@ export default class Jankenpon extends SlashCommand {
   async execute(interaction: CommandInteraction) {
     const { options } = interaction;
 
-    const subcommand = <'game' | 'spock'>options.getSubcommandGroup();
+    const subcommand = options.getSubcommandGroup();
 
-    await this[subcommand]?.(interaction);
+    return this[subcommand]?.(interaction);
   }
 
   async game(interaction: CommandInteraction) {
@@ -123,12 +124,12 @@ export default class Jankenpon extends SlashCommand {
         { name: 'Machine', value: `${this.emoji[player2]} ${player2}`, inline: true },
       ]);
 
-      return await interaction.reply({ embeds });
+      return interaction.reply({ embeds });
     }
 
     if (subcommand === 'multiplayer') {
       if (!interaction.inCachedGuild())
-        return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
+        return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
       const player2 = options.getMember('opponent', true);
 
@@ -150,7 +151,7 @@ export default class Jankenpon extends SlashCommand {
 
       const components = [new MessageActionRow().setComponents(buttons)];
 
-      return await interaction.reply({ components, embeds });
+      return interaction.reply({ components, embeds });
     }
   }
 
@@ -174,12 +175,12 @@ export default class Jankenpon extends SlashCommand {
         { name: 'Machine', value: `${this.emoji[player2]} ${player2}`, inline: true },
       ]);
 
-      return await interaction.reply({ embeds });
+      return interaction.reply({ embeds });
     }
 
     if (subcommand === 'multiplayer') {
       if (!interaction.inCachedGuild())
-        return await interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
+        return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
       const player2 = options.getMember('opponent', true);
 
@@ -205,7 +206,7 @@ export default class Jankenpon extends SlashCommand {
 
       const components = [new MessageActionRow().setComponents(buttons)];
 
-      return await interaction.reply({ components, embeds });
+      return interaction.reply({ components, embeds });
     }
   }
 }

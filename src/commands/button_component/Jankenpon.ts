@@ -111,6 +111,6 @@ export default class Jankenpon extends ButtonComponentInteraction {
       return row;
     });
 
-    await interaction.update({ components: message.components, embeds: message.embeds });
+    return interaction.update({ components: message.components, embeds: message.embeds });
   }
 }

@@ -89,6 +89,6 @@ export default class Jankenpon extends ButtonComponentInteraction {
 
     await quickDb.delete(`${message.id}`);
 
-    await interaction.update({ embeds: message.embeds });
+    return interaction.update({ embeds: message.embeds });
   }
 }

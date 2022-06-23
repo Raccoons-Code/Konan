@@ -1,6 +1,6 @@
 import { EmojiIdentifierResolvable, MessageButton, Util } from 'discord.js';
 
-export default class ComponentLink {
+class ComponentLink {
   static button({ emoji, label, url }: { emoji?: EmojiIdentifierResolvable, label: string, url: string }) {
     emoji = <EmojiIdentifierResolvable>(emoji ? Util.resolvePartialEmoji(emoji) : null);
 
@@ -11,3 +11,5 @@ export default class ComponentLink {
       .setURL(`https://${url}`);
   }
 }
+
+export { ComponentLink };

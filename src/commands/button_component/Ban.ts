@@ -3,6 +3,8 @@ import { BanCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
 export default class Ban extends ButtonComponentInteraction {
+  [k: string]: any;
+
   constructor(client: Client) {
     super(client, {
       name: 'ban',
@@ -15,7 +17,7 @@ export default class Ban extends ButtonComponentInteraction {
 
     const { sc } = <BanCustomId>JSON.parse(customId);
 
-    this[<'chunk'>sc]?.(interaction);
+    this[sc]?.(interaction);
   }
 
   async chunk(interaction: ButtonInteraction<'cached'>) {
@@ -45,6 +47,6 @@ export default class Ban extends ButtonComponentInteraction {
       }])
       .setTitle('Chunk Ban Result');
 
-    await interaction.update({ components: [], embeds: message.embeds });
+    return interaction.update({ components: [], embeds: message.embeds });
   }
 }

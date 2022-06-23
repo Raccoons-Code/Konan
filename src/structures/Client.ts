@@ -95,7 +95,7 @@ export default class Client extends DJS.Client {
       } else {
         await Util.waitAsync(1000);
 
-        return await this.fetchStats(options);
+        return this.fetchStats(options);
       }
     }
 

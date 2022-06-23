@@ -15,7 +15,7 @@ export default class extends MessageContextMenu {
       .setType(3);
   }
 
-  async execute(interaction: MessageContextMenuInteraction) {
+  async execute(interaction: MessageContextMenuInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale, targetMessage } = interaction;
@@ -24,7 +24,7 @@ export default class extends MessageContextMenu {
 
     const translation = await translate(targetMessage.content, { from: 'auto', to });
 
-    await interaction.editReply({
+    return interaction.editReply({
       embeds: [
         new MessageEmbed()
           .setColor('RANDOM')

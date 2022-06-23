@@ -8,6 +8,7 @@ const Choices = <[string, string][]>Object.keys(languages)
   .map((l) => [languages[<'auto'>l], l]);
 
 export default class Translate extends SlashCommand {
+  [k: string]: any;
   cache = new Map();
 
   constructor(client: Client) {
@@ -39,9 +40,9 @@ export default class Translate extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
     if (interaction.isAutocomplete())
-      return await this.executeAutocomplete(interaction);
+      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -55,7 +56,7 @@ export default class Translate extends SlashCommand {
 
     const translation = await translate(cache || text, { from, to });
 
-    await interaction.editReply({
+    return interaction.editReply({
       embeds: [
         new MessageEmbed()
           .setColor('RANDOM')
@@ -77,9 +78,9 @@ export default class Translate extends SlashCommand {
 
     const focused = options.getFocused(true);
 
-    res = await this[`${<'from'>focused.name}Autocomplete`]?.(interaction);
+    res = await this[`${focused.name}Autocomplete`]?.(interaction);
 
-    await interaction.respond(res);
+    return interaction.respond(res);
   }
 
   async fromAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
