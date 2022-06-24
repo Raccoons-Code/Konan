@@ -218,15 +218,15 @@ export default class Embed extends SlashCommand {
 
         const { title, description } = embeds[0];
 
-        const nameProps = [
+        const name = [
           id,
           title ? ` | ${title}` : '',
           description ? ` | ${description}` : '',
-        ];
+        ].join('').slice(0, 100);
 
         if (title || description)
           res.push({
-            name: `${nameProps.join('').slice(0, 100)}`,
+            name,
             value: `${id}`,
           });
 

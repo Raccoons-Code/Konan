@@ -22,20 +22,21 @@ export default class Help extends SlashCommand {
         .setAutocomplete(true));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
-    const { client, guild, locale, options, user } = <CommandInteraction<'cached'>>interaction;
+    const { client, guild, locale, options, user } = interaction;
 
     const commandName = options.getString('command')?.split(' |')[0].toLowerCase();
 
     if (commandName) return this.executeCommand(interaction, commandName);
 
-    const avatarURL = <string>guild?.me?.displayAvatarURL({ dynamic: true }) ??
-      client.user?.displayAvatarURL({ dynamic: true });
+    const clientUser = guild?.me ?? client.user;
+
+    const avatarURL = <string>clientUser?.displayAvatarURL({ dynamic: true });
 
     const embeds = [
       new MessageEmbed()
@@ -132,18 +133,18 @@ export default class Help extends SlashCommand {
       for (let i = 0; i < slashCommands.length; i++) {
         const command = slashCommands[i];
 
-        const nameProps = [
+        const name = [
           this.t(command.data.name),
           ' | ',
           command.data.description,
-        ];
+        ].join('').slice(0, 100);
 
         res.push({
-          name: `${nameProps.join('').slice(0, 100)}`,
+          name,
           value: `${command.data.name}`,
         });
 
-        if (i === 24) break;
+        if (res.length === 25) break;
       }
     }
 

@@ -108,18 +108,18 @@ export default class Unban extends SlashCommand {
     for (let i = 0; i < bans_array.length; i++) {
       const ban = bans_array[i];
 
-      const nameProps = [
+      const name = [
         ban.user.id,
         ' | ', ban.user.tag,
         ban.reason ? ` | Reason: ${ban.reason}` : '',
-      ];
+      ].join('').slice(0, 100);
 
       res.push({
-        name: `${nameProps.join('').slice(0, 100)}`,
+        name,
         value: `${ban.user.id}`,
       });
 
-      if (i === 24) break;
+      if (res.length === 25) break;
     }
 
     return interaction.respond(res);

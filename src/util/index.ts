@@ -3,6 +3,7 @@ import capitalize from './capitalize';
 import { addButtonRoles, addSelectRoles, ComponentLink, createButtonRoles, createSelectRoles, filterRolesId, removeButtonRoles, removeSelectRoles, setDefaultRole } from './commands';
 import composition from './composition';
 import Constants from './Constants';
+import djsLimits from './djsLimits';
 import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
 import getLocalizations from './getLocalizations';
@@ -28,6 +29,7 @@ export default abstract class Util {
   static capitalize = capitalize;
   static composition = composition;
   static Constants = Constants;
+  static djsLimits = djsLimits;
   static filterObjectByKeys = filterObjectByKeys;
   static findDuplicatesInArray = findDuplicatesInArray;
   static getLocalizations = getLocalizations;

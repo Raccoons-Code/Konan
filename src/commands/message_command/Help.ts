@@ -17,8 +17,9 @@ export default class Help extends Command {
 
     const locale = guild?.preferredLocale;
 
-    const avatarURL = <string>guild?.me?.displayAvatarURL({ dynamic: true }) ??
-      client.user?.displayAvatarURL({ dynamic: true });
+    const clientUser = guild?.me ?? client.user;
+
+    const avatarURL = <string>clientUser?.displayAvatarURL({ dynamic: true });
 
     const embeds = [
       new MessageEmbed()

@@ -121,7 +121,7 @@ export default class WatchTogether extends SlashCommand {
         value: `${application}`,
       });
 
-      if (i === 24) break;
+      if (res.length === 25) break;
     }
 
     return res;

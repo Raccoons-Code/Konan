@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { Client, CommandInteraction, GuildMember, MessageActionRow, MessageButton, MessageEmbed, User } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Avatar extends SlashCommand {
@@ -21,8 +21,7 @@ export default class Avatar extends SlashCommand {
   async execute(interaction: CommandInteraction) {
     const { options } = interaction;
 
-    const user = options.getUser('user') ?? interaction.user;
-    const member = <GuildMember>options.getMember('user') ?? interaction.member;
+    const user = <GuildMember | User>options.getMember('user') ?? interaction.member ?? interaction.user;
 
     return interaction.reply({
       components: [
@@ -31,16 +30,14 @@ export default class Avatar extends SlashCommand {
             new MessageButton()
               .setLabel('Link')
               .setStyle('LINK')
-              .setURL(member?.displayAvatarURL({ dynamic: true, size: 4096 }) ??
-                user.displayAvatarURL({ dynamic: true, size: 4096 })),
+              .setURL(user.displayAvatarURL({ dynamic: true, size: 4096 })),
           ]),
       ],
       embeds: [
         new MessageEmbed()
           .setColor('RANDOM')
-          .setDescription(`${member ?? user}`)
-          .setImage(member?.displayAvatarURL({ dynamic: true, size: 512 }) ??
-            user.displayAvatarURL({ dynamic: true, size: 512 })),
+          .setDescription(`${user}`)
+          .setImage(user.displayAvatarURL({ dynamic: true, size: 512 })),
       ],
     });
   }

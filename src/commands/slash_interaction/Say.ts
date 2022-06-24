@@ -23,8 +23,8 @@ export default class Say extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction) {
-    const { channel, client, locale, member, options, user } = <CommandInteraction<'cached'>>interaction;
+  async execute(interaction: CommandInteraction<'cached'>) {
+    const { channel, client, locale, member, options, user } = interaction;
 
     const message = options.getString('message', true);
 

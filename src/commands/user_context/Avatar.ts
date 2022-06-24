@@ -13,6 +13,8 @@ export default class Avatar extends UserContextMenu {
   async execute(interaction: UserContextMenuInteraction<'cached'>) {
     const { targetMember, targetUser } = interaction;
 
+    const target = targetMember ?? targetUser;
+
     return interaction.reply({
       components: [
         new MessageActionRow()
@@ -21,16 +23,14 @@ export default class Avatar extends UserContextMenu {
               .setStyle('LINK')
               .setLabel('Link')
               .setEmoji('🖼')
-              .setURL(targetMember?.displayAvatarURL({ dynamic: true, size: 4096 }) ??
-                targetUser?.displayAvatarURL({ dynamic: true, size: 4096 })),
+              .setURL(target.displayAvatarURL({ dynamic: true, size: 4096 })),
           ]),
       ],
       embeds: [
         new MessageEmbed()
           .setColor('RANDOM')
           .setDescription(`${targetUser}`)
-          .setImage(targetMember?.displayAvatarURL({ dynamic: true, size: 512 }) ??
-            targetUser?.displayAvatarURL({ dynamic: true, size: 512 })),
+          .setImage(target.displayAvatarURL({ dynamic: true, size: 512 })),
       ],
     });
   }

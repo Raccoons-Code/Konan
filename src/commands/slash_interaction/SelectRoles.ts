@@ -812,25 +812,25 @@ export default class SelectRoles extends SlashCommand {
     if (focused.name === 'message_id') {
       const messages = await channel.messages.fetch({ limit: 100 });
 
-      const messages_array = messages.filter(m =>
+      const messagesArray = messages.filter(m =>
         m.author.id === client.user?.id &&
         m.components.some(c => RegExp(`"c":"${this.data.name}"`).test(c.components[0].customId!)) &&
         pattern.test(m.id)).toJSON();
 
-      for (let i = 0; i < messages_array.length; i++) {
-        const { embeds, id } = messages_array[i];
+      for (let i = 0; i < messagesArray.length; i++) {
+        const { embeds, id } = messagesArray[i];
 
         const { title, description } = embeds[0];
 
-        const nameProps = [
+        const name = [
           id,
           title ? ` | ${title}` : '',
           description ? ` | ${description}` : '',
-        ];
+        ].join('').slice(0, 100);
 
         if (title || description)
           res.push({
-            name: `${nameProps.join('').slice(0, 100)}`,
+            name,
             value: `${id}`,
           });
 
@@ -843,9 +843,7 @@ export default class SelectRoles extends SlashCommand {
 
       const message = await channel.messages.fetch(message_id);
 
-      if (!message) return interaction.respond(res);
-
-      if (!message.editable) return interaction.respond(res);
+      if (!(message && message.editable)) return interaction.respond(res);
 
       for (let i = 0; i < message.components.length; i++) {
         const component = message.components[i];
@@ -857,18 +855,16 @@ export default class SelectRoles extends SlashCommand {
 
           const { customId, disabled, maxValues, placeholder } = element;
 
-          const menuProps = [
-            `${i2 + 1}`,
+          const name = [
+            `${i + 1} - ${i2 + 1}`,
             placeholder ? ` | ${placeholder}` : '',
             maxValues ? ` | ${maxValues} ${maxValues > 1 ? 'options' : 'option'}` : '',
             disabled ? ' | disabled' : '',
-          ];
+          ].join('').slice(0, 100);
 
-          const menuName = menuProps.join('');
-
-          if (pattern.test(menuName))
+          if (pattern.test(name))
             res.push({
-              name: `${menuName.slice(0, 100)}`,
+              name,
               value: `${customId}`,
             });
         }
@@ -881,9 +877,7 @@ export default class SelectRoles extends SlashCommand {
 
       const message = await channel.messages.fetch(message_id);
 
-      if (!message) return interaction.respond(res);
-
-      if (!message.editable) return interaction.respond(res);
+      if (!(message && message.editable)) return interaction.respond(res);
 
       for (let i = 0; i < message.components.length; i++) {
         const component = message.components[i];
@@ -895,7 +889,7 @@ export default class SelectRoles extends SlashCommand {
 
           const { customId, options: menuOptions } = element;
 
-          if (customId !== menuId || element.type !== 'SELECT_MENU') continue;
+          if (customId !== menuId) continue;
 
           for (let i3 = 0; i3 < menuOptions.length; i3++) {
             const option = menuOptions[i3];
@@ -906,16 +900,16 @@ export default class SelectRoles extends SlashCommand {
 
             const role = await guild.roles.fetch(roleId);
 
-            const nameProps = [
+            const name = [
               emoji?.id ? '' : emoji?.name,
               label ? label : ` Item ${i2 + 1}`,
               ` | ${role?.name}`,
               ` | ${roleId}`,
               description ? ` | ${description}` : '',
-            ];
+            ].join('').slice(0, 100);
 
             res.push({
-              name: `${nameProps.join('').slice(0, 100)}`,
+              name,
               value,
             });
           }

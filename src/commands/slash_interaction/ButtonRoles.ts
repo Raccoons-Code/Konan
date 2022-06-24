@@ -262,7 +262,7 @@ export default class ButtonRoles extends SlashCommand {
     if (!interaction.inCachedGuild()) {
       if (interaction.isAutocomplete()) return interaction.respond([]);
 
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return interaction.reply(this.t('onlyOnServer', { locale }));
     }
 
     const { memberPermissions, options } = interaction;
@@ -548,25 +548,25 @@ export default class ButtonRoles extends SlashCommand {
     if (focused.name === 'message_id') {
       const messages = await channel.messages.fetch({ limit: 100 });
 
-      const messages_array = messages.filter(m =>
+      const messagesArray = messages.filter(m =>
         m.author.id === client.user?.id &&
         m.components.some(c => RegExp(`"c":"${this.data.name}"`).test(c.components[0].customId!)) &&
         pattern.test(m.id)).toJSON();
 
-      for (let i = 0; i < messages_array.length; i++) {
-        const { embeds, id } = messages_array[i];
+      for (let i = 0; i < messagesArray.length; i++) {
+        const { embeds, id } = messagesArray[i];
 
         const { title, description } = embeds[0];
 
-        const nameProps = [
+        const name = [
           id,
           title ? ` | ${title}` : '',
           description ? ` | ${description}` : '',
-        ];
+        ].join('').slice(0, 100);
 
         if (title || description)
           res.push({
-            name: `${nameProps.join('').slice(0, 80)}`,
+            name,
             value: `${id}`,
           });
 
@@ -579,9 +579,7 @@ export default class ButtonRoles extends SlashCommand {
 
       const message = await channel.messages.fetch(message_id);
 
-      if (!message) return interaction.respond(res);
-
-      if (!message.editable) return interaction.respond(res);
+      if (!(message && message.editable)) return interaction.respond(res);
 
       for (let i = 0; i < message.components.length; i++) {
         const component = message.components[i];
@@ -593,24 +591,22 @@ export default class ButtonRoles extends SlashCommand {
 
           const { customId, disabled, label, style } = button;
 
-          const { roleId } = <ButtonRolesCustomId>JSON.parse(<string>customId);
+          const { roleId } = <ButtonRolesCustomId>JSON.parse(customId!);
 
-          const role = await guild?.roles.fetch(roleId);
+          const role = await guild.roles.fetch(roleId);
 
-          const nameProps = [
+          const name = [
             `${i + 1} - ${i2 + 1}`,
             label ? ` | ${label}` : '',
             ` | ${role?.name}`,
             ` | ${roleId}`,
             ` | ${style}`,
             disabled ? ' | disabled' : '',
-          ];
-
-          const name = nameProps.join('');
+          ].join('').slice(0, 100);
 
           if (pattern.test(name))
             res.push({
-              name: `${name.slice(0, 80)}`,
+              name,
               value: `${customId}`,
             });
         }

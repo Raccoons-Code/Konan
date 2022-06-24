@@ -100,7 +100,7 @@ export default class Translate extends SlashCommand {
         value: choice[1],
       });
 
-      if (res.length === 24) break;
+      if (res.length === 25) break;
     }
 
     return res;
@@ -125,7 +125,7 @@ export default class Translate extends SlashCommand {
         value: choice[1],
       });
 
-      if (res.length === 24) break;
+      if (res.length === 25) break;
     }
 
     return res;
@@ -146,13 +146,13 @@ export default class Translate extends SlashCommand {
 
     const translation = await translate(`${focused.value}`, { from, to });
 
-    const nameProps = [
+    const name = [
       translation.text,
       ' (', translation.from.language.iso.toUpperCase(), ' -> ', to.toUpperCase(), ')',
-    ];
+    ].join('').slice(0, 100);
 
     res.push({
-      name: `${nameProps.join('').slice(0, 100)}`,
+      name,
       value: varJson,
     });
 

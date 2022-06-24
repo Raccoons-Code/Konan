@@ -152,17 +152,17 @@ export default class Movies extends SlashCommand {
     for (let i = 0; i < results.length; i++) {
       const { id, title, vote_average } = results[i];
 
-      const nameProps = [
+      const name = [
         vote_average, ' | ',
         title,
-      ];
+      ].join('').slice(0, 100);
 
       res.push({
-        name: `${nameProps.join('').slice(0, 100)}`,
+        name,
         value: `${id}`,
       });
 
-      if (i === 24) break;
+      if (res.length === 25) break;
     }
 
     return interaction.respond(res);

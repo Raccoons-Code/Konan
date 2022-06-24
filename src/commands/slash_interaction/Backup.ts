@@ -97,14 +97,14 @@ export default class extends SlashCommand {
       });
     }
 
-    const command = options.getSubcommandGroup(false) ?? options.getSubcommand();
+    const subcommand = options.getSubcommandGroup(false) ?? options.getSubcommand();
 
     if (interaction.isAutocomplete())
-      return this[`${command}Autocomplete`]?.(interaction);
+      return this[`${subcommand}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true, fetchReply: true });
 
-    return this[command]?.(interaction);
+    return this[subcommand]?.(interaction);
   }
 
   async create(interaction: CommandInteraction): Promise<any> {
@@ -115,7 +115,7 @@ export default class extends SlashCommand {
 
     const { guild, guildId, user } = interaction;
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
+    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -253,7 +253,7 @@ export default class extends SlashCommand {
 
     const { guild, options } = interaction;
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
+    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -294,7 +294,7 @@ export default class extends SlashCommand {
 
     const { guild, options } = interaction;
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
+    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -341,28 +341,28 @@ export default class extends SlashCommand {
         },
       });
 
-      if (!(dbUser?.guilds)) return interaction.respond(res);
+      if (!dbUser?.guilds) return interaction.respond(res);
 
       for (let i = 0; i < dbUser.guilds.length; i++) {
-        const _guild = dbUser.guilds[i];
+        const dbGuild = dbUser.guilds[i];
 
-        const name = (typeof _guild.backups[0].data === 'object' &&
-          !Array.isArray(_guild.backups[0].data) && _guild.backups[0].data?.name) ||
-          (await client.guilds.fetch(_guild.id)).name ||
+        const guildName = (typeof dbGuild.backups[0].data === 'object' &&
+          !Array.isArray(dbGuild.backups[0].data) && dbGuild.backups[0].data?.name) ||
+          (await client.guilds.fetch(dbGuild.id))?.name ||
           this.t('undefinedServerName', { locale });
 
-        const nameProps = [
-          _guild.id,
-          ' | ', name,
-          `${_guild.id === guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
-        ];
+        const name = [
+          dbGuild.id,
+          ' | ', guildName,
+          `${dbGuild.id === guildId ? ` | ${this.t('currentServer', { locale })}` : ''}`,
+        ].join('').slice(0, 100);
 
         res.push({
-          name: `${nameProps.join('').slice(0, 100)}`,
-          value: `${_guild.id}`,
+          name,
+          value: `${dbGuild.id}`,
         });
 
-        if (i === 24) break;
+        if (res.length === 25) break;
       }
     }
 
@@ -374,19 +374,19 @@ export default class extends SlashCommand {
 
         if (!backup.data || typeof backup.data !== 'object' || Array.isArray(backup.data)) continue;
 
-        const nameProps = [
+        const name = [
           backup.id,
           ' | ', backup.data.name,
           backup.premium ? ' | Premium' : '',
           backup.guildId == guildId ? ` | ${this.t('currentServer', { locale })}` : '',
-        ];
+        ].join('').slice(0, 100);
 
         res.push({
-          name: `${nameProps.join('').slice(0, 100)}`,
+          name,
           value: `${backup.id}`,
         });
 
-        if (i === 24) break;
+        if (res.length === 25) break;
       }
     }
 
@@ -418,18 +418,18 @@ export default class extends SlashCommand {
 
       if (!backup.data || typeof backup.data !== 'object' || Array.isArray(backup.data)) continue;
 
-      const nameProps = [
+      const name = [
         backup.id,
         ' | ', backup.data.name,
         backup.premium ? ' | Premium' : '',
-      ];
+      ].join('').slice(0, 100);
 
       res.push({
-        name: `${nameProps.join('').slice(0, 100)}`,
+        name,
         value: `${backup.id}`,
       });
 
-      if (i === 24) break;
+      if (res.length === 25) break;
     }
 
     return interaction.respond(res);

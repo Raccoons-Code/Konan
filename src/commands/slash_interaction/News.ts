@@ -53,7 +53,7 @@ export default class News extends SlashCommand {
         .setAutocomplete(true));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
     if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
@@ -126,7 +126,7 @@ export default class News extends SlashCommand {
         value: `${category}`,
       });
 
-      if (i === 24) break;
+      if (res.length === 25) break;
     }
 
     return res;
@@ -151,14 +151,14 @@ export default class News extends SlashCommand {
         _journal.name,
         ' | langs: ', ..._journal.languages.map(l => languages[l]),
         ' | categories: ', ..._journal.categories,
-      ];
+      ].join('').slice(0, 100);
 
       res.push({
-        name: `${name.join('').slice(0, 100)}`,
+        name,
         value: `${_journal.name}`,
       });
 
-      if (i === 24) break;
+      if (res.length === 25) break;
     }
 
     return res;
@@ -187,7 +187,7 @@ export default class News extends SlashCommand {
         value: `${language}`,
       });
 
-      if (i === 24) break;
+      if (res.length === 25) break;
     }
 
     return res;

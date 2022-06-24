@@ -90,7 +90,7 @@ export default class Ban extends SlashCommand {
         permission: this.t(userPerms[0], { locale }),
       }));
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.userPermissions!);
+    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
