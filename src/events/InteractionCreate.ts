@@ -1,7 +1,7 @@
 import { codeBlock } from '@discordjs/builders';
 import { AutocompleteInteraction, ButtonInteraction, Client, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, ModalSubmitInteraction, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
 import { env } from 'node:process';
-import { InteractionTypes } from '../@types';
+import { AnyInteraction } from '../@types';
 import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 const { GUILD_INVITE } = env;
@@ -14,7 +14,7 @@ export default class InteractionCreate extends Event {
     });
   }
 
-  async execute(interaction: InteractionTypes) {
+  async execute(interaction: AnyInteraction) {
     const { client, locale, type } = interaction;
 
     const command = this[<Exclude<InteractionType, 'PING'>>type]?.(<any>interaction);
@@ -46,7 +46,9 @@ export default class InteractionCreate extends Event {
 
       try {
         if (!interaction.isAutocomplete()) {
-          if (interaction.replied) {
+          if (interaction.isMessageComponent()) {
+            await interaction.followUp({ components, embeds, ephemeral: true });
+          } else if (interaction.replied) {
             await interaction.editReply({ components, embeds });
           } else {
             await interaction.reply({ components, embeds, ephemeral: true });

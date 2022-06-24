@@ -589,7 +589,7 @@ export default class ButtonRoles extends SlashCommand {
         for (let i2 = 0; i2 < component.components.length; i2++) {
           const button = <MessageButton>component.components[i2];
 
-          const { customId, disabled, label, style } = button;
+          const { customId, disabled, emoji, label, style } = button;
 
           const { roleId } = <ButtonRolesCustomId>JSON.parse(customId!);
 
@@ -597,6 +597,7 @@ export default class ButtonRoles extends SlashCommand {
 
           const name = [
             `${i + 1} - ${i2 + 1}`,
+            emoji?.id ? '' : emoji?.name,
             label ? ` | ${label}` : '',
             ` | ${role?.name}`,
             ` | ${roleId}`,

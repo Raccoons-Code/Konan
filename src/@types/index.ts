@@ -4,6 +4,17 @@ import { ButtonComponentInteraction, Command, MessageContextMenu, SelectMenuComp
 export * from './customid';
 export * from './quickdb';
 
+export type AnyInteraction =
+  AutocompleteInteraction |
+  ButtonInteraction |
+  CommandInteraction |
+  ContextMenuInteraction |
+  MessageComponentInteraction |
+  MessageContextMenuInteraction |
+  ModalSubmitInteraction |
+  SelectMenuInteraction |
+  UserContextMenuInteraction
+
 export interface ApplicationCommandsCollection {
   [k: string]: Collection<string, Interaction & (
     AutocompleteInteraction |
@@ -26,6 +37,11 @@ export interface CommandArgsData {
   required?: boolean
 }
 
+export interface CommandChoicesData {
+  name: string
+  value: any
+}
+
 export interface CommandData {
   aliases?: string[]
   args?: CommandArgsData[]
@@ -34,11 +50,6 @@ export interface CommandData {
   emoji?: string
   name: string
   userPermissions?: PermissionString[]
-}
-
-export interface CommandChoicesData {
-  name: string
-  value: any
 }
 
 export interface CommandCollectionTypes {
@@ -69,13 +80,6 @@ export interface EventData {
   partials?: PartialTypes[]
   permissions?: PermissionString[]
 }
-
-export type InteractionTypes =
-  AutocompleteInteraction |
-  CommandInteraction |
-  ContextMenuInteraction |
-  MessageComponentInteraction |
-  ModalSubmitInteraction
 
 export type ListenerString = 'on' | 'once'
 
