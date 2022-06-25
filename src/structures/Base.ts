@@ -1,10 +1,10 @@
-import { Guild, GuildMember, Permissions } from 'discord.js';
 import { prisma } from '../database';
 import { t } from '../translator';
 import Util from '../util';
 import Client from './Client';
+import Utils from './Utils';
 
-export default abstract class Base {
+export default abstract class Base extends Utils {
   client!: Client;
   getLocalizations!: typeof Util.getLocalizations;
   pattern!: typeof Util.pattern;
@@ -13,6 +13,8 @@ export default abstract class Base {
   Util!: typeof Util;
 
   constructor(client: Client) {
+    super();
+
     Object.defineProperties(this, {
       client: { value: client },
       getLocalizations: { value: Util.getLocalizations },
@@ -24,29 +26,4 @@ export default abstract class Base {
   }
 
   abstract execute(...args: any): Promise<any>;
-
-  isManageable({ author, guild, target }: { author: GuildMember, guild: Guild, target: GuildMember }): boolean {
-    if (target.id === guild.ownerId) return false;
-    if (author.id === target.id) return false;
-    if (author.id === guild.ownerId) return true;
-    return author.roles.highest.comparePositionTo(target.roles.highest) > 0;
-  }
-
-  isBannable({ author, guild, target }: { author: GuildMember, guild: Guild, target: GuildMember }) {
-    return this.isManageable({ author, guild, target }) &&
-      author.permissions.has(Permissions.FLAGS.BAN_MEMBERS);
-  }
-
-  isKickable({ author, guild, target }: { author: GuildMember, guild: Guild, target: GuildMember }) {
-    return this.isManageable({ author, guild, target }) &&
-      author.permissions.has(Permissions.FLAGS.KICK_MEMBERS);
-  }
-
-  isModeratable({ author, guild, target }: { author: GuildMember, guild: Guild, target: GuildMember }) {
-    return (
-      !target.permissions.has(Permissions.FLAGS.ADMINISTRATOR) &&
-      this.isManageable({ author, guild, target }) &&
-      author.permissions.has(Permissions.FLAGS.MODERATE_MEMBERS)
-    );
-  }
 }

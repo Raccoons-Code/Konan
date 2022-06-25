@@ -2,7 +2,7 @@
 
 # Commands
 
-Last modified: June 20, 2022
+Last modified: June 24, 2022
 
 ## Application Commands (/) - 24
 
@@ -108,13 +108,13 @@ Last modified: June 20, 2022
   - [`delete_messages`]: How much of that person's message history should be deleted.
   - [`reason`]: The reason for the ban.
 
-#### buttonroles {`create`  | `edit`  | `add`  | `remove`}
+#### buttonroles {`create`  | `edit`  | `add`  | `remove`  | `bulk`}
 
 > Manage button roles.
 
 - {`create`}: Create a button role.
   - <`role`>: Select the role to use.
-  - [`text`]: The text of the button. Title {0,256} | Description {0,4096} - default: ButtonRoles
+  - [`text`]: The Button Role text. Title {0,256} | Description {0,4096} - default: ButtonRoles
   - [`button_name`]: The name of the button. Button name {0,63} - default: <role>
   - [`button_emoji`]: The emoji of the button.
   - [`button_disabled`]: Whether the button is disabled.
@@ -156,6 +156,23 @@ Last modified: June 20, 2022
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
     - <`button`>: Select the button. - `Autocomplete`
 
+- {`bulk`}: Bulk manage Button roles.
+
+  - {`create`}: Create a bulk of buttons in a Button role.
+    - <`roles`>: Input the roles.
+    - [`text`]: The Button Role text. Title {0,256} | Description {0,4096} - default: ButtonRoles
+    - [`channel`]: Select the channel. default: <current channel>
+
+  - {`add`}: Add to a bulk of buttons in a Button role.
+    - <`channel`>: Select the channel.
+    - <`message_id`>: Message ID | Message URL - `Autocomplete`
+    - <`roles`>: Input the roles.
+
+  - {`remove`}: Remove from a bulk of buttons in a Button role.
+    - <`channel`>: Select the channel.
+    - <`message_id`>: Message ID | Message URL - `Autocomplete`
+    - <`roles`>: Input the roles.
+
 #### clear <`amount`> [`channel`]
 
 > Deletes up to 1000 channel messages at once.
@@ -168,7 +185,7 @@ Last modified: June 20, 2022
 - <`user`>: The user to kick.
 - [`reason`]: The reason to kick.
 
-#### selectroles {`create`  | `edit`  | `add`  | `remove`}
+#### selectroles {`create`  | `edit`  | `add`  | `remove`  | `bulk`}
 
 > Manage roles with a select menu.
 
@@ -178,7 +195,7 @@ Last modified: June 20, 2022
   - [`item_description`]: The description of the item. {0,100}
   - [`item_default`]: Used to always add this role with other roles.
   - [`item_emoji`]: The emoji of the item.
-  - [`menu_disabled`]: Whether the button is disabled.
+  - [`menu_disabled`]: Whether the menu is disabled.
   - [`menu_place_holder`]: The placeholder of the menu. {0,150}
   - [`text`]: The text of the message. Title {0,256} | Description {0,4096} - default: SelectRoles
   - [`channel`]: The channel of the setup. default: <current channel>
@@ -243,6 +260,27 @@ Last modified: June 20, 2022
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
     - <`menu`>: Select the menu of the item. - `Autocomplete`
     - <`item`>: Select the item to remove. - `Autocomplete`
+
+- {`bulk`}: Bulk manage Select roles.
+
+  - {`create`}: Create a bulk of options in a Select role.
+    - <`roles`>: Input the roles.
+    - [`text`]: The Select Role text. Title {0,256} | Description {0,4096} - default: SelectRoles
+    - [`channel`]: Select the channel. default: <current channel>
+    - [`default_role`]: Select the default role.
+    - [`menu_place_holder`]: The menu place holder. {0,150}
+
+  - {`add`}: Add to a bulk of options in a Select role.
+    - <`channel`>: Select the channel.
+    - <`message_id`>: Message ID | Message URL - `Autocomplete`
+    - <`roles`>: Input the roles.
+    - [`default_role`]: Select the default role.
+    - [`menu_place_holder`]: The menu place holder. {0,150}
+
+  - {`remove`}: Remove from a bulk of options in a Select role.
+    - <`channel`>: Select the channel.
+    - <`message_id`>: Message ID | Message URL - `Autocomplete`
+    - <`roles`>: Input the roles.
 
 #### timeout <`user`> <`time`> [`reason`]
 
