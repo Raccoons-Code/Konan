@@ -1,5 +1,4 @@
-import { ContextMenuCommandBuilder } from '@discordjs/builders';
-import { Client, MessageActionRow, Modal, ModalActionRowComponent, Permissions, TextInputComponent, UserContextMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, Client, ContextMenuCommandBuilder, ModalActionRowComponentBuilder, ModalBuilder, PermissionFlagsBits, TextInputBuilder, TextInputStyle, UserContextMenuCommandInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class Kick extends UserContextMenu {
@@ -8,26 +7,26 @@ export default class Kick extends UserContextMenu {
 
     this.data = new ContextMenuCommandBuilder().setName('Kick')
       .setNameLocalizations(this.getLocalizations('kickName'))
-      .setType(2)
+      .setType(ApplicationCommandType.User)
       .setDMPermission(false)
-      .setDefaultMemberPermissions(Permissions.FLAGS.KICK_MEMBERS);
+      .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers);
   }
 
-  async execute(interaction: UserContextMenuInteraction<'cached'>) {
+  async execute(interaction: UserContextMenuCommandInteraction<'cached'>) {
     const { targetMember } = interaction;
 
     return interaction.showModal(
-      new Modal()
+      new ModalBuilder()
         .setCustomId(JSON.stringify({ c: 'kick', userId: targetMember.id }))
         .setTitle(`Kick ${targetMember.displayName}`)
         .setComponents(...[
-          new MessageActionRow<ModalActionRowComponent>()
+          new ActionRowBuilder<ModalActionRowComponentBuilder>()
             .setComponents([
-              new TextInputComponent()
+              new TextInputBuilder()
                 .setCustomId('reason')
                 .setLabel('Reason')
                 .setPlaceholder('Reason for kick...')
-                .setStyle('PARAGRAPH'),
+                .setStyle(TextInputStyle.Paragraph),
             ]),
         ]),
     );

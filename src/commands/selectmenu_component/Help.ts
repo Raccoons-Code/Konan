@@ -1,4 +1,4 @@
-import { Client, EmbedFieldData, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, SelectMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, EmbedFieldData, RouteBases, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
 import { env } from 'node:process';
 import { SelectMenuComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
@@ -28,13 +28,13 @@ export default class Help extends SelectMenuComponentInteraction {
   async home(interaction: SelectMenuInteraction<'cached'>) {
     const { client, guild, locale, user } = interaction;
 
-    const clientUser = guild?.me ?? client.user;
+    const me = guild?.members.me ?? client.user;
 
-    const avatarURL = <string>clientUser?.displayAvatarURL({ dynamic: true });
+    const avatarURL = <string>me?.displayAvatarURL();
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setDescription([
           this.t('helpText', { locale, user }),
           '',
@@ -45,32 +45,32 @@ export default class Help extends SelectMenuComponentInteraction {
     ];
 
     const buttons = [
-      new MessageButton()
+      new ButtonBuilder()
         .setEmoji('📮') // :postbox:
         .setLabel(this.t('inviteLink', { locale }))
-        .setStyle('LINK')
+        .setStyle(ButtonStyle.Link)
         .setURL(client.invite),
     ];
 
     if (GUILD_INVITE)
-      buttons.push(new MessageButton()
+      buttons.push(new ButtonBuilder()
         .setEmoji('🪤') // :mouse_trap:
         .setLabel(this.t('supportServer', { locale }))
-        .setStyle('LINK')
-        .setURL(`${client.options.http?.invite}/${GUILD_INVITE}`));
+        .setStyle(ButtonStyle.Link)
+        .setURL(`${RouteBases.invite}/${GUILD_INVITE}`));
 
     if (DONATE_LINK)
-      buttons.push(new MessageButton()
+      buttons.push(new ButtonBuilder()
         .setEmoji('💸') // :money_with_wings:
         .setLabel(this.t('donate', { locale }))
-        .setStyle('LINK')
+        .setStyle(ButtonStyle.Link)
         .setURL(`${DONATE_LINK}`));
 
     const menus = [this.setSelectMenu(0)];
 
     const components = [
-      new MessageActionRow().setComponents(buttons),
-      new MessageActionRow().setComponents(menus),
+      new ActionRowBuilder<ButtonBuilder>().setComponents(buttons),
+      new ActionRowBuilder<SelectMenuBuilder>().setComponents(menus),
     ];
 
     return interaction.update({ components, embeds });
@@ -84,25 +84,25 @@ export default class Help extends SelectMenuComponentInteraction {
     const slashCommands = slash_interaction.filter((c: SlashCommand) => !c.props?.ownerOnly).toJSON();
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setFields(this.convertCommandsToEmbedFields(slashCommands))
         .setFooter({ text: `Total: ${slashCommands.length}` })
         .setTitle(this.t('konanSupport', { locale })),
     ];
 
     message.components = [
-      new MessageActionRow().setComponents([this.setSelectCategory('general')]),
-      new MessageActionRow().setComponents([this.setSelectMenu(1)]),
-    ];
+      new ActionRowBuilder<SelectMenuBuilder>().setComponents([this.setSelectCategory('general')]),
+      new ActionRowBuilder<SelectMenuBuilder>().setComponents([this.setSelectMenu(1)]),
+    ] as any;
 
     if (slashCommands.length > this.limit)
-      message.components.unshift(new MessageActionRow()
+      message.components.unshift(new ActionRowBuilder<ButtonBuilder>()
         .setComponents(this.setPageButtons({
           category: 'general',
           page: 0,
           total: Math.floor(slashCommands.length / this.limit),
-        })));
+        })) as any);
 
     return interaction.update({ components: message.components, embeds });
   }
@@ -111,15 +111,15 @@ export default class Help extends SelectMenuComponentInteraction {
     const { locale } = interaction;
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setImage('https://badges.awesome-crowdin.com/translation-15144556-499220.png')
         .setTitle(this.t('konanSupport', { locale })),
     ];
 
     const menus = [this.setSelectMenu(2)];
 
-    const components = [new MessageActionRow().setComponents(menus)];
+    const components = [new ActionRowBuilder<SelectMenuBuilder>().setComponents(menus)];
 
     return interaction.update({ components, embeds });
   }
@@ -132,46 +132,46 @@ export default class Help extends SelectMenuComponentInteraction {
     const slashCommands = commands.filter((c: any) => c.data.defaultPermission !== false).toJSON();
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setFields(this.convertCommandsToEmbedFields(slashCommands))
         .setFooter({ text: `Total: ${slashCommands.length}` })
         .setTitle(this.t('konanSupport', { locale })),
     ];
 
     message.components = [
-      new MessageActionRow().setComponents(this.setSelectCategory(values[0])),
-      new MessageActionRow().setComponents(this.setSelectMenu(1)),
-    ];
+      new ActionRowBuilder<SelectMenuBuilder>().setComponents(this.setSelectCategory(values[0])),
+      new ActionRowBuilder<SelectMenuBuilder>().setComponents(this.setSelectMenu(1)),
+    ] as any;
 
     if (slashCommands.length > this.limit)
-      message.components.unshift(new MessageActionRow()
+      message.components.unshift(new ActionRowBuilder<ButtonBuilder>()
         .setComponents(this.setPageButtons({
           category: values[0],
           page: 0,
           total: Math.floor(slashCommands.length / this.limit),
-        })));
+        })) as any);
 
     return interaction.update({ components: message.components, embeds });
   }
 
   setPageButtons({ category, page, total }: { category: string, page: number, total: number }) {
     return [
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page - 1 }))
         .setDisabled(page < 1)
         .setLabel('Back')
-        .setStyle('SECONDARY'),
-      new MessageButton()
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: '' }))
         .setDisabled(true)
-        .setStyle('SECONDARY')
+        .setStyle(ButtonStyle.Secondary)
         .setLabel(`${page + 1}/${total + 1}`),
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page + 1 }))
         .setDisabled(page >= total)
         .setLabel('Next')
-        .setStyle('SECONDARY'),
+        .setStyle(ButtonStyle.Secondary),
     ];
   }
 
@@ -209,7 +209,7 @@ export default class Help extends SelectMenuComponentInteraction {
   setSelectMenu(i = 0) {
     // const earth = ['🌍', '🌎', '🌏'][this.Util.mathRandom(2, 0)]; :earth_africa: :earth_americas: :earth_asia:
 
-    return new MessageSelectMenu()
+    return new SelectMenuBuilder()
       .setCustomId(JSON.stringify({ c: this.data.name }))
       .setOptions([
         { label: '🏠 Home', value: 'home', default: i === 0 }, // :home:
@@ -219,7 +219,7 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   setSelectCategory(i: string | number = 0) {
-    return new MessageSelectMenu()
+    return new SelectMenuBuilder()
       .setCustomId(JSON.stringify({ c: this.data.name, sc: 'setCommandCategory', i }))
       .setOptions([
         { label: '📝 General', value: 'general', default: i === 'general' }, // :pencil2:

@@ -1,19 +1,18 @@
-import { SlashCommandBuilder, time } from '@discordjs/builders';
-import { Client, CommandInteraction, Permissions } from 'discord.js';
+import { ChatInputCommandInteraction, Client, PermissionFlagsBits, SlashCommandBuilder, time } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Timeout extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Moderation',
-      clientPermissions: ['MODERATE_MEMBERS'],
-      userPermissions: ['MODERATE_MEMBERS'],
+      clientPermissions: ['ModerateMembers'],
+      userPermissions: ['ModerateMembers'],
     });
 
     this.data = new SlashCommandBuilder().setName('timeout')
       .setDescription('Temporarily mute a user.')
       .setDMPermission(false)
-      .setDefaultMemberPermissions(Permissions.FLAGS.MODERATE_MEMBERS)
+      .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
       .setNameLocalizations(this.getLocalizations('timeoutName'))
       .setDescriptionLocalizations(this.getLocalizations('timeoutDescription'))
       .addUserOption(option => option.setName('user')
@@ -61,7 +60,7 @@ export default class Timeout extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('timeoutReasonDescription')));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;
@@ -79,7 +78,7 @@ export default class Timeout extends SlashCommand {
         permission: this.t(userPerms[0], { locale }),
       }));
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = await guild.fetchMe().then(me => me.permissions.missing(this.props!.clientPermissions!));
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -87,9 +86,9 @@ export default class Timeout extends SlashCommand {
         permission: this.t(clientPerms[0], { locale }),
       }));
 
-    const user = options.getMember('user', true);
+    const user = options.getMember('user');
 
-    if (!(user.moderatable && this.isModeratable({ author: member, guild, target: user })))
+    if (!(user?.moderatable && this.isModeratable({ author: member, guild, target: user })))
       return interaction.editReply(this.t('moderateHierarchyError', { locale }));
 
     const timeout = options.getInteger('time', true);

@@ -16,7 +16,7 @@ if (!(DISCORD_APPLICATION_ID && DISCORD_TOKEN))
 const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
 
 const data = [];
-const data_private: any[] = [];
+const dataPrivate: any[] = [];
 const commands: SlashCommand[] = [];
 const { applicationCommandTypes } = Commands;
 
@@ -34,7 +34,7 @@ const rest = new REST().setToken(DISCORD_TOKEN);
     const command_data = command.data.toJSON();
 
     if (command.props?.ownerOnly) {
-      data_private.push(command_data);
+      dataPrivate.push(command_data);
 
       continue;
     }
@@ -55,17 +55,23 @@ const rest = new REST().setToken(DISCORD_TOKEN);
 
         const guildCommands = await rest.get(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id)) as any[];
 
-        const guild_commands_data = guildCommands.filter(guildCommand =>
-          !data_private.some(command => command.name === guildCommand.name))
-          .reduce((acc, command) => [...acc, {
-            name: command.name,
-            defaultPermission: command.defaultPermission,
+        const guildCommandsData = guildCommands.filter(guildCommand =>
+          !dataPrivate.some(command => command.name === guildCommand.name))
+          .reduce((acc, command) => acc.concat({
+            defaultMemberPermissions: command.defaultMemberPermissions,
             description: command.description,
+            descriptionLocalizations: command.descriptionLocalizations,
+            descriptionLocalized: command.descriptionLocalized,
+            dmPermission: command.dmPermission,
+            name: command.name,
+            nameLocalizations: command.nameLocalizations,
+            nameLocalized: command.nameLocalized,
             options: command.options,
+            permissions: command.permissions,
             type: command.type,
-          }], <any[]>[]);
+          }), <any[]>[]);
 
-        guild_commands_data.push(...data_private);
+        guildCommandsData.push(...dataPrivate);
 
         await rest.put(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id), { body: guildCommands });
       }
@@ -75,7 +81,9 @@ const rest = new REST().setToken(DISCORD_TOKEN);
       for (let i = 0; i < guilds?.length; i++) {
         const id = guilds[i];
 
-        await rest.put(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id), { body: [...data, ...data_private] });
+        await rest.put(Routes.applicationGuildCommands(DISCORD_APPLICATION_ID, id), {
+          body: [...data, ...dataPrivate],
+        });
 
         console.log(`Successfully reloaded application (/) commands for guild ${id}.`);
       }

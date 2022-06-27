@@ -1,4 +1,4 @@
-import { Client, Message, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, Message, RouteBases, SelectMenuBuilder } from 'discord.js';
 import { Command } from '../../structures';
 
 const { env } = process;
@@ -17,42 +17,42 @@ export default class Help extends Command {
 
     const locale = guild?.preferredLocale;
 
-    const clientUser = guild?.me ?? client.user;
+    const me = guild?.members.me ?? client.user;
 
-    const avatarURL = <string>clientUser?.displayAvatarURL({ dynamic: true });
+    const avatarURL = <string>me?.displayAvatarURL();
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setDescription(this.t('helpText', { locale, user }))
         .setThumbnail(avatarURL)
         .setTitle(this.t('konanSupport', { locale })),
     ];
 
     const buttons = [
-      new MessageButton()
+      new ButtonBuilder()
         .setEmoji('📮') // :postbox:
         .setLabel(this.t('inviteLink', { locale }))
-        .setStyle('LINK')
+        .setStyle(ButtonStyle.Link)
         .setURL(client.invite),
     ];
 
     if (GUILD_INVITE)
-      buttons.push(new MessageButton()
+      buttons.push(new ButtonBuilder()
         .setEmoji('🪤') // :mouse_trap:
         .setLabel(this.t('supportServer', { locale }))
-        .setStyle('LINK')
-        .setURL(`${client.options.http?.invite}/${GUILD_INVITE}`));
+        .setStyle(ButtonStyle.Link)
+        .setURL(`${RouteBases.invite}/${GUILD_INVITE}`));
 
     if (DONATE_LINK)
-      buttons.push(new MessageButton()
+      buttons.push(new ButtonBuilder()
         .setEmoji('💸') // :money_with_wings:
         .setLabel(this.t('donate', { locale }))
-        .setStyle('LINK')
+        .setStyle(ButtonStyle.Link)
         .setURL(`${DONATE_LINK}`));
 
     const menus = [
-      new MessageSelectMenu()
+      new SelectMenuBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name }))
         .setOptions([
           { label: '🏠 Home', value: 'home', default: true }, // :home:
@@ -62,8 +62,8 @@ export default class Help extends Command {
     ];
 
     const components = [
-      new MessageActionRow().setComponents(buttons),
-      new MessageActionRow().setComponents(menus),
+      new ActionRowBuilder<ButtonBuilder>().setComponents(buttons),
+      new ActionRowBuilder<SelectMenuBuilder>().setComponents(menus),
     ];
 
     return message.reply({ components, embeds });

@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, Client, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import JKP from '../../JKP';
 import { SlashCommand } from '../../structures';
 
@@ -96,22 +95,22 @@ export default class Jankenpon extends SlashCommand {
             .setRequired(true))));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const { options } = interaction;
 
-    const subcommand = options.getSubcommandGroup();
+    const subcommand = options.getSubcommandGroup(true);
 
     return this[subcommand]?.(interaction);
   }
 
-  async game(interaction: CommandInteraction) {
-    const { locale, member, options, user } = <CommandInteraction<'cached'>>interaction;
+  async game(interaction: ChatInputCommandInteraction) {
+    const { locale, member, options, user } = <ChatInputCommandInteraction<'cached'>>interaction;
 
     const name = member?.displayName ?? user.username;
 
     const subcommand = options.getSubcommand();
 
-    const embeds = [new MessageEmbed().setColor('RANDOM').setTitle('Jankenpon')];
+    const embeds = [new EmbedBuilder().setColor('Random').setTitle('Jankenpon')];
 
     if (subcommand === 'single') {
       const jankenpon = options.getString('jankenpon', true);
@@ -131,38 +130,39 @@ export default class Jankenpon extends SlashCommand {
       if (!interaction.inCachedGuild())
         return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
-      const player2 = options.getMember('opponent', true);
+      const player2 = options.getMember('opponent');
 
       embeds[0].setDescription(`${user} - ${player2}`)
         .addFields([
           { name: `${name}`, value: '0', inline: true },
           { name: 'Result', value: '-', inline: true },
-          { name: `${player2.displayName}`, value: '0', inline: true },
+          { name: `${player2?.displayName}`, value: '0', inline: true },
         ]);
 
-      const buttons = [
-        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 1 }))
-          .setEmoji('✊').setLabel('Rock').setStyle(this.randomButtonStyle),
-        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 2 }))
-          .setEmoji('✋').setLabel('Paper').setStyle(this.randomButtonStyle),
-        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 3 }))
-          .setEmoji('✌️').setLabel('Scissors').setStyle(this.randomButtonStyle),
+      const components = [
+        new ActionRowBuilder<ButtonBuilder>()
+          .setComponents([
+            new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 1 }))
+              .setEmoji('✊').setLabel('Rock').setStyle(this.randomButtonStyle.value),
+            new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 2 }))
+              .setEmoji('✋').setLabel('Paper').setStyle(this.randomButtonStyle.value),
+            new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 3 }))
+              .setEmoji('✌️').setLabel('Scissors').setStyle(this.randomButtonStyle.value),
+          ]),
       ];
-
-      const components = [new MessageActionRow().setComponents(buttons)];
 
       return interaction.reply({ components, embeds });
     }
   }
 
-  async spock(interaction: CommandInteraction) {
-    const { locale, member, options, user } = <CommandInteraction<'cached'>>interaction;
+  async spock(interaction: ChatInputCommandInteraction) {
+    const { locale, member, options, user } = <ChatInputCommandInteraction<'cached'>>interaction;
 
     const name = member?.displayName ?? user.username;
 
     const subcommand = options.getSubcommand();
 
-    const embeds = [new MessageEmbed().setColor('RANDOM').setTitle('Jankenpon')];
+    const embeds = [new EmbedBuilder().setColor('Random').setTitle('Jankenpon')];
 
     if (subcommand === 'single') {
       const jankenpon = options.getString('jankenpon', true);
@@ -182,29 +182,30 @@ export default class Jankenpon extends SlashCommand {
       if (!interaction.inCachedGuild())
         return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
 
-      const player2 = options.getMember('opponent', true);
+      const player2 = options.getMember('opponent');
 
       embeds[0].setDescription(`${user} - ${player2}`)
         .addFields([
           { name: `${name}`, value: '0', inline: true },
           { name: 'Result', value: '-', inline: true },
-          { name: `${player2.displayName}`, value: '0', inline: true },
+          { name: `${player2?.displayName}`, value: '0', inline: true },
         ]);
 
-      const buttons = [
-        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 1 }))
-          .setEmoji('✊').setLabel('Rock').setStyle(this.randomButtonStyle),
-        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 2 }))
-          .setEmoji('✋').setLabel('Paper').setStyle(this.randomButtonStyle),
-        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 3 }))
-          .setEmoji('✌️').setLabel('Scissors').setStyle(this.randomButtonStyle),
-        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 4 }))
-          .setEmoji('🦎').setLabel('Lizard').setStyle(this.randomButtonStyle),
-        new MessageButton().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2.id], v: 5 }))
-          .setEmoji('🖖').setLabel('Spock').setStyle(this.randomButtonStyle),
+      const components = [
+        new ActionRowBuilder<ButtonBuilder>()
+          .setComponents([
+            new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 1 }))
+              .setEmoji('✊').setLabel('Rock').setStyle(this.randomButtonStyle.value),
+            new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 2 }))
+              .setEmoji('✋').setLabel('Paper').setStyle(this.randomButtonStyle.value),
+            new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 3 }))
+              .setEmoji('✌️').setLabel('Scissors').setStyle(this.randomButtonStyle.value),
+            new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 4 }))
+              .setEmoji('🦎').setLabel('Lizard').setStyle(this.randomButtonStyle.value),
+            new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 5 }))
+              .setEmoji('🖖').setLabel('Spock').setStyle(this.randomButtonStyle.value),
+          ]),
       ];
-
-      const components = [new MessageActionRow().setComponents(buttons)];
 
       return interaction.reply({ components, embeds });
     }

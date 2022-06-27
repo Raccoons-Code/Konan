@@ -1,8 +1,9 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import { QuickDB } from 'quick.db';
 import { GuessGameData } from '../../@types';
 import { SlashCommand } from '../../structures';
+
+const { ApplicationCommandAutocomplete } = InteractionType;
 
 const quickDb = new QuickDB();
 
@@ -26,8 +27,8 @@ export default class Guess extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
-    if (interaction.isAutocomplete())
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<any> {
+    if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
@@ -37,8 +38,8 @@ export default class Guess extends SlashCommand {
     const number = options.getInteger('number', true);
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setTitle(this.t('guessNumber', { locale })),
     ];
 

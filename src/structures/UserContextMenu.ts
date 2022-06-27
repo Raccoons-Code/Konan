@@ -1,5 +1,4 @@
-import { ContextMenuCommandBuilder } from '@discordjs/builders';
-import { UserContextMenuInteraction } from 'discord.js';
+import { ContextMenuCommandBuilder, UserContextMenuCommandInteraction } from 'discord.js';
 import Base from './Base';
 import Client from './Client';
 
@@ -10,5 +9,5 @@ export default abstract class UserContextMenu extends Base {
     super(client);
   }
 
-  abstract execute(interaction: UserContextMenuInteraction): Promise<any>;
+  abstract execute(interaction: UserContextMenuCommandInteraction): Promise<any>;
 }

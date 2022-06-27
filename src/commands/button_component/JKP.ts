@@ -1,5 +1,4 @@
-import { userMention } from '@discordjs/builders';
-import { ButtonInteraction, Client } from 'discord.js';
+import { ButtonInteraction, Client, EmbedBuilder, userMention } from 'discord.js';
 import { QuickDB } from 'quick.db';
 import { JkpCustomId, JKPGameData } from '../../@types';
 import JKP from '../../JKP';
@@ -57,32 +56,32 @@ export default class Jankenpon extends ButtonComponentInteraction {
     const value2 = values![player2];
     const result = JKP.spock(value1 - 1, value2 - 1);
 
-    message.embeds.map(embed => {
-      embed.fields.map((field, i) => {
-        const { name, value } = field;
+    message.embeds.map(oldEmbed => {
+      if (!oldEmbed.data.fields) return oldEmbed;
 
-        if (name === 'Result') {
-          field.value = `${userMention(player1)} ${result.result}`;
+      const embed = new EmbedBuilder(oldEmbed.toJSON())
+        .setFields(oldEmbed.data.fields.map((field, i) => {
+          if (field.name === 'Result') {
+            field.value = `${userMention(player1)} ${result.result}`;
+
+            return field;
+          }
+
+          if (result.res === 1 ? changed ? i === 2 : i === 0 : false) {
+            field.value = `${parseInt(field.value) + 1}`;
+
+            return field;
+          }
+
+          if (result.res === 2 ? changed ? i === 0 : i === 2 : false) {
+            field.value = `${parseInt(field.value) + 1}`;
+
+            return field;
+          }
 
           return field;
-        }
-
-        if (result.res === 1 ? changed ? i === 2 : i === 0 : false) {
-          field.value = `${parseInt(value) + 1}`;
-
-          return field;
-        }
-
-        if (result.res === 2 ? changed ? i === 0 : i === 2 : false) {
-          field.value = `${parseInt(value) + 1}`;
-
-          return field;
-        }
-
-        return field;
-      });
-
-      embed.setColor('RANDOM');
+        }))
+        .setColor('Random');
 
       return embed;
     });

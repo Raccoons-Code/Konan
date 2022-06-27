@@ -1,10 +1,9 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { ChannelType } from 'discord-api-types/v10';
 import { DiscordTogether } from 'discord-together';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChannelType, ChatInputCommandInteraction, Client, InteractionType, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 const { GuildVoice } = ChannelType;
+const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class WatchTogether extends SlashCommand {
   discordTogether!: DiscordTogether<{ [k: string]: string }>;
@@ -13,11 +12,11 @@ export default class WatchTogether extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Utility',
-      clientPermissions: ['CREATE_INSTANT_INVITE'],
+      clientPermissions: ['CreateInstantInvite'],
     });
 
     if (client) {
-      this.discordTogether = new DiscordTogether(client);
+      this.discordTogether = new DiscordTogether(<any>client);
       this.applications = Object.keys(this.discordTogether.applications);
       client.discordTogether = this.discordTogether;
     }
@@ -39,23 +38,23 @@ export default class WatchTogether extends SlashCommand {
         .addChannelTypes(GuildVoice));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
-      if (interaction.isAutocomplete()) return interaction.respond([]);
+      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
 
       return interaction.reply(this.t('onlyOnServer', { locale }));
     }
 
-    if (interaction.isAutocomplete())
+    if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);
 
     const { client, member, options } = interaction;
 
     const channel = options.getChannel('channel') ?? member.voice.channel;
 
-    if (!channel || channel.type !== 'GUILD_VOICE')
+    if (!channel || channel.type !== GuildVoice)
       return interaction.reply({
         content: `${member}, ${this.t('userMustBeOnVoiceChannel', { locale })}`,
         ephemeral: true,

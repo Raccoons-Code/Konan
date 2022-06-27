@@ -1,6 +1,5 @@
-import { codeBlock, ContextMenuCommandBuilder } from '@discordjs/builders';
 import translate, { languages } from '@vitalets/google-translate-api';
-import { Client, MessageContextMenuInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandType, Client, codeBlock, ContextMenuCommandBuilder, EmbedBuilder, MessageContextMenuCommandInteraction } from 'discord.js';
 import { MessageContextMenu } from '../../structures';
 
 const langs = Object.keys(languages)
@@ -12,10 +11,10 @@ export default class extends MessageContextMenu {
 
     this.data = new ContextMenuCommandBuilder().setName('Translate')
       .setNameLocalizations(this.getLocalizations('translateName'))
-      .setType(3);
+      .setType(ApplicationCommandType.Message);
   }
 
-  async execute(interaction: MessageContextMenuInteraction): Promise<any> {
+  async execute(interaction: MessageContextMenuCommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale, targetMessage } = interaction;
@@ -26,8 +25,8 @@ export default class extends MessageContextMenu {
 
     return interaction.editReply({
       embeds: [
-        new MessageEmbed()
-          .setColor('RANDOM')
+        new EmbedBuilder()
+          .setColor('Random')
           .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
           .setTitle([
             'Translation from',

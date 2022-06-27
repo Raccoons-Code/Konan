@@ -1,8 +1,10 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, Client, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import ms from 'ms';
 import { SlashCommand } from '../../structures';
 import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../TMDBAPI';
+
+const { Primary, Secondary } = ButtonStyle;
+const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Movies extends SlashCommand {
   [k: string]: any;
@@ -38,12 +40,12 @@ export default class Movies extends SlashCommand {
           .setRequired(true)));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
     const { options } = interaction;
 
     const subcommand = options.getSubcommand();
 
-    if (interaction.isAutocomplete())
+    if (interaction.type === ApplicationCommandAutocomplete)
       return this[`${subcommand}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true, fetchReply: true });
@@ -51,7 +53,7 @@ export default class Movies extends SlashCommand {
     return this[subcommand]?.(interaction);
   }
 
-  async list(interaction: CommandInteraction): Promise<any> {
+  async list(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const raw_page = options.getInteger('page') ?? 1;
@@ -71,30 +73,31 @@ export default class Movies extends SlashCommand {
     const a = page > 1 ? true : offset;
     const b = raw_page < 1000;
 
-    const buttons = [
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 0, o: offset, p: page, target: 1 }))
-        .setDisabled(!a).setLabel('1...').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 1, o: offset, p: page, target: raw_page - 1 }))
-        .setDisabled(!a).setLabel('Back').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 2, o: offset, p: page }))
-        .setDisabled(true).setLabel(`${raw_page}`).setStyle('SECONDARY'),
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 3, o: offset, p: page, target: raw_page + 1 }))
-        .setDisabled(!b).setLabel('Next').setStyle(b ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c: this.data.name, d: 4, o: offset, p: page, target: 1000 }))
-        .setDisabled(!b).setLabel(`...${1000}`).setStyle(b ? 'PRIMARY' : 'SECONDARY'),
+    const components = [
+      new ActionRowBuilder<ButtonBuilder>()
+        .setComponents([
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c: this.data.name, d: 0, o: offset, p: page, target: 1 }))
+            .setDisabled(!a).setLabel('1...').setStyle(a ? Primary : Secondary),
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c: this.data.name, d: 1, o: offset, p: page, target: raw_page - 1 }))
+            .setDisabled(!a).setLabel('Back').setStyle(a ? Primary : Secondary),
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c: this.data.name, d: 2, o: offset, p: page }))
+            .setDisabled(true).setLabel(`${raw_page}`).setStyle(Secondary),
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c: this.data.name, d: 3, o: offset, p: page, target: raw_page + 1 }))
+            .setDisabled(!b).setLabel('Next').setStyle(b ? Primary : Secondary),
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c: this.data.name, d: 4, o: offset, p: page, target: 1000 }))
+            .setDisabled(!b).setLabel(`...${1000}`).setStyle(b ? Primary : Secondary),
+        ]),
     ];
-
-    const components = [new MessageActionRow().setComponents(buttons)];
 
     return interaction.editReply({ components, embeds });
   }
 
-  async search(interaction: CommandInteraction): Promise<any> {
+  async search(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
     const movie_id = parseInt(options.getString('keyword', true));
@@ -116,9 +119,9 @@ export default class Movies extends SlashCommand {
     const numberFormat = Intl.NumberFormat(locale, { currency: 'USD', style: 'currency' });
 
     const embeds = [
-      new MessageEmbed()
+      new EmbedBuilder()
         .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
-        .setColor('RANDOM')
+        .setColor('Random')
         .setDescription(overview.slice(0, 4096))
         .setFields([
           { name: 'Release date', value: release_date || '-', inline: true },
@@ -194,9 +197,9 @@ export default class Movies extends SlashCommand {
 
       const lang = TMDBApi.configuration.getLanguage({ language: original_language });
 
-      embeds.push(new MessageEmbed()
+      embeds.push(new EmbedBuilder()
         .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
-        .setColor('RANDOM')
+        .setColor('Random')
         .setDescription(overview.slice(0, 4096))
         .setFields([
           { name: 'Release date', value: release_date || '-', inline: true },

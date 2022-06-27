@@ -1,4 +1,4 @@
-import { Guild, GuildMember, Permissions } from 'discord.js';
+import { Guild, GuildMember, PermissionFlagsBits } from 'discord.js';
 
 export default abstract class Utils {
   isManageable({ author, guild, target }: { author: GuildMember, guild: Guild, target: GuildMember }): boolean {
@@ -10,19 +10,19 @@ export default abstract class Utils {
 
   isBannable({ author, guild, target }: { author: GuildMember, guild: Guild, target: GuildMember }) {
     return this.isManageable({ author, guild, target }) &&
-      author.permissions.has(Permissions.FLAGS.BAN_MEMBERS);
+      author.permissions.has(PermissionFlagsBits.BanMembers);
   }
 
   isKickable({ author, guild, target }: { author: GuildMember, guild: Guild, target: GuildMember }) {
     return this.isManageable({ author, guild, target }) &&
-      author.permissions.has(Permissions.FLAGS.KICK_MEMBERS);
+      author.permissions.has(PermissionFlagsBits.KickMembers);
   }
 
   isModeratable({ author, guild, target }: { author: GuildMember, guild: Guild, target: GuildMember }) {
     return (
-      !target.permissions.has(Permissions.FLAGS.ADMINISTRATOR) &&
+      !target.permissions.has(PermissionFlagsBits.Administrator) &&
       this.isManageable({ author, guild, target }) &&
-      author.permissions.has(Permissions.FLAGS.MODERATE_MEMBERS)
+      author.permissions.has(PermissionFlagsBits.ModerateMembers)
     );
   }
 }

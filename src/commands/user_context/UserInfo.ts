@@ -1,5 +1,4 @@
-import { codeBlock, ContextMenuCommandBuilder, inlineCode, time } from '@discordjs/builders';
-import { Client, MessageEmbed, UserContextMenuInteraction } from 'discord.js';
+import { ApplicationCommandType, Client, codeBlock, ContextMenuCommandBuilder, EmbedBuilder, inlineCode, time, UserContextMenuCommandInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class UserInfo extends UserContextMenu {
@@ -7,24 +6,24 @@ export default class UserInfo extends UserContextMenu {
     super(client);
 
     this.data = new ContextMenuCommandBuilder().setName('User info')
-      .setType(2);
+      .setType(ApplicationCommandType.User);
   }
 
-  async execute(interaction: UserContextMenuInteraction<'cached'>) {
+  async execute(interaction: UserContextMenuCommandInteraction<'cached'>) {
     const { locale, targetMember, targetUser } = interaction;
 
     const { createdAt, id, tag } = targetUser;
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setDescription(`${targetUser}`)
         .setFields(
           { name: this.t('discordTag', { locale }), value: inlineCode(tag), inline: true },
           { name: this.t('discordId', { locale }), value: inlineCode(id), inline: true },
         )
         .setFooter({ text: this.t(targetMember ? 'joinedTheServerAt' : 'creationDate', { locale }) })
-        .setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
+        .setThumbnail(targetUser.displayAvatarURL())
         .setTimestamp(targetMember?.joinedTimestamp ?? createdAt),
     ];
 
@@ -46,7 +45,7 @@ export default class UserInfo extends UserContextMenu {
         embeds[0].setColor(displayColor);
 
       if (avatar)
-        embeds[0].setThumbnail(targetMember.displayAvatarURL({ dynamic: true }));
+        embeds[0].setThumbnail(targetMember.displayAvatarURL());
     }
 
     return interaction.reply({ embeds, ephemeral: true });

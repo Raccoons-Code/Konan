@@ -1,12 +1,12 @@
-import { Client, Message } from 'discord.js';
+import { Client, Message, Partials } from 'discord.js';
 import { Command, Event } from '../structures';
 
 export default class MessageCreate extends Event {
   constructor(client: Client) {
     super(client, {
-      intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'],
+      intents: ['Guilds', 'GuildMessages', 'DirectMessages'],
       name: 'messageCreate',
-      partials: ['MESSAGE'],
+      partials: [Partials.Message],
     });
   }
 
@@ -16,8 +16,8 @@ export default class MessageCreate extends Event {
     if (author.bot) return;
 
     const { commands, user } = client;
-    const botRole = guild?.me?.roles.botRole ?? user;
-    const pattern = RegExp(`^\\s*<@!?&?(?:${user?.id}|${botRole?.id})>([\\w\\W]*)$`);
+    const me = guild?.members.me?.roles.botRole ?? user;
+    const pattern = RegExp(`^\\s*<@!?&?(?:${user?.id}|${me?.id})>([\\w\\W]*)$`);
     const matched = content.match(pattern);
 
     if (!matched) return;

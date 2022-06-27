@@ -1,15 +1,12 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, Client, SlashCommandBuilder, TextChannel } from 'discord.js';
 import * as googleTTS from 'google-tts-api';
 import { SlashCommand } from '../../structures';
-
-const dynamic = true;
 
 export default class Say extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Fun',
-      clientPermissions: ['MANAGE_WEBHOOKS'],
+      clientPermissions: ['ManageWebhooks'],
     });
 
     this.data = new SlashCommandBuilder().setName('say')
@@ -23,7 +20,7 @@ export default class Say extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction<'cached'>) {
+  async execute(interaction: ChatInputCommandInteraction<'cached'>) {
     const { channel, client, locale, member, options, user } = interaction;
 
     const message = options.getString('message', true);
@@ -32,7 +29,7 @@ export default class Say extends SlashCommand {
       lang: locale.split(/_|-/)[0],
     });
 
-    const avatarURL = member?.displayAvatarURL({ dynamic }) ?? user.displayAvatarURL({ dynamic });
+    const avatarURL = member?.displayAvatarURL() ?? user.displayAvatarURL();
 
     const username = member?.displayName ?? user.username;
 
@@ -41,7 +38,9 @@ export default class Say extends SlashCommand {
 
     const webhook = await (<TextChannel>channel).fetchWebhooks()
       .then(w => w.find(v => v.name === client.user?.id)) ??
-      await (<TextChannel>channel).createWebhook(<string>client.user?.id);
+      await (<TextChannel>channel).createWebhook({
+        name: `${client.user?.id}`,
+      });
 
     await webhook.send({ avatarURL, username, files: [{ attachment: url, name: 'say.mp3' }] });
 

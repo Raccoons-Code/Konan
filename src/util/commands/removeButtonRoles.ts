@@ -1,12 +1,19 @@
-import { MessageActionRow } from 'discord.js';
+import { ActionRow, ActionRowBuilder, ButtonBuilder, ComponentType, MessageActionRowComponent } from 'discord.js';
 
-export function removeButtonRoles(roles: string[], components: MessageActionRow[] = []): MessageActionRow[] {
-  return components.map(component => {
-    if (component.components[0].type !== 'BUTTON') return component;
+const { Button } = ComponentType;
 
-    component.setComponents(component.components.filter(button =>
-      !roles.includes(JSON.parse(button.customId!).roleId)));
+export function removeButtonRoles(
+  components: ActionRow<MessageActionRowComponent>[] = [],
+  roles: string[],
+) {
+  return components.map(row => {
+    if (row.components[0].type !== Button) return row;
 
-    return component;
-  }).filter(component => component.components.length);
+    return new ActionRowBuilder<ButtonBuilder>()
+      .setComponents(row.components.reduce((acc: ButtonBuilder[], button) => {
+        if (roles.includes(JSON.parse(button.customId!).roleId)) return acc;
+
+        return acc.concat(new ButtonBuilder(button.toJSON()));
+      }, <ButtonBuilder[]>[]));
+  }).filter(row => row.components.length);
 }

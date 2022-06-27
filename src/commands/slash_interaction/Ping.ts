@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, MessageEmbed } from 'discord.js';
+import { Client, CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Ping extends SlashCommand {
@@ -21,8 +20,8 @@ export default class Ping extends SlashCommand {
 
     return interaction.editReply({
       embeds: [
-        new MessageEmbed()
-          .setColor('RANDOM')
+        new EmbedBuilder()
+          .setColor('Random')
           .setFields([
             { name: ':signal_strength:', value: `**\`${interaction.client.ws.ping}\`ms**`, inline: true },
             { name: ':robot:', value: `**\`${ping}\`ms**`, inline: true },

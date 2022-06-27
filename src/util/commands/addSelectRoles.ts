@@ -1,10 +1,14 @@
-import { MessageActionRow, MessageSelectMenu, Role } from 'discord.js';
+import { ActionRow, ActionRowBuilder, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+
+const { SelectMenu } = ComponentType;
 
 export function addSelectRoles(
+  components: (ActionRow<MessageActionRowComponent> | null)[] = [],
   roles: Role[],
-  components: (MessageActionRow | null)[] = [],
   menuPlaceholder: string | null = '',
-): MessageActionRow[] {
+) {
+  const newComponents = <(ActionRow<MessageActionRowComponent> | ActionRowBuilder<SelectMenuBuilder>)[]>components;
+
   for (let i = 0; i < 5; i++) {
     if (!roles.length) break;
 
@@ -13,42 +17,39 @@ export function addSelectRoles(
     if (!component) {
       const array = roles.splice(0, 25);
 
-      components.push(new MessageActionRow()
-        .setComponents(new MessageSelectMenu()
+      newComponents.push(new ActionRowBuilder<SelectMenuBuilder>()
+        .setComponents(new SelectMenuBuilder()
           .setCustomId(JSON.stringify({
             c: 'selectroles',
             count: 0,
           }))
-          .setOptions(array.map(role => ({
-            label: `${role.name.slice(0, 83)} 0`,
-            value: JSON.stringify({
+          .setOptions(array.map(role => new SelectMenuOptionBuilder()
+            .setLabel(`${role.name.slice(0, 83)} 0`)
+            .setValue(JSON.stringify({
               count: 0,
               roleId: role.id,
-            }),
-          })))
+            }))))
           .setMaxValues(array.length)
           .setPlaceholder(menuPlaceholder ?? '')));
 
       continue;
     }
 
-    if (component.components[0].type !== 'SELECT_MENU') continue;
+    if (component.components[0].type !== SelectMenu) continue;
 
     const array = roles.splice(0, 25 - component.components[0].options.length);
 
-    component.components[0]
-      .addOptions(array.map(role => ({
-        label: `${role.name.slice(0, 83)} 0`,
-        value: JSON.stringify({
-          count: 0,
-          roleId: role.id,
-        }),
-      })))
-      .setMaxValues(component.components[0].options.length)
-      .setPlaceholder(menuPlaceholder ?? '');
-
-    components[i] = component;
+    newComponents[i] = new ActionRowBuilder<SelectMenuBuilder>(component.toJSON())
+      .setComponents(new SelectMenuBuilder(component.components[0].toJSON())
+        .addOptions(array.map(role => new SelectMenuOptionBuilder()
+          .setLabel(`${role.name.slice(0, 83)} 0`)
+          .setValue(JSON.stringify({
+            count: 0,
+            roleId: role.id,
+          }))))
+        .setMaxValues(component.components[0].options.length + array.length)
+        .setPlaceholder(menuPlaceholder ?? ''));
   }
 
-  return <MessageActionRow[]>components;
+  return newComponents;
 }

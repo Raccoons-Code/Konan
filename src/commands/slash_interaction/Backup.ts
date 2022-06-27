@@ -1,7 +1,8 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
 import Backup from 'discord-backup';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, Guild, MessageEmbed, Permissions } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, EmbedBuilder, Guild, InteractionType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
+
+const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class extends SlashCommand {
   [k: string]: any;
@@ -9,13 +10,13 @@ export default class extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Utility',
-      clientPermissions: ['BAN_MEMBERS', 'MANAGE_CHANNELS', 'MANAGE_EMOJIS_AND_STICKERS', 'MANAGE_GUILD', 'MANAGE_MESSAGES', 'MANAGE_ROLES', 'MANAGE_WEBHOOKS', 'READ_MESSAGE_HISTORY', 'VIEW_CHANNEL'],
-      userPermissions: ['ADMINISTRATOR'],
+      clientPermissions: ['BanMembers', 'ManageChannels', 'ManageEmojisAndStickers', 'ManageGuild', 'ManageMessages', 'ManageRoles', 'ManageWebhooks', 'ReadMessageHistory', 'ViewChannel'],
+      userPermissions: ['Administrator'],
     });
 
     this.data = new SlashCommandBuilder().setName('backup')
       .setDescription('Make backup for your server - Powered by Discord Backup.')
-      .setDefaultMemberPermissions(Permissions.FLAGS.ADMINISTRATOR)
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
       .setNameLocalizations(this.getLocalizations('backupName'))
       .setDescriptionLocalizations(this.getLocalizations('backupDescription'))
       .addSubcommand(subcommand => subcommand.setName('create')
@@ -80,13 +81,13 @@ export default class extends SlashCommand {
           .setRequired(true)));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<any> {
     const { locale, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions?.missing(this.props!.userPermissions!, true);
 
     if (userPerms?.length) {
-      if (interaction.isAutocomplete()) return interaction.respond([]);
+      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
 
       return interaction.reply({
         content: this.t('missingUserPermission', {
@@ -97,9 +98,9 @@ export default class extends SlashCommand {
       });
     }
 
-    const subcommand = options.getSubcommandGroup(false) ?? options.getSubcommand();
+    const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
-    if (interaction.isAutocomplete())
+    if (interaction.type === ApplicationCommandAutocomplete)
       return this[`${subcommand}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true, fetchReply: true });
@@ -107,7 +108,7 @@ export default class extends SlashCommand {
     return this[subcommand]?.(interaction);
   }
 
-  async create(interaction: CommandInteraction): Promise<any> {
+  async create(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -115,7 +116,7 @@ export default class extends SlashCommand {
 
     const { guild, guildId, user } = interaction;
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = await guild.fetchMe().then(me => me.permissions.missing(this.props!.clientPermissions!));
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -173,7 +174,7 @@ export default class extends SlashCommand {
     ].join(' '));
   }
 
-  async delete(interaction: CommandInteraction): Promise<any> {
+  async delete(interaction: ChatInputCommandInteraction): Promise<any> {
     const { guild, locale, options, user } = interaction;
 
     const subcommand = options.getSubcommand();
@@ -208,7 +209,7 @@ export default class extends SlashCommand {
     }
   }
 
-  async list(interaction: CommandInteraction): Promise<any> {
+  async list(interaction: ChatInputCommandInteraction): Promise<any> {
     const { guild, guildId, locale, user } = interaction;
 
     const userId = guild?.ownerId ?? user.id;
@@ -218,34 +219,34 @@ export default class extends SlashCommand {
     if (!backups.length)
       return interaction.editReply(this.t('You don\'t have backups in the database', { locale }));
 
-    const embeds = [new MessageEmbed().setColor('RANDOM')];
+    const embeds = [new EmbedBuilder().setColor('Random')];
 
     for (let i = 0; i < backups.length; i++) {
       const backup = backups[i];
 
       if (!backup.data || typeof backup.data !== 'object' || Array.isArray(backup.data)) continue;
 
-      embeds[0].addField(
-        [
+      embeds[0].addFields({
+        name: [
           backup.data.id,
           ' | ',
           backup.data.name,
         ].join(''),
-        [
+        value: [
           backup.id,
           backup.data.guildID === guildId ? ` | ${this.t('currentServer', { locale })}` : '',
           backup.premium ? ' - `Premium`' : '',
         ].join(''),
-        true,
-      );
+        inline: true,
+      });
 
-      if (embeds[0].fields.length === 25) break;
+      if (embeds[0].data.fields?.length === 25) break;
     }
 
     return interaction.editReply({ embeds });
   }
 
-  async restore(interaction: CommandInteraction): Promise<any> {
+  async restore(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -253,7 +254,7 @@ export default class extends SlashCommand {
 
     const { guild, options } = interaction;
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = await guild.fetchMe().then(me => me.permissions.missing(this.props!.clientPermissions!));
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -286,7 +287,7 @@ export default class extends SlashCommand {
     }
   }
 
-  async update(interaction: CommandInteraction): Promise<any> {
+  async update(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -294,7 +295,7 @@ export default class extends SlashCommand {
 
     const { guild, options } = interaction;
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = await guild.fetchMe().then(me => me?.permissions.missing(this.props!.clientPermissions!));
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {

@@ -1,6 +1,6 @@
 import bytes from './bytes';
 import capitalize from './capitalize';
-import { addButtonRoles, addSelectRoles, ComponentLink, createButtonRoles, createSelectRoles, filterRolesId, removeButtonRoles, removeSelectRoles, setDefaultRole } from './commands';
+import { addButtonRoles, addSelectRoles, ComponentLink, componentsHasRoles, createButtonRoles, createSelectRoles, filterRolesId, removeButtonRoles, removeSelectRoles, setDefaultRole } from './commands';
 import composition from './composition';
 import Constants from './Constants';
 import djsLimits from './djsLimits';
@@ -54,6 +54,7 @@ export default abstract class Util {
   static addButtonRoles = addButtonRoles;
   static addSelectRoles = addSelectRoles;
   static ComponentLink = ComponentLink;
+  static componentsHasRoles = componentsHasRoles;
   static createButtonRoles = createButtonRoles;
   static createSelectRoles = createSelectRoles;
   static filterRolesId = filterRolesId;

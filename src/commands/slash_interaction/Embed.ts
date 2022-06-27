@@ -1,6 +1,7 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEmbed, TextChannel } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, EmbedBuilder, InteractionType, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { SlashCommand } from '../../structures';
+
+const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Embed extends SlashCommand {
   [k: string]: any;
@@ -8,8 +9,8 @@ export default class Embed extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Utility',
-      clientPermissions: ['SEND_MESSAGES'],
-      userPermissions: ['MANAGE_MESSAGES'],
+      clientPermissions: ['SendMessages'],
+      userPermissions: ['ManageMessages'],
     });
 
     this.data = new SlashCommandBuilder().setName('embed')
@@ -72,11 +73,11 @@ export default class Embed extends SlashCommand {
             .setDescriptionLocalizations(this.getLocalizations('embedEditEmbedContentDescription')))));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
-      if (interaction.isAutocomplete()) return interaction.respond([]);
+      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
 
       return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
     }
@@ -86,7 +87,7 @@ export default class Embed extends SlashCommand {
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length) {
-      if (interaction.isAutocomplete()) return interaction.respond([]);
+      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
 
       return interaction.reply({
         content: this.t('missingUserPermission', {
@@ -97,9 +98,9 @@ export default class Embed extends SlashCommand {
       });
     }
 
-    const subcommand = options.getSubcommandGroup(false) ?? options.getSubcommand();
+    const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
-    if (interaction.isAutocomplete())
+    if (interaction.type === ApplicationCommandAutocomplete)
       return this[`${subcommand}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true });
@@ -107,7 +108,7 @@ export default class Embed extends SlashCommand {
     return this[subcommand]?.(interaction);
   }
 
-  async send(interaction: CommandInteraction<'cached'>) {
+  async send(interaction: ChatInputCommandInteraction<'cached'>) {
     const { client, locale, member, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
@@ -124,8 +125,8 @@ export default class Embed extends SlashCommand {
       }));
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
         .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
         .setImage(attachment.url)
@@ -133,7 +134,7 @@ export default class Embed extends SlashCommand {
         .setTitle(title),
     ];
 
-    if (!clientPerms?.includes('SEND_MESSAGES')) {
+    if (!clientPerms?.includes('SendMessages')) {
       try {
         await channel.send({ content, embeds });
 
@@ -144,7 +145,7 @@ export default class Embed extends SlashCommand {
     }
   }
 
-  async edit(interaction: CommandInteraction<'cached'>) {
+  async edit(interaction: ChatInputCommandInteraction<'cached'>) {
     const { client, locale, member, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
@@ -164,8 +165,8 @@ export default class Embed extends SlashCommand {
       const attachment = options.getAttachment('attachment')!;
 
       const embeds = [
-        new MessageEmbed()
-          .setColor('RANDOM')
+        new EmbedBuilder()
+          .setColor('Random')
           .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
           .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
           .setImage(attachment.url)
@@ -175,7 +176,7 @@ export default class Embed extends SlashCommand {
 
       const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
-      if (!clientPerms?.includes('SEND_MESSAGES')) {
+      if (!clientPerms?.includes('SendMessages')) {
         try {
           await message.edit({ content, embeds });
 

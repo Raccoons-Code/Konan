@@ -1,4 +1,4 @@
-import { Locale } from 'discord-api-types/v10';
+import { Locale } from 'discord.js';
 import { t } from '../translator';
 
 const localeString = Object.values(Locale);

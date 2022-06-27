@@ -1,7 +1,8 @@
-import { codeBlock, SlashCommandBuilder } from '@discordjs/builders';
 import translate, { languages } from '@vitalets/google-translate-api';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, codeBlock, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
+
+const { ApplicationCommandAutocomplete } = InteractionType;
 
 const Choices = <[string, string][]>Object.keys(languages)
   .filter(l => !/(isSupported|getCode)/.test(l))
@@ -40,8 +41,8 @@ export default class Translate extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
-    if (interaction.isAutocomplete())
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<any> {
+    if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
@@ -58,8 +59,8 @@ export default class Translate extends SlashCommand {
 
     return interaction.editReply({
       embeds: [
-        new MessageEmbed()
-          .setColor('RANDOM')
+        new EmbedBuilder()
+          .setColor('Random')
           .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
           .setTitle([
             'Translation from',

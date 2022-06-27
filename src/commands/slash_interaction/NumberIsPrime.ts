@@ -1,5 +1,4 @@
-import { codeBlock, SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, MessageEmbed } from 'discord.js';
+import { ChatInputCommandInteraction, Client, codeBlock, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { PrimeResolveOptions } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -22,7 +21,7 @@ export default class NumberIsPrime extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { options } = interaction;
@@ -36,8 +35,8 @@ export default class NumberIsPrime extends SlashCommand {
     const length = 4096 - (codeBlock('').length + embedDescription.length);
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setTitle(prime.length ? `${number} is not prime.` : `${number} is prime!`)
         .setDescription(prime.length ?
           `${embedDescription}${codeBlock(prime.join(', ').slice(0, length))}` : ''),

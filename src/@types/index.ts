@@ -1,29 +1,32 @@
-import { AutocompleteInteraction, ButtonInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuInteraction, IntentsString, Interaction, MessageComponentInteraction, MessageContextMenuInteraction, ModalSubmitInteraction, PartialTypes, Permissions, PermissionString, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { AutocompleteInteraction, BitFieldResolvable, ButtonInteraction, ChatInputCommandInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuCommandInteraction, GatewayIntentsString, Interaction, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, PermissionsString, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { ButtonComponentInteraction, Command, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 export * from './customid';
 export * from './quickdb';
 
-export type AnyInteraction =
+export type AnyInteraction = Interaction & (
   AutocompleteInteraction |
   ButtonInteraction |
+  ChatInputCommandInteraction |
   CommandInteraction |
-  ContextMenuInteraction |
+  ContextMenuCommandInteraction |
   MessageComponentInteraction |
-  MessageContextMenuInteraction |
+  MessageContextMenuCommandInteraction |
   ModalSubmitInteraction |
   SelectMenuInteraction |
-  UserContextMenuInteraction
+  UserContextMenuCommandInteraction
+)
 
 export interface ApplicationCommandsCollection {
   [k: string]: Collection<string, Interaction & (
     AutocompleteInteraction |
     ButtonInteraction |
+    ChatInputCommandInteraction |
     CommandInteraction |
-    MessageContextMenuInteraction |
+    MessageContextMenuCommandInteraction |
     ModalSubmitInteraction |
     SelectMenuInteraction |
-    UserContextMenuInteraction
+    UserContextMenuCommandInteraction
   )>
 }
 
@@ -45,11 +48,11 @@ export interface CommandChoicesData {
 export interface CommandData {
   aliases?: string[]
   args?: CommandArgsData[]
-  clientPermissions?: PermissionString[]
+  clientPermissions?: BitFieldResolvable<PermissionsString, bigint>
   description: string
   emoji?: string
   name: string
-  userPermissions?: PermissionString[]
+  userPermissions?: BitFieldResolvable<PermissionsString, bigint>
 }
 
 export interface CommandCollectionTypes {
@@ -70,15 +73,15 @@ export interface CommandsCollection {
 export interface ComponentInteractionData {
   name: string
   description: string
-  clientPermissions?: PermissionString[]
+  clientPermissions?: BitFieldResolvable<PermissionsString, bigint>
 }
 
 export interface EventData {
-  intents?: IntentsString[]
+  intents?: GatewayIntentsString[]
   listener?: ListenerString
   name: keyof ClientEvents
-  partials?: PartialTypes[]
-  permissions?: PermissionString[]
+  partials?: Partials[]
+  permissions?: BitFieldResolvable<PermissionsString, bigint>
 }
 
 export type ListenerString = 'on' | 'once'
@@ -106,9 +109,9 @@ export interface SelectRolesItemOptionValue {
 
 export interface SlashCommandProps {
   category?: CategoryTypes;
-  clientPermissions?: bigint | Permissions | PermissionString[]
+  clientPermissions?: BitFieldResolvable<PermissionsString, bigint>
   ownerOnly?: boolean
-  userPermissions?: bigint | Permissions | PermissionString[]
+  userPermissions?: BitFieldResolvable<PermissionsString, bigint>
 }
 
 export interface SlashCommandsCollection {

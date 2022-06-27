@@ -1,9 +1,14 @@
-import { MessageActionRow, MessageButton, Role } from 'discord.js';
+import { ActionRow, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent, Role } from 'discord.js';
+
+const { Primary } = ButtonStyle;
+const { Button } = ComponentType;
 
 export function addButtonRoles(
+  components: (ActionRow<MessageActionRowComponent> | undefined)[] = [],
   roles: Role[],
-  components: (MessageActionRow | undefined)[] = [],
-): MessageActionRow[] {
+) {
+  const newComponents = <(ActionRow<MessageActionRowComponent> | ActionRowBuilder<ButtonBuilder>)[]>components;
+
   for (let i = 0; i < 5; i++) {
     if (!roles.length) break;
 
@@ -12,34 +17,33 @@ export function addButtonRoles(
     if (!component) {
       const array = roles.splice(0, 5);
 
-      components.push(new MessageActionRow()
-        .setComponents(array.map(role => new MessageButton()
+      newComponents.push(new ActionRowBuilder<ButtonBuilder>()
+        .setComponents(array.map(role => new ButtonBuilder()
           .setCustomId(JSON.stringify({
             c: 'buttonroles',
             count: 0,
             roleId: role.id,
           }))
           .setLabel(`${role.name.slice(0, 63)} 0`)
-          .setStyle('PRIMARY'))));
+          .setStyle(Primary))));
 
       continue;
     }
 
-    if (component.components[0].type !== 'BUTTON') continue;
+    if (component.components[0].type !== Button) continue;
 
     const array = roles.splice(0, 5 - component.components.length);
 
-    component.addComponents(array.map(role => new MessageButton()
-      .setCustomId(JSON.stringify({
-        c: 'buttonroles',
-        count: 0,
-        roleId: role.id,
-      }))
-      .setLabel(`${role.name.slice(0, 63)} 0`)
-      .setStyle('PRIMARY')));
-
-    components[i] = component;
+    newComponents[i] = new ActionRowBuilder<ButtonBuilder>(component.toJSON())
+      .addComponents(array.map(role => new ButtonBuilder()
+        .setCustomId(JSON.stringify({
+          c: 'buttonroles',
+          count: 0,
+          roleId: role.id,
+        }))
+        .setLabel(`${role.name.slice(0, 63)} 0`)
+        .setStyle(Primary)));
   }
 
-  return <MessageActionRow[]>components;
+  return newComponents;
 }

@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, Permissions } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, Client, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Ban extends SlashCommand {
@@ -8,14 +7,14 @@ export default class Ban extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Moderation',
-      clientPermissions: ['BAN_MEMBERS'],
-      userPermissions: ['BAN_MEMBERS'],
+      clientPermissions: ['BanMembers'],
+      userPermissions: ['BanMembers'],
     });
 
     this.data = new SlashCommandBuilder().setName('ban')
       .setDescription('Bans a user from the server.')
       .setDMPermission(false)
-      .setDefaultMemberPermissions(Permissions.FLAGS.BAN_MEMBERS)
+      .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
       .setNameLocalizations(this.getLocalizations('banName'))
       .setDescriptionLocalizations(this.getLocalizations('banDescription'))
       .addSubcommand(subcommand => subcommand.setName('single')
@@ -72,7 +71,7 @@ export default class Ban extends SlashCommand {
           .setDescriptionLocalizations(this.getLocalizations('banChunkReasonDescription'))));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;
@@ -90,7 +89,7 @@ export default class Ban extends SlashCommand {
         permission: this.t(userPerms[0], { locale }),
       }));
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = await guild.fetchMe().then(me => me.permissions.missing(this.props!.clientPermissions!));
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -98,25 +97,25 @@ export default class Ban extends SlashCommand {
         permission: this.t(clientPerms[0], { locale }),
       }));
 
-    const command = options.getSubcommand();
+    const subcommand = options.getSubcommand();
 
-    return this[command]?.(interaction);
+    return this[subcommand]?.(interaction);
   }
 
-  async single(interaction: CommandInteraction<'cached'>) {
+  async single(interaction: ChatInputCommandInteraction<'cached'>) {
     const { guild, locale, member, options } = interaction;
 
-    const user = options.getMember('user', true);
+    const user = options.getMember('user');
 
-    if (!(user.bannable && this.isBannable({ author: member, guild, target: user })))
+    if (!(user?.bannable && this.isBannable({ author: member, guild, target: user! })))
       return interaction.editReply(this.t('banHierarchyError', { locale }));
 
-    const days = options.getInteger('delete_messages') ?? 0;
+    const deleteMessageDays = options.getInteger('delete_messages') ?? 0;
 
     const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
 
     try {
-      await guild.bans.create(user, { days, reason });
+      await guild.bans.create(user, { deleteMessageDays, reason });
 
       return interaction.editReply(this.t('userBanned', { locale }));
     } catch {
@@ -124,7 +123,7 @@ export default class Ban extends SlashCommand {
     }
   }
 
-  async chunk(interaction: CommandInteraction<'cached'>) {
+  async chunk(interaction: ChatInputCommandInteraction<'cached'>) {
     const { options } = interaction;
 
     const usersId = options.getString('users', true);
@@ -139,31 +138,32 @@ export default class Ban extends SlashCommand {
     const reason = options.getString('reason') || '-';
 
     const embeds = [
-      new MessageEmbed()
+      new EmbedBuilder()
         .setDescription(usersMentions.join(' ').slice(0, 4096))
-        .setTitle('Chunk of users to ban')
         .setFields([{
           name: 'Reason for ban',
           value: reason.slice(0, 1024),
         }, {
           name: 'Delete messages',
           value: days ? `${days} day${days === 1 ? '' : 's'}` : '-',
-        }]),
+        }])
+        .setTitle('Chunk of users to ban'),
     ];
 
-    const buttons = [
-      new MessageButton()
-        .setCustomId(JSON.stringify({
-          c: 'ban',
-          sc: 'chunk',
-          a: true,
-        }))
-        .setEmoji('⚠')
-        .setLabel('Yes')
-        .setStyle('PRIMARY'),
+    const components = [
+      new ActionRowBuilder<ButtonBuilder>()
+        .setComponents([
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({
+              c: 'ban',
+              sc: 'chunk',
+              a: true,
+            }))
+            .setEmoji('⚠')
+            .setLabel('Yes')
+            .setStyle(ButtonStyle.Primary),
+        ]),
     ];
-
-    const components = [new MessageActionRow().setComponents(buttons)];
 
     return interaction.editReply({ components, embeds });
   }

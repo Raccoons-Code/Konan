@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
 import { SlashCommand } from '../../structures';
 
@@ -18,7 +17,7 @@ export default class Respawn extends SlashCommand {
       .setDefaultMemberPermissions(null);
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const { client, user } = interaction;
 
     const owners = OWNER_ID?.split(',');

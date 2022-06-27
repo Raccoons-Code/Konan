@@ -1,4 +1,4 @@
-import { ButtonInteraction, Client, EmbedFieldData, MessageButton } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Client, ComponentType, EmbedBuilder, EmbedFieldData } from 'discord.js';
 import { HelpButtonCustomId } from '../../@types';
 import { ButtonComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
@@ -31,24 +31,27 @@ export default class Help extends ButtonComponentInteraction {
 
     const slashCommands = commands.filter((c: SlashCommand) => !c.props?.ownerOnly).toJSON();
 
-    message.embeds[0]
-      .setColor('RANDOM')
-      .setFields(this.convertCommandsToEmbedFields(slashCommands, p))
-      .setTitle(this.t('konanSupport', { locale }));
+    const embeds = [
+      new EmbedBuilder(message.embeds[0].toJSON())
+        .setColor('Random')
+        .setFields(this.convertCommandsToEmbedFields(slashCommands, p))
+        .setTitle(this.t('konanSupport', { locale })),
+    ];
 
-    message.components.map(c => {
-      if (c.components[0].type !== 'BUTTON') return c;
+    const components = message.components.map(row => {
+      if (row.components[0].type !== ComponentType.Button) return row;
 
-      c.setComponents(this.setPageButtons({
-        category: cbc,
-        page: p,
-        total: Math.floor(slashCommands.length / this.limit),
-      }));
+      if (row.components.every(element => element.customId !== customId)) return row;
 
-      return c;
+      return new ActionRowBuilder<ButtonBuilder>()
+        .setComponents(this.setPageButtons({
+          category: cbc,
+          page: p,
+          total: Math.floor(slashCommands.length / this.limit),
+        }));
     });
 
-    return interaction.update({ components: message.components, embeds: message.embeds });
+    return interaction.update({ components, embeds });
   }
 
   convertCommandsToEmbedFields(
@@ -73,21 +76,21 @@ export default class Help extends ButtonComponentInteraction {
 
   setPageButtons({ category, page, total }: { category: string, page: number, total: number }) {
     return [
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page - 1 }))
         .setDisabled(page < 1)
         .setLabel('Back')
-        .setStyle('SECONDARY'),
-      new MessageButton()
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: '' }))
         .setDisabled(true)
-        .setStyle('SECONDARY')
+        .setStyle(ButtonStyle.Secondary)
         .setLabel(`${page + 1}/${total + 1}`),
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page + 1 }))
         .setDisabled(page >= total)
         .setLabel('Next')
-        .setStyle('SECONDARY'),
+        .setStyle(ButtonStyle.Secondary),
     ];
   }
 }

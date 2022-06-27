@@ -1,5 +1,4 @@
-import { codeBlock } from '@discordjs/builders';
-import { AutocompleteInteraction, ButtonInteraction, Client, CommandInteraction, ContextMenuInteraction, InteractionType, MessageActionRow, MessageButton, MessageComponentInteraction, MessageContextMenuInteraction, MessageEmbed, ModalSubmitInteraction, SelectMenuInteraction, UserContextMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, Client, codeBlock, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { env } from 'node:process';
 import { AnyInteraction } from '../@types';
 import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
@@ -9,7 +8,7 @@ const { GUILD_INVITE } = env;
 export default class InteractionCreate extends Event {
   constructor(client: Client) {
     super(client, {
-      intents: ['GUILDS', 'GUILD_BANS', 'GUILD_INTEGRATIONS', 'GUILD_VOICE_STATES', 'GUILD_WEBHOOKS'],
+      intents: ['Guilds', 'GuildBans', 'GuildIntegrations', 'GuildVoiceStates', 'GuildWebhooks'],
       name: 'interactionCreate',
     });
   }
@@ -17,7 +16,7 @@ export default class InteractionCreate extends Event {
   async execute(interaction: AnyInteraction) {
     const { client, locale, type } = interaction;
 
-    const command = this[<Exclude<InteractionType, 'PING'>>type]?.(<any>interaction);
+    const command = this[<Exclude<keyof typeof InteractionType, 'Ping'>>InteractionType[type]]?.(<any>interaction);
 
     if (!command) return;
 
@@ -27,26 +26,26 @@ export default class InteractionCreate extends Event {
       client.sendError(error);
 
       const embeds = [
-        new MessageEmbed()
-          .setColor('DARK_RED')
+        new EmbedBuilder()
+          .setColor('DarkRed')
           .setTitle(this.t('There was an error while executing this command!', { locale }))
           .setDescription(codeBlock('properties', `${error.name}: ${error.message}`))
-          .setFooter({ text: command.data?.name || '-' })
+          .setFooter({ text: command.data?.name ?? '' })
           .setTimestamp(Date.now()),
       ];
 
-      const components: MessageActionRow[] = [];
+      const components = [];
 
       if (GUILD_INVITE)
-        components.push(new MessageActionRow()
-          .setComponents(new MessageButton()
-            .setStyle('LINK')
+        components.push(new ActionRowBuilder<ButtonBuilder>()
+          .setComponents(new ButtonBuilder()
+            .setStyle(ButtonStyle.Link)
             .setLabel(this.t('supportServer', { locale }))
-            .setURL(`${client.options.http?.invite}/${GUILD_INVITE}`)));
+            .setURL(`${RouteBases.invite}/${GUILD_INVITE}`)));
 
       try {
-        if (!interaction.isAutocomplete()) {
-          if (interaction.isMessageComponent()) {
+        if (interaction.type !== InteractionType.ApplicationCommandAutocomplete) {
+          if (interaction.type === InteractionType.MessageComponent) {
             await interaction.followUp({ components, embeds, ephemeral: true });
           } else if (interaction.replied) {
             await interaction.editReply({ components, embeds });
@@ -58,45 +57,47 @@ export default class InteractionCreate extends Event {
     }
   }
 
-  APPLICATION_COMMAND(interaction: CommandInteraction & ContextMenuInteraction) {
-    return this[interaction.targetType || 'TEXT_INPUT']?.(<any>interaction);
+  ApplicationCommand(interaction: CommandInteraction) {
+    return this[<keyof typeof ApplicationCommandType>
+      ApplicationCommandType[interaction.commandType]]?.(<any>interaction);
   }
 
-  APPLICATION_COMMAND_AUTOCOMPLETE(interaction: AutocompleteInteraction) {
-    return this['TEXT_INPUT']?.(interaction);
+  ApplicationCommandAutocomplete(interaction: AutocompleteInteraction) {
+    return this['ChatInput']?.(interaction);
   }
 
-  MESSAGE_COMPONENT(interaction: MessageComponentInteraction) {
-    return this[interaction.componentType]?.(<any>interaction);
+  MessageComponent(interaction: MessageComponentInteraction) {
+    return this[<Exclude<keyof typeof ComponentType, 'ActionRow' | 'TextInput'>>
+      ComponentType[interaction.componentType]]?.(<any>interaction);
   }
 
-  MODAL_SUBMIT(interaction: ModalSubmitInteraction): ModalSubmit {
+  ModalSubmit(interaction: ModalSubmitInteraction): ModalSubmit {
     const { c, command } = this.Util.parseJSON(interaction.customId) ?? {};
 
     return interaction.client.commands.modal_component?.get(c ?? command);
   }
 
-  BUTTON(interaction: ButtonInteraction): ButtonComponentInteraction {
+  Button(interaction: ButtonInteraction): ButtonComponentInteraction {
     const { c, command } = this.Util.parseJSON(interaction.customId) ?? {};
 
     return interaction.client.commands.button_component?.get(c ?? command);
   }
 
-  MESSAGE(interaction: MessageContextMenuInteraction): MessageContextMenu {
+  ChatInput(interaction: CommandInteraction | AutocompleteInteraction): SlashCommand {
+    return interaction.client.commands.slash_interaction?.get(interaction.commandName);
+  }
+
+  Message(interaction: MessageContextMenuCommandInteraction): MessageContextMenu {
     return interaction.client.commands.message_context?.get(interaction.commandName);
   }
 
-  SELECT_MENU(interaction: SelectMenuInteraction): SelectMenuComponentInteraction {
+  SelectMenu(interaction: SelectMenuInteraction): SelectMenuComponentInteraction {
     const { c, command } = this.Util.parseJSON(interaction.customId) ?? {};
 
     return interaction.client.commands.selectmenu_component?.get(c ?? command);
   }
 
-  TEXT_INPUT(interaction: CommandInteraction | AutocompleteInteraction): SlashCommand | undefined {
-    return interaction.client.commands.slash_interaction?.get(interaction.commandName);
-  }
-
-  USER(interaction: UserContextMenuInteraction): UserContextMenu {
+  User(interaction: UserContextMenuCommandInteraction): UserContextMenu {
     return interaction.client.commands.user_context?.get(interaction.commandName);
   }
 }

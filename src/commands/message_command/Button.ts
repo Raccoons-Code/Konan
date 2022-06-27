@@ -1,4 +1,4 @@
-import { Client, Message, MessageActionRow, MessageButton, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, Client, Message, TextChannel } from 'discord.js';
 import { Command } from '../../structures';
 
 export default class extends Command {
@@ -7,7 +7,7 @@ export default class extends Command {
       name: 'button',
       description: 'Makes a link button.',
       aliases: ['http', 'https'],
-      clientPermissions: ['MANAGE_WEBHOOKS'],
+      clientPermissions: ['ManageWebhooks'],
     });
   }
 
@@ -34,23 +34,23 @@ export default class extends Command {
 
     const components = this.getButtons(componentLinks);
 
-    const avatarURL = member?.displayAvatarURL({ dynamic: true }) ?? author.displayAvatarURL({ dynamic: true });
+    const avatarURL = member?.displayAvatarURL() ?? author.displayAvatarURL();
 
     const username = member?.displayName ?? author.username;
 
     const webhook = await (<TextChannel>channel).fetchWebhooks()
       .then(w => w.find(v => v.name === client.user?.id)) ??
-      await (<TextChannel>channel).createWebhook(client.user!.id);
+      await (<TextChannel>channel).createWebhook({
+        name: `${client.user?.id}`,
+      });
 
     return webhook.send({ avatarURL, components, content, username });
   }
 
-  getButtons(buttons: MessageButton[], rows: MessageActionRow[] = []): MessageActionRow[] {
+  getButtons(buttons: ButtonBuilder[], rows: ActionRowBuilder<ButtonBuilder>[] = []) {
     for (let i = 0; i < buttons.length; i += 5) {
-      const mButtons = buttons.slice(i, i + 5);
-
-      rows.push(new MessageActionRow()
-        .setComponents(mButtons));
+      rows.push(new ActionRowBuilder<ButtonBuilder>()
+        .setComponents(buttons.slice(i, i + 5)));
     }
 
     return rows;

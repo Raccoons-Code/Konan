@@ -1,9 +1,11 @@
-import { Client, Guild } from 'discord.js';
+import { ActivityType, Client, Guild, OAuth2Scopes } from 'discord.js';
 import { env } from 'node:process';
 import commands from '../commands';
 import { Event } from '../structures';
 
 const { NODE_ENV } = env;
+const { Listening, Playing, Streaming, Watching } = ActivityType;
+const { ApplicationsCommands, Bot } = OAuth2Scopes;
 
 export default class Ready extends Event {
   constructor(client: Client) {
@@ -16,17 +18,17 @@ export default class Ready extends Event {
   async execute(client: Client) {
     console.log(`Ready! ${client.user?.tag} is on ${client.guilds.cache.size} servers.`);
 
-    await client.application?.fetch();
+    client.application?.fetch();
 
     client.invite = client.generateInvite({
-      scopes: ['applications.commands', 'bot'],
+      scopes: [ApplicationsCommands, Bot],
       permissions: BigInt(545460321791),
     });
 
     client.topggAutoposter();
+    this.logCommandsErrors(client);
     await client.fetchStats();
     this.setPresence(client);
-    this.logCommandsErrors(client);
   }
 
   async logCommandsErrors(client: Client) {
@@ -66,14 +68,14 @@ export default class Ready extends Event {
   async setPresence(client: Client) {
     client.user?.setPresence({
       activities: [
-        { name: `${client.stats.members || 'Fetching'} members`, type: 'WATCHING' },
-        { name: 'Cat Vibing Meme', type: 'STREAMING', url: this.ytURL('NUYvbT6vTPs') },
-        { name: `${client.stats.guilds || 'Fetching'} servers`, type: 'PLAYING' },
-        { name: 'Wide Putin Walking', type: 'STREAMING', url: this.ytURL('SLU3oG_ePhM') },
-        { name: `${client.stats.channels || 'Fetching'} channels`, type: 'LISTENING' },
-        { name: 'Noisestorm - Crab Rave', type: 'STREAMING', url: this.ytURL('LDU_Txk06tM') },
-        { name: 'National Anthem of USSR', type: 'STREAMING', url: this.ytURL('U06jlgpMtQs') },
-        { name: 'Rick Astley - Never Gonna Give You Up', type: 'STREAMING', url: this.ytURL('dQw4w9WgXcQ') },
+        { name: `${client.stats.members || 'Fetching'} members`, type: Watching },
+        { name: 'Cat Vibing Meme', type: Streaming, url: ytURL('NUYvbT6vTPs') },
+        { name: `${client.stats.guilds || 'Fetching'} servers`, type: Playing },
+        { name: 'Wide Putin Walking', type: Streaming, url: ytURL('SLU3oG_ePhM') },
+        { name: `${client.stats.channels || 'Fetching'} channels`, type: Listening },
+        { name: 'Noisestorm - Crab Rave', type: Streaming, url: ytURL('LDU_Txk06tM') },
+        { name: 'National Anthem of USSR', type: Streaming, url: ytURL('U06jlgpMtQs') },
+        { name: 'Rick Astley - Never Gonna Give You Up', type: Streaming, url: ytURL('dQw4w9WgXcQ') },
       ],
     });
 
@@ -81,8 +83,8 @@ export default class Ready extends Event {
 
     this.setPresence(client);
   }
+}
 
-  ytURL<s extends string>(code: s): `https://www.youtube.com/watch?v=${s}` {
-    return `https://www.youtube.com/watch?v=${code}`;
-  }
+function ytURL<s extends string>(code: s): `https://www.youtube.com/watch?v=${s}` {
+  return `https://www.youtube.com/watch?v=${code}`;
 }

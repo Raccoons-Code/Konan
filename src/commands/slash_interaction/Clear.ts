@@ -1,19 +1,18 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, Permissions, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, Client, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Clear extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Moderation',
-      clientPermissions: ['MANAGE_MESSAGES', 'READ_MESSAGE_HISTORY'],
-      userPermissions: ['MANAGE_MESSAGES'],
+      clientPermissions: ['ManageMessages', 'ReadMessageHistory'],
+      userPermissions: ['ManageMessages'],
     });
 
     this.data = new SlashCommandBuilder().setName('clear')
       .setDescription('Deletes up to 1000 channel messages at once.')
       .setDMPermission(false)
-      .setDefaultMemberPermissions(Permissions.FLAGS.MANAGE_MESSAGES)
+      .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
       .setNameLocalizations(this.getLocalizations('clearName'))
       .setDescriptionLocalizations(this.getLocalizations('clearDescription'))
       .addIntegerOption(option => option.setName('amount')
@@ -30,7 +29,7 @@ export default class Clear extends SlashCommand {
         .addChannelTypes(...this.GuildTextChannelTypes));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;

@@ -1,11 +1,11 @@
-import { Client, NonThreadGuildBasedChannel } from 'discord.js';
+import { Client, NonThreadGuildBasedChannel, Partials } from 'discord.js';
 import { Event } from '../structures';
 
 export default class ChannelDelete extends Event {
   constructor(client: Client) {
     super(client, {
       name: 'channelDelete',
-      partials: ['CHANNEL'],
+      partials: [Partials.Channel],
     });
   }
 

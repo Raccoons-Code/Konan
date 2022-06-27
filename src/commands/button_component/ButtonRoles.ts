@@ -1,4 +1,4 @@
-import { ButtonInteraction, Client } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, Client, ComponentType } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
@@ -7,7 +7,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
     super(client, {
       name: 'buttonroles',
       description: 'Button roles',
-      clientPermissions: ['MANAGE_ROLES'],
+      clientPermissions: ['ManageRoles'],
     });
   }
 
@@ -43,12 +43,24 @@ export default class ButtonRoles extends ButtonComponentInteraction {
       roleId,
     };
 
-    component.setCustomId(JSON.stringify(newCustomId));
-
     const [, label] = component.label?.match(this.pattern.labelWithCount) ?? [];
 
-    component.setLabel([label, newCustomId.count].join(' ').trim());
+    const components = message.components.map(row => {
+      if (row.components[0].type !== ComponentType.Button ||
+        row.components.every(element => element.customId !== customId)) return row;
 
-    return interaction.update({ components: message.components });
+      return new ActionRowBuilder<ButtonBuilder>(row.toJSON())
+        .setComponents(row.components.map(element => {
+          const button = new ButtonBuilder(element.toJSON());
+
+          if (element.customId !== customId) return button;
+
+          return button
+            .setCustomId(JSON.stringify(newCustomId))
+            .setLabel([label, newCustomId.count].join(' ').trim());
+        }));
+    });
+
+    return interaction.update({ components });
   }
 }

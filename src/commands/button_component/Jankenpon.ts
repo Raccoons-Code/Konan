@@ -1,5 +1,4 @@
-import { userMention } from '@discordjs/builders';
-import { ButtonInteraction, Client } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, Client, ComponentType, EmbedBuilder, userMention } from 'discord.js';
 import { QuickDB } from 'quick.db';
 import { JkpCustomId, JKPGameData } from '../../@types';
 import JKP from '../../JKP';
@@ -63,32 +62,32 @@ export default class Jankenpon extends ButtonComponentInteraction {
     const value2 = values![player2];
     const result = JKP.spock(value1, value2);
 
-    message.embeds.map(embed => {
-      embed.fields = embed.fields?.map((field, i) => {
-        const { name, value } = field;
+    message.embeds.map(oldEmbed => {
+      if (!oldEmbed.data.fields) return oldEmbed;
 
-        if (name === 'Result') {
-          field.value = `${userMention(player1)} ${result.result}`;
+      const embed = new EmbedBuilder(oldEmbed.toJSON())
+        .setFields(oldEmbed.data.fields.map((field, i) => {
+          if (field.name === 'Result') {
+            field.value = `${userMention(player1)} ${result.result}`;
+
+            return field;
+          }
+
+          if (result.res === 1 ? changed ? i === 2 : i === 0 : false) {
+            field.value = `${parseInt(field.value) + 1}`;
+
+            return field;
+          }
+
+          if (result.res === 2 ? changed ? i === 0 : i === 2 : false) {
+            field.value = `${parseInt(field.value) + 1}`;
+
+            return field;
+          }
 
           return field;
-        }
-
-        if (result.res === 1 ? changed ? i === 2 : i === 0 : false) {
-          field.value = `${parseInt(value) + 1}`;
-
-          return field;
-        }
-
-        if (result.res === 2 ? changed ? i === 0 : i === 2 : false) {
-          field.value = `${parseInt(value) + 1}`;
-
-          return field;
-        }
-
-        return field;
-      });
-
-      embed.setColor('RANDOM');
+        }))
+        .setColor('Random');
 
       return embed;
     });
@@ -96,19 +95,20 @@ export default class Jankenpon extends ButtonComponentInteraction {
     await quickDb.delete(`${message.id}`);
 
     message.components.map(row => {
-      if (row.components[0].type !== 'BUTTON') return row;
+      if (row.components[0].type !== ComponentType.Button) return row;
 
-      row.components.map(button => {
-        if (button.type !== 'BUTTON' || !button.customId) return button;
+      return new ActionRowBuilder<ButtonBuilder>(row.toJSON())
+        .setComponents(row.components.map(oldButton => {
+          const button = new ButtonBuilder(oldButton.toJSON());
 
-        const { p, v } = parsedCustomId;
+          if (!oldButton.customId) return button;
 
-        button.setCustomId(JSON.stringify({ c: 'jkp', p, v }));
+          const { p, v } = parsedCustomId;
 
-        return button;
-      });
+          button.setCustomId(JSON.stringify({ c: 'jkp', p, v }));
 
-      return row;
+          return button;
+        }));
     });
 
     return interaction.update({ components: message.components, embeds: message.embeds });

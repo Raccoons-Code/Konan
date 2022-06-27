@@ -1,19 +1,20 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, Permissions } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, InteractionType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
+
+const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Unban extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Moderation',
-      clientPermissions: ['BAN_MEMBERS'],
-      userPermissions: ['BAN_MEMBERS'],
+      clientPermissions: ['BanMembers'],
+      userPermissions: ['BanMembers'],
     });
 
     this.data = new SlashCommandBuilder().setName('unban')
       .setDescription('Revoke a user\'s ban.')
       .setDMPermission(false)
-      .setDefaultMemberPermissions(Permissions.FLAGS.BAN_MEMBERS)
+      .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
       .setNameLocalizations(this.getLocalizations('unbanName'))
       .setDescriptionLocalizations(this.getLocalizations('unbanDescription'))
       .addStringOption(option => option.setName('user')
@@ -28,11 +29,11 @@ export default class Unban extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('unbanReasonDescription')));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild()) {
-      if (interaction.isAutocomplete()) return interaction.respond([]);
+      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
 
       return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
     }
@@ -42,7 +43,7 @@ export default class Unban extends SlashCommand {
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length) {
-      if (interaction.isAutocomplete()) return interaction.respond([]);
+      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
 
       return interaction.reply({
         content: this.t('missingUserPermission', {
@@ -53,10 +54,10 @@ export default class Unban extends SlashCommand {
       });
     }
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = await guild.fetchMe().then(me => me.permissions.missing(this.props!.clientPermissions!));
 
     if (clientPerms?.length) {
-      if (interaction.isAutocomplete()) return interaction.respond([]);
+      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
 
       return interaction.reply({
         content: this.t('missingPermission', {
@@ -67,7 +68,7 @@ export default class Unban extends SlashCommand {
       });
     }
 
-    if (interaction.isAutocomplete())
+    if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
@@ -90,10 +91,13 @@ export default class Unban extends SlashCommand {
     }
   }
 
-  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
+  async executeAutocomplete(
+    interaction: AutocompleteInteraction<'cached'>,
+    res: ApplicationCommandOptionChoiceData[] = [],
+  ) {
     if (interaction.responded) return;
 
-    const { guild, options } = <AutocompleteInteraction<'cached'>>interaction;
+    const { guild, options } = interaction;
 
     const user = options.getString('user', true);
     const pattern = RegExp(user, 'i');
@@ -103,14 +107,13 @@ export default class Unban extends SlashCommand {
     const bans_array = bans_collection.filter(ban =>
       pattern.test(ban.user.tag) ||
       pattern.test(ban.user.id) ||
-      pattern.test(<string>ban.reason)).toJSON();
+      pattern.test(ban.reason!)).toJSON();
 
     for (let i = 0; i < bans_array.length; i++) {
       const ban = bans_array[i];
 
       const name = [
-        ban.user.id,
-        ' | ', ban.user.tag,
+        ban.user.id, ' | ', ban.user.tag,
         ban.reason ? ` | Reason: ${ban.reason}` : '',
       ].join('').slice(0, 100);
 

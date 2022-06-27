@@ -1,4 +1,4 @@
-import { Client, Intents, IntentsString, PartialTypes } from 'discord.js';
+import { Client, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
 import { GlobSync } from 'glob';
 import { posix } from 'node:path';
 import { Event } from '../structures';
@@ -9,7 +9,7 @@ class Events {
   eventFiles!: string[];
   private _events!: Event[];
   intents?: number;
-  partials?: PartialTypes[];
+  partials?: Partials[];
   errors: Error[] = [];
 
   constructor() {
@@ -64,7 +64,7 @@ class Events {
     }
   }
 
-  async loadIntents(intents: IntentsString[] = []) {
+  async loadIntents(intents: GatewayIntentsString[] = []) {
     if (!this._events) await this.getEvents();
 
     for (let i = 0; i < this.events.length; i++) {
@@ -74,12 +74,12 @@ class Events {
         intents.push(...event.data.intents);
     }
 
-    this.intents = Intents.resolve([...new Set(intents)]);
+    this.intents = IntentsBitField.resolve([...new Set(intents)]);
 
     return this.intents;
   }
 
-  async loadPartials(partials: PartialTypes[] = []) {
+  async loadPartials(partials: Partials[] = []) {
     if (!this._events) await this.getEvents();
 
     for (let i = 0; i < this.events.length; i++) {

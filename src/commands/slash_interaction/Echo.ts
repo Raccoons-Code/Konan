@@ -1,14 +1,11 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, MessageEmbed, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, Client, EmbedBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { SlashCommand } from '../../structures';
-
-const dynamic = true;
 
 export default class Echo extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Fun',
-      clientPermissions: ['MANAGE_WEBHOOKS'],
+      clientPermissions: ['ManageWebhooks'],
     });
 
     this.data = new SlashCommandBuilder().setName('echo')
@@ -22,12 +19,12 @@ export default class Echo extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction<'cached'>) {
+  async execute(interaction: ChatInputCommandInteraction<'cached'>) {
     const { client, channel, member, options, user } = interaction;
 
     const content = options.getString('message', true);
 
-    const avatarURL = member?.displayAvatarURL({ dynamic }) ?? user.displayAvatarURL({ dynamic });
+    const avatarURL = member?.displayAvatarURL() ?? user.displayAvatarURL();
 
     const username = member?.displayName ?? user.username;
 
@@ -36,19 +33,21 @@ export default class Echo extends SlashCommand {
 
       return interaction.reply({
         embeds: [
-          new MessageEmbed()
-            .setColor(member?.displayColor || 'RANDOM')
+          new EmbedBuilder()
+            .setColor(member?.displayColor || 'Random')
+            .setDescription(description)
             .setFooter({ text: username, iconURL: avatarURL })
             .setTimestamp(Date.now())
-            .setTitle(title)
-            .setDescription(description),
+            .setTitle(title),
         ],
       });
     }
 
     const webhook = await (<TextChannel>channel).fetchWebhooks()
       .then(w => w.find(v => v.name === client.user?.id)) ??
-      await (<TextChannel>channel).createWebhook(client.user!.id);
+      await (<TextChannel>channel).createWebhook({
+        name: `${client.user?.id}`,
+      });
 
     await webhook.send({ avatarURL, content, username });
 

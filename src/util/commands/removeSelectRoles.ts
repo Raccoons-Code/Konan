@@ -1,19 +1,27 @@
-import { MessageActionRow, MessageSelectOptionData } from 'discord.js';
+import { ActionRow, ActionRowBuilder, APISelectMenuComponent, ComponentType, MessageActionRowComponent, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 
-export function removeSelectRoles(roles: string[], components: MessageActionRow[] = []): MessageActionRow[] {
-  return components.map(component => {
-    if (component.components[0].type !== 'SELECT_MENU') return component;
+const { SelectMenu } = ComponentType;
 
-    component.components = component.components.map(element => {
-      if (element.type !== 'SELECT_MENU') return element;
+export function removeSelectRoles(
+  components: ActionRow<MessageActionRowComponent>[] = [],
+  roles: string[],
+) {
+  return components.map(row => {
+    if (row.components[0].type !== SelectMenu) return row;
 
-      element.setOptions(<MessageSelectOptionData[]>element.options.filter(option =>
-        !roles.includes(JSON.parse(option.value!).roleId)))
-        .setMaxValues(element.options.length);
+    return new ActionRowBuilder<SelectMenuBuilder>()
+      .setComponents(row.components.map(element => {
+        const newSelectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
 
-      return element;
-    }).filter(element => element.type === 'SELECT_MENU' ? element.options.length : true);
+        if (element.type !== SelectMenu) return newSelectMenu;
 
-    return component;
-  }).filter(component => component.components.length);
+        newSelectMenu.setOptions(element.options.reduce((acc: SelectMenuOptionBuilder[], option) => {
+          if (roles.includes(JSON.parse(option.value).roleId)) return acc;
+
+          return acc.concat(new SelectMenuOptionBuilder(option));
+        }, <SelectMenuOptionBuilder[]>[]));
+
+        return newSelectMenu;
+      }).filter(element => element.data.type === SelectMenu ? element.options.length : true));
+  }).filter(row => row.components.length);
 }

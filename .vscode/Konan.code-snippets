@@ -60,8 +60,7 @@
   },
   "Class menu message context": {
     "body": [
-      "import { ContextMenuCommandBuilder } from '@discordjs/builders';",
-      "import { Client, MessageContextMenuInteraction } from 'discord.js';",
+      "import { ApplicationCommandType, Client, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction } from 'discord.js';",
       "import { MessageContextMenu } from '../../structures';",
       "",
       "export default class$2 extends MessageContextMenu {",
@@ -69,10 +68,10 @@
       "    super(client);",
       "",
       "    this.data = new ContextMenuCommandBuilder().setName('$1')",
-      "      .setType(3);",
+      "      .setType(ApplicationCommandType.Message);",
       "  }",
       "",
-      "  async execute(interaction: MessageContextMenuInteraction) {",
+      "  async execute(interaction: MessageContextMenuCommandInteraction) {",
       "    $0",
       "  }",
       "}"
@@ -83,8 +82,7 @@
   },
   "Class menu user context": {
     "body": [
-      "import { ContextMenuCommandBuilder } from '@discordjs/builders';",
-      "import { Client, UserContextMenuInteraction } from 'discord.js';",
+      "import { ApplicationCommandType, Client, ContextMenuCommandBuilder, UserContextMenuCommandInteraction } from 'discord.js';",
       "import { UserContextMenu } from '../../structures';",
       "",
       "export default class$2 extends UserContextMenu {",
@@ -92,10 +90,10 @@
       "    super(client);",
       "",
       "    this.data = new ContextMenuCommandBuilder().setName('$1')",
-      "      .setType(2);",
+      "      .setType(ApplicationCommandType.User);",
       "  }",
       "",
-      "  async execute(interaction: UserContextMenuInteraction) {",
+      "  async execute(interaction: UserContextMenuCommandInteraction) {",
       "    $0",
       "  }",
       "}"
@@ -172,8 +170,7 @@
   },
   "Class slash command": {
     "body": [
-      "import { SlashCommandBuilder } from '@discordjs/builders';",
-      "import { Client, CommandInteraction } from 'discord.js';",
+      "import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';",
       "import { SlashCommand } from '../../structures';",
       "",
       "export default class$4 extends SlashCommand {",
@@ -184,7 +181,7 @@
       "      .setDescription('$2')$3;",
       "  }",
       "",
-      "  async execute(interaction: CommandInteraction) {",
+      "  async execute(interaction: ChatInputCommandInteraction) {",
       "    $0",
       "  }",
       "}"

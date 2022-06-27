@@ -1,6 +1,5 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
 import TicTacToe from 'discord-tictactoe';
-import { Client, CommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class extends SlashCommand {
@@ -19,7 +18,7 @@ export default class extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('tictactoeOpponentDescription')));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const { locale } = interaction;
 
     const game = new TicTacToe({ language: locale.toLowerCase() });

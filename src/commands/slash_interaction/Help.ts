@@ -1,9 +1,10 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandNonOptionsData, ApplicationCommandOptionChoiceData, ApplicationCommandSubCommand, AutocompleteInteraction, Client, CommandInteraction, MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandNonOptionsData, ApplicationCommandOptionChoiceData, ApplicationCommandSubCommand, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, Client, EmbedBuilder, InteractionType, RouteBases, SelectMenuBuilder, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
 import { SlashCommand } from '../../structures';
 
 const { DONATE_LINK, GUILD_INVITE } = env;
+const { Link } = ButtonStyle;
+const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Help extends SlashCommand {
   constructor(client: Client) {
@@ -22,8 +23,8 @@ export default class Help extends SlashCommand {
         .setAutocomplete(true));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction) {
-    if (interaction.isAutocomplete())
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
+    if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
@@ -34,13 +35,13 @@ export default class Help extends SlashCommand {
 
     if (commandName) return this.executeCommand(interaction, commandName);
 
-    const clientUser = guild?.me ?? client.user;
+    const me = guild?.members.me ?? client.user;
 
-    const avatarURL = <string>clientUser?.displayAvatarURL({ dynamic: true });
+    const avatarURL = <string>me?.displayAvatarURL();
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setDescription([
           this.t('helpText', { locale, user }),
           '',
@@ -51,29 +52,29 @@ export default class Help extends SlashCommand {
     ];
 
     const buttons = [
-      new MessageButton()
+      new ButtonBuilder()
         .setEmoji('📮') // :postbox:
         .setLabel(this.t('inviteLink', { locale }))
-        .setStyle('LINK')
+        .setStyle(Link)
         .setURL(client.invite),
     ];
 
     if (GUILD_INVITE)
-      buttons.push(new MessageButton()
+      buttons.push(new ButtonBuilder()
         .setEmoji('🪤') // :mouse_trap:
         .setLabel(this.t('supportServer', { locale }))
-        .setStyle('LINK')
-        .setURL(`${client.options.http?.invite}/${GUILD_INVITE}`));
+        .setStyle(Link)
+        .setURL(`${RouteBases.invite}/${GUILD_INVITE}`));
 
     if (DONATE_LINK)
-      buttons.push(new MessageButton()
+      buttons.push(new ButtonBuilder()
         .setEmoji('💸') // :money_with_wings:
         .setLabel(this.t('donate', { locale }))
-        .setStyle('LINK')
+        .setStyle(Link)
         .setURL(`${DONATE_LINK}`));
 
     const menus = [
-      new MessageSelectMenu()
+      new SelectMenuBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name }))
         .setOptions([
           { label: '🏠 Home', value: 'home', default: true }, // :home:
@@ -83,14 +84,14 @@ export default class Help extends SlashCommand {
     ];
 
     const components = [
-      new MessageActionRow().setComponents(buttons),
-      new MessageActionRow().setComponents(menus),
+      new ActionRowBuilder<ButtonBuilder>().setComponents(buttons),
+      new ActionRowBuilder<SelectMenuBuilder>().setComponents(menus),
     ];
 
     return interaction.editReply({ components, embeds });
   }
 
-  async executeCommand(interaction: CommandInteraction, commandName: string): Promise<any> {
+  async executeCommand(interaction: ChatInputCommandInteraction, commandName: string): Promise<any> {
     const { client, locale } = interaction;
 
     const { slash_interaction } = client.commands;
@@ -101,8 +102,8 @@ export default class Help extends SlashCommand {
       return interaction.editReply(this.t('command404', { locale }));
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setTitle(`${command.data.name} - ${command.data.description}`)
         .setDescription(this.convertOptionsToString(command.data.options)),
     ];

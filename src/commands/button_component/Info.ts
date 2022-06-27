@@ -1,6 +1,5 @@
-import { codeBlock, time } from '@discordjs/builders';
 import { stripIndents } from 'common-tags';
-import { ButtonInteraction, Client, MessageEmbed, version as djsVersion } from 'discord.js';
+import { ButtonInteraction, Client, codeBlock, EmbedBuilder, time, version as djsVersion } from 'discord.js';
 import { cpus, totalmem, version } from 'node:os';
 import { env, memoryUsage, versions } from 'node:process';
 import { InfoCustomId } from '../../@types';
@@ -26,19 +25,21 @@ export default class Info extends ButtonComponentInteraction {
 
     const { sc } = <InfoCustomId>JSON.parse(customId);
 
-    const embeds = [new MessageEmbed().setColor('RANDOM')];
+    const embeds = [new EmbedBuilder().setColor('Random')];
 
     this[sc]?.(interaction, embeds);
   }
 
-  async application(interaction: ButtonInteraction, embeds: MessageEmbed[]) {
+  async application(interaction: ButtonInteraction, embeds: EmbedBuilder[]) {
     const { client, guild } = interaction;
 
     const { channels, guilds, readyAt, user, users, ws } = client;
 
-    const avatarURL = guild?.me?.displayAvatarURL({ dynamic: true }) ?? user?.displayAvatarURL({ dynamic: true });
+    const me = guild?.members.me;
 
-    const username = guild?.me?.displayName ?? user?.username;
+    const avatarURL = me?.displayAvatarURL() ?? user?.displayAvatarURL();
+
+    const username = me?.displayName ?? user?.username;
 
     const newStats = await client.fetchStats();
 

@@ -1,4 +1,4 @@
-import { Client, MessageSelectMenu, MessageSelectOptionData, SelectMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, APISelectMenuComponent, Client, ComponentType, SelectMenuBuilder, SelectMenuComponent, SelectMenuInteraction } from 'discord.js';
 import { RolesManager, SelectRolesCustomId, SelectRolesItemOptionValue } from '../../@types';
 import { SelectMenuComponentInteraction } from '../../structures';
 
@@ -7,7 +7,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
     super(client, {
       name: 'selectroles',
       description: 'Select Roles',
-      clientPermissions: ['MANAGE_ROLES'],
+      clientPermissions: ['ManageRoles'],
     });
   }
 
@@ -15,12 +15,12 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
     const { member, message, values } = interaction;
 
     const actionRow = message.components.find(c =>
-      c.components.some(co => co.type === 'SELECT_MENU' &&
+      c.components.some(co => co.type === ComponentType.SelectMenu &&
         co.options.some(option => option.default)));
 
     if (actionRow) {
-      const component = <MessageSelectMenu>actionRow.components.find(co =>
-        co.type === 'SELECT_MENU' && co.options.some(option => option.default));
+      const component = <SelectMenuComponent>actionRow.components.find(co =>
+        co.type === ComponentType.SelectMenu && co.options.some(option => option.default));
 
       const item_default = component.options.find(option => option.default)!;
 
@@ -57,56 +57,68 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
   }
 
   async setComponents(interaction: SelectMenuInteraction<'cached'>, roles: RolesManager) {
-    const { customId, component, message, values } = interaction;
+    const { customId, message, values } = interaction;
 
-    for (let i = 0; i < component.options.length; i++) {
-      const option = component.options[i];
+    const components = message.components.map(row => {
+      if (row.components[0].type !== ComponentType.SelectMenu ||
+        row.components.every(element => element.customId !== customId)) return row;
 
-      if (!values.includes(option.value)) continue;
+      return new ActionRowBuilder<SelectMenuBuilder>(row.toJSON())
+        .setComponents(row.components.map(element => {
+          const selectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
 
-      const { count, d, roleId } = <SelectRolesItemOptionValue>JSON.parse(option.value);
+          if (element.customId !== customId ||
+            element.type !== ComponentType.SelectMenu) return selectMenu;
 
-      const add = roles.add.includes(roleId) ? roleId === roles.default ? 0 : 1 : 0;
-      const rem = roles.remove.includes(roleId) ? -1 : 0;
+          selectMenu.setOptions(element.options.map(option => {
+            if (!values.includes(option.value)) return option;
 
-      let sum = add + rem;
+            const { count, d, roleId } = <SelectRolesItemOptionValue>JSON.parse(option.value);
 
-      if (sum > 0)
-        sum = (count + sum > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER - count : sum);
+            const add = roles.add.includes(roleId) ? roleId === roles.default ? 0 : 1 : 0;
+            const rem = roles.remove.includes(roleId) ? -1 : 0;
 
-      if (sum < 0)
-        sum = (count + sum < 0 ? -count : sum);
+            let sum = add + rem;
 
-      const newValue = {
-        count: count + sum,
-        d,
-        roleId,
-      };
+            if (sum > 0)
+              sum = (count + sum > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER - count : sum);
 
-      const [, label] = option.label.match(this.pattern.labelWithCount) ?? [];
+            if (sum < 0)
+              sum = (count + sum < 0 ? -count : sum);
 
-      option.label = [label, newValue.count].join(' ').trim();
+            const newValue = {
+              count: count + sum,
+              d,
+              roleId,
+            };
 
-      option.value = JSON.stringify(newValue);
-    }
+            const [, label] = option.label.match(this.pattern.labelWithCount) ?? [];
 
-    const { c, count, d } = <SelectRolesCustomId>JSON.parse(customId);
+            option.label = [label, newValue.count].join(' ').trim();
 
-    let sum = roles.add.length - roles.remove.length - (roles.default ? 1 : 0);
+            option.value = JSON.stringify(newValue);
 
-    if (sum > 0)
-      sum = (count + sum > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER - count : sum);
+            return option;
+          }));
 
-    if (sum < 0)
-      sum = (count + sum < 0 ? -count : sum);
+          const { c, count, d } = <SelectRolesCustomId>JSON.parse(customId);
 
-    component.setCustomId(JSON.stringify({
-      c,
-      count: count + sum,
-      d,
-    }))
-      .setOptions(<MessageSelectOptionData[]>component.options);
+          let sum = roles.add.length - roles.remove.length - (roles.default ? 1 : 0);
 
-    return interaction.update({ components: message.components });
+          if (sum > 0)
+            sum = (count + sum > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER - count : sum);
+
+          if (sum < 0)
+            sum = (count + sum < 0 ? -count : sum);
+
+          return selectMenu.setCustomId(JSON.stringify({
+            c,
+            count: count + sum,
+            d,
+          }));
+        }));
+    });
+
+    return interaction.update({ components });
   }
 }

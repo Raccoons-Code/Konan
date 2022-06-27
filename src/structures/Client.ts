@@ -1,5 +1,4 @@
-import { codeBlock } from '@discordjs/builders';
-import DJS, { ClientOptions, MessageEmbed, WebhookClient } from 'discord.js';
+import DJS, { ClientOptions, codeBlock, EmbedBuilder, WebhookClient } from 'discord.js';
 import { env } from 'node:process';
 import AutoPoster from 'topgg-autoposter';
 import { FetchStatsOptions, Stats } from '../@types';
@@ -20,7 +19,7 @@ export default class Client extends DJS.Client {
   }
 
   async login(token = this.token ?? undefined) {
-    process.on('unhandledRejection', this.sendError);
+    // process.on('unhandledRejection', this.sendError);
 
     commands.init(this);
 
@@ -59,8 +58,8 @@ export default class Client extends DJS.Client {
     try {
       await this.ERROR_WEBHOOK.send({
         embeds: [
-          new MessageEmbed()
-            .setColor('RED')
+          new EmbedBuilder()
+            .setColor('Red')
             .setDescription(codeBlock(`${reason.stack}`.slice(0, 4089)))
             .setFields([{
               name: 'Cause',

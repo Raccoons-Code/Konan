@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
 import { SlashCommand } from '../../structures';
 
@@ -22,7 +21,7 @@ export default class Throw extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const { options, user } = interaction;
 
     if (!OWNER_ID?.split(',').includes(user.id)) return;

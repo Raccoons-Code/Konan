@@ -1,12 +1,12 @@
-import { Client, NonThreadGuildBasedChannel } from 'discord.js';
+import { Client, NonThreadGuildBasedChannel, Partials } from 'discord.js';
 import { Event } from '../structures';
 
 export default class ChannelCreate extends Event {
   constructor(client: Client) {
     super(client, {
       name: 'channelCreate',
-      permissions: ['SEND_MESSAGES'],
-      partials: ['CHANNEL'],
+      permissions: ['SendMessages'],
+      partials: [Partials.Channel],
     });
   }
 
@@ -15,7 +15,7 @@ export default class ChannelCreate extends Event {
 
     client.fetchStats();
 
-    if (!(channel.isText() && channel.permissionsFor(client.user!)?.has(this.data.permissions!))) return;
+    if (!(channel.isTextBased() && channel.permissionsFor(client.user!)?.has(this.data.permissions!))) return;
 
     channel.send('First!').catch(() => null);
   }

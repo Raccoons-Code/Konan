@@ -1,5 +1,4 @@
-import { ContextMenuCommandBuilder } from '@discordjs/builders';
-import { Client, MessageActionRow, Modal, ModalActionRowComponent, Permissions, TextInputComponent, UserContextMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, Client, ContextMenuCommandBuilder, ModalActionRowComponentBuilder, ModalBuilder, PermissionFlagsBits, TextInputBuilder, TextInputStyle, UserContextMenuCommandInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class Ban extends UserContextMenu {
@@ -8,35 +7,35 @@ export default class Ban extends UserContextMenu {
 
     this.data = new ContextMenuCommandBuilder().setName('Ban')
       .setNameLocalizations(this.getLocalizations('banName'))
-      .setType(2)
+      .setType(ApplicationCommandType.User)
       .setDMPermission(false)
-      .setDefaultMemberPermissions(Permissions.FLAGS.BAN_MEMBERS);
+      .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers);
   }
 
-  async execute(interaction: UserContextMenuInteraction<'cached'>) {
+  async execute(interaction: UserContextMenuCommandInteraction<'cached'>) {
     const { targetMember } = interaction;
 
     return interaction.showModal(
-      new Modal()
+      new ModalBuilder()
         .setCustomId(JSON.stringify({ c: 'ban', userId: targetMember.id }))
         .setTitle(`Ban ${targetMember.displayName}`)
         .setComponents(...[
-          new MessageActionRow<ModalActionRowComponent>()
+          new ActionRowBuilder<ModalActionRowComponentBuilder>()
             .setComponents([
-              new TextInputComponent()
+              new TextInputBuilder()
                 .setCustomId('reason')
                 .setLabel('Reason')
                 .setPlaceholder('Reason for ban...')
-                .setStyle('PARAGRAPH'),
+                .setStyle(TextInputStyle.Paragraph),
             ]),
-          new MessageActionRow<ModalActionRowComponent>()
+          new ActionRowBuilder<ModalActionRowComponentBuilder>()
             .setComponents([
-              new TextInputComponent()
+              new TextInputBuilder()
                 .setCustomId('days')
                 .setLabel('Days of message deletion')
                 .setMaxLength(1)
                 .setPlaceholder('Max of 7 days')
-                .setStyle('SHORT'),
+                .setStyle(TextInputStyle.Short),
             ]),
         ]),
     );

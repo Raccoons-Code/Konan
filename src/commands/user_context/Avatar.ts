@@ -1,5 +1,4 @@
-import { ContextMenuCommandBuilder } from '@discordjs/builders';
-import { Client, MessageActionRow, MessageButton, MessageEmbed, UserContextMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonStyle, Client, ContextMenuCommandBuilder, EmbedBuilder, UserContextMenuCommandInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class Avatar extends UserContextMenu {
@@ -7,30 +6,30 @@ export default class Avatar extends UserContextMenu {
     super(client);
 
     this.data = new ContextMenuCommandBuilder().setName('Get Avatar')
-      .setType(2);
+      .setType(ApplicationCommandType.User);
   }
 
-  async execute(interaction: UserContextMenuInteraction<'cached'>) {
+  async execute(interaction: UserContextMenuCommandInteraction<'cached'>) {
     const { targetMember, targetUser } = interaction;
 
     const target = targetMember ?? targetUser;
 
     return interaction.reply({
       components: [
-        new MessageActionRow()
+        new ActionRowBuilder<ButtonBuilder>()
           .setComponents([
-            new MessageButton()
-              .setStyle('LINK')
+            new ButtonBuilder()
+              .setStyle(ButtonStyle.Link)
               .setLabel('Link')
               .setEmoji('🖼')
-              .setURL(target.displayAvatarURL({ dynamic: true, size: 4096 })),
+              .setURL(target.displayAvatarURL({ size: 4096 })),
           ]),
       ],
       embeds: [
-        new MessageEmbed()
-          .setColor('RANDOM')
+        new EmbedBuilder()
+          .setColor('Random')
           .setDescription(`${targetUser}`)
-          .setImage(target.displayAvatarURL({ dynamic: true, size: 512 })),
+          .setImage(target.displayAvatarURL({ size: 512 })),
       ],
     });
   }

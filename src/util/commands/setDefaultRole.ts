@@ -1,22 +1,25 @@
-import { MessageActionRow, Role } from 'discord.js';
+import { ActionRow, ActionRowBuilder, APISelectMenuComponent, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder } from 'discord.js';
 
 export function setDefaultRole(
-  components: MessageActionRow[],
+  components: ActionRow<MessageActionRowComponent>[],
   defaultRole: Role,
-): MessageActionRow[] {
-  return components.map(component => {
-    component.components.map(element => {
-      if (element.type !== 'SELECT_MENU') return element;
+) {
+  return components.map(row => {
+    if (row.components[0].type !== ComponentType.SelectMenu) return row;
 
-      element.options.map(option => {
-        option.default = JSON.parse(option.value).roleId === defaultRole.id;
+    return new ActionRowBuilder<SelectMenuBuilder>()
+      .setComponents(row.components.map(element => {
+        const selectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
 
-        return option;
-      });
+        if (element.type !== ComponentType.SelectMenu) return selectMenu;
 
-      return element;
-    });
+        selectMenu.setOptions(element.options.map(option => {
+          option.default = JSON.parse(option.value).roleId === defaultRole.id;
 
-    return component;
+          return option;
+        }));
+
+        return selectMenu;
+      }));
   });
 }

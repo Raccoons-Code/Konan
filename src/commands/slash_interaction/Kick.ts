@@ -1,19 +1,18 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction, Permissions } from 'discord.js';
+import { ChatInputCommandInteraction, Client, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Kick extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Moderation',
-      clientPermissions: ['KICK_MEMBERS'],
-      userPermissions: ['KICK_MEMBERS'],
+      clientPermissions: ['KickMembers'],
+      userPermissions: ['KickMembers'],
     });
 
     this.data = new SlashCommandBuilder().setName('kick')
       .setDescription('Kicks a user from the server.')
       .setDMPermission(false)
-      .setDefaultMemberPermissions(Permissions.FLAGS.KICK_MEMBERS)
+      .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
       .setNameLocalizations(this.getLocalizations('kickName'))
       .setDescriptionLocalizations(this.getLocalizations('kickDescription'))
       .addUserOption(option => option.setName('user')
@@ -27,7 +26,7 @@ export default class Kick extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('kickReasonDescription')));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { locale } = interaction;
@@ -45,7 +44,7 @@ export default class Kick extends SlashCommand {
         permission: this.t(userPerms[0], { locale }),
       }));
 
-    const clientPerms = guild.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = await guild.fetchMe().then(me => me.permissions.missing(this.props!.clientPermissions!));
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -53,9 +52,9 @@ export default class Kick extends SlashCommand {
         permission: this.t(clientPerms[0], { locale }),
       }));
 
-    const user = options.getMember('user', true);
+    const user = options.getMember('user');
 
-    if (!(user.kickable && this.isKickable({ author: member, guild, target: user })))
+    if (!(user?.kickable && this.isKickable({ author: member, guild, target: user })))
       return interaction.editReply(this.t('kickHierarchyError', { locale }));
 
     const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;

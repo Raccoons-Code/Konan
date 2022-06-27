@@ -4,7 +4,7 @@ import { Event } from '../structures';
 export default class GuildCreate extends Event {
   constructor(client: Client) {
     super(client, {
-      intents: ['GUILDS'],
+      intents: ['Guilds'],
       name: 'guildCreate',
     });
   }

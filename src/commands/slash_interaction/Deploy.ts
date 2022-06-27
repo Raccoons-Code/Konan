@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { Client, CommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
 import Commands from '..';
 import { SlashCommand } from '../../structures';
@@ -36,7 +35,7 @@ export default class Deploy extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('deployResetOptionDescription')));
   }
 
-  async execute(interaction: CommandInteraction): Promise<any> {
+  async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     const { client, locale, options, user } = interaction;
 
     const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
@@ -50,7 +49,7 @@ export default class Deploy extends SlashCommand {
     const reset = options.getBoolean('reset');
 
     const data: any[] = [];
-    const data_private: any[] = [];
+    const dataPrivate: any[] = [];
     const commands: SlashCommand[] = [];
     const { applicationCommandTypes } = Commands;
     const applicationCommands = await Commands.loadCommands(applicationCommandTypes);
@@ -64,7 +63,7 @@ export default class Deploy extends SlashCommand {
       const command_data = command.data.toJSON();
 
       if (command.props?.ownerOnly) {
-        data_private.push(command_data);
+        dataPrivate.push(command_data);
 
         continue;
       }
@@ -84,26 +83,32 @@ export default class Deploy extends SlashCommand {
         if (!guild) continue;
 
         if (type === 'global') {
-          const guild_commands = await guild.commands.fetch();
+          const guildCommands = await guild.commands.fetch();
 
-          const guild_commands_data = guild_commands.filter(guild_command =>
-            !data_private.some(command => command.name === guild_command.name))
-            .toJSON().reduce((acc, command) => [...acc, {
-              name: command.name,
-              defaultPermission: command.defaultPermission,
+          const guildCommandsData = guildCommands.filter(guild_command =>
+            !dataPrivate.some(command => command.name === guild_command.name))
+            .toJSON().reduce((acc, command) => acc.concat({
+              defaultMemberPermissions: command.defaultMemberPermissions,
               description: command.description,
+              descriptionLocalizations: command.descriptionLocalizations,
+              descriptionLocalized: command.descriptionLocalized,
+              dmPermission: command.dmPermission,
+              name: command.name,
+              nameLocalizations: command.nameLocalizations,
+              nameLocalized: command.nameLocalized,
               options: command.options,
+              permissions: command.permissions,
               type: command.type,
-            }], <any[]>[]);
+            }), <any[]>[]);
 
-          guild_commands_data.push(...data_private);
+          guildCommandsData.push(...dataPrivate);
 
-          await guild.commands.set(guild_commands_data);
+          await guild.commands.set(guildCommandsData);
 
           continue;
         }
 
-        await guild.commands.set([...data, ...data_private]);
+        await guild.commands.set([...data, ...dataPrivate]);
       }
 
       console.log('Successfully reloaded application (/) commands.');

@@ -1,13 +1,15 @@
-import { EmojiIdentifierResolvable, MessageButton, Util } from 'discord.js';
+import { ButtonBuilder, ButtonStyle, EmojiIdentifierResolvable, resolvePartialEmoji } from 'discord.js';
+
+const { Link } = ButtonStyle;
 
 class ComponentLink {
   static button({ emoji, label, url }: { emoji?: EmojiIdentifierResolvable, label: string, url: string }) {
-    emoji = <EmojiIdentifierResolvable>(emoji ? Util.resolvePartialEmoji(emoji) : null);
+    emoji = <string>(emoji ? resolvePartialEmoji(emoji) : null);
 
-    return new MessageButton()
+    return new ButtonBuilder()
       .setEmoji(emoji)
       .setLabel(label)
-      .setStyle('LINK')
+      .setStyle(Link)
       .setURL(`https://${url}`);
   }
 }

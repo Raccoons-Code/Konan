@@ -1,10 +1,9 @@
-import { SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from '@discordjs/builders';
-import { APIApplicationCommandOptionChoice, ChannelType } from 'discord-api-types/v10';
-import { AutocompleteInteraction, CommandInteraction, MessageButtonStyle } from 'discord.js';
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionAllowedChannelTypes, AutocompleteInteraction, ButtonStyle, ChannelType, CommandInteraction, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
 import { SlashCommandProps } from '../@types';
 import Base from './Base';
 import Client from './Client';
 
+const { Danger, Primary, Secondary, Success } = ButtonStyle;
 const { GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText } = ChannelType;
 
 export default abstract class SlashCommand extends Base {
@@ -18,24 +17,24 @@ export default abstract class SlashCommand extends Base {
 
   abstract execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any>;
 
-  buttonStyles: MessageButtonStyle[] = ['DANGER', 'PRIMARY', 'SECONDARY', 'SUCCESS'];
+  buttonStyles: { name: keyof typeof ButtonStyle, value: ButtonStyle }[] = [{
+    name: 'Danger', value: Danger,
+  }, {
+    name: 'Primary', value: Primary,
+  }, {
+    name: 'Secondary', value: Secondary,
+  }, {
+    name: 'Success', value: Success,
+  }];
 
-  ButtonStylesChoices: APIApplicationCommandOptionChoice<string>[] = this.buttonStyles.map(style => ({
-    name: style,
-    value: style,
-    name_localizations: this.getLocalizations(style),
+  ButtonStylesChoices: APIApplicationCommandOptionChoice<number>[] = this.buttonStyles.map(style => ({
+    name: style.name,
+    value: style.value,
+    name_localizations: this.getLocalizations(style.name),
   }));
 
-  GuildTextChannelTypes: (
-    ChannelType.GuildCategory |
-    ChannelType.GuildNews |
-    ChannelType.GuildNewsThread |
-    ChannelType.GuildPrivateThread |
-    ChannelType.GuildPublicThread |
-    ChannelType.GuildStageVoice |
-    ChannelType.GuildText |
-    ChannelType.GuildVoice
-  )[] = [GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText];
+  GuildTextChannelTypes: ApplicationCommandOptionAllowedChannelTypes[] =
+    [GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText];
 
   get randomButtonStyle() {
     return this.buttonStyles[Math.floor(Math.random() * this.buttonStyles.length)];

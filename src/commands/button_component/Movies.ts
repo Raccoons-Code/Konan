@@ -1,7 +1,9 @@
-import { ButtonInteraction, Client, MessageActionRow, MessageButton, MessageEmbed } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Client, EmbedBuilder } from 'discord.js';
 import { MoviesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../TMDBAPI';
+
+const { Primary, Secondary } = ButtonStyle;
 
 export default class Movies extends ButtonComponentInteraction {
   constructor(client: Client) {
@@ -32,25 +34,26 @@ export default class Movies extends ButtonComponentInteraction {
     const a = page > 1 ? true : offset;
     const b = target < 1000;
 
-    const buttons = [
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c, d: 0, o: offset, p: page, target: 1 }))
-        .setDisabled(!a).setLabel('1...').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c, d: 1, o: offset, p: page, target: target - 1 }))
-        .setDisabled(!a).setLabel('Back').setStyle(a ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c, d: 2, o: offset, p: page }))
-        .setDisabled(true).setLabel(`${target}`).setStyle('SECONDARY'),
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, target: target + 1 }))
-        .setDisabled(!b).setLabel('Next').setStyle(b ? 'PRIMARY' : 'SECONDARY'),
-      new MessageButton()
-        .setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, target: 1000 }))
-        .setDisabled(!b).setLabel('...1000').setStyle(b ? 'PRIMARY' : 'SECONDARY'),
+    const components = [
+      new ActionRowBuilder<ButtonBuilder>()
+        .setComponents([
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c, d: 0, o: offset, p: page, target: 1 }))
+            .setDisabled(!a).setLabel('1...').setStyle(a ? Primary : Secondary),
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c, d: 1, o: offset, p: page, target: target - 1 }))
+            .setDisabled(!a).setLabel('Back').setStyle(a ? Primary : Secondary),
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c, d: 2, o: offset, p: page }))
+            .setDisabled(true).setLabel(`${target}`).setStyle(Secondary),
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, target: target + 1 }))
+            .setDisabled(!b).setLabel('Next').setStyle(b ? Primary : Secondary),
+          new ButtonBuilder()
+            .setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, target: 1000 }))
+            .setDisabled(!b).setLabel('...1000').setStyle(b ? Primary : Secondary),
+        ]),
     ];
-
-    const components = [new MessageActionRow().setComponents(buttons)];
 
     return interaction.update({ components, embeds });
   }
@@ -81,9 +84,9 @@ export default class Movies extends ButtonComponentInteraction {
 
       const lang = TMDBApi.configuration.getLanguage({ language: original_language });
 
-      embeds.push(new MessageEmbed()
+      embeds.push(new EmbedBuilder()
         .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
-        .setColor('RANDOM')
+        .setColor('Random')
         .setDescription(overview.slice(0, 4096))
         .setFields([
           { name: 'Release date', value: release_date || '-', inline: true },

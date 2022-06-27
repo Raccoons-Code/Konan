@@ -1,7 +1,8 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
 import axios from 'axios';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
+
+const { ApplicationCommandAutocomplete } = InteractionType;
 
 const journals = [{
   categories: ['games'],
@@ -53,8 +54,8 @@ export default class News extends SlashCommand {
         .setAutocomplete(true));
   }
 
-  async execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any> {
-    if (interaction.isAutocomplete())
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<any> {
+    if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
@@ -84,8 +85,8 @@ export default class News extends SlashCommand {
     const __new = news.find(_fnew => _fnew[journal.properties.title].match(_new));
 
     const embeds = [
-      new MessageEmbed()
-        .setColor('RANDOM')
+      new EmbedBuilder()
+        .setColor('Random')
         .setTitle(__new[journal.properties.title].slice(0, 256))
         .setDescription(__new[journal.properties.description].join('\n\n').slice(0, 4096)),
     ];

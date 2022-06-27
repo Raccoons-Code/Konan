@@ -1,7 +1,5 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
 import axios from 'axios';
-import { APIApplicationCommandOptionChoice } from 'discord-api-types/v10';
-import { Client, CommandInteraction } from 'discord.js';
+import { APIApplicationCommandOptionChoice, ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 import Util from '../../util';
 
@@ -44,7 +42,7 @@ export default class Random extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Fun',
-      clientPermissions: ['ATTACH_FILES'],
+      clientPermissions: ['AttachFiles'],
     });
 
     this.data = new SlashCommandBuilder().setName('random')
@@ -58,8 +56,8 @@ export default class Random extends SlashCommand {
         .setChoices(...Choices.getChoices()));
   }
 
-  async execute(interaction: CommandInteraction) {
-    const { channel, client, locale, options } = <CommandInteraction<'cached'>>interaction;
+  async execute(interaction: ChatInputCommandInteraction) {
+    const { channel, client, locale, options } = <ChatInputCommandInteraction<'cached'>>interaction;
 
     const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
@@ -79,7 +77,7 @@ export default class Random extends SlashCommand {
     return this[`execute${string ?? Choices.getRandom()}`]?.(interaction);
   }
 
-  async executeCat(interaction: CommandInteraction): Promise<any> {
+  async executeCat(interaction: ChatInputCommandInteraction): Promise<any> {
     const { file } = await axios.get('https://aws.random.cat/meow').then(r => r.data);
 
     return interaction.editReply({ files: [file] });
