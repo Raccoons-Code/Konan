@@ -89,7 +89,7 @@ export default class Ban extends SlashCommand {
         permission: this.t(userPerms[0], { locale }),
       }));
 
-    const clientPerms = await guild.fetchMe().then(me => me.permissions.missing(this.props!.clientPermissions!));
+    const clientPerms = guild.members.me?.permissions.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -124,14 +124,18 @@ export default class Ban extends SlashCommand {
   }
 
   async chunk(interaction: ChatInputCommandInteraction<'cached'>) {
-    const { options } = interaction;
+    const { guild, options } = interaction;
 
-    const usersId = options.getString('users', true);
+    const usersId = options.getString('users', true).match(/\d{17,}/g);
 
-    const usersMentions = usersId.match(/\d{17,}/g)?.map(user => `<@${user}>`);
-
-    if (!usersMentions)
+    if (!usersId)
       return interaction.editReply('No IDs were found in the users input.');
+
+    const usersArray = await guild.members.fetch({ user: usersId })
+      .then(members => members.toJSON());
+
+    if (!usersArray.length)
+      return interaction.editReply('No users were found in the users input.');
 
     const days = options.getInteger('delete_messages') ?? 0;
 
@@ -139,7 +143,7 @@ export default class Ban extends SlashCommand {
 
     const embeds = [
       new EmbedBuilder()
-        .setDescription(usersMentions.join(' ').slice(0, 4096))
+        .setDescription(usersArray.join(' ').slice(0, 4096))
         .setFields([{
           name: 'Reason for ban',
           value: reason.slice(0, 1024),
@@ -147,7 +151,7 @@ export default class Ban extends SlashCommand {
           name: 'Delete messages',
           value: days ? `${days} day${days === 1 ? '' : 's'}` : '-',
         }])
-        .setTitle('Chunk of users to ban'),
+        .setTitle(`Chunk of users to ban [${usersArray.length}]`),
     ];
 
     const components = [

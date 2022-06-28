@@ -39,7 +39,7 @@ export default class NumberIsPrime extends SlashCommand {
         .setColor('Random')
         .setTitle(prime.length ? `${number} is not prime.` : `${number} is prime!`)
         .setDescription(prime.length ?
-          `${embedDescription}${codeBlock(prime.join(', ').slice(0, length))}` : ''),
+          `${embedDescription}${codeBlock(prime.join(', ').slice(0, length))}` : null),
     ];
 
     return interaction.editReply({ embeds });

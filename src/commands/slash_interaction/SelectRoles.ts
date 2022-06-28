@@ -469,8 +469,8 @@ export default class SelectRoles extends SlashCommand {
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
-        .setDescription(embed_description ? embed_description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title ? title : embed_description ? '' : 'SelectRoles'),
+        .setDescription(embed_description?.replace(/(\s{2})/g, '\n') || null)
+        .setTitle(title ? title : embed_description ? null : 'SelectRoles'),
     ];
 
     try {
@@ -501,8 +501,8 @@ export default class SelectRoles extends SlashCommand {
       const embeds = [
         new EmbedBuilder()
           .setColor('Random')
-          .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-          .setTitle(title || ''),
+          .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
+          .setTitle(title || null),
       ];
 
       try {
@@ -950,8 +950,8 @@ export default class SelectRoles extends SlashCommand {
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
-        .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title ? title : description ? '' : 'SelectRoles'),
+        .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
+        .setTitle(title ? title : description ? null : 'SelectRoles'),
     ];
 
     try {
@@ -989,7 +989,7 @@ export default class SelectRoles extends SlashCommand {
 
     const menuPlaceholder = options.getString('menu_place_holder');
 
-    let components = this.Util.addSelectRoles(message.components, rolesArray, menuPlaceholder).slice(0, 5);
+    let components = this.Util.addSelectRoles(rolesArray, message.components, menuPlaceholder).slice(0, 5);
 
     const defaultRole = options.getRole('default_role');
 

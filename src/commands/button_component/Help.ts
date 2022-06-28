@@ -32,7 +32,7 @@ export default class Help extends ButtonComponentInteraction {
     const slashCommands = commands.filter((c: SlashCommand) => !c.props?.ownerOnly).toJSON();
 
     const embeds = [
-      new EmbedBuilder(message.embeds[0].toJSON())
+      new EmbedBuilder()
         .setColor('Random')
         .setFields(this.convertCommandsToEmbedFields(slashCommands, p))
         .setTitle(this.t('konanSupport', { locale })),

@@ -19,9 +19,9 @@ export default class Avatar extends UserContextMenu {
         new ActionRowBuilder<ButtonBuilder>()
           .setComponents([
             new ButtonBuilder()
-              .setStyle(ButtonStyle.Link)
-              .setLabel('Link')
               .setEmoji('🖼')
+              .setLabel('Link')
+              .setStyle(ButtonStyle.Link)
               .setURL(target.displayAvatarURL({ size: 4096 })),
           ]),
       ],

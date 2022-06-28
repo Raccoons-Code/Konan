@@ -326,8 +326,8 @@ export default class ButtonRoles extends SlashCommand {
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
-        .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title ? title : description ? '' : 'ButtonRoles'),
+        .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
+        .setTitle(title ? title : description ? null : 'ButtonRoles'),
     ];
 
     try {
@@ -358,8 +358,8 @@ export default class ButtonRoles extends SlashCommand {
       const embeds = [
         new EmbedBuilder()
           .setColor('Random')
-          .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-          .setTitle(title || ''),
+          .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
+          .setTitle(title || null),
       ];
 
       try {
@@ -656,8 +656,8 @@ export default class ButtonRoles extends SlashCommand {
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
-        .setDescription(description ? description.replace(/(\s{2})/g, '\n') : '')
-        .setTitle(title ? title : description ? '' : 'ButtonRoles'),
+        .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
+        .setTitle(title ? title : description ? null : 'ButtonRoles'),
     ];
 
     try {
@@ -693,7 +693,7 @@ export default class ButtonRoles extends SlashCommand {
     if (!rolesArray.length)
       return interaction.editReply('No roles were found in the roles input.');
 
-    const components = this.Util.addButtonRoles(message.components, rolesArray).slice(0, 5);
+    const components = this.Util.addButtonRoles(rolesArray, message.components).slice(0, 5);
 
     try {
       await message.edit({ components });

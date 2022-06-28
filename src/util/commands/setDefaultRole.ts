@@ -4,7 +4,7 @@ export function setDefaultRole(
   components: ActionRow<MessageActionRowComponent>[],
   defaultRole: Role,
 ) {
-  return components.map(row => {
+  return <ActionRowBuilder<SelectMenuBuilder>[]>components.map(row => {
     if (row.components[0].type !== ComponentType.SelectMenu) return row;
 
     return new ActionRowBuilder<SelectMenuBuilder>()

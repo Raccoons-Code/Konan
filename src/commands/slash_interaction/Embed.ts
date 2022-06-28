@@ -127,11 +127,11 @@ export default class Embed extends SlashCommand {
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
-        .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
+        .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
         .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
         .setImage(attachment.url)
         .setTimestamp(Date.now())
-        .setTitle(title),
+        .setTitle(title || null),
     ];
 
     if (!clientPerms?.includes('SendMessages')) {
@@ -167,11 +167,11 @@ export default class Embed extends SlashCommand {
       const embeds = [
         new EmbedBuilder()
           .setColor('Random')
-          .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
+          .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
           .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
           .setImage(attachment.url)
           .setTimestamp(Date.now())
-          .setTitle(title),
+          .setTitle(title || null),
       ];
 
       const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);

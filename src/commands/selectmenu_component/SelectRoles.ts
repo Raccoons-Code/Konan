@@ -60,8 +60,8 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
     const { customId, message, values } = interaction;
 
     const components = message.components.map(row => {
-      if (row.components[0].type !== ComponentType.SelectMenu ||
-        row.components.every(element => element.customId !== customId)) return row;
+      if (row.components[0].type !== ComponentType.SelectMenu) return row;
+      if (row.components.every(element => element.customId !== customId)) return row;
 
       return new ActionRowBuilder<SelectMenuBuilder>(row.toJSON())
         .setComponents(row.components.map(element => {

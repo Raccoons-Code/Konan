@@ -35,10 +35,10 @@ export default class Echo extends SlashCommand {
         embeds: [
           new EmbedBuilder()
             .setColor(member?.displayColor || 'Random')
-            .setDescription(description)
+            .setDescription(description || null)
             .setFooter({ text: username, iconURL: avatarURL })
             .setTimestamp(Date.now())
-            .setTitle(title),
+            .setTitle(title || null),
         ],
       });
     }

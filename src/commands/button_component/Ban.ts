@@ -31,17 +31,18 @@ export default class Ban extends ButtonComponentInteraction {
 
     const failed: string[] = [];
 
-    const banUsers = usersId.map(id => guild.members.fetch(id).then(user =>
-      (user.bannable && this.isBannable({ author: member, guild, target: user })) ?
-        guild.bans.create(id, { deleteMessageDays, reason }).catch(() => failed.push(`<@${id}>`) && undefined) :
-        failed.push(`<@${id}>`) && undefined));
+    const banUsers = guild.members.fetch({ user: usersId })
+      .then(collection => collection.toJSON().map(user =>
+        (user.bannable && this.isBannable({ author: member, guild, target: user })) ?
+          guild.bans.create(user.id, { deleteMessageDays, reason })
+            .catch(() => failed.push(`<@${user.id}>`) && undefined) :
+          failed.push(`<@${user.id}>`) && undefined));
 
-    const bannedUsers = await Promise.all(banUsers)
-      .then(bans => bans.filter(ban => ban));
+    const bannedUsers = await Promise.resolve(banUsers.then(promises => Promise.all(promises)));
 
     const embeds = [
-      new EmbedBuilder(message.embeds[0].toJSON())
-        .setDescription(failed.length ? `Failed: ${failed.join(' ')}.`.slice(0, 4096) : '')
+      new EmbedBuilder()
+        .setDescription(failed.length ? `❌ ${failed.join(' ')}`.slice(0, 4096) : null)
         .setFields([{
           name: 'Amount of banned users',
           value: `${bannedUsers.length}/${usersId.length}`,

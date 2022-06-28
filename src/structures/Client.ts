@@ -63,7 +63,7 @@ export default class Client extends DJS.Client {
             .setDescription(codeBlock(`${reason.stack}`.slice(0, 4089)))
             .setFields([{
               name: 'Cause',
-              value: `${reason.cause} `.slice(0, 1024),
+              value: `${reason.cause}`.slice(0, 1024),
             }])
             .setTitle(`${reason.name}: ${reason.message}`.slice(0, 256)),
         ],

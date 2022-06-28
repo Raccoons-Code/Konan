@@ -1,8 +1,11 @@
 import { ActionRow, APIRole, ComponentType, MessageActionRowComponent, Role } from 'discord.js';
 import { safeParseJSON } from './safeParseJSON';
 
-export function componentsHasRoles(components: ActionRow<MessageActionRowComponent>[], roles: (APIRole | Role)[]) {
-  if (!Array.isArray(roles)) roles = [roles];
+export function componentsHasRoles(
+  components: ActionRow<MessageActionRowComponent>[],
+  roles: APIRole | Role | (APIRole | Role)[],
+): boolean {
+  if (!Array.isArray(roles)) return componentsHasRoles(components, [roles]);
 
   return components.some(row => row.components.some(element => {
     if (element.type === ComponentType.Button)
