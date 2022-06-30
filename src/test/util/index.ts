@@ -1,5 +1,9 @@
 import './addButtonRoles.test';
 import './addSelectRoles.test.ts';
+import './bytes.test';
 import './ComponentLink.test';
+import './componentsHasRoles.test';
 import './createButtonRoles.test';
 import './createSelectRoles.test';
+import './filterRolesId.test';
+import './setDefaultRoles.test';

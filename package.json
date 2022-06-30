@@ -1,6 +1,6 @@
 {
   "name": "konan",
-  "version": "0.17.1",
+  "version": "0.17.2",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/Raccoons-Code/Konan#readme",
   "dependencies": {
-    "@prisma/client": "^3.15.2",
+    "@prisma/client": "^4.0.0",
     "@tsconfig/recommended": "^1.0.1",
     "@vitalets/google-translate-api": "^8.0.0",
     "axios": "^0.27.2",
@@ -55,7 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "eslint": "^8.18.0",
-    "prisma": "^3.15.2",
+    "prisma": "^4.0.0",
     "typescript": "^4.7.4"
   },
   "engines": {

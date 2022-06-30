@@ -1,25 +1,20 @@
-import { ActionRow, ActionRowBuilder, APISelectMenuComponent, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder } from 'discord.js';
+import { ActionRow, ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 
 export function setDefaultRole(
-  components: ActionRow<MessageActionRowComponent>[],
+  components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<SelectMenuBuilder>)[],
   defaultRole: Role,
 ) {
-  return <ActionRowBuilder<SelectMenuBuilder>[]>components.map(row => {
-    if (row.components[0].type !== ComponentType.SelectMenu) return row;
+  return components.map(row => {
+    const rowJson = <APIActionRowComponent<APISelectMenuComponent>>row.toJSON();
+
+    if (rowJson.components[0].type !== ComponentType.SelectMenu) return row;
 
     return new ActionRowBuilder<SelectMenuBuilder>()
-      .setComponents(row.components.map(element => {
-        const selectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
+      .setComponents(rowJson.components.map(element => {
+        const selectMenu = new SelectMenuBuilder(element);
 
-        if (element.type !== ComponentType.SelectMenu) return selectMenu;
-
-        selectMenu.setOptions(element.options.map(option => {
-          option.default = JSON.parse(option.value).roleId === defaultRole.id;
-
-          return option;
-        }));
-
-        return selectMenu;
+        return selectMenu.setOptions(element.options.map(option => new SelectMenuOptionBuilder(option)
+          .setDefault(JSON.parse(option.value).roleId === defaultRole.id).toJSON()));
       }));
   });
 }

@@ -1,14 +1,16 @@
-import { ActionRow, ComponentType, MessageActionRowComponent } from 'discord.js';
+import { ActionRow, ButtonStyle, ComponentType, MessageActionRowComponent } from 'discord.js';
 
-export function filterRolesId(components: ActionRow<MessageActionRowComponent>[], rolesId: string[]) {
+export function filterRolesId(components: ActionRow<MessageActionRowComponent>[], rolesId: string | string[]) {
+  if (typeof rolesId === 'string') rolesId = [rolesId];
+
   for (let i = 0; i < components.length; i++) {
-    const component = components[i];
+    const component = components[i].toJSON();
 
     for (let j = 0; j < component.components.length; j++) {
       const element = component.components[j];
 
-      if (element.type === ComponentType.Button) {
-        const roleId = JSON.parse(`${element.customId}`).roleId;
+      if (element.type === ComponentType.Button && element.style !== ButtonStyle.Link) {
+        const roleId = JSON.parse(`${element.custom_id}`).roleId;
 
         if (rolesId.includes(roleId))
           rolesId.splice(rolesId.indexOf(roleId), 1);

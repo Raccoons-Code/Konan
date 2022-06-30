@@ -11,5 +11,5 @@ export function createButtonRoles(roles: Role[][]) {
         roleId: role.id,
       }))
       .setLabel(`${role.name.slice(0, 63)} 0`)
-      .setStyle(Primary))));
+      .setStyle(Primary)))).slice(0, 5);
 }

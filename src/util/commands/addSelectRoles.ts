@@ -1,26 +1,24 @@
-import { ActionRow, ActionRowBuilder, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIRole, APISelectMenuComponent, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 
 const { SelectMenu } = ComponentType;
 
 export function addSelectRoles(
-  roles: Role[],
-  components: (ActionRow<MessageActionRowComponent> | null)[] = [],
+  roles: (APIRole | Role)[],
+  components: ActionRow<MessageActionRowComponent>[] = [],
   menuPlaceholder: string | null = '',
 ) {
-  const newComponents = <ActionRowBuilder<SelectMenuBuilder>[]>components
+  const newComponents = components
     .filter(component => component)
     .map(component => {
-      const componentJson = component?.toJSON();
+      const componentJson = <APIActionRowComponent<APISelectMenuComponent>>component.toJSON();
 
-      if (componentJson?.components[0].type !== SelectMenu) return component;
-      if (componentJson?.components[0].options.length === 25) return component;
+      if (componentJson.components[0].type !== SelectMenu) return component;
+      if (componentJson.components[0].options.length === 25) return component;
 
       const newComponent = new ActionRowBuilder<SelectMenuBuilder>(componentJson);
 
       return newComponent
         .setComponents(newComponent.components.map(element => {
-          if (element.data.type !== SelectMenu) return element;
-
           const newElement = new SelectMenuBuilder(element.toJSON());
 
           return newElement
@@ -57,5 +55,5 @@ export function addSelectRoles(
         .setPlaceholder(menuPlaceholder ?? '')));
   }
 
-  return newComponents;
+  return newComponents.slice(0, 5);
 }

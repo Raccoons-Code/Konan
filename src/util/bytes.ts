@@ -1,4 +1,10 @@
-export = (bytes: number): [bytes: string, unit: string] => [
-  (bytes / Math.pow(1024, Math.floor(Math.log(bytes) / Math.log(1000)))).toFixed(2),
-  ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][(Math.floor(Math.log(bytes) / Math.log(1000)))],
-];
+export = (x: number): [bytes: number, unit: string] => {
+  if (!x) return [0, 'B'];
+
+  const a = Math.floor(Math.log(x) / Math.log(1000));
+
+  return [
+    Number((x / Math.pow(1024, a)).toFixed(2)),
+    ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][a],
+  ];
+}

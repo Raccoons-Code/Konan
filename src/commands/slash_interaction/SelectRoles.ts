@@ -994,7 +994,7 @@ export default class SelectRoles extends SlashCommand {
     const defaultRole = options.getRole('default_role');
 
     if (defaultRole)
-      components = this.Util.setDefaultRole(message.components, defaultRole);
+      components = this.Util.setDefaultRole(components, defaultRole);
 
     try {
       await message.edit({ components });

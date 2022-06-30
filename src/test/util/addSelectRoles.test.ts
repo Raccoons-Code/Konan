@@ -96,17 +96,17 @@ import Util from '../../util';
           c: 'selectroles',
           count: 0,
         }))
-        .setOptions(params.slice(25).map(role => new SelectMenuOptionBuilder()
+        .setOptions(params.slice(25, 30).map(role => new SelectMenuOptionBuilder()
           .setLabel(`${role.name.slice(0, 83)} 0`)
           .setValue(JSON.stringify({
             count: 0,
             roleId: role.id,
           })).toJSON()))
-        .setMaxValues(params.slice(25).length)
+        .setMaxValues(params.slice(25, 30).length)
         .setPlaceholder(menuPlaceholder)),
   ];
 
-  const selectRoles = Util.addSelectRoles(params.slice(5), <any[]>components, menuPlaceholder);
+  const selectRoles = Util.addSelectRoles(params.slice(5, 30), <any[]>components, menuPlaceholder);
 
   assert.deepEqual(selectRoles, components2);
 }

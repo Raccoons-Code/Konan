@@ -18,5 +18,5 @@ export function createSelectRoles(
           count: 0,
           roleId: role.id,
         })).toJSON()))
-      .setPlaceholder(menuPlaceholder ?? '')));
+      .setPlaceholder(menuPlaceholder ?? ''))).slice(0, 5);
 }

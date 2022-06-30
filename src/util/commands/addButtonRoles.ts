@@ -1,19 +1,19 @@
-import { ActionRow, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent, Role } from 'discord.js';
+import { ActionRow, ActionRowBuilder, APIRole, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent, Role } from 'discord.js';
 
 const { Primary } = ButtonStyle;
 const { Button } = ComponentType;
 
 export function addButtonRoles(
-  roles: Role[],
-  components: (ActionRow<MessageActionRowComponent> | undefined)[] = [],
+  roles: (APIRole | Role)[],
+  components: ActionRow<MessageActionRowComponent>[] = [],
 ) {
-  const newComponents = <ActionRowBuilder<ButtonBuilder>[]>components
+  const newComponents = components
     .filter(component => component)
     .map(component => {
-      const componentJson = component?.toJSON();
+      const componentJson = component.toJSON();
 
-      if (componentJson?.components[0].type !== Button) return component;
-      if (componentJson?.components.length === 5) return component;
+      if (componentJson.components[0].type !== Button) return component;
+      if (componentJson.components.length === 5) return component;
 
       const newComponent = new ActionRowBuilder<ButtonBuilder>(componentJson);
 
@@ -43,5 +43,5 @@ export function addButtonRoles(
         .setStyle(Primary))));
   }
 
-  return newComponents;
+  return newComponents.slice(0, 5);
 }
