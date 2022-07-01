@@ -30,7 +30,7 @@ export default class InteractionCreate extends Event {
         new MessageEmbed()
           .setColor('DARK_RED')
           .setTitle(this.t('There was an error while executing this command!', { locale }))
-          .setDescription(codeBlock('properties', `${error.name}: ${error.message}`))
+          .setDescription(codeBlock('properties', `${error.name}: ${error.message}`.slice(0, 4079)))
           .setFooter({ text: command.data?.name || '-' })
           .setTimestamp(Date.now()),
       ];
