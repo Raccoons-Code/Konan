@@ -1,9 +1,9 @@
-import { ActionRowBuilder, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+import { ActionRowBuilder, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+import { ManageSelectRolesOptions } from '../../@types';
 
-export function createSelectRoles(
-  { roles, menuPlaceholder = '', defaultRole }:
-    { roles: Role[][]; menuPlaceholder?: string | null; defaultRole?: Role | null; },
-) {
+export function createSelectRoles(options: ManageSelectRolesOptions) {
+  const { roles, defaultRole, menuPlaceholder } = options;
+
   return roles.map(array => new ActionRowBuilder<SelectMenuBuilder>()
     .setComponents(new SelectMenuBuilder()
       .setCustomId(JSON.stringify({
@@ -18,5 +18,5 @@ export function createSelectRoles(
           count: 0,
           roleId: role.id,
         })).toJSON()))
-      .setPlaceholder(menuPlaceholder ?? ''))).slice(0, 5);
+      .setPlaceholder(menuPlaceholder ?? '')));
 }

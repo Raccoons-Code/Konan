@@ -1,9 +1,9 @@
-import { Client, Message, Partials } from 'discord.js';
+import { Message, Partials } from 'discord.js';
 import { Command, Event } from '../structures';
 
 export default class MessageCreate extends Event {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       intents: ['Guilds', 'GuildMessages', 'DirectMessages'],
       name: 'messageCreate',
       partials: [Partials.Message],

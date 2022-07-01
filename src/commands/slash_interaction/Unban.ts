@@ -73,7 +73,7 @@ export default class Unban extends SlashCommand {
 
     await interaction.deferReply({ ephemeral: true });
 
-    const id = options.getString('user', true).split(' |')[0];
+    const id = options.getString('user', true);
 
     const ban = await guild.bans.fetch(id);
 
@@ -102,18 +102,18 @@ export default class Unban extends SlashCommand {
     const user = options.getString('user', true);
     const pattern = RegExp(user, 'i');
 
-    const bans_collection = await guild.bans.fetch();
+    const bansCollection = await guild.bans.fetch();
 
-    const bans_array = bans_collection.filter(ban =>
+    const bansArray = bansCollection.filter(ban =>
       pattern.test(ban.user.tag) ||
       pattern.test(ban.user.id) ||
       pattern.test(ban.reason!)).toJSON();
 
-    for (let i = 0; i < bans_array.length; i++) {
-      const ban = bans_array[i];
+    for (let i = 0; i < bansArray.length; i++) {
+      const ban = bansArray[i];
 
       const name = [
-        ban.user.id, ' | ', ban.user.tag,
+        ban.user.tag, ' | ', ban.user.id,
         ban.reason ? ` | Reason: ${ban.reason}` : '',
       ].join('').slice(0, 100);
 

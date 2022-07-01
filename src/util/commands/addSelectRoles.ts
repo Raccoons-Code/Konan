@@ -6,7 +6,9 @@ export function addSelectRoles(
   roles: (APIRole | Role)[],
   components: ActionRow<MessageActionRowComponent>[] = [],
   menuPlaceholder: string | null = '',
-) {
+): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<SelectMenuBuilder>)[] {
+  if (!Array.isArray(roles)) return addSelectRoles([roles], components, menuPlaceholder);
+
   const newComponents = components
     .filter(component => component)
     .map(component => {
@@ -55,5 +57,5 @@ export function addSelectRoles(
         .setPlaceholder(menuPlaceholder ?? '')));
   }
 
-  return newComponents.slice(0, 5);
+  return newComponents;
 }

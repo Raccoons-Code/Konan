@@ -8,8 +8,8 @@ const { Listening, Playing, Streaming, Watching } = ActivityType;
 const { ApplicationsCommands, Bot } = OAuth2Scopes;
 
 export default class Ready extends Event {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'ready',
       listener: 'once',
     });

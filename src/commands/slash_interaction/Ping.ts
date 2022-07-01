@@ -1,4 +1,4 @@
-import { Client, CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, Client, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Ping extends SlashCommand {
@@ -13,7 +13,7 @@ export default class Ping extends SlashCommand {
       .setDescriptionLocalizations(this.getLocalizations('pingDescription'));
   }
 
-  async execute(interaction: CommandInteraction<'cached'>) {
+  async execute(interaction: ChatInputCommandInteraction<'cached'>) {
     const sent = await interaction.reply({ content: 'Pong!', ephemeral: true, fetchReply: true });
 
     const ping = sent.createdTimestamp - interaction.createdTimestamp;

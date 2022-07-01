@@ -3,6 +3,7 @@ import { ButtonComponentInteraction, Command, MessageContextMenu, SelectMenuComp
 
 export * from './customid';
 export * from './quickdb';
+export * from './util';
 
 export type AnyInteraction = Interaction & (
   AutocompleteInteraction |

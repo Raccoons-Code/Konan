@@ -4,9 +4,11 @@ const { Primary } = ButtonStyle;
 const { Button } = ComponentType;
 
 export function addButtonRoles(
-  roles: (APIRole | Role)[],
+  roles: APIRole | Role | (APIRole | Role)[],
   components: ActionRow<MessageActionRowComponent>[] = [],
-) {
+): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<ButtonBuilder>)[] {
+  if (!Array.isArray(roles)) return addButtonRoles([roles], components);
+
   const newComponents = components
     .filter(component => component)
     .map(component => {
@@ -43,5 +45,5 @@ export function addButtonRoles(
         .setStyle(Primary))));
   }
 
-  return newComponents.slice(0, 5);
+  return newComponents;
 }

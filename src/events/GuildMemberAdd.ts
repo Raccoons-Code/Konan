@@ -1,9 +1,9 @@
-import { Client, GuildMember, Partials } from 'discord.js';
+import { GuildMember, Partials } from 'discord.js';
 import { Event } from '../structures';
 
 export default class GuildMemberAdd extends Event {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       intents: ['GuildMembers'],
       name: 'guildMemberAdd',
       partials: [Partials.GuildMember, Partials.User],

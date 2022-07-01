@@ -6,9 +6,9 @@ import { Command, SlashCommand } from '../structures';
 import Util from '../util';
 
 class Commands {
-  private client!: Client;
-  private _applicationCommandTypes!: string[];
-  private _commandTypes!: { [k: string]: string[] } | string[];
+  #client!: Client;
+  #applicationCommandTypes!: string[];
+  #commandTypes!: { [k: string]: string[] } | string[];
   commandsByCategory: { [k: string]: Collection<string, SlashCommand> } = {};
   errors: Error[] = [];
 
@@ -19,20 +19,20 @@ class Commands {
   }
 
   get applicationCommandTypes(): string[] {
-    return this._applicationCommandTypes ? this._applicationCommandTypes : this.applicationCommandTypes =
+    return this.#applicationCommandTypes ? this.#applicationCommandTypes : this.applicationCommandTypes =
       Object.values(this.commandTypes).flat().filter((f: string) => !/(_(command|component))/i.test(f));
   }
 
   set applicationCommandTypes(value) {
-    this._applicationCommandTypes = value;
+    this.#applicationCommandTypes = value;
   }
 
   get commandTypes(): { [k: string]: string[] } | string[] {
-    return this._commandTypes ? this._commandTypes : this.commandTypes = this.getCommandTypes();
+    return this.#commandTypes ? this.#commandTypes : this.commandTypes = this.getCommandTypes();
   }
 
   set commandTypes(value) {
-    this._commandTypes = value;
+    this.#commandTypes = value;
   }
 
   getCommandTypes(commandTypes: { [k: string]: string[] } = {}) {
@@ -52,7 +52,7 @@ class Commands {
     return commandTypes;
   }
 
-  async loadCommands(commandTypes = this.commandTypes, commands: any = {}, client = this.client) {
+  async loadCommands(commandTypes = this.commandTypes, commands: any = {}, client = this.#client) {
     const dirs = Object.values(commandTypes).flat();
 
     for (let i = 0; i < dirs.length; i++) {

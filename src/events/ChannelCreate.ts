@@ -1,9 +1,9 @@
-import { Client, NonThreadGuildBasedChannel, Partials } from 'discord.js';
+import { NonThreadGuildBasedChannel, Partials } from 'discord.js';
 import { Event } from '../structures';
 
 export default class ChannelCreate extends Event {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'channelCreate',
       permissions: ['SendMessages'],
       partials: [Partials.Channel],

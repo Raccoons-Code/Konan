@@ -1,9 +1,9 @@
-import { Client, Guild } from 'discord.js';
+import { Guild } from 'discord.js';
 import { Event } from '../structures';
 
 export default class GuildUpdate extends Event {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       intents: ['Guilds'],
       name: 'guildUpdate',
     });

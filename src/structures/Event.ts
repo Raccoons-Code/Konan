@@ -1,11 +1,10 @@
 import { ClientEvents } from 'discord.js';
 import { EventData, ListenerString } from '../@types';
-import Base from './Base';
-import Client from './Client';
+import BaseEvent from './BaseEvent';
 
-export default abstract class Event extends Base {
-  constructor(client: Client, public data: EventData) {
-    super(client);
+export default abstract class Event extends BaseEvent {
+  constructor(public data: EventData) {
+    super();
 
     data.listener = <ListenerString>data.listener?.match(/(on(ce)?)/)?.[1] || 'on';
   }

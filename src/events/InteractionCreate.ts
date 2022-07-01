@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, Client, codeBlock, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, codeBlock, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { env } from 'node:process';
 import { AnyInteraction } from '../@types';
 import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
@@ -6,8 +6,8 @@ import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, Sel
 const { GUILD_INVITE } = env;
 
 export default class InteractionCreate extends Event {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       intents: ['Guilds', 'GuildBans', 'GuildIntegrations', 'GuildVoiceStates', 'GuildWebhooks'],
       name: 'interactionCreate',
     });

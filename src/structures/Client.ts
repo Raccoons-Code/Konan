@@ -57,17 +57,17 @@ export default class Client extends DJS.Client {
 
     try {
       await this.ERROR_WEBHOOK.send({
+        avatarURL: this.user.displayAvatarURL(),
         embeds: [
           new EmbedBuilder()
             .setColor('Red')
-            .setDescription(codeBlock(`${reason.stack}`.slice(0, 4089)))
+            .setDescription(codeBlock('ts', `${reason.stack}`.slice(0, 4087)))
             .setFields([{
               name: 'Cause',
               value: `${reason.cause}`.slice(0, 1024),
             }])
             .setTitle(`${reason.name}: ${reason.message}`.slice(0, 256)),
         ],
-        avatarURL: this.user.displayAvatarURL(),
         username: this.user.username,
       });
     } catch {
