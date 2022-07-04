@@ -43,15 +43,11 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
       role ? roles.remove.push(role.id) : roles.add.push(roleId);
     }
 
-    const promises = [];
+    if (roles.remove.length)
+      await member.roles.remove(roles.remove).catch(() => roles.remove = []);
 
     if (roles.add.length)
-      promises.push(member.roles.add(roles.add).catch(() => roles.add = []));
-
-    if (roles.remove.length)
-      promises.push(member.roles.remove(roles.remove).catch(() => roles.remove = []));
-
-    await Promise.all(promises);
+      await member.roles.add(roles.add).catch(() => roles.add = []);
 
     return this.setComponents(interaction, roles);
   }

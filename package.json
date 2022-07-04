@@ -1,6 +1,6 @@
 {
   "name": "konan",
-  "version": "0.16.24",
+  "version": "0.16.25",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -43,17 +43,17 @@
     "quick.db": "^9.0.5",
     "statcord.js": "^3.4.2",
     "topgg-autoposter": "^2.0.1",
-    "ts-node": "^10.8.1"
+    "ts-node": "^10.8.2"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
-    "@types/eslint": "^8.4.3",
+    "@types/eslint": "^8.4.5",
     "@types/glob": "^7.2.0",
     "@types/ms": "^0.7.31",
-    "@types/node": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.30.0",
-    "@typescript-eslint/parser": "^5.30.0",
-    "eslint": "^8.18.0",
+    "@types/node": "^18.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.30.4",
+    "@typescript-eslint/parser": "^5.30.4",
+    "eslint": "^8.19.0",
     "prisma": "^4.0.0",
     "typescript": "^4.7.4"
   },
