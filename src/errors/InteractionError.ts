@@ -21,8 +21,8 @@ export default class InteractionError {
 
     const commandName = [
       data.commandName,
-      data.options?.getSubcommandGroup(),
-      data.options?.getSubcommand(),
+      data.options?.getSubcommandGroup(false),
+      data.options?.getSubcommand(false),
     ].filter(a => a);
 
     const interactionType = [

@@ -33,15 +33,13 @@ export default class Info extends ButtonComponentInteraction {
   async application(interaction: ButtonInteraction, embeds: EmbedBuilder[]) {
     const { client, guild } = interaction;
 
-    const { channels, guilds, readyAt, user, users, ws } = client;
+    const { readyAt, user, ws } = client;
 
     const me = guild?.members.me;
 
     const avatarURL = me?.displayAvatarURL() ?? user?.displayAvatarURL();
 
     const username = me?.displayName ?? user?.username;
-
-    const newStats = await client.fetchStats();
 
     const { heapUsed } = memoryUsage();
 
@@ -60,9 +58,9 @@ export default class Info extends ButtonComponentInteraction {
       `);
 
     const stats = stripIndents(`
-      Servers  : ${newStats.guilds ?? guilds.cache.size}
-      Channels : ${newStats.channels ?? channels.cache.size}
-      Members  : ${newStats.members ?? users.cache.size}
+      Servers  : ${client.stats.guilds}
+      Channels : ${client.stats.channels}
+      Members  : ${client.stats.members}
       Ping     : ${ws.ping} ms
       Version  : ${npm_package_version}
       `);

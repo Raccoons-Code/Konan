@@ -268,10 +268,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.43.tgz#7f16898cdd791c9d64069000ad448b47b3ca8353"
   integrity sha512-jnUpgw8fL9kP2iszfIDyBQtw5Mf4/XSqy0Loc1J9pI14ejL83XcCEvSf50Gs/4ET0I9VCCDoOfufQysj0S66xA==
 
-"@types/node@^18.0.2":
-  version "18.0.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.2.tgz#a594e580c396c22dd6b1470be81737c79ec0b1b1"
-  integrity sha512-b947SdS4GH+g2W33wf5FzUu1KLj5FcSIiNWbU1ZyMvt/X7w48ZsVcsQoirIgE/Oq03WT5Qbn/dkY0hePi4ZXcQ==
+"@types/node@^18.0.3":
+  version "18.0.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.3.tgz#463fc47f13ec0688a33aec75d078a0541a447199"
+  integrity sha512-HzNRZtp4eepNitP+BD6k2L6DROIDG4Q0fm4x+dwfsr6LGmROENnok75VGw40628xf+iR24WeMFcHuuBDUAzzsQ==
 
 "@types/ws@^8.5.3":
   version "8.5.3"
@@ -712,10 +712,10 @@ discord.js@^13.1.0, discord.js@^13.6.0:
     node-fetch "^2.6.1"
     ws "^8.7.0"
 
-discord.js@^14.0.0-dev.1657066252-68c3d87:
-  version "14.0.0-dev.1657066252-68c3d87"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1657066252-68c3d87.tgz#4fc367aabaa9a82e0c7ecb0756506c8828158b2b"
-  integrity sha512-26IpNv7HzeMjycePpvkMsehQpGhpOi8eMkdKml5V3XJMLcZ7FAl382I+J9tfk2V/xm7fOdFbGumb2y9XPBZw0w==
+discord.js@^14.0.0-dev.1657109083-8198da5:
+  version "14.0.0-dev.1657109083-8198da5"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1657109083-8198da5.tgz#0c222d2b7b1d7f4d0c108c3591daeaf80bc70cf1"
+  integrity sha512-HuGJdY84q87BG2HGavOLjdHI6A/44Md6f71f2Af3kEQ9EhZ03GiOYLIS7TD5yFJvaUH4fhgwEKnTI4Qt0ZO0sQ==
   dependencies:
     "@discordjs/builders" "^0.16.0-dev"
     "@discordjs/collection" "^0.8.0-dev"
@@ -726,7 +726,7 @@ discord.js@^14.0.0-dev.1657066252-68c3d87:
     fast-deep-equal "^3.1.3"
     lodash.snakecase "^4.1.1"
     tslib "^2.4.0"
-    undici "^5.5.1"
+    undici "^5.6.0"
     ws "^8.8.0"
 
 doctrine@^3.0.0:
@@ -1795,6 +1795,11 @@ undici@^5.5.1:
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.5.1.tgz#baaf25844a99eaa0b22e1ef8d205bffe587c8f43"
   integrity sha512-MEvryPLf18HvlCbLSzCW0U00IMftKGI5udnjrQbC5D4P0Hodwffhv+iGfWuJwg16Y/TK11ZFK8i+BPVW2z/eAw==
+
+undici@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.6.0.tgz#3fd695d4454970bae3d151326ee4ab645b8d1962"
+  integrity sha512-mc+8SY1fXubTrdx4CXDkeFFGV8lI3Tq4I/70U1V8Z6g4iscGII0uLO7CPnDt56bXEbvaKwo2T2+VrteWbZiXiQ==
 
 unique-string@^2.0.0:
   version "2.0.0"

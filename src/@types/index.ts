@@ -89,6 +89,7 @@ export type ListenerString = 'on' | 'once'
 
 export interface FetchStatsOptions {
   loop?: boolean
+  filter?: 'channels' | 'guilds' | 'members'
 }
 
 export interface PrimeResolveOptions {
@@ -120,7 +121,7 @@ export interface SlashCommandsCollection {
 }
 
 export interface Stats {
-  channels?: number
-  guilds?: number
-  members?: number
+  channels: number
+  guilds: number
+  members: number
 }

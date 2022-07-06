@@ -11,6 +11,6 @@ export default class GuildMemberRemove extends Event {
   }
 
   async execute(member: GuildMember) {
-    member.client.fetchStats();
+    member.client.stats.fetch({ filter: 'members' });
   }
 }

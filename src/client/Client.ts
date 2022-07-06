@@ -1,9 +1,8 @@
 import DJS, { ClientOptions, codeBlock, EmbedBuilder, WebhookClient } from 'discord.js';
 import { env } from 'node:process';
 import AutoPoster from 'topgg-autoposter';
-import { FetchStatsOptions, Stats } from '../@types';
 import events from '../events';
-import Util from '../util';
+import ApplicationStats from './ApplicationStats';
 
 const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
 
@@ -11,7 +10,7 @@ export default class Client extends DJS.Client {
   constructor(options: ClientOptions) {
     super(options);
 
-    this.stats = {};
+    this.stats = new ApplicationStats(this);
   }
 
   static init() {
@@ -67,38 +66,6 @@ export default class Client extends DJS.Client {
     } catch {
       console.error(reason);
     }
-  }
-
-  async fetchStats(options: FetchStatsOptions = {}): Promise<Stats> {
-    const promises = <(Promise<number[]> | undefined)[]>[
-      this.shard?.fetchClientValues('guilds.cache.size'),
-      this.shard?.fetchClientValues('channels.cache.size'),
-      this.shard?.broadcastEval(client => client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
-    ];
-
-    try {
-      const results = await Promise.all(promises);
-
-      this.stats.guilds = results[0]?.reduce((acc, guildCount) => acc + guildCount, 0);
-      this.stats.channels = results[1]?.reduce((acc, channelCount) => acc + channelCount, 0);
-      this.stats.members = results[2]?.reduce((acc, memberCount) => acc + memberCount, 0);
-    } catch {
-      if (options.loop) {
-        await Util.waitAsync(10000);
-      } else {
-        await Util.waitAsync(1000);
-
-        return this.fetchStats(options);
-      }
-    }
-
-    if (options.loop) {
-      await Util.waitAsync(600000);
-
-      return this.fetchStats(options);
-    }
-
-    return this.stats;
   }
 
   async topggAutoposter(token = TOPGG_TOKEN) {

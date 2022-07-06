@@ -25,10 +25,10 @@ export default class Ready extends Event {
       permissions: BigInt(545460321791),
     });
 
+    await client.stats.fetch();
+    this.setPresence(client);
     client.topggAutoposter();
     this.logCommandsErrors(client);
-    await client.fetchStats();
-    this.setPresence(client);
   }
 
   async logCommandsErrors(client: Client) {
@@ -63,11 +63,11 @@ export default class Ready extends Event {
   async setPresence(client: Client) {
     client.user?.setPresence({
       activities: [
-        { name: `${client.stats.members ?? 'Fetching'} members`, type: Watching },
+        { name: `${client.stats.members || 'Fetching'} members`, type: Watching },
         { name: 'Cat Vibing Meme', type: Streaming, url: ytURL('NUYvbT6vTPs') },
-        { name: `${client.stats.guilds ?? 'Fetching'} servers`, type: Playing },
+        { name: `${client.stats.guilds || 'Fetching'} servers`, type: Playing },
         { name: 'Wide Putin Walking', type: Streaming, url: ytURL('SLU3oG_ePhM') },
-        { name: `${client.stats.channels ?? 'Fetching'} channels`, type: Listening },
+        { name: `${client.stats.channels || 'Fetching'} channels`, type: Listening },
         { name: 'Noisestorm - Crab Rave', type: Streaming, url: ytURL('LDU_Txk06tM') },
         { name: 'National Anthem of USSR', type: Streaming, url: ytURL('U06jlgpMtQs') },
         { name: 'Rick Astley - Never Gonna Give You Up', type: Streaming, url: ytURL('dQw4w9WgXcQ') },

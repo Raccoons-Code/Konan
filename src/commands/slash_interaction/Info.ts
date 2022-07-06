@@ -80,7 +80,7 @@ export default class Info extends SlashCommand {
   ): Promise<any> {
     const { client, guild } = interaction;
 
-    const { channels, guilds, readyAt, user, users, ws } = client;
+    const { readyAt, user, ws } = client;
 
     const me = guild?.members.me;
 
@@ -105,9 +105,9 @@ export default class Info extends SlashCommand {
       `);
 
     const stats = stripIndents(`
-      Servers  : ${client.stats.guilds ?? guilds.cache.size}
-      Channels : ${client.stats.channels ?? channels.cache.size}
-      Members  : ${client.stats.members ?? users.cache.size}
+      Servers  : ${client.stats.guilds}
+      Channels : ${client.stats.channels}
+      Members  : ${client.stats.members}
       Ping     : ${ws.ping} ms
       Version  : ${npm_package_version}
       `);

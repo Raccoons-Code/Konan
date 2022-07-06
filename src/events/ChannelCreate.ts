@@ -13,7 +13,7 @@ export default class ChannelCreate extends Event {
   async execute(channel: NonThreadGuildBasedChannel) {
     const { client } = channel;
 
-    client.fetchStats();
+    client.stats.fetch({ filter: 'channels' });
 
     if (!(channel.isTextBased() && channel.permissionsFor(client.user!)?.has(this.data.permissions!))) return;
 

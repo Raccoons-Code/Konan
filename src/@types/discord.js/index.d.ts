@@ -1,6 +1,6 @@
 import { DiscordTogether } from 'discord-together';
 import { Collection } from 'discord.js';
-import { FetchStatsOptions, Stats } from '..';
+import ApplicationStats from '../../client/ApplicationStats';
 
 declare module 'discord.js' {
   export interface Client {
@@ -8,9 +8,8 @@ declare module 'discord.js' {
     discordTogether: DiscordTogether<{ [k: string]: string }>;
     ERROR_WEBHOOK: WebhookClient;
     invite: string;
-    stats: Stats;
+    stats: ApplicationStats;
 
-    fetchStats(options?: FetchStatsOptions): Promise<Stats>
     sendError(reason: Error): Promise<void>
     topggAutoposter(token?: string | undefined): Promise<void>
   }
