@@ -1,42 +1,41 @@
-import { Client, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
+import { GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
 import { GlobSync } from 'glob';
 import { posix } from 'node:path';
+import client from '../client';
 import { Event } from '../structures';
 import Util from '../util';
 
 class Events {
-  #client!: Client;
-  #events!: Event[];
-  eventFiles!: string[];
-  intents?: number;
-  partials?: Partials[];
   errors: Error[] = [];
+  #events: Event[] = [];
 
-  constructor() {
-    this.eventFiles = this.getEventFiles();
+  #eventFiles = this.#getEventFiles();
+
+  get eventFiles() {
+    return this.#eventFiles;
   }
 
-  init(client: Client) {
-    Object.defineProperties(this, { client: { value: client } });
-
-    return this;
+  get events() {
+    return this.#requireEvents();
   }
 
-  get events(): Event[] {
-    return this.#events ?? this.getEvents();
+  get intents() {
+    return this.#loadIntents();
   }
 
-  set events(value) {
-    this.#events = value;
+  get partials() {
+    return this.#loadPartials();
   }
 
-  getEventFiles() {
+  #getEventFiles() {
     return new GlobSync(posix.resolve('src', 'events', '*.@(j|t)s'), { ignore: ['**/index.@(j|t)s'] }).found;
   }
 
-  async getEvents(events: Event[] = []) {
+  #requireEvents(events: Event[] = []) {
+    if (this.#events.length === this.#eventFiles.length) return this.#events;
+
     for (let i = 0; i < this.eventFiles.length; i++) {
-      const importedFile = await import(`${this.eventFiles[i]}`);
+      const importedFile = require(`${this.eventFiles[i]}`);
 
       const eventFile = importedFile.default ?? importedFile;
 
@@ -45,39 +44,26 @@ class Events {
       events.push(event);
     }
 
-    this.events = events;
+    this.#events = events;
 
-    return this.events;
+    return events;
   }
 
-  async loadEvents(client = this.#client) {
-    if (!this.#events) await this.getEvents();
-
+  #loadIntents(intents: GatewayIntentsString[] = []) {
     for (let i = 0; i < this.events.length; i++) {
-      const event = this.events[i];
 
-      client[event.data.listener!]?.(event.data.name, (...args: any) => event.execute(...args));
-    }
-  }
-
-  async loadIntents(intents: GatewayIntentsString[] = []) {
-    if (!this.#events) await this.getEvents();
-
-    for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];
 
       if (event.data?.intents?.length)
         intents.push(...event.data.intents);
     }
 
-    this.intents = IntentsBitField.resolve([...new Set(intents)]);
+    intents.length ? intents = [...new Set(intents)] : intents;
 
-    return this.intents;
+    return IntentsBitField.resolve(intents);
   }
 
-  async loadPartials(partials: Partials[] = []) {
-    if (!this.#events) await this.getEvents();
-
+  #loadPartials(partials: Partials[] = []) {
     for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];
 
@@ -85,9 +71,35 @@ class Events {
         partials.push(...event.data.partials);
     }
 
-    this.partials = partials.length ? [...new Set(partials)] : partials;
+    partials = partials.length ? [...new Set(partials)] : partials;
 
-    return this.partials;
+    return partials;
+  }
+
+  async importEvents(events: Event[] = []) {
+    const importedFiles = await Promise.all(this.eventFiles.reduce((acc, file) =>
+      acc.concat(import(`${file}`).then(importedFile => importedFile.default ?? importedFile)),
+      <Promise<any>[]>[]));
+
+    for (let i = 0; i < importedFiles.length; i++) {
+      const importedFile = importedFiles[i];
+
+      const eventFile = importedFile.default ?? importedFile;
+
+      const event = <Event>(Util.isClass(eventFile) ? new eventFile() : eventFile);
+
+      events.push(event);
+    }
+
+    return events;
+  }
+
+  async loadEvents() {
+    for (let i = 0; i < this.events.length; i++) {
+      const event = this.events[i];
+
+      client[event.data.listener!]?.(event.data.name, (...args: any) => event.execute(...args));
+    }
   }
 }
 

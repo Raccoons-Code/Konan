@@ -1,12 +1,12 @@
-import { ButtonInteraction, Client, EmbedBuilder } from 'discord.js';
+import { ButtonInteraction, EmbedBuilder } from 'discord.js';
 import { BanCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
 export default class Ban extends ButtonComponentInteraction {
   [k: string]: any;
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'ban',
       description: 'Ban Button Component',
     });

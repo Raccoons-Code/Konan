@@ -1,10 +1,10 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, Client, ComponentType } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ComponentType } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
 export default class ButtonRoles extends ButtonComponentInteraction {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'buttonroles',
       description: 'Button roles',
       clientPermissions: ['ManageRoles'],

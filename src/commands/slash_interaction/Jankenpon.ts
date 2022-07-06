@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, Client, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import JKP from '../../JKP';
 import { SlashCommand } from '../../structures';
 
@@ -6,8 +6,8 @@ export default class Jankenpon extends SlashCommand {
   [k: string]: any;
   emoji: { [k: string]: string } = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Game',
     });
 

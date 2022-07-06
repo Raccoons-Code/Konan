@@ -1,3 +1,4 @@
+import Bytes from './Byte';
 import bytes from './bytes';
 import capitalize from './capitalize';
 import { addButtonRoles, addSelectRoles, ComponentLink, componentsHasRoles, createButtonRoles, createSelectRoles, filterRolesId, removeButtonRoles, removeSelectRoles, setDefaultRole } from './commands';
@@ -25,6 +26,7 @@ import waitAsync from './waitAsync';
 import waitSync from './waitSync';
 
 export default abstract class Util {
+  static Bytes = Bytes;
   static bytes = bytes;
   static capitalize = capitalize;
   static composition = composition;

@@ -1,11 +1,11 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, Client, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Ban extends SlashCommand {
   [k: string]: any;
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Moderation',
       clientPermissions: ['BanMembers'],
       userPermissions: ['BanMembers'],

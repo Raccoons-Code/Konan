@@ -1,10 +1,10 @@
 import TicTacToe from 'discord-tictactoe';
-import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Game',
     });
 

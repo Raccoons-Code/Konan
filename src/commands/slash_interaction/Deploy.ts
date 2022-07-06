@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
 import Commands from '..';
 import { SlashCommand } from '../../structures';
@@ -6,8 +6,8 @@ import { SlashCommand } from '../../structures';
 const { DISCORD_TEST_GUILD_ID, OWNER_ID } = env;
 
 export default class Deploy extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       ownerOnly: true,
     });
 

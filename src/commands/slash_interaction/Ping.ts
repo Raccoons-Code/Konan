@@ -1,16 +1,15 @@
-import { ChatInputCommandInteraction, Client, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Ping extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Utility',
     });
 
     this.data = new SlashCommandBuilder().setName('ping')
       .setDescription('Replies with Pong!')
-      .setNameLocalizations(this.getLocalizations('pingName'))
-      .setDescriptionLocalizations(this.getLocalizations('pingDescription'));
+      .setNameLocalizations(this.getLocalizations('pingName'));
   }
 
   async execute(interaction: ChatInputCommandInteraction<'cached'>) {

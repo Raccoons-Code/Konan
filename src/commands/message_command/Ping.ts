@@ -1,9 +1,9 @@
-import { Client, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { Command } from '../../structures';
 
 export default class Ping extends Command {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'ping',
       description: 'Replies with Pong!',
     });

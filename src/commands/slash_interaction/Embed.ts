@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, EmbedBuilder, InteractionType, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, InteractionType, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 const { ApplicationCommandAutocomplete } = InteractionType;
@@ -6,8 +6,8 @@ const { ApplicationCommandAutocomplete } = InteractionType;
 export default class Embed extends SlashCommand {
   [k: string]: any;
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Utility',
       clientPermissions: ['SendMessages'],
       userPermissions: ['ManageMessages'],

@@ -1,5 +1,6 @@
-import { ActionRowBuilder, ApplicationCommandNonOptionsData, ApplicationCommandOptionChoiceData, ApplicationCommandSubCommand, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, Client, EmbedBuilder, InteractionType, RouteBases, SelectMenuBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandNonOptionsData, ApplicationCommandOptionChoiceData, ApplicationCommandSubCommand, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, InteractionType, RouteBases, SelectMenuBuilder, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
+import commandHandler from '../../commands';
 import { SlashCommand } from '../../structures';
 
 const { DONATE_LINK, GUILD_INVITE } = env;
@@ -7,8 +8,8 @@ const { Link } = ButtonStyle;
 const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Help extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'General',
     });
 
@@ -92,9 +93,9 @@ export default class Help extends SlashCommand {
   }
 
   async executeCommand(interaction: ChatInputCommandInteraction, commandName: string): Promise<any> {
-    const { client, locale } = interaction;
+    const { locale } = interaction;
 
-    const { slash_interaction } = client.commands;
+    const { slash_interaction } = commandHandler.commands;
 
     const command = slash_interaction.get(commandName);
 
@@ -114,7 +115,7 @@ export default class Help extends SlashCommand {
   async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
-    const { client, options } = interaction;
+    const { options } = interaction;
 
     const focused = options.getFocused(true);
 
@@ -123,7 +124,7 @@ export default class Help extends SlashCommand {
 
       const pattern = RegExp(commandName, 'i');
 
-      const { slash_interaction } = client.commands;
+      const { slash_interaction } = commandHandler.commands;
 
       const slashCommands = slash_interaction.filter((c: any) =>
         c.data.defaultPermission !== false && (

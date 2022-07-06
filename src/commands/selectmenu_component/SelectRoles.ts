@@ -1,10 +1,10 @@
-import { ActionRowBuilder, APISelectMenuComponent, Client, ComponentType, SelectMenuBuilder, SelectMenuComponent, SelectMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, APISelectMenuComponent, ComponentType, SelectMenuBuilder, SelectMenuComponent, SelectMenuInteraction } from 'discord.js';
 import { RolesManager, SelectRolesCustomId, SelectRolesItemOptionValue } from '../../@types';
 import { SelectMenuComponentInteraction } from '../../structures';
 
 export default class SelectRoles extends SelectMenuComponentInteraction {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'selectroles',
       description: 'Select Roles',
       clientPermissions: ['ManageRoles'],
@@ -43,15 +43,11 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
       role ? roles.remove.push(role.id) : roles.add.push(roleId);
     }
 
-    const promises = [];
+    if (roles.remove.length)
+      await member.roles.remove(roles.remove).catch(console.log);
 
     if (roles.add.length)
-      promises.push(member.roles.add(roles.add).catch(() => roles.add = []));
-
-    if (roles.remove.length)
-      promises.push(member.roles.remove(roles.remove).catch(() => roles.remove = []));
-
-    await Promise.all(promises);
+      await member.roles.add(roles.add).catch(console.log);
 
     return this.setComponents(interaction, roles);
   }

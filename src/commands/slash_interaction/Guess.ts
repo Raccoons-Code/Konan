@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import { QuickDB } from 'quick.db';
 import { GuessGameData } from '../../@types';
 import { SlashCommand } from '../../structures';
@@ -8,8 +8,8 @@ const { ApplicationCommandAutocomplete } = InteractionType;
 const quickDb = new QuickDB();
 
 export default class Guess extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Game',
     });
 

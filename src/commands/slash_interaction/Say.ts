@@ -1,10 +1,10 @@
-import { ChatInputCommandInteraction, Client, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, TextChannel } from 'discord.js';
 import * as googleTTS from 'google-tts-api';
 import { SlashCommand } from '../../structures';
 
 export default class Say extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Fun',
       clientPermissions: ['ManageWebhooks'],
     });

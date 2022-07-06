@@ -4,10 +4,7 @@ import { FetchStatsOptions, Stats } from '..';
 
 declare module 'discord.js' {
   export interface Client {
-    applicationCommandTypes: string[];
     commands: { [k: string]: Collection<string, any> };
-    commandsByCategory: { [k: string]: Collection<string, any> };
-    commandTypes: { [k: string]: string[] } | string[];
     discordTogether: DiscordTogether<{ [k: string]: string }>;
     ERROR_WEBHOOK: WebhookClient;
     invite: string;

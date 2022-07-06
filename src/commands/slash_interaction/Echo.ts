@@ -1,9 +1,9 @@
-import { ChatInputCommandInteraction, Client, EmbedBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Echo extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Fun',
       clientPermissions: ['ManageWebhooks'],
     });

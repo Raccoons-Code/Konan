@@ -2,46 +2,40 @@ import DJS, { ClientOptions, codeBlock, EmbedBuilder, WebhookClient } from 'disc
 import { env } from 'node:process';
 import AutoPoster from 'topgg-autoposter';
 import { FetchStatsOptions, Stats } from '../@types';
-import commands from '../commands';
 import events from '../events';
 import Util from '../util';
 
 const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
 
 export default class Client extends DJS.Client {
-  applicationCommandTypes = commands.applicationCommandTypes;
-  commandTypes = commands.commandTypes;
-
   constructor(options: ClientOptions) {
     super(options);
 
     this.stats = {};
   }
 
+  static init() {
+    const client = new Client({
+      intents: events.intents,
+      failIfNotExists: false,
+      partials: events.partials,
+    });
+
+    return client;
+  }
+
   async login(token = this.token ?? undefined) {
     // process.on('unhandledRejection', this.sendError);
 
-    commands.init(this);
-
-    this.commands = await commands.loadCommands();
-
-    this.commandsByCategory = commands.commandsByCategory;
-
-    events.init(this);
-
     await events.loadEvents();
 
-    return await super.login(token);
+    return super.login(token);
   }
 
-  static async login(token?: string) {
-    const client = new Client({
-      intents: await events.loadIntents(),
-      failIfNotExists: false,
-      partials: await events.loadPartials(),
-    });
+  static login() {
+    const client = this.init();
 
-    return client.login(token);
+    return client.login();
   }
 
   async sendError(reason: Error) {

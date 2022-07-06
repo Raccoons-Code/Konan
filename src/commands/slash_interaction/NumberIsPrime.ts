@@ -1,10 +1,10 @@
-import { ChatInputCommandInteraction, Client, codeBlock, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, codeBlock, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { PrimeResolveOptions } from '../../@types';
 import { SlashCommand } from '../../structures';
 
 export default class NumberIsPrime extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Utility',
     });
 

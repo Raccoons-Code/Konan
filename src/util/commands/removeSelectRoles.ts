@@ -3,8 +3,10 @@ import { safeParseJSON } from './safeParseJSON';
 
 export function removeSelectRoles(
   components: ActionRow<MessageActionRowComponent>[] = [],
-  roles: string[],
-) {
+  roles: string | string[],
+): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<SelectMenuBuilder>)[] {
+  if (!Array.isArray(roles)) return removeSelectRoles(components, [roles]);
+
   return components.map(row => {
     const rowJson = <APIActionRowComponent<APISelectMenuComponent>>row.toJSON();
 

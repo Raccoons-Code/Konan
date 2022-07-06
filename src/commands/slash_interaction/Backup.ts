@@ -1,5 +1,5 @@
 import Backup from 'discord-backup';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, EmbedBuilder, Guild, InteractionType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, Guild, InteractionType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 const { ApplicationCommandAutocomplete } = InteractionType;
@@ -7,8 +7,8 @@ const { ApplicationCommandAutocomplete } = InteractionType;
 export default class extends SlashCommand {
   [k: string]: any;
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Utility',
       clientPermissions: ['BanMembers', 'ManageChannels', 'ManageEmojisAndStickers', 'ManageGuild', 'ManageMessages', 'ManageRoles', 'ManageWebhooks', 'ReadMessageHistory', 'ViewChannel'],
       userPermissions: ['Administrator'],

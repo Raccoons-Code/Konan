@@ -1,9 +1,9 @@
-import { ChatInputCommandInteraction, Client, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Clear extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Moderation',
       clientPermissions: ['ManageMessages', 'ReadMessageHistory'],
       userPermissions: ['ManageMessages'],

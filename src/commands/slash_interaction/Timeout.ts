@@ -1,9 +1,9 @@
-import { ChatInputCommandInteraction, Client, PermissionFlagsBits, SlashCommandBuilder, time } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, time } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Timeout extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Moderation',
       clientPermissions: ['ModerateMembers'],
       userPermissions: ['ModerateMembers'],

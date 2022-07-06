@@ -1,5 +1,6 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, EmbedFieldData, RouteBases, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, EmbedFieldData, RouteBases, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
 import { env } from 'node:process';
+import commandHandler from '..';
 import { SelectMenuComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
 
@@ -10,8 +11,8 @@ export default class Help extends SelectMenuComponentInteraction {
   [k: string]: any;
   limit = Util.Constants.helpPageLimit;
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'help',
       description: 'Help menu',
     });
@@ -77,9 +78,9 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   async commands(interaction: SelectMenuInteraction) {
-    const { client, locale, message } = interaction;
+    const { locale, message } = interaction;
 
-    const { slash_interaction } = client.commands;
+    const { slash_interaction } = commandHandler.commands;
 
     const slashCommands = slash_interaction.filter((c: SlashCommand) => !c.props?.ownerOnly).toJSON();
 
@@ -125,9 +126,9 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   async setCommandCategory(interaction: SelectMenuInteraction<'cached'>) {
-    const { client, locale, message, values } = interaction;
+    const { locale, message, values } = interaction;
 
-    const commands = client.commandsByCategory[values[0]] || client.commands.slash_interaction;
+    const commands = commandHandler.commandsByCategory[values[0]] || commandHandler.commands.slash_interaction;
 
     const slashCommands = commands.filter((c: any) => c.data.defaultPermission !== false).toJSON();
 

@@ -1,9 +1,9 @@
-import { Client, ModalSubmitInteraction } from 'discord.js';
+import { ModalSubmitInteraction } from 'discord.js';
 import { ModalSubmit } from '../../structures';
 
 export default class extends ModalSubmit {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'kick',
       description: 'Kick a user',
     });

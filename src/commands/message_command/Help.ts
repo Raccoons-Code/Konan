@@ -1,12 +1,12 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, Message, RouteBases, SelectMenuBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Message, RouteBases, SelectMenuBuilder } from 'discord.js';
 import { Command } from '../../structures';
 
 const { env } = process;
 const { DONATE_LINK, GUILD_INVITE } = env;
 
 export default class Help extends Command {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'help',
       description: 'Help!',
     });

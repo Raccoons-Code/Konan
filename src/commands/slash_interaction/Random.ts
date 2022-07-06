@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { APIApplicationCommandOptionChoice, ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';
+import { APIApplicationCommandOptionChoice, ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 import Util from '../../util';
 
 const Choices = new class {
   choices: string[];
-  _choices!: APIApplicationCommandOptionChoice<string>[];
+  #choices!: APIApplicationCommandOptionChoice<string>[];
 
   constructor() {
     this.choices = ['Cat'];
@@ -14,11 +14,11 @@ const Choices = new class {
   }
 
   getChoices() {
-    return this._choices ?? this.setChoices();
+    return this.#choices ?? this.setChoices();
   }
 
   getRandom() {
-    return this.choices.sort(() => Util.mathRandom(3, -1))[Util.mathRandom(this.choices.length, 0)];
+    return this.choices.sort(() => Math.random() - 0.5)[Util.mathRandom(this.choices.length, 0)];
   }
 
   setChoices(array: APIApplicationCommandOptionChoice<string>[] = []) {
@@ -32,15 +32,15 @@ const Choices = new class {
       };
     }
 
-    return this._choices = array;
+    return this.#choices = array;
   }
 };
 
 export default class Random extends SlashCommand {
   [k: string]: any;
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Fun',
       clientPermissions: ['AttachFiles'],
     });

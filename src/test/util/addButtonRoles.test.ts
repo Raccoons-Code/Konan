@@ -24,7 +24,7 @@ import Util from '../../util';
         .setStyle(ButtonStyle.Primary))),
   ];
 
-  const components2 = [
+  const expected = [
     new ActionRowBuilder<ButtonBuilder>(components[0].toJSON())
       .addComponents(params.slice(3, 5).map(role => new ButtonBuilder()
         .setCustomId(JSON.stringify({
@@ -47,5 +47,5 @@ import Util from '../../util';
 
   const buttonRoles = Util.addButtonRoles(params.slice(3), <any[]>components);
 
-  assert.deepEqual(buttonRoles, components2);
+  assert.deepEqual(buttonRoles, expected);
 }

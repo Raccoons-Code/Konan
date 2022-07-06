@@ -1,9 +1,9 @@
-import { ActionRowBuilder, ButtonBuilder, Client, Message, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, Message, TextChannel } from 'discord.js';
 import { Command } from '../../structures';
 
 export default class extends Command {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'button',
       description: 'Makes a link button.',
       aliases: ['http', 'https'],

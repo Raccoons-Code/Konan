@@ -1,11 +1,10 @@
 import { Message } from 'discord.js';
 import { CommandData } from '../@types';
-import Base from './Base';
-import Client from './Client';
+import BaseCommand from './BaseCommand';
 
-export default abstract class Command extends Base {
-  constructor(client: Client, public data: CommandData) {
-    super(client);
+export default abstract class Command extends BaseCommand {
+  constructor(public data: CommandData) {
+    super();
 
     if (!this.regexCommandName(data.name))
       return <any>console.error(`Command ${data.name} cannot be loaded.`);

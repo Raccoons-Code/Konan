@@ -75,7 +75,7 @@ import Util from '../../util';
         .setPlaceholder(menuPlaceholder)),
   ];
 
-  const components2 = [
+  const expected = [
     new ActionRowBuilder<SelectMenuBuilder>(components[0].toJSON())
       .setComponents(new SelectMenuBuilder(components[0].components[0].toJSON())
         .setCustomId(JSON.stringify({
@@ -108,5 +108,5 @@ import Util from '../../util';
 
   const selectRoles = Util.addSelectRoles(params.slice(5, 30), <any[]>components, menuPlaceholder);
 
-  assert.deepEqual(selectRoles, components2);
+  assert.deepEqual(selectRoles, expected);
 }

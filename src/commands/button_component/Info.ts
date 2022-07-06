@@ -1,5 +1,5 @@
 import { stripIndents } from 'common-tags';
-import { ButtonInteraction, Client, codeBlock, EmbedBuilder, time, version as djsVersion } from 'discord.js';
+import { ButtonInteraction, codeBlock, EmbedBuilder, time, version as djsVersion } from 'discord.js';
 import { cpus, totalmem, version } from 'node:os';
 import { env, memoryUsage, versions } from 'node:process';
 import { InfoCustomId } from '../../@types';
@@ -13,8 +13,8 @@ const inline = true;
 export default class Info extends ButtonComponentInteraction {
   [k: string]: any;
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'info',
       description: 'Info',
     });

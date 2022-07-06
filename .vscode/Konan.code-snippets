@@ -17,12 +17,11 @@
   // }
   "Class event": {
     "body": [
-      "import { Client, $3 } from 'discord.js';",
       "import { Event } from '../structures';",
       "",
       "export default class$4 extends Event {",
-      "  constructor(client: Client) {",
-      "    super(client, {",
+      "  constructor() {",
+      "    super({",
       "      name: '$1',",
       "    });",
       "  }",
@@ -38,12 +37,12 @@
   },
   "Class button component": {
     "body": [
-      "import { ButtonInteraction, Client } from 'discord.js';",
+      "import { ButtonInteraction } from 'discord.js';",
       "import { ButtonComponentInteraction } from '../../structures';",
       "",
       "export default class$3 extends ButtonComponentInteraction {",
-      "  constructor(client: Client) {",
-      "    super(client, {",
+      "  constructor() {",
+      "    super({",
       "      name: '$1',",
       "      description: '$2',",
       "    });",
@@ -60,12 +59,12 @@
   },
   "Class menu message context": {
     "body": [
-      "import { ApplicationCommandType, Client, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction } from 'discord.js';",
+      "import { ApplicationCommandType, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction } from 'discord.js';",
       "import { MessageContextMenu } from '../../structures';",
       "",
       "export default class$2 extends MessageContextMenu {",
-      "  constructor(client: Client) {",
-      "    super(client);",
+      "  constructor() {",
+      "    super();",
       "",
       "    this.data = new ContextMenuCommandBuilder().setName('$1')",
       "      .setType(ApplicationCommandType.Message);",
@@ -82,12 +81,12 @@
   },
   "Class menu user context": {
     "body": [
-      "import { ApplicationCommandType, Client, ContextMenuCommandBuilder, UserContextMenuCommandInteraction } from 'discord.js';",
+      "import { ApplicationCommandType, ContextMenuCommandBuilder, UserContextMenuCommandInteraction } from 'discord.js';",
       "import { UserContextMenu } from '../../structures';",
       "",
       "export default class$2 extends UserContextMenu {",
-      "  constructor(client: Client) {",
-      "    super(client);",
+      "  constructor() {",
+      "    super();",
       "",
       "    this.data = new ContextMenuCommandBuilder().setName('$1')",
       "      .setType(ApplicationCommandType.User);",
@@ -104,12 +103,12 @@
   },
   "Class message command": {
     "body": [
-      "import { Client, Message } from 'discord.js';",
+      "import { Message } from 'discord.js';",
       "import { Command } from '../../structures';",
       "",
       "export default class$3 extends Command {",
-      "  constructor(client) {",
-      "    super(client, {",
+      "  constructor() {",
+      "    super({",
       "      name: '$1',",
       "      description: '$2',",
       "    });",
@@ -126,12 +125,12 @@
   },
   "Class modal submit": {
     "body": [
-      "import { Client, ModalSubmitInteraction } from 'discord.js';",
+      "import { ModalSubmitInteraction } from 'discord.js';",
       "import { ModalSubmit } from '../../structures';",
       "",
       "export default class$4 extends ModalSubmit {",
-      "  constructor(client: Client) {",
-      "    super(client, {",
+      "  constructor() {",
+      "    super({",
       "      name: '$1',",
       "      description: '$2',",
       "    });",
@@ -148,12 +147,12 @@
   },
   "Class select component": {
     "body": [
-      "import { Client, SelectMenuInteraction } from 'discord.js';",
+      "import { SelectMenuInteraction } from 'discord.js';",
       "import { SelectMenuComponentInteraction } from '../../structures';",
       "",
       "export default class$3 extends SelectMenuComponentInteraction {",
-      "  constructor(client: Client) {",
-      "    super(client, {",
+      "  constructor() {",
+      "    super({",
       "      name: '$1',",
       "      description: '$2',",
       "    });",
@@ -170,12 +169,12 @@
   },
   "Class slash command": {
     "body": [
-      "import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';",
+      "import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';",
       "import { SlashCommand } from '../../structures';",
       "",
       "export default class$4 extends SlashCommand {",
-      "  constructor(client: Client) {",
-      "    super(client);",
+      "  constructor() {",
+      "    super();",
       "",
       "    this.data = new SlashCommandBuilder().setName('$1')",
       "      .setDescription('$2')$3;",

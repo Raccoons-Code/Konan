@@ -1,5 +1,6 @@
 import { DiscordTogether } from 'discord-together';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChannelType, ChatInputCommandInteraction, Client, InteractionType, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChannelType, ChatInputCommandInteraction, InteractionType, SlashCommandBuilder } from 'discord.js';
+import client from '../../client';
 import { SlashCommand } from '../../structures';
 
 const { GuildVoice } = ChannelType;
@@ -9,17 +10,15 @@ export default class WatchTogether extends SlashCommand {
   discordTogether!: DiscordTogether<{ [k: string]: string }>;
   applications!: (keyof DiscordTogether<{ [k: string]: string }>['applications'])[];
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Utility',
       clientPermissions: ['CreateInstantInvite'],
     });
 
-    if (client) {
-      this.discordTogether = new DiscordTogether(<any>client);
-      this.applications = Object.keys(this.discordTogether.applications);
-      client.discordTogether = this.discordTogether;
-    }
+    this.discordTogether = new DiscordTogether(<any>client);
+    this.applications = Object.keys(this.discordTogether.applications);
+    client.discordTogether = this.discordTogether;
 
     this.data = new SlashCommandBuilder().setName('party')
       .setDescription('Create an activity party together - Powered by Discord Together.')
@@ -50,7 +49,7 @@ export default class WatchTogether extends SlashCommand {
     if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);
 
-    const { client, member, options } = interaction;
+    const { member, options } = interaction;
 
     const channel = options.getChannel('channel') ?? member.voice.channel;
 

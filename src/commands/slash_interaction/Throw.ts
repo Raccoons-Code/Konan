@@ -1,12 +1,12 @@
-import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
 import { SlashCommand } from '../../structures';
 
 const { OWNER_ID } = env;
 
 export default class Throw extends SlashCommand {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       ownerOnly: true,
     });
 

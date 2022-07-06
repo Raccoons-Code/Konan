@@ -1,11 +1,10 @@
 import { ModalSubmitInteraction } from 'discord.js';
 import { ComponentInteractionData } from '../@types';
-import Base from './Base';
-import Client from './Client';
+import BaseCommand from './BaseCommand';
 
-export default abstract class ModalSubmit extends Base {
-  constructor(client: Client, public data: ComponentInteractionData) {
-    super(client);
+export default abstract class ModalSubmit extends BaseCommand {
+  constructor(public data: ComponentInteractionData) {
+    super();
   }
 
   abstract execute(interaction: ModalSubmitInteraction): Promise<any>;

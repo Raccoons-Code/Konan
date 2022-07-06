@@ -1,13 +1,13 @@
 import translate, { languages } from '@vitalets/google-translate-api';
-import { ApplicationCommandType, Client, codeBlock, ContextMenuCommandBuilder, EmbedBuilder, MessageContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, codeBlock, ContextMenuCommandBuilder, EmbedBuilder, MessageContextMenuCommandInteraction } from 'discord.js';
 import { MessageContextMenu } from '../../structures';
 
 const langs = Object.keys(languages)
   .filter(l => !/(isSupported|getCode)/.test(l));
 
 export default class extends MessageContextMenu {
-  constructor(client: Client) {
-    super(client);
+  constructor() {
+    super();
 
     this.data = new ContextMenuCommandBuilder().setName('Translate')
       .setNameLocalizations(this.getLocalizations('translateName'))

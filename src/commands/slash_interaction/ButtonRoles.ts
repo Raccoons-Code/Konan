@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonComponent, ButtonStyle, ChatInputCommandInteraction, Client, ComponentEmojiResolvable, ComponentType, EmbedBuilder, InteractionType, parseEmoji, PermissionFlagsBits, Role, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonComponent, ButtonStyle, ChatInputCommandInteraction, ComponentEmojiResolvable, ComponentType, EmbedBuilder, InteractionType, parseEmoji, PermissionFlagsBits, Role, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -9,8 +9,8 @@ const { ApplicationCommandAutocomplete } = InteractionType;
 export default class ButtonRoles extends SlashCommand {
   [k: string]: any;
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Moderation',
       clientPermissions: ['EmbedLinks', 'ManageRoles', 'SendMessages'],
       userPermissions: ['ManageRoles'],
@@ -524,6 +524,16 @@ export default class ButtonRoles extends SlashCommand {
     }
   }
 
+  async executeAutocomplete(interaction: AutocompleteInteraction): Promise<any> {
+    const { options } = interaction;
+
+    const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
+
+    const res = this[`${subcommand}Autocomplete`]?.(interaction);
+
+    return interaction.respond(res);
+  }
+
   async editAutocomplete(
     interaction: AutocompleteInteraction<'cached'>,
     res: ApplicationCommandOptionChoiceData[] = [],
@@ -611,7 +621,7 @@ export default class ButtonRoles extends SlashCommand {
       }
     }
 
-    return interaction.respond(res);
+    return res;
   }
 
   async addAutocomplete(interaction: AutocompleteInteraction<'cached'>) {

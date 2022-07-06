@@ -2,7 +2,8 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
 import 'dotenv/config';
 import { env } from 'node:process';
-import Commands from './commands';
+import './client';
+import commandHandler from './commands';
 import { SlashCommand } from './structures';
 
 const { DISCORD_APPLICATION_ID, DISCORD_TOKEN, DISCORD_TEST_GUILD_ID } = env;
@@ -18,12 +19,12 @@ const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
 const data = [];
 const dataPrivate: any[] = [];
 const commands: SlashCommand[] = [];
-const { applicationCommandTypes } = Commands;
+const { applicationCommandTypes } = commandHandler;
 
 const rest = new REST().setToken(DISCORD_TOKEN);
 
 (async () => {
-  const applicationCommands = await Commands.loadCommands(applicationCommandTypes);
+  const applicationCommands = await commandHandler.loadCommands(applicationCommandTypes);
 
   Object.values(applicationCommands).forEach(_commands =>
     commands.push(...<SlashCommand[]>_commands.toJSON()));

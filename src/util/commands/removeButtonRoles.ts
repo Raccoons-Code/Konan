@@ -3,8 +3,10 @@ import { safeParseJSON } from './safeParseJSON';
 
 export function removeButtonRoles(
   components: ActionRow<MessageActionRowComponent>[] = [],
-  roles: string[],
-) {
+  roles: string | string[],
+): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<ButtonBuilder>)[] {
+  if (!Array.isArray(roles)) return removeButtonRoles(components, [roles]);
+
   return components.map(row => {
     const rowJson = <APIActionRowComponent<APIButtonComponent>>row.toJSON();
 

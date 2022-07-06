@@ -1,9 +1,9 @@
-import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonStyle, Client, ContextMenuCommandBuilder, EmbedBuilder, UserContextMenuCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonStyle, ContextMenuCommandBuilder, EmbedBuilder, UserContextMenuCommandInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class Avatar extends UserContextMenu {
-  constructor(client: Client) {
-    super(client);
+  constructor() {
+    super();
 
     this.data = new ContextMenuCommandBuilder().setName('Get Avatar')
       .setType(ApplicationCommandType.User);

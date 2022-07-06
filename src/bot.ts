@@ -1,3 +1,3 @@
-import { Client } from './structures';
+import client from './client';
 
-Client.login();
+client.login();

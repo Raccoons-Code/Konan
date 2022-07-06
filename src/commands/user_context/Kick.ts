@@ -1,9 +1,9 @@
-import { ActionRowBuilder, ApplicationCommandType, Client, ContextMenuCommandBuilder, ModalActionRowComponentBuilder, ModalBuilder, PermissionFlagsBits, TextInputBuilder, TextInputStyle, UserContextMenuCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, ContextMenuCommandBuilder, ModalActionRowComponentBuilder, ModalBuilder, PermissionFlagsBits, TextInputBuilder, TextInputStyle, UserContextMenuCommandInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class Kick extends UserContextMenu {
-  constructor(client: Client) {
-    super(client);
+  constructor() {
+    super();
 
     this.data = new ContextMenuCommandBuilder().setName('Kick')
       .setNameLocalizations(this.getLocalizations('kickName'))
@@ -25,6 +25,7 @@ export default class Kick extends UserContextMenu {
               new TextInputBuilder()
                 .setCustomId('reason')
                 .setLabel('Reason')
+                .setMaxLength(512)
                 .setPlaceholder('Reason for kick...')
                 .setStyle(TextInputStyle.Paragraph),
             ]),

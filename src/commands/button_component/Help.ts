@@ -1,4 +1,5 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Client, ComponentType, EmbedBuilder, EmbedFieldData } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, EmbedBuilder, EmbedFieldData } from 'discord.js';
+import commandHandler from '..';
 import { HelpButtonCustomId } from '../../@types';
 import { ButtonComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
@@ -7,8 +8,8 @@ export default class Help extends ButtonComponentInteraction {
   [k: string]: any;
   limit = Util.Constants.helpPageLimit;
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'help',
       description: 'Help Button',
     });
@@ -23,11 +24,11 @@ export default class Help extends ButtonComponentInteraction {
   }
 
   async commands(interaction: ButtonInteraction<'cached'>) {
-    const { client, customId, locale, message } = interaction;
+    const { customId, locale, message } = interaction;
 
     const { cbc, p } = <HelpButtonCustomId>JSON.parse(customId);
 
-    const commands = client.commandsByCategory[cbc] || client.commands.slash_interaction;
+    const commands = commandHandler.commandsByCategory[cbc] || commandHandler.commands.slash_interaction;
 
     const slashCommands = commands.filter((c: SlashCommand) => !c.props?.ownerOnly).toJSON();
 

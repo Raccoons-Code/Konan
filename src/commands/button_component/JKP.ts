@@ -1,4 +1,4 @@
-import { ButtonInteraction, Client, EmbedBuilder, userMention } from 'discord.js';
+import { ButtonInteraction, EmbedBuilder, userMention } from 'discord.js';
 import { QuickDB } from 'quick.db';
 import { JkpCustomId, JKPGameData } from '../../@types';
 import JKP from '../../JKP';
@@ -7,8 +7,8 @@ import { ButtonComponentInteraction } from '../../structures';
 const quickDb = new QuickDB();
 
 export default class Jankenpon extends ButtonComponentInteraction {
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       name: 'jkp',
       description: 'Jankenpon',
     });

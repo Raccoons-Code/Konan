@@ -1,5 +1,5 @@
 import translate, { languages } from '@vitalets/google-translate-api';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, Client, codeBlock, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, codeBlock, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 const { ApplicationCommandAutocomplete } = InteractionType;
@@ -12,8 +12,8 @@ export default class Translate extends SlashCommand {
   [k: string]: any;
   cache = new Map();
 
-  constructor(client: Client) {
-    super(client, {
+  constructor() {
+    super({
       category: 'Utility',
     });
 

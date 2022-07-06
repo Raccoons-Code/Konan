@@ -1,22 +1,17 @@
-import { Client, Collection } from 'discord.js';
+import { Collection } from 'discord.js';
 import { GlobSync } from 'glob';
 import { readdirSync, statSync } from 'node:fs';
 import { join, posix } from 'node:path';
-import { Command, SlashCommand } from '../structures';
+import client from '../client';
+import { SlashCommand } from '../structures';
 import Util from '../util';
 
-class Commands {
-  #client!: Client;
+class CommandHandler {
   #applicationCommandTypes!: string[];
+  #commands!: { [k: string]: Collection<string, any> };
   #commandTypes!: { [k: string]: string[] } | string[];
   commandsByCategory: { [k: string]: Collection<string, SlashCommand> } = {};
   errors: Error[] = [];
-
-  init(client: Client) {
-    Object.defineProperties(this, { client: { value: client } });
-
-    return this;
-  }
 
   get applicationCommandTypes(): string[] {
     return this.#applicationCommandTypes ? this.#applicationCommandTypes : this.applicationCommandTypes =
@@ -33,6 +28,10 @@ class Commands {
 
   set commandTypes(value) {
     this.#commandTypes = value;
+  }
+
+  get commands(): { [k: string]: Collection<string, any> } {
+    return this.#commands;
   }
 
   getCommandTypes(commandTypes: { [k: string]: string[] } = {}) {
@@ -52,7 +51,7 @@ class Commands {
     return commandTypes;
   }
 
-  async loadCommands(commandTypes = this.commandTypes, commands: any = {}, client = this.#client) {
+  async loadCommands(commandTypes = this.commandTypes, commands: any = {}) {
     const dirs = Object.values(commandTypes).flat();
 
     for (let i = 0; i < dirs.length; i++) {
@@ -81,7 +80,7 @@ class Commands {
 
         const commandFile = importedFile.default ?? importedFile;
 
-        const command = Util.isClass(commandFile) ? new commandFile(client) : commandFile;
+        const command = Util.isClass(commandFile) ? new commandFile() : commandFile;
 
         if (!(command.data && command.execute)) continue;
 
@@ -98,8 +97,14 @@ class Commands {
       }
     }
 
-    return <{ [k: string]: Collection<string, Command | SlashCommand> }>commands;
+    client.commands = this.#commands = commands;
+
+    return <{ [k: string]: Collection<string, any> }>commands;
   }
 }
 
-export default new Commands();
+const commandHandler = new CommandHandler();
+
+commandHandler.loadCommands();
+
+export default commandHandler;

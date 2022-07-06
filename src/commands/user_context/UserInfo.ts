@@ -1,9 +1,9 @@
-import { ApplicationCommandType, Client, codeBlock, ContextMenuCommandBuilder, EmbedBuilder, inlineCode, time, UserContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, codeBlock, ContextMenuCommandBuilder, EmbedBuilder, inlineCode, time, UserContextMenuCommandInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class UserInfo extends UserContextMenu {
-  constructor(client: Client) {
-    super(client);
+  constructor() {
+    super();
 
     this.data = new ContextMenuCommandBuilder().setName('User info')
       .setType(ApplicationCommandType.User);
