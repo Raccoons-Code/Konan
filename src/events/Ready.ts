@@ -1,5 +1,6 @@
 import { ActivityType, Client, Guild, OAuth2Scopes } from 'discord.js';
 import { env } from 'node:process';
+import { setTimeout as waitAsync } from 'node:timers/promises';
 import commandHandler from '../commands';
 import { Event } from '../structures';
 
@@ -74,7 +75,7 @@ export default class Ready extends Event {
       ],
     });
 
-    await this.Util.waitAsync(10000 * this.Util.mathRandom(6, 1));
+    await waitAsync(10000 * this.Util.mathRandom(6, 1));
 
     this.setPresence(client);
   }

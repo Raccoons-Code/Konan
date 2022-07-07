@@ -1,6 +1,6 @@
 import { Client } from 'discord.js';
+import { setTimeout as waitAsync } from 'node:timers/promises';
 import { FetchStatsOptions, Stats } from '../@types';
-import Util from '../util';
 
 export default class ApplicationStats {
   [k: string]: any;
@@ -31,16 +31,16 @@ export default class ApplicationStats {
       this[`#fetch_${options.filter ?? 'stats'}`]();
     } catch {
       if (options.loop) {
-        await Util.waitAsync(10000);
+        await waitAsync(10000);
       } else {
-        await Util.waitAsync(1000);
+        await waitAsync(1000);
 
         return this.fetch(options);
       }
     }
 
     if (options.loop) {
-      await Util.waitAsync(600000);
+      await waitAsync(600000);
 
       return this.fetch(options);
     }

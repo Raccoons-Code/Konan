@@ -1,4 +1,5 @@
 import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { setTimeout as waitAsync } from 'node:timers/promises';
 import { SlashCommand } from '../../structures';
 
 export default class Clear extends SlashCommand {
@@ -82,7 +83,7 @@ export default class Clear extends SlashCommand {
 
       i = count += size;
 
-      await this.Util.waitAsync(500);
+      await waitAsync(500);
     }
 
     return count;

@@ -1,4 +1,4 @@
-import { promisify } from 'node:util';
+import { setTimeout } from 'node:timers/promises';
 
 /** @description wait a time in milliseconds */
-export = promisify(setTimeout);
+export = setTimeout;

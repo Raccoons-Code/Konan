@@ -8,6 +8,7 @@ import djsLimits from './djsLimits';
 import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
 import getLocalizations from './getLocalizations';
+import getRandomFromArray from './getRandomFromArray';
 import hasDuplicatesInArray from './hasDuplicatesInArray';
 import isClass from './isClass';
 import isDuplicate from './isDuplicate';
@@ -35,6 +36,7 @@ export default abstract class Util {
   static filterObjectByKeys = filterObjectByKeys;
   static findDuplicatesInArray = findDuplicatesInArray;
   static getLocalizations = getLocalizations;
+  static getRandomFromArray = getRandomFromArray;
   static hasDuplicatesInArray = hasDuplicatesInArray;
   static isClass = isClass;
   static isDuplicate = isDuplicate;

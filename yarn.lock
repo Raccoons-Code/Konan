@@ -712,10 +712,10 @@ discord.js@^13.1.0, discord.js@^13.6.0:
     node-fetch "^2.6.1"
     ws "^8.7.0"
 
-discord.js@^14.0.0-dev.1657109083-8198da5:
-  version "14.0.0-dev.1657109083-8198da5"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1657109083-8198da5.tgz#0c222d2b7b1d7f4d0c108c3591daeaf80bc70cf1"
-  integrity sha512-HuGJdY84q87BG2HGavOLjdHI6A/44Md6f71f2Af3kEQ9EhZ03GiOYLIS7TD5yFJvaUH4fhgwEKnTI4Qt0ZO0sQ==
+discord.js@^14.0.0-dev.1657152699-10ba008:
+  version "14.0.0-dev.1657152699-10ba008"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1657152699-10ba008.tgz#1f7fb84a66f521608e3350f4093086dbef93cdff"
+  integrity sha512-1sZ79NbrsN+q8UBe8cZoKEvZS/hU697Hd6ciyR6/a6dI1zUH+mR1yzB0PKlYaAf4GApSMdXLffuNMILkd8KOTg==
   dependencies:
     "@discordjs/builders" "^0.16.0-dev"
     "@discordjs/collection" "^0.8.0-dev"
