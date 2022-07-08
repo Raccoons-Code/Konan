@@ -1,11 +1,12 @@
 import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, codeBlock, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { env } from 'node:process';
+import { ShardingClient } from 'statcord.js';
 import { AnyInteraction } from '../@types';
 import commandHandler from '../commands';
 import { InteractionError } from '../errors';
 import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
-const { GUILD_INVITE } = env;
+const { GUILD_INVITE, NODE_ENV } = env;
 
 const codeBlockLength = codeBlock('properties', '').length;
 const descriptionLength = 4096 - codeBlockLength;
@@ -19,7 +20,7 @@ export default class InteractionCreate extends Event {
   }
 
   async execute(interaction: AnyInteraction) {
-    const { client, locale, type } = interaction;
+    const { client, locale, type, user } = interaction;
 
     const command = this[<Exclude<keyof typeof InteractionType, 'Ping'>>InteractionType[type]]?.(<any>interaction);
 
@@ -67,6 +68,9 @@ export default class InteractionCreate extends Event {
         }
       } catch { null; }
     }
+
+    if (NODE_ENV === 'production')
+      ShardingClient.postCommand(command.data.name, user.id, client);
   }
 
   ApplicationCommand(interaction: CommandInteraction) {
