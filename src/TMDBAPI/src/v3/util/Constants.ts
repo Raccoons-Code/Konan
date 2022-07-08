@@ -1,6 +1,6 @@
-import http from './http';
+import RouteBases from '../RouteBases';
 
 export default class Constants {
-  static baseURL = `${http.api}/${http.version}`;
+  static baseURL = `${RouteBases.api}/${RouteBases.version}`;
   static apiKey = process.env.TMDB_APIKEY!;
 }

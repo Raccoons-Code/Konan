@@ -1,11 +1,11 @@
 import { ImageURLOptions } from '../@types';
-import http from './http';
+import RouteBases from '../RouteBases';
 
 export const image = new class Image {
   baseURL: string;
 
   constructor() {
-    this.baseURL = http.image;
+    this.baseURL = RouteBases.image;
   }
 
   imageURL(props: ImageURLOptions) {

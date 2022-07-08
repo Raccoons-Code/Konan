@@ -9,6 +9,7 @@ import Search from './search';
 import Util from './util';
 
 export * from './@types';
+export * from './RouteBases';
 export * from './Routes';
 export { Util };
 

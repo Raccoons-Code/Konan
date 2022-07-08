@@ -1,4 +1,4 @@
-export const http = new class Http {
+export const RouteBases = new class RouteBases {
   version = 3;
   api = 'https://api.themoviedb.org';
   image = 'https://image.tmdb.org/t/p';
@@ -6,4 +6,4 @@ export const http = new class Http {
   movie = `${this.theMovieDb}/movie`;
 };
 
-export default http;
+export default RouteBases;
