@@ -1,9 +1,11 @@
 import { ActivityType, Client, Guild, OAuth2Scopes } from 'discord.js';
 import { env } from 'node:process';
 import { setTimeout as waitAsync } from 'node:timers/promises';
+import Deploy from '../client/Deploy';
 import commandHandler from '../commands';
 import { Event } from '../structures';
 
+const deployCommands = new Deploy();
 const { NODE_ENV } = env;
 const { Listening, Playing, Streaming, Watching } = ActivityType;
 const { ApplicationsCommands, Bot } = OAuth2Scopes;
@@ -19,6 +21,8 @@ export default class Ready extends Event {
   async execute(client: Client) {
     console.log(`Ready! ${client.user?.tag} is on ${client.guilds.cache.size} servers.`);
 
+    await commandHandler.loadCommands();
+
     client.application?.fetch();
 
     client.invite = client.generateInvite({
@@ -30,6 +34,7 @@ export default class Ready extends Event {
     this.setPresence(client);
     client.topggAutoposter();
     this.logCommandsErrors(client);
+    deployCommands.online(client);
   }
 
   async logCommandsErrors(client: Client) {
@@ -81,6 +86,6 @@ export default class Ready extends Event {
   }
 }
 
-function ytURL<s extends string>(code: s): `https://www.youtube.com/watch?v=${s}` {
-  return `https://www.youtube.com/watch?v=${code}`;
+function ytURL<s extends string>(s: s): `https://www.youtube.com/watch?v=${s}` {
+  return `https://www.youtube.com/watch?v=${s}`;
 }

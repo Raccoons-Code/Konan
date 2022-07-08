@@ -1,8 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { env } from 'node:process';
 import { SlashCommand } from '../../structures';
-
-const { OWNER_ID } = env;
 
 export default class Throw extends SlashCommand {
   constructor() {
@@ -22,9 +19,11 @@ export default class Throw extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const { options, user } = interaction;
+    const { client, options, user } = interaction;
 
-    if (!OWNER_ID?.split(',').includes(user.id)) return;
+    const owners = await this.Util.getApplicationOwners.getOwnersId(client);
+
+    if (!owners.includes(user.id)) return;
 
     const error = options.getString('error', true);
 

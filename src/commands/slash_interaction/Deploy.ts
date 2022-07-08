@@ -1,9 +1,10 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
-import Commands from '..';
+import commandHandler from '..';
 import { SlashCommand } from '../../structures';
 
-const { DISCORD_TEST_GUILD_ID, OWNER_ID } = env;
+const { applicationCommandTypes } = commandHandler;
+const { DISCORD_TEST_GUILD_ID } = env;
 
 export default class Deploy extends SlashCommand {
   constructor() {
@@ -39,9 +40,9 @@ export default class Deploy extends SlashCommand {
     const { client, locale, options, user } = interaction;
 
     const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
-    const owners = OWNER_ID?.split(',');
+    const owners = await this.Util.getApplicationOwners.getOwnersId(client);
 
-    if (!owners?.includes(user.id)) return;
+    if (!owners.includes(user.id)) return;
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -50,25 +51,24 @@ export default class Deploy extends SlashCommand {
 
     const data: any[] = [];
     const dataPrivate: any[] = [];
-    const commands: SlashCommand[] = [];
-    const { applicationCommandTypes } = Commands;
-    const applicationCommands = await Commands.loadCommands(applicationCommandTypes);
 
-    Object.values(applicationCommands).forEach(_commands =>
-      commands.push(...<SlashCommand[]>_commands.toJSON()));
+    const applicationCommands = await commandHandler.loadCommands(applicationCommandTypes);
+
+    const commands = Object.values(applicationCommands).map(_commands =>
+      <SlashCommand[]>_commands.toJSON()).flat();
 
     for (let i = 0; i < commands.length; i++) {
       const command = commands[i];
 
-      const command_data = command.data.toJSON();
+      const commandData = command.data.toJSON();
 
       if (command.props?.ownerOnly) {
-        dataPrivate.push(command_data);
+        dataPrivate.push(commandData);
 
         continue;
       }
 
-      reset ?? data.push(command_data);
+      reset ?? data.push(commandData);
     }
 
     try {

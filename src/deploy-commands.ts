@@ -32,17 +32,15 @@ const rest = new REST().setToken(DISCORD_TOKEN);
   for (let i = 0; i < commands.length; i++) {
     const command = commands[i];
 
-    const command_data = command.data.toJSON();
+    const commandData = command.data.toJSON();
 
     if (command.props?.ownerOnly) {
-      dataPrivate.push(command_data);
+      dataPrivate.push(commandData);
 
       continue;
     }
 
-    command_data.default_permission = true;
-
-    reset || data.push(command_data);
+    reset || data.push(commandData);
   }
 
   try {

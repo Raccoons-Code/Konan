@@ -5,7 +5,7 @@ import client from '../client';
 import { Event } from '../structures';
 import Util from '../util';
 
-class Events {
+class EventHandler {
   errors: Error[] = [];
   #events: Event[] = [];
 
@@ -103,4 +103,6 @@ class Events {
   }
 }
 
-export default new Events();
+const eventHandler = new EventHandler();
+
+export default eventHandler;

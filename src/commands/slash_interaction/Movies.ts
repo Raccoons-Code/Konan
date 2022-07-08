@@ -102,9 +102,7 @@ export default class Movies extends SlashCommand {
 
     const movie_id = parseInt(options.getString('keyword', true));
 
-    const { backdrop_path, budget, genres, id, original_language, original_title, overview, poster_path, release_date, revenue, runtime, title, vote_average, vote_count, belongs_to_collection } = await TMDBApi.movies.fetchDetails({ movie_id, language: locale });
-
-    console.log(belongs_to_collection);
+    const { backdrop_path, budget, genres, id, original_language, original_title, overview, poster_path, release_date, revenue, runtime, title, vote_average, vote_count } = await TMDBApi.movies.fetchDetails({ movie_id, language: locale });
 
     const backdrop_img = TMDBUtil.image.imageURL({ path: backdrop_path! });
 

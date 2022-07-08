@@ -11,6 +11,7 @@ class CommandHandler {
   #commands!: { [k: string]: Collection<string, any> };
   #commandTypes!: { [k: string]: string[] } | string[];
   commandsByCategory: { [k: string]: Collection<string, SlashCommand> } = {};
+  commandsSize: { [k: string]: number } = {};
   errors: Error[] = [];
 
   get applicationCommandTypes(): string[] {
@@ -97,14 +98,23 @@ class CommandHandler {
       }
     }
 
+    if (this.#commands)
+      return <{ [k: string]: Collection<string, any> }>commands;
+
     client.commands = this.#commands = commands;
+
+    this.commandsSize = Object.keys(this.commands).reduce((acc, key) =>
+      ({ ...acc, [key]: this.commands[key].size }), this.commandsSize);
+
+    this.commandsSize.applicationCommands = Object.values(this.commandsByCategory)
+      .reduce((acc, category) => acc + category.size, 0);
+
+    console.log(`Loaded ${this.commandsSize.applicationCommands} application commands.`);
 
     return <{ [k: string]: Collection<string, any> }>commands;
   }
 }
 
 const commandHandler = new CommandHandler();
-
-commandHandler.loadCommands();
 
 export default commandHandler;

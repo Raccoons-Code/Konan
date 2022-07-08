@@ -1,8 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-import { env } from 'node:process';
 import { SlashCommand } from '../../structures';
-
-const { OWNER_ID } = env;
 
 export default class Respawn extends SlashCommand {
   constructor() {
@@ -20,9 +17,9 @@ export default class Respawn extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction) {
     const { client, user } = interaction;
 
-    const owners = OWNER_ID?.split(',');
+    const owners = await this.Util.getApplicationOwners.getOwnersId(client);
 
-    if (!owners?.includes(user.id)) return;
+    if (!owners.includes(user.id)) return;
 
     await interaction.reply({ content: 'Respawned!', ephemeral: true });
 
