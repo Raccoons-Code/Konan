@@ -4,7 +4,7 @@ import { env } from 'node:process';
 import Commands from '..';
 import { SlashCommand } from '../../structures';
 
-const { DISCORD_TEST_GUILD_ID, OWNER_ID } = env;
+const { DISCORD_TEST_GUILD_ID } = env;
 
 export default class Deploy extends SlashCommand {
   constructor(client: Client) {
@@ -40,7 +40,7 @@ export default class Deploy extends SlashCommand {
     const { client, locale, options, user } = interaction;
 
     const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
-    const owners = OWNER_ID?.split(',');
+    const owners = await this.Util.getApplicationOwners.getOwnersId(client);
 
     if (!owners?.includes(user.id)) return;
 

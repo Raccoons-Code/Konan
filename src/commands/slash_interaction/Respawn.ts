@@ -1,9 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { Client, CommandInteraction } from 'discord.js';
-import { env } from 'node:process';
 import { SlashCommand } from '../../structures';
-
-const { OWNER_ID } = env;
 
 export default class Respawn extends SlashCommand {
   constructor(client: Client) {
@@ -21,7 +18,7 @@ export default class Respawn extends SlashCommand {
   async execute(interaction: CommandInteraction) {
     const { client, user } = interaction;
 
-    const owners = OWNER_ID?.split(',');
+    const owners = await this.Util.getApplicationOwners.getOwnersId(client);
 
     if (!owners?.includes(user.id)) return;
 
