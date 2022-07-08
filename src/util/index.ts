@@ -6,6 +6,7 @@ import Constants from './Constants';
 import djsLimits from './djsLimits';
 import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
+import getApplicationOwners from './getApplicationOwners';
 import getLocalizations from './getLocalizations';
 import hasDuplicatesInArray from './hasDuplicatesInArray';
 import isClass from './isClass';
@@ -32,6 +33,7 @@ export default abstract class Util {
   static djsLimits = djsLimits;
   static filterObjectByKeys = filterObjectByKeys;
   static findDuplicatesInArray = findDuplicatesInArray;
+  static getApplicationOwners = getApplicationOwners;
   static getLocalizations = getLocalizations;
   static hasDuplicatesInArray = hasDuplicatesInArray;
   static isClass = isClass;

@@ -58,7 +58,8 @@ export default class InteractionCreate extends Event {
       } catch { null; }
     }
 
-    if (NODE_ENV === 'production')
+    if (NODE_ENV === 'production' &&
+      await this.Util.getApplicationOwners.getOwners(client).then(o => !o.includes(user.id)))
       ShardingClient.postCommand(command.data.name, user.id, client);
   }
 
