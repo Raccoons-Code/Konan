@@ -40,7 +40,7 @@ export default class JKP {
     };
   }
 
-  spock(player1: number | string = this.machine, player2: number | string = this.machineSpock) {
+  spock(player1: number | string = this.machineSpock, player2: number | string = this.machineSpock) {
     if (typeof player1 === 'number')
       player1 = this.index[player1];
 
