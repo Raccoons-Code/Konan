@@ -100,7 +100,7 @@ export default class Info extends SlashCommand {
 
     const machine = stripIndents(`
       CPU    : ${CPUs[0].model} (${CPUs.length} cores)
-      Memory : ${this.Util.bytes(heapUsed).join(' ')} / ${this.Util.bytes(totalmem()).join(' ')}
+      Memory : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
       OS     : ${OS}
       `);
 

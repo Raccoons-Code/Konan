@@ -75,7 +75,7 @@ export default class Help extends ButtonComponentInteraction {
     return fields;
   }
 
-  setPageButtons({ category, page, total }: { category: string, page: number, total: number }) {
+  setPageButtons({ category, page, total }: { category: string; page: number; total: number }) {
     return [
       new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page - 1 }))

@@ -569,11 +569,11 @@ export default class SelectRoles extends SlashCommand {
             const newSelectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
 
             if (element.customId !== menuId)
-              return newSelectMenu.setOptions(newSelectMenu.data.options!.map(option =>
+              return newSelectMenu.setOptions(newSelectMenu.toJSON().options.map(option =>
                 new SelectMenuOptionBuilder(option)
                   .setDefault(Boolean(typeof item_default === 'boolean' ? false : option.default))));
 
-            newSelectMenu.setOptions(newSelectMenu.data.options!.map(option => {
+            newSelectMenu.setOptions(newSelectMenu.toJSON().options.map(option => {
               if (option.value !== item) {
                 if (typeof item_default === 'boolean')
                   option.default = false;

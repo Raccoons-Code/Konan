@@ -24,6 +24,10 @@ export default class ApplicationStats {
       client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)) as Promise<number[]> | undefined;
   }
 
+  get shards() {
+    return this.client.shard?.count ?? 0;
+  }
+
   async fetch(options?: FetchStatsOptions): Promise<Stats | undefined> {
     if (!options) return this.#fetch_stats();
 
@@ -48,20 +52,6 @@ export default class ApplicationStats {
     return this;
   }
 
-  async #fetch_stats() {
-    return Promise.all([
-      this.#guilds,
-      this.#channels,
-      this.#members,
-    ]).then(([guilds, channels, members]) => {
-      this.guilds = guilds?.reduce((acc, guildCount) => acc + guildCount, 0) ?? this.guilds;
-      this.channels = channels?.reduce((acc, channelCount) => acc + channelCount, 0) ?? this.channels;
-      this.members = members?.reduce((acc, memberCount) => acc + memberCount, 0) ?? this.members;
-
-      return this;
-    });
-  }
-
   async #fetch_channels() {
     return Promise.all([
       this.#channels,
@@ -80,6 +70,20 @@ export default class ApplicationStats {
     return Promise.all([
       this.#members,
     ]).then(([members]) => {
+      this.members = members?.reduce((acc, memberCount) => acc + memberCount, 0) ?? this.members;
+
+      return this;
+    });
+  }
+
+  async #fetch_stats() {
+    return Promise.all([
+      this.#guilds,
+      this.#channels,
+      this.#members,
+    ]).then(([guilds, channels, members]) => {
+      this.guilds = guilds?.reduce((acc, guildCount) => acc + guildCount, 0) ?? this.guilds;
+      this.channels = channels?.reduce((acc, channelCount) => acc + channelCount, 0) ?? this.channels;
       this.members = members?.reduce((acc, memberCount) => acc + memberCount, 0) ?? this.members;
 
       return this;

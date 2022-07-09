@@ -52,8 +52,8 @@ export default class Info extends ButtonComponentInteraction {
       `);
 
     const machine = stripIndents(`
+      Memory : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
       CPU    : ${CPUs[0].model} (${CPUs.length} cores)
-      Memory : ${this.Util.bytes(heapUsed).join(' ')} / ${this.Util.bytes(totalmem()).join(' ')}
       OS     : ${OS}
       `);
 
