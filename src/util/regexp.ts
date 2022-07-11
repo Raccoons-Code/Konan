@@ -1,4 +1,4 @@
-export = new class pattern {
+export = new class regexp {
   /** @pattern /([\w\W]{0,80})/ */
   buttonLabel = /([\w\W]{0,80})/;
   /**
@@ -14,14 +14,21 @@ export = new class pattern {
   componentCommandNameLink = /\[\s*(<.*?:.*?:.*?>|:.*?:)?\s*(.+?)\s*\]\(\s*(?:(button|https?)):\/?\/?(.*?)\)/;
   /** @pattern /([\w\W]{0,4096})/ */
   content = /([\w\W]{0,4096})/;
-  /** @pattern /(?:(?:([^|]{0,256}))(?:\|?([\w\W]{0,4096})))/ */
-  embed = /(?:(?:([^|]{0,256}))(?:\|?([\w\W]{0,4096})))/;
+  /**
+   * @title 256
+   * @description 4096
+   * @total 4352
+   * @pattern /(?:(?:(?<title>[^|]{0,256}))(?:\|?(?<description>[\w\W]{0,4096})))/
+   */
+  embed = /(?:(?:(?<title>[^|]{0,256}))(?:\|?(?<description>[\w\W]{0,4096})))/;
   /** @pattern /([\w\W]{0,4096})/ */
   embedDescription = /([\w\W]{0,4096})/;
   /** @pattern /([\w\W]{0,256})/ */
   embedTitle = /([\w\W]{0,256})/;
-  /** @pattern /^((?:class\s*)(\s+(?!extends)\w+\s*)?(?:(?:\s+extends)(\s+\w+\s*))?){/ */
-  isClass = /^((?:class\s*)(\s+(?!extends)\w+\s*)?(?:(?:\s+extends)(\s+\w+\s*))?){/;
+  /** @pattern /<?(?:(?<animated>a))?(?::?(?<name>\p{S}|\w{2,32}):?)(?<id>\d{17,19})?>?/u */
+  emoji = /<?(?:(?<animated>a))?(?::?(?<name>\p{S}|\w{2,32}):?)(?<id>\d{17,19})?>?/u;
+  /** @pattern /^(?<all>(?:class)(?:\s+(?<name>(?!extends)\w+))?(?:(?:\s+extends)\s+(?<extended>\w+))?)\s*{/ */
+  isClass = /^(?<all>(?:class)(?:\s+(?<name>(?!extends)\w+))?(?:(?:\s+extends)\s+(?<extended>\w+))?)\s*{/;
   /** @pattern /([\w\W]{0,100})/ */
   label = /([\w\W]{0,100})/;
   /**
@@ -33,7 +40,7 @@ export = new class pattern {
   labelWithCount = /(.+)(?:\s(\d+))/;
   /** @pattern /(on(?:ce)?)/ */
   listeners = /(on(?:ce)?)/;
-  /** @pattern /<@!?&?(\d{17,})>/g */
+  /** @pattern /<(@|#)!?&?(\d{17,})>/g */
   mentions = /<(@|#)!?&?(\d{17,})>/g;
   /** @pattern /(?:(?:\/)?(\d{17,}))+/ */
   messageURL = /(?:(?:\/)?(\d{17,}))+/;

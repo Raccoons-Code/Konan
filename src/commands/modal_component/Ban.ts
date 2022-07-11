@@ -1,7 +1,7 @@
 import { ModalSubmitInteraction } from 'discord.js';
 import { ModalSubmit } from '../../structures';
 
-export default class extends ModalSubmit {
+export default class Ban extends ModalSubmit {
   constructor() {
     super({
       name: 'ban',

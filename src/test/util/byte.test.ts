@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import Util from '../../util';
+import Util from './util';
 
 {
   assert.deepStrictEqual(new Util.Bytes(0).toArray(), [0, 'B']);

@@ -43,7 +43,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
       roleId,
     };
 
-    const [, label] = component.label?.match(this.pattern.labelWithCount) ?? [];
+    const [, label] = component.label?.match(this.regexp.labelWithCount) ?? [];
 
     const components = message.components.map(row => {
       if (row.components[0].type !== ComponentType.Button) return row;

@@ -1,6 +1,6 @@
 import { ActionRowBuilder, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 import assert from 'node:assert';
-import Util from '../../util';
+import Util from './../util';
 
 {
   const roles = <Role[][]><unknown>[[

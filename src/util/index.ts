@@ -1,3 +1,4 @@
+import BitField from './BitField';
 import Bytes from './Byte';
 import bytes from './bytes';
 import capitalize from './capitalize';
@@ -18,8 +19,8 @@ import isSameDate from './isSameDate';
 import keyGen from './keyGen';
 import mathRandom from './mathRandom';
 import parseJSON from './parseJSON';
-import pattern from './pattern';
 import randomizeArray from './randomizeArray';
+import regexp from './regexp';
 import removeDuplicatesInArray from './removeDuplicatesInArray';
 import removeFromArray from './removeFromArray';
 import splitArrayInGroups from './splitArrayInGroups';
@@ -28,6 +29,7 @@ import waitAsync from './waitAsync';
 import waitSync from './waitSync';
 
 export default abstract class Util {
+  static BitField = BitField;
   static Bytes = Bytes;
   static bytes = bytes;
   static capitalize = capitalize;
@@ -47,7 +49,7 @@ export default abstract class Util {
   static keyGen = keyGen;
   static mathRandom = mathRandom;
   static parseJSON = parseJSON;
-  static pattern = pattern;
+  static regexp = regexp;
   static randomizeArray = randomizeArray;
   static removeDuplicatesInArray = removeDuplicatesInArray;
   static removeFromArray = removeFromArray;

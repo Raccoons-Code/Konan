@@ -1,5 +1,7 @@
 import assert from 'node:assert';
-import BitField from '../../util/BitField';
+import Util from './util';
+
+const { BitField } = Util;
 
 const PermissionFlagsBits = {
   CreateInstantInvite: 1n << 0n,
@@ -63,4 +65,3 @@ assert.deepStrictEqual(permissionsBitField.has('ViewChannel'), true);
 assert.deepStrictEqual(permissionsBitField.has(['ViewChannel', 'SendMessages']), true);
 assert.deepStrictEqual(permissionsBitField.has(['ViewChannel', 'SendMessages', 'BanMembers']), false);
 assert.deepStrictEqual(permissionsBitField.has(PermissionFlagsBits.BanMembers), false);
-/* console.log(Object.entries(PermissionsBitField.Flags).reduce((acc, [k, v]) => ({ ...acc, [k]: v }), <any>{})); */

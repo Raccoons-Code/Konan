@@ -5,7 +5,7 @@ import Utils from './Utils';
 
 export default abstract class Base extends Utils {
   getLocalizations!: typeof Util.getLocalizations;
-  pattern!: typeof Util.pattern;
+  regexp!: typeof Util.regexp;
   t!: typeof t;
   prisma!: typeof prisma;
   Util!: typeof Util;
@@ -15,7 +15,7 @@ export default abstract class Base extends Utils {
 
     Object.defineProperties(this, {
       getLocalizations: { value: Util.getLocalizations },
-      pattern: { value: Util.pattern },
+      pattern: { value: Util.regexp },
       prisma: { value: prisma },
       t: { value: t },
       Util: { value: Util },

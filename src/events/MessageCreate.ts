@@ -26,7 +26,7 @@ export default class MessageCreate extends Event {
 
     message.args = message.text.split(/\s+/g);
 
-    const matchedComponentLink = message.text.match(this.pattern.componentCommandNameLink) ?? [];
+    const matchedComponentLink = message.text.match(this.regexp.componentCommandNameLink) ?? [];
 
     const commandName = message.commandName = matchedComponentLink[3] || message.args.shift() || 'help';
 

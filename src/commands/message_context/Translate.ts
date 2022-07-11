@@ -5,7 +5,7 @@ import { MessageContextMenu } from '../../structures';
 const langs = Object.keys(languages)
   .filter(l => !/(isSupported|getCode)/.test(l));
 
-export default class extends MessageContextMenu {
+export default class Translate extends MessageContextMenu {
   constructor() {
     super();
 

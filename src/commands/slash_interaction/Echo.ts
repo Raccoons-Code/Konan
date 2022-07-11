@@ -29,7 +29,7 @@ export default class Echo extends SlashCommand {
     const username = member?.displayName ?? user.username;
 
     if (!channel?.permissionsFor(client.user!)?.has(this.props!.clientPermissions!)) {
-      const [, title, description] = content.match(this.pattern.embed) ?? [];
+      const [, title, description] = content.match(this.regexp.embed) ?? [];
 
       return interaction.reply({
         embeds: [

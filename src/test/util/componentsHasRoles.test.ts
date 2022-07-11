@@ -1,6 +1,6 @@
 import { ActionRow, APIActionRowComponent, APIButtonComponent, APISelectMenuComponent, ComponentType, MessageActionRowComponent, Role } from 'discord.js';
 import assert from 'node:assert';
-import Util from '../../util';
+import Util from './util';
 
 {
   const rows = <ActionRow<MessageActionRowComponent>[]>[

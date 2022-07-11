@@ -1,6 +1,6 @@
 import { ButtonBuilder, ButtonStyle, ComponentEmojiResolvable, parseEmoji, resolvePartialEmoji } from 'discord.js';
 import assert from 'node:assert';
-import Util from '../../util';
+import Util from './util';
 
 {
   const params = {

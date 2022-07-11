@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonComponent, ButtonStyle, ChatInputCommandInteraction, ComponentEmojiResolvable, ComponentType, EmbedBuilder, InteractionType, parseEmoji, PermissionFlagsBits, Role, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonComponent, ButtonStyle, ChatInputCommandInteraction, ComponentEmojiResolvable, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, resolvePartialEmoji, Role, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -297,7 +297,7 @@ export default class ButtonRoles extends SlashCommand {
   async create(interaction: ChatInputCommandInteraction<'cached'>): Promise<any> {
     const { locale, options } = interaction;
 
-    const [, title, description] = options.getString('text')?.match(this.pattern.embed) ?? [];
+    const [, title, description] = options.getString('text')?.match(this.regexp.embed) ?? [];
     const button_emoji = options.getString('button_emoji');
     const button_disabled = Boolean(options.getBoolean('button_disabled'));
     const button_style = options.getInteger('button_style') ?? Primary;
@@ -305,7 +305,7 @@ export default class ButtonRoles extends SlashCommand {
     const role = options.getRole('role', true);
     const button_name = (options.getString('button_name') ?? role.name).slice(0, 63);
 
-    const emoji = button_emoji ? <ComponentEmojiResolvable>parseEmoji(button_emoji) : {};
+    const emoji = button_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(button_emoji) : {};
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
@@ -343,7 +343,7 @@ export default class ButtonRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -353,7 +353,7 @@ export default class ButtonRoles extends SlashCommand {
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'message') {
-      const [, title, description] = options.getString('text', true).match(this.pattern.embed) ?? [];
+      const [, title, description] = options.getString('text', true).match(this.regexp.embed) ?? [];
 
       const embeds = [
         new EmbedBuilder()
@@ -383,7 +383,7 @@ export default class ButtonRoles extends SlashCommand {
       const button_style = options.getInteger('button_style');
       const buttonId = options.getString('button', true);
 
-      const emoji = button_emoji ? <ComponentEmojiResolvable>parseEmoji(button_emoji) : null;
+      const emoji = button_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(button_emoji) : null;
 
       const components = message.components.map(row => {
         if (row.components[0].type !== Button) return row;
@@ -420,7 +420,7 @@ export default class ButtonRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -440,7 +440,7 @@ export default class ButtonRoles extends SlashCommand {
       const button_name = (options.getString('button_name') ?? role.name).slice(0, 63);
       const button_style = options.getInteger('button_style') || Primary;
 
-      const emoji = button_emoji ? <ComponentEmojiResolvable>parseEmoji(button_emoji) : {};
+      const emoji = button_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(button_emoji) : {};
 
       const buttons = [
         new ButtonBuilder()
@@ -490,7 +490,7 @@ export default class ButtonRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -582,7 +582,7 @@ export default class ButtonRoles extends SlashCommand {
     }
 
     if (focused.name === 'button') {
-      const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+      const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
       const message = await channel.messages.fetch(message_id);
 
@@ -661,7 +661,7 @@ export default class ButtonRoles extends SlashCommand {
 
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
 
-    const [, title, description] = options.getString('text')?.match(this.pattern.embed) ?? [];
+    const [, title, description] = options.getString('text')?.match(this.regexp.embed) ?? [];
 
     const embeds = [
       new EmbedBuilder()
@@ -688,7 +688,7 @@ export default class ButtonRoles extends SlashCommand {
       return interaction.editReply('No IDs were found in the roles input.');
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -723,7 +723,7 @@ export default class ButtonRoles extends SlashCommand {
       return interaction.editReply('No IDs were found in the roles input.');
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 

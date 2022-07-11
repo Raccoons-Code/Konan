@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, Message, TextChannel } from 'discord.js';
 import { Command } from '../../structures';
 
-export default class extends Command {
+export default class Button extends Command {
   constructor() {
     super({
       name: 'button',
@@ -16,10 +16,10 @@ export default class extends Command {
 
     const { author, channel, client, member, text } = message;
 
-    const matchedComponentLink = text.match(this.pattern.componentLinkG) ?? [];
+    const matchedComponentLink = text.match(this.regexp.componentLinkG) ?? [];
 
     const componentLinks = matchedComponentLink.map(c => {
-      const [, emoji, label, component, url] = c.match(this.pattern.componentLink) ?? [];
+      const [, emoji, label, component, url] = c.match(this.regexp.componentLink) ?? [];
 
       return this.Util.ComponentLink[<'button'>component]?.({ emoji, label, url });
     })

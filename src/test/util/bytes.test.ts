@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import Util from '../../util';
+import Util from './util';
 
 {
   assert.deepEqual(Util.bytes(0), [0, 'B']);

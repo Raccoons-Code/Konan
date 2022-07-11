@@ -1,4 +1,4 @@
-import { ActionRowBuilder, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, ComponentEmojiResolvable, ComponentType, EmbedBuilder, InteractionType, parseEmoji, PermissionFlagsBits, Role, SelectMenuBuilder, SelectMenuComponent, SelectMenuOptionBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ActionRowBuilder, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, ComponentEmojiResolvable, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, resolvePartialEmoji, Role, SelectMenuBuilder, SelectMenuComponent, SelectMenuOptionBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { SelectRolesItemOptionValue } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -432,7 +432,7 @@ export default class SelectRoles extends SlashCommand {
   async create(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
-    const [, title, embed_description] = options.getString('text')?.match(this.pattern.embed) ?? [];
+    const [, title, embed_description] = options.getString('text')?.match(this.regexp.embed) ?? [];
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const item_default = options.getBoolean('item_default') ?? false;
     const description = options.getString('item_description')?.slice(0, 100) ?? '';
@@ -442,7 +442,7 @@ export default class SelectRoles extends SlashCommand {
     const role = options.getRole('role', true);
     const label = (options.getString('item_name') ?? role.name).slice(0, 83);
 
-    const emoji = item_emoji ? <ComponentEmojiResolvable>parseEmoji(item_emoji) : {};
+    const emoji = item_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(item_emoji) : {};
 
     const components = [
       new ActionRowBuilder<SelectMenuBuilder>()
@@ -486,7 +486,7 @@ export default class SelectRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -496,7 +496,7 @@ export default class SelectRoles extends SlashCommand {
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'message') {
-      const [, title, description] = options.getString('text', true).match(this.pattern.embed) ?? [];
+      const [, title, description] = options.getString('text', true).match(this.regexp.embed) ?? [];
 
       const embeds = [
         new EmbedBuilder()
@@ -558,7 +558,7 @@ export default class SelectRoles extends SlashCommand {
       const item_emoji = options.getString('item_emoji');
       const label = options.getString('item_name')?.slice(0, 83);
 
-      const emoji = item_emoji ? <ComponentEmojiResolvable>parseEmoji(item_emoji) : null;
+      const emoji = item_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(item_emoji) : null;
 
       const components = message.components.map(row => {
         if (row.components[0].type !== SelectMenu) return row;
@@ -609,7 +609,7 @@ export default class SelectRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -723,7 +723,7 @@ export default class SelectRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -834,7 +834,7 @@ export default class SelectRoles extends SlashCommand {
     }
 
     if (focused.name === 'menu') {
-      const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+      const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
       const message = await channel.messages.fetch(message_id);
 
@@ -868,7 +868,7 @@ export default class SelectRoles extends SlashCommand {
 
     if (focused.name === 'item') {
       const menuId = options.getString('menu', true);
-      const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+      const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
       const message = await channel.messages.fetch(message_id);
 
@@ -955,7 +955,7 @@ export default class SelectRoles extends SlashCommand {
 
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
 
-    const [, title, description] = options.getString('text')?.match(this.pattern.embed) ?? [];
+    const [, title, description] = options.getString('text')?.match(this.regexp.embed) ?? [];
 
     const embeds = [
       new EmbedBuilder()
@@ -982,7 +982,7 @@ export default class SelectRoles extends SlashCommand {
       return interaction.editReply('No IDs were found in the roles input.');
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -1024,7 +1024,7 @@ export default class SelectRoles extends SlashCommand {
       return interaction.editReply('No IDs were found in the roles input.');
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 

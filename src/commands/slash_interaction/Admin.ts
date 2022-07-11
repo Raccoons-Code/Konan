@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, InteractionType, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
-export default class extends SlashCommand {
+export default class Admin extends SlashCommand {
   [k: string]: any;
 
   constructor() {

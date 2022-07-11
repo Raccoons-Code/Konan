@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Role } from 'discord.js';
 import assert from 'node:assert';
-import Util from '../../util';
+import Util from './../util';
 
 {
   const params = <Role[][]><unknown>[[

@@ -113,7 +113,7 @@ export default class Embed extends SlashCommand {
 
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const content = options.getString('content')?.slice(0, 4096);
-    const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
+    const [, title, description] = options.getString('embed')?.match(this.regexp.embed) ?? [];
     const attachment = options.getAttachment('attachment')!;
 
     const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
@@ -149,7 +149,7 @@ export default class Embed extends SlashCommand {
     const { client, locale, member, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
-    const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
+    const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.fetch(message_id);
 
@@ -160,7 +160,7 @@ export default class Embed extends SlashCommand {
     const subcommand = options.getSubcommand();
 
     if (subcommand === 'embed') {
-      const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
+      const [, title, description] = options.getString('embed')?.match(this.regexp.embed) ?? [];
       const content = options.getString('content')?.slice(0, 4096);
       const attachment = options.getAttachment('attachment')!;
 
