@@ -1,4 +1,4 @@
-export = <T = { [k: number | string]: any }>(string: string): T | undefined => {
+export = <T = Record<any, any>>(string: string): T | undefined => {
   try {
     return JSON.parse(string);
   } catch {

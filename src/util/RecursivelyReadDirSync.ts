@@ -42,8 +42,6 @@ export default class RecursivelyReadDirSync {
   }
 }
 
-console.log(new RecursivelyReadDirSync('./src/TMDBAPI', { pattern: /\.ts$/ }));
-
 export interface FileSystemOptions {
   ignore?: RegExp | string;
   pattern?: RegExp | string;

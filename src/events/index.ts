@@ -98,7 +98,13 @@ class EventHandler {
     for (let i = 0; i < this.events.length; i++) {
       const event = this.events[i];
 
-      client[event.data.listener!]?.(event.data.name, (...args: any) => event.execute(...args));
+      client[event.data.listener!]?.(event.data.name, async (...args: any) => {
+        try {
+          await event.execute(...args);
+        } catch (error: any) {
+          client.sendError(error);
+        }
+      });
     }
   }
 }

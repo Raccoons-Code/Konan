@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, codeBlock, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, codeBlock, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { env } from 'node:process';
 import { ShardingClient } from 'statcord.js';
 import { AnyInteraction } from '../@types';
@@ -16,6 +16,7 @@ export default class InteractionCreate extends Event {
     super({
       intents: ['Guilds', 'GuildBans', 'GuildIntegrations', 'GuildVoiceStates', 'GuildWebhooks'],
       name: 'interactionCreate',
+      partials: [Partials.ThreadMember],
     });
   }
 
@@ -32,7 +33,8 @@ export default class InteractionCreate extends Event {
       new InteractionError({
         client: client,
         commandName: command.data.name,
-        componentType: (<any>interaction).componentType,
+        commandType: (<CommandInteraction>interaction).commandType,
+        componentType: (<MessageComponentInteraction>interaction).componentType,
         error: error,
         options: (<any>interaction).options,
         type: type,
@@ -100,7 +102,7 @@ export default class InteractionCreate extends Event {
     return commandHandler.commands.button_component?.get(c ?? command);
   }
 
-  ChatInput(interaction: CommandInteraction | AutocompleteInteraction): SlashCommand {
+  ChatInput(interaction: ChatInputCommandInteraction | AutocompleteInteraction): SlashCommand {
     return commandHandler.commands.slash_interaction?.get(interaction.commandName);
   }
 

@@ -3,9 +3,9 @@ import { Collection } from 'discord.js';
 import ApplicationStats from '../../client/ApplicationStats';
 
 declare module 'discord.js' {
-  export interface Client {
-    commands: { [k: string]: Collection<string, any> };
-    discordTogether: DiscordTogether<{ [k: string]: string }>;
+  interface Client {
+    commands: Record<Collection<string, any>>;
+    discordTogether: DiscordTogether<Record<string, string>>;
     ERROR_WEBHOOK: WebhookClient;
     invite: string;
     stats: ApplicationStats;
@@ -14,7 +14,7 @@ declare module 'discord.js' {
     topggAutoposter(token?: string | undefined): Promise<void>
   }
 
-  export interface Message {
+  interface Message {
     args: string[];
     commandName: string;
     text: string;

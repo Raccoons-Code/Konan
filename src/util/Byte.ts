@@ -1,10 +1,10 @@
-export default class Bytes {
+export default class Bytes<T extends number> {
   #units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   index: number;
   bytes: string;
   unit: string;
 
-  constructor(public x: number) {
+  constructor(public x: T) {
     this.index = this.#index;
     this.bytes = this.#bytes;
     this.unit = this.#unit;

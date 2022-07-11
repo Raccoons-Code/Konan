@@ -1,5 +1,5 @@
 declare namespace NodeJS {
-  export interface ProcessEnv {
+  interface ProcessEnv {
     /** @deprecated use DISCORD_APPLICATION_ID */
     CLIENT_ID?: string
     CLIENT_SECRET?: string
@@ -15,7 +15,7 @@ declare namespace NodeJS {
     /** @deprecated use DISCORD_TEST_GUILD_ID */
     GUILD_ID?: string
     GUILD_INVITE?: string
-    NODE_ENV?: 'development' | 'production';
+    NODE_ENV?: 'development' | 'production'
     OWNER_ID?: string
     PAYPAL_DONATE_LINK?: string
     STATCORD_KEY?: string

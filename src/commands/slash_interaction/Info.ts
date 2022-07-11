@@ -8,7 +8,7 @@ import { SlashCommand } from '../../structures';
 const CPUs = cpus();
 const OS = version();
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
-const { Secondary } = ButtonStyle;
+const { Link, Secondary } = ButtonStyle;
 const { GuildCategory, GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildStageVoice, GuildText, GuildVoice } = ChannelType;
 const inline = true;
 
@@ -99,9 +99,9 @@ export default class Info extends SlashCommand {
       `);
 
     const machine = stripIndents(`
-      CPU    : ${CPUs[0].model} (${CPUs.length} cores)
-      Memory : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
-      OS     : ${OS}
+      CPU : ${CPUs[0].model} (${CPUs.length} cores)
+      OS  : ${OS}
+      RAM : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
       `);
 
     const stats = stripIndents(`
@@ -188,7 +188,7 @@ export default class Info extends SlashCommand {
       ]);
 
     if ([GuildCategory].includes(type)) {
-      const arrayChildren = children.cache.map(child => child);
+      const arrayChildren = children.cache.toJSON();
       const textChildren = arrayChildren.join(' ').trim() || '-';
 
       embeds[0].addFields({
@@ -215,7 +215,7 @@ export default class Info extends SlashCommand {
 
     const role = <Role>options.getRole('role', true);
 
-    const { color, mentionable, permissions, name } = role;
+    const { color, mentionable, permissions, members, name, tags } = role;
 
     const arrayPerms = permissions.toArray();
     const textPerms = arrayPerms.map(p => this.t(p, { locale })).join(', ') || '-';
@@ -224,8 +224,12 @@ export default class Info extends SlashCommand {
       .setColor(color || 'Random')
       .setAuthor({ name, iconURL: role.iconURL()! })
       .addFields([
-        { name: this.t('mentionable', { locale }), value: this.t(`${mentionable}`, { locale }) },
+        { name: this.t('mentionable', { locale }), value: this.t(`${mentionable}`, { locale }), inline },
+        { name: this.t('members', { locale }), value: `${members.size}`, inline },
         { name: `${this.t('permissions', { locale })} [${arrayPerms.length}]`, value: codeBlock(textPerms) },
+        { name: 'Bot role', value: this.t(`${!!tags?.botId}`, { locale }), inline },
+        { name: 'Integration role', value: this.t(`${!!tags?.integrationId}`, { locale }), inline },
+        { name: 'Subscriber role', value: this.t(`${!!tags?.premiumSubscriberRole}`, { locale }), inline },
       ]);
 
     return interaction.editReply({ embeds });
@@ -242,58 +246,98 @@ export default class Info extends SlashCommand {
     embeds[0]
       .setAuthor({ name: guild.name, iconURL: guild.iconURL()! })
       .setFields(
-        { name: this.t('id', { locale }), value: inlineCode(guild.id), inline: true },
-        { name: this.t('owner', { locale }), value: userMention(guild.ownerId), inline: true },
-        { name: this.t('members', { locale }), value: `${guild.memberCount}`, inline: true },
+        { name: this.t('id', { locale }), value: inlineCode(guild.id), inline },
+        { name: this.t('owner', { locale }), value: userMention(guild.ownerId), inline },
+        { name: this.t('members', { locale }), value: `${guild.memberCount}`, inline },
+        { name: this.t('serverCreatedAt', { locale }), value: time(guild.createdAt), inline },
       )
-      .setFooter({ text: this.t('serverCreatedAt', { locale }) })
-      .setImage(guild.splashURL({ size: 512 })!)
-      .setThumbnail(guild.iconURL()!)
-      .setTimestamp(guild.createdTimestamp);
+      .setImage(guild.bannerURL({ size: 512 }))
+      .setThumbnail(guild.iconURL());
 
     return interaction.editReply({ embeds });
   }
 
   async user(interaction: ChatInputCommandInteraction, embeds: EmbedBuilder[]): Promise<any> {
-    const { locale, options } = interaction;
+    const { guild, locale, options } = interaction;
 
     const user = options.getUser('user') ?? interaction.user;
     const member = <GuildMember>options.getMember('user') ?? interaction.member;
 
-    const { createdAt, id, tag } = user;
+    await user.fetch();
+
+    const { createdAt, flags, id, tag } = user;
+
+    const components = <ActionRowBuilder<ButtonBuilder>[]>[];
+
+    const flagsArray = flags?.toArray();
+    const textFlags = flagsArray?.map(flag => this.t(flag, { locale })).join('\n') || '-';
 
     embeds[0]
       .setDescription(`${user}`)
-      .setFields(
-        { name: this.t('discordTag', { locale }), value: inlineCode(tag), inline: true },
-        { name: this.t('discordId', { locale }), value: inlineCode(id), inline: true },
-      )
-      .setFooter({ text: this.t(member ? 'joinedTheServerAt' : 'creationDate', { locale }) })
+      .setFields([
+        { name: this.t('discordTag', { locale }), value: inlineCode(tag), inline },
+        { name: this.t('discordId', { locale }), value: inlineCode(id), inline },
+        { name: `Flags [${flagsArray?.length ?? 0}]`, value: codeBlock(textFlags) },
+        { name: this.t('creationDate', { locale }), value: `${time(createdAt)}${time(createdAt, 'R')}`, inline },
+      ])
       .setThumbnail(user.displayAvatarURL())
-      .setTimestamp(member?.joinedTimestamp ?? createdAt);
+      .setImage(user.bannerURL({ size: 512 })!);
 
     if (member) {
-      const { avatar, displayColor, permissions, roles } = member;
+      const { avatar, displayColor, joinedAt, permissions, roles } = member;
 
-      const arrayRoles = roles.cache.map(role => role);
-      const textRoles = arrayRoles.join(' ').trim().replace('@everyone', '') || '-';
+      const arrayRoles = roles.cache.toJSON();
+      const textRoles = arrayRoles.join(' ').replace('@everyone', '').trim() || '-';
       const arrayPerms = permissions.toArray();
       const textPerms = arrayPerms.map(p => this.t(p, { locale })).join(', ') || '-';
 
       embeds[0].addFields(
-        { name: this.t('role', { locale }), value: `${roles.highest}`, inline: true },
+        { name: this.t('role', { locale }), value: `${roles.highest}`, inline },
         { name: `${this.t('roles', { locale })} [${arrayRoles.length - 1}]`, value: textRoles },
         { name: `${this.t('permissions', { locale })} [${arrayPerms.length}]`, value: codeBlock(textPerms) },
-        { name: this.t('creationDate', { locale }), value: `${time(createdAt)} ${time(createdAt, 'R')}` },
+        { name: this.t('joinedTheServerAt', { locale }), value: `${time(joinedAt!)}${time(joinedAt!, 'R')}` },
       );
 
       if (roles.color)
         embeds[0].setColor(displayColor);
 
-      if (avatar)
+      if (avatar) {
         embeds[0].setThumbnail(member.displayAvatarURL());
+      }
     }
 
-    return interaction.editReply({ embeds });
+    const integrations = await guild?.fetchIntegrations();
+
+    const integration = integrations?.find(i => i.application?.id === user.id);
+
+    if (integration) {
+      const { application } = integration;
+
+      if (application) {
+        const { description, privacyPolicyURL, termsOfServiceURL } = application;
+
+        if (description)
+          embeds[0].setDescription(description);
+
+        if (privacyPolicyURL || termsOfServiceURL)
+          components.push(new ActionRowBuilder<ButtonBuilder>());
+
+        if (privacyPolicyURL)
+          components[0]
+            .addComponents(new ButtonBuilder()
+              .setLabel('Privacy policy')
+              .setStyle(Link)
+              .setURL(privacyPolicyURL));
+
+        if (termsOfServiceURL)
+          components[0]
+            .addComponents(new ButtonBuilder()
+              .setLabel('Terms of service')
+              .setStyle(Link)
+              .setURL(termsOfServiceURL));
+      }
+    }
+
+    return interaction.editReply({ components, embeds });
   }
 }

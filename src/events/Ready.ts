@@ -34,7 +34,9 @@ export default class Ready extends Event {
     this.setPresence(client);
     client.topggAutoposter();
     this.logCommandsErrors(client);
-    deployCommands.online(client);
+
+    if (NODE_ENV === 'production')
+      deployCommands.online(client);
   }
 
   async logCommandsErrors(client: Client) {
@@ -43,7 +45,8 @@ export default class Ready extends Event {
         client.sendError(commandHandler.errors[i]);
       }
 
-    console.error(commandHandler.errors.splice(0, commandHandler.errors.length).join('\n'));
+    if (commandHandler.errors.length)
+      console.error(commandHandler.errors.splice(0, commandHandler.errors.length).join('\n'));
   }
 
   async deleteGuild(guild: Guild) {

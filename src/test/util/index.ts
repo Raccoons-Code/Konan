@@ -1,5 +1,6 @@
 import './addButtonRoles.test';
 import './addSelectRoles.test.ts';
+import './BitField.test';
 import './byte.test';
 import './bytes.test';
 import './ComponentLink.test';

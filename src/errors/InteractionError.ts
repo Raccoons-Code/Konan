@@ -1,4 +1,4 @@
-import { Client, codeBlock, CommandInteractionOptionResolver, ComponentType, EmbedBuilder, InteractionType, WebhookClient } from 'discord.js';
+import { ApplicationCommandType, Client, codeBlock, CommandInteractionOptionResolver, ComponentType, EmbedBuilder, InteractionType, WebhookClient } from 'discord.js';
 import { env } from 'node:process';
 
 const { ERROR_WEBHOOK } = env;
@@ -27,6 +27,7 @@ export default class InteractionError {
 
     const interactionType = [
       InteractionType[data.type],
+      ApplicationCommandType[data.commandType],
       ComponentType[data.componentType],
     ].filter(a => a);
 
@@ -59,6 +60,7 @@ export default class InteractionError {
 interface InteractionErrorData {
   client: Client;
   commandName: string;
+  commandType: ApplicationCommandType;
   componentType: ComponentType;
   error: Error;
   options?: CommandInteractionOptionResolver;

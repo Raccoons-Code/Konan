@@ -1,0 +1,18 @@
+{
+  "BotHTTPInteractions": "Bot uses only HTTP interactions and is shown in the online member list",
+  "BugHunterLevel1": "Bug Hunter Level 1",
+  "BugHunterLevel2": "Bug Hunter Level 2",
+  "CertifiedModerator": "Discord Certified Moderator",
+  "Hypesquad": "HypeSquad Events Member",
+  "HypeSquadOnlineHouse1": "House Bravery Member",
+  "HypeSquadOnlineHouse2": "House Brilliance Member",
+  "HypeSquadOnlineHouse3": "House Balance Member",
+  "Partner": "Partnered Server Owner",
+  "PremiumEarlySupporter": "Early Supporter",
+  "Quarantined": "User's account has been quarantined based on recent activity",
+  "Spammer": "User has been identified as spammer",
+  "Staff": "Discord Employee",
+  "TeamPseudoUser": "User is a team",
+  "VerifiedBot": "Verified Bot",
+  "VerifiedDeveloper": "Early Verified Bot Developer"
+}

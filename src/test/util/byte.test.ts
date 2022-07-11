@@ -5,6 +5,8 @@ import Util from '../../util';
   assert.deepStrictEqual(new Util.Bytes(0).toArray(), [0, 'B']);
   assert.deepStrictEqual(new Util.Bytes(0).toJSON(), { bytes: 0, unit: 'B' });
   assert.deepStrictEqual(new Util.Bytes(0).toString(), '0.00 B');
+  assert.deepStrictEqual(new Util.Bytes(Math.pow(1000, 1)).toArray(), [0.98, 'KB']);
+  assert.deepStrictEqual(new Util.Bytes(Math.pow(1000, 1)).toJSON(), { bytes: 0.98, unit: 'KB' });
   assert.deepStrictEqual(new Util.Bytes(Math.pow(1000, 1)).toString(), '0.98 KB');
   assert.deepStrictEqual(new Util.Bytes(Math.pow(1024, 1)).toString(), '1.00 KB');
   assert.deepStrictEqual(new Util.Bytes(Math.pow(1000, 2)).toString(), '0.95 MB');
