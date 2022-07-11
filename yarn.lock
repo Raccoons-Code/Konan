@@ -413,9 +413,9 @@ base64-js@^1.3.1:
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
 
 better-sqlite3@^7.5.3:
-  version "7.5.3"
-  resolved "https://registry.yarnpkg.com/better-sqlite3/-/better-sqlite3-7.5.3.tgz#b42e02941f918cb8048971273abc458d937ab2b9"
-  integrity sha512-tNIrDsThpWT8j1mg+svI1pqCYROqNOWMbB2qXVg+TJqH9UR5XnbAHyRsLZoJagldGTTqJPj/sUPVOkW0GRpYqw==
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/better-sqlite3/-/better-sqlite3-7.6.0.tgz#66444ba12985071b9070b2b16d10e586ae4ad581"
+  integrity sha512-wYckL8S8RHP+KKNsZuJGZ7z/6FFmVgwd0U8jSv6t997C+EFR1yvi8p2WIpTb10jiV5rRA5VtMdgtAZFcAnK3Iw==
   dependencies:
     bindings "^1.5.0"
     prebuild-install "^7.1.0"
