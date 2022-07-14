@@ -5,6 +5,7 @@ import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../TMDBAPI
 
 const { Primary, Secondary } = ButtonStyle;
 const { ApplicationCommandAutocomplete } = InteractionType;
+const inline = true;
 
 export default class Movies extends SlashCommand {
   [k: string]: any;
@@ -81,13 +82,13 @@ export default class Movies extends SlashCommand {
             .setDisabled(!a).setLabel('1...').setStyle(a ? Primary : Secondary),
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c: this.data.name, d: 1, o: offset, p: page, target: raw_page - 1 }))
-            .setDisabled(!a).setLabel('Back').setStyle(a ? Primary : Secondary),
+            .setDisabled(!a).setLabel('<').setStyle(a ? Primary : Secondary),
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c: this.data.name, d: 2, o: offset, p: page }))
             .setDisabled(true).setLabel(`${raw_page}`).setStyle(Secondary),
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c: this.data.name, d: 3, o: offset, p: page, target: raw_page + 1 }))
-            .setDisabled(!b).setLabel('Next').setStyle(b ? Primary : Secondary),
+            .setDisabled(!b).setLabel('>').setStyle(b ? Primary : Secondary),
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c: this.data.name, d: 4, o: offset, p: page, target: 1000 }))
             .setDisabled(!b).setLabel(`...${1000}`).setStyle(b ? Primary : Secondary),
@@ -116,23 +117,25 @@ export default class Movies extends SlashCommand {
 
     const numberFormat = Intl.NumberFormat(locale, { currency: 'USD', style: 'currency' });
 
+    const dateFormat = new Intl.DateTimeFormat(locale, { timeZone: 'UTC' });
+
     const embeds = [
       new EmbedBuilder()
         .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
         .setColor('Random')
-        .setDescription(overview.slice(0, 4096))
+        .setDescription(overview.slice(0, 4096) || null)
         .setFields([
-          { name: 'Release date', value: release_date || '-', inline: true },
-          { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },
-          { name: 'Count of votes', value: `${vote_count ?? 0}`, inline: true },
-          { name: 'Original language', value: lang || '-', inline: true },
-          { name: 'Budget', value: numberFormat.format(budget), inline: true },
-          { name: 'Revenue', value: numberFormat.format(revenue), inline: true },
-          { name: 'Runtime', value: `${ms((runtime ?? 0) * 60000)}`, inline: true },
+          { name: 'Release date', value: release_date ? dateFormat.format(new Date(release_date)) : '-', inline },
+          { name: 'Average of votes', value: `${vote_average ?? 0}`, inline },
+          { name: 'Count of votes', value: `${vote_count ?? 0}`, inline },
+          { name: 'Original language', value: lang || '-', inline },
+          { name: 'Budget', value: numberFormat.format(budget), inline },
+          { name: 'Revenue', value: numberFormat.format(revenue), inline },
+          { name: 'Runtime', value: `${ms((runtime ?? 0) * 60000)}`, inline },
         ])
         .setImage(backdrop_img)
         .setThumbnail(poster_img)
-        .setTitle(title ?? original_title)
+        .setTitle(title || original_title)
         .setURL(movie_url),
     ];
 
@@ -195,19 +198,21 @@ export default class Movies extends SlashCommand {
 
       const lang = TMDBApi.configuration.getLanguage({ language: original_language });
 
+      const dateFormat = new Intl.DateTimeFormat(locale, { timeZone: 'UTC' });
+
       embeds.push(new EmbedBuilder()
-        .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
+        .setAuthor(genre_names.length ? { name: genre_names.join(', ').slice(0, 256) } : null)
         .setColor('Random')
-        .setDescription(overview.slice(0, 4096))
+        .setDescription(overview.slice(0, 4096) || null)
         .setFields([
-          { name: 'Release date', value: release_date || '-', inline: true },
-          { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },
-          { name: 'Count of votes', value: `${vote_count ?? 0}`, inline: true },
-          { name: 'Original language', value: lang || '-', inline: true },
+          { name: 'Release date', value: release_date ? dateFormat.format(new Date(release_date)) : '-', inline },
+          { name: 'Average of votes', value: `${vote_average ?? 0}`, inline },
+          { name: 'Count of votes', value: `${vote_count ?? 0}`, inline },
+          { name: 'Original language', value: lang || '-', inline },
         ])
         .setImage(backdrop_img)
         .setThumbnail(poster_img)
-        .setTitle(title ?? original_title)
+        .setTitle(title || original_title)
         .setURL(movie_url),
       );
     }

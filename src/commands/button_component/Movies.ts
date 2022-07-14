@@ -4,6 +4,7 @@ import { ButtonComponentInteraction } from '../../structures';
 import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../TMDBAPI';
 
 const { Primary, Secondary } = ButtonStyle;
+const inline = true;
 
 export default class Movies extends ButtonComponentInteraction {
   constructor() {
@@ -42,13 +43,13 @@ export default class Movies extends ButtonComponentInteraction {
             .setDisabled(!a).setLabel('1...').setStyle(a ? Primary : Secondary),
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c, d: 1, o: offset, p: page, target: target - 1 }))
-            .setDisabled(!a).setLabel('Back').setStyle(a ? Primary : Secondary),
+            .setDisabled(!a).setLabel('<').setStyle(a ? Primary : Secondary),
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c, d: 2, o: offset, p: page }))
             .setDisabled(true).setLabel(`${target}`).setStyle(Secondary),
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, target: target + 1 }))
-            .setDisabled(!b).setLabel('Next').setStyle(b ? Primary : Secondary),
+            .setDisabled(!b).setLabel('>').setStyle(b ? Primary : Secondary),
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, target: 1000 }))
             .setDisabled(!b).setLabel('...1000').setStyle(b ? Primary : Secondary),
@@ -84,15 +85,17 @@ export default class Movies extends ButtonComponentInteraction {
 
       const lang = TMDBApi.configuration.getLanguage({ language: original_language });
 
+      const dateformat = new Intl.DateTimeFormat(locale, { timeZone: 'UTC' });
+
       embeds.push(new EmbedBuilder()
-        .setAuthor({ name: genre_names.join(', ').slice(0, 256) })
+        .setAuthor(genre_names.length ? { name: genre_names.join(', ').slice(0, 256) } : null)
         .setColor('Random')
-        .setDescription(overview.slice(0, 4096))
+        .setDescription(overview.slice(0, 4096) || null)
         .setFields([
-          { name: 'Release date', value: release_date || '-', inline: true },
-          { name: 'Average of votes', value: `${vote_average ?? 0}`, inline: true },
-          { name: 'Count of votes', value: `${vote_count ?? 0}`, inline: true },
-          { name: 'Original language', value: lang || '-', inline: true },
+          { name: 'Release date', value: release_date ? dateformat.format(new Date(release_date)) : '-', inline },
+          { name: 'Average of votes', value: `${vote_average ?? 0}`, inline },
+          { name: 'Count of votes', value: `${vote_count ?? 0}`, inline },
+          { name: 'Original language', value: lang || '-', inline },
         ])
         .setImage(backdrop_img)
         .setThumbnail(poster_img)
