@@ -1,6 +1,6 @@
 import Base from './Base';
 
-export default abstract class BaseEvent extends Base {
+export default abstract class BaseCommand extends Base {
   constructor() {
     super();
   }

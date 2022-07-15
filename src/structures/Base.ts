@@ -15,7 +15,7 @@ export default abstract class Base extends Utils {
 
     Object.defineProperties(this, {
       getLocalizations: { value: Util.getLocalizations },
-      pattern: { value: Util.regexp },
+      regexp: { value: Util.regexp },
       prisma: { value: prisma },
       t: { value: t },
       Util: { value: Util },

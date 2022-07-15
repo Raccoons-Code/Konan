@@ -2,9 +2,9 @@
 
 # Commands
 
-Last modified: June 24, 2022
+Last modified: July 14, 2022
 
-## Application Commands (/) - 24
+## Application Commands (/) - 25
 
 **Optional**: [`foo`]  
 **Required**: <`foo`>  
@@ -118,7 +118,7 @@ Last modified: June 24, 2022
   - [`button_name`]: The name of the button. Button name {0,63} - default: <role>
   - [`button_emoji`]: The emoji of the button.
   - [`button_disabled`]: Whether the button is disabled.
-  - [`button_style`]: Select the style of the button. default: PRIMARY
+  - [`button_style`]: Select the style of the button. default: Primary
   - [`channel`]: Select the channel. default: <current channel>
 
 - {`edit`}: Edit a button role.
@@ -145,7 +145,7 @@ Last modified: June 24, 2022
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
     - <`role`>: Select the role.
     - [`button_name`]: Input the name of the button. {0,63} - default: <role>
-    - [`button_style`]: Select the style of the button. default: PRIMARY
+    - [`button_style`]: Select the style of the button. default: Primary
     - [`button_emoji`]: Input the emoji of the button.
     - [`button_disabled`]: Whether the button is disabled.
 
@@ -297,7 +297,7 @@ Last modified: June 24, 2022
 
 ---
 
-### Utility - 8
+### Utility - 9
 
 #### avatar [`user`]
 
@@ -328,6 +328,13 @@ Last modified: June 24, 2022
 
 - {`update`}: Update a backup. Only on server!
   - <`key`>: The key of the backup to update. - `Autocomplete`
+
+#### bitfield {`permissions`}
+
+> Bitfield of the specified rules.
+
+- {`permissions`}: Bitfield of the permissions.
+  - [`role`]: Role to get the permissions from.
 
 #### embed {`send`  | `edit`}
 

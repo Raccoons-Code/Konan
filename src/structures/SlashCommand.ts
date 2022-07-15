@@ -16,15 +16,12 @@ export default abstract class SlashCommand extends BaseCommand {
 
   abstract execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any>;
 
-  buttonStyles: { name: keyof typeof ButtonStyle, value: ButtonStyle }[] = [{
-    name: 'Danger', value: Danger,
-  }, {
-    name: 'Primary', value: Primary,
-  }, {
-    name: 'Secondary', value: Secondary,
-  }, {
-    name: 'Success', value: Success,
-  }];
+  buttonStyles: { name: keyof typeof ButtonStyle, value: ButtonStyle }[] = [
+    { name: 'Danger', value: Danger },
+    { name: 'Primary', value: Primary },
+    { name: 'Secondary', value: Secondary },
+    { name: 'Success', value: Success },
+  ];
 
   ButtonStylesChoices: APIApplicationCommandOptionChoice<number>[] = this.buttonStyles.map(style => ({
     name: style.name,

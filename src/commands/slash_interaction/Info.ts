@@ -246,9 +246,12 @@ export default class Info extends SlashCommand {
     embeds[0]
       .setAuthor({ name: guild.name, iconURL: guild.iconURL()! })
       .setFields(
-        { name: this.t('id', { locale }), value: inlineCode(guild.id), inline },
         { name: this.t('owner', { locale }), value: userMention(guild.ownerId), inline },
+        { name: this.t('id', { locale }), value: inlineCode(guild.id), inline },
+        { name: this.t('preferredLocale', { locale }), value: inlineCode(guild.preferredLocale), inline },
         { name: this.t('members', { locale }), value: `${guild.memberCount}`, inline },
+        { name: this.t('channels', { locale }), value: `${guild.channels.cache.size}`, inline },
+        { name: this.t('emojis', { locale }), value: `${guild.emojis.cache.size}`, inline },
         { name: this.t('serverCreatedAt', { locale }), value: time(guild.createdAt), inline },
       )
       .setImage(guild.bannerURL({ size: 512 }))
