@@ -60,7 +60,13 @@ class Events {
 
       const event = <Event>(Util.isClass(eventFile) ? new eventFile() : eventFile);
 
-      client[event.data.listener!]?.(event.data.name, (...args: any) => event.execute(...args));
+      client[event.data.listener!]?.(event.data.name, async (...args: any) => {
+        try {
+          await event.execute(...args);
+        } catch (error: any) {
+          client.sendError(error);
+        }
+      });
     }
   }
 
