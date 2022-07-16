@@ -2,9 +2,9 @@
 
 # Commands
 
-Last modified: July 14, 2022
+Last modified: July 16, 2022
 
-## Application Commands (/) - 25
+## Application Commands (/) - 26
 
 **Optional**: [`foo`]  
 **Required**: <`foo`>  
@@ -297,7 +297,7 @@ Last modified: July 14, 2022
 
 ---
 
-### Utility - 9
+### Utility - 10
 
 #### avatar [`user`]
 
@@ -329,12 +329,18 @@ Last modified: July 14, 2022
 - {`update`}: Update a backup. Only on server!
   - <`key`>: The key of the backup to update. - `Autocomplete`
 
-#### bitfield {`permissions`}
+#### bitfield {`permissions`  | `intents`}
 
 > Bitfield of the specified rules.
 
 - {`permissions`}: Bitfield of the permissions.
   - [`role`]: Role to get the permissions from.
+
+- {`intents`}: Bitfield of the intents.
+
+#### calculator
+
+> Opens a calculator
 
 #### embed {`send`  | `edit`}
 

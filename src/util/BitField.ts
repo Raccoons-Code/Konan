@@ -138,7 +138,7 @@ class BitField<S extends string, N extends bigint> {
     if (typeof bit === 'string') {
       if (typeof this.Flags[bit] !== 'undefined') return BigInt(this.Flags[bit]);
 
-      if (!isNaN(parseInt(bit))) return typeof DefaultBit === 'bigint' ? BigInt(bit) : BigInt(bit);
+      if (!isNaN(Number(bit))) return typeof DefaultBit === 'bigint' ? BigInt(bit) : BigInt(bit);
     }
     throw new RangeError('Invalid BitField');
   }
