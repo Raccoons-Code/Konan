@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -23,22 +23,24 @@ model User {
 }
 
 model Purchase {
-  ObjectId  String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime  @default(now()) @db.Timestamp
-  User      User      @relation(fields: [userId], references: [id])
-  userId    String
-  products  Product[]
+  ObjectId   String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime  @default(now()) @db.Timestamp
+  data       Json?
+  User       User      @relation(fields: [userId], references: [id])
+  userId     String
+  productIDs String[]  @db.ObjectId
+  products   Product[] @relation(fields: [productIDs], references: [ObjectId])
 }
 
 model Product {
-  ObjectId    String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime  @default(now()) @db.Timestamp
-  id          String    @unique @default(uuid())
+  ObjectId    String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime   @default(now()) @db.Timestamp
+  id          String     @unique @default(uuid())
   name        String
   description String?
   price       Float
-  Purchase    Purchase? @relation(fields: [purchaseId], references: [ObjectId])
-  purchaseId  String?   @db.ObjectId
+  purchaseIDs String[]   @db.ObjectId
+  purchases   Purchase[] @relation(fields: [purchaseIDs], references: [ObjectId])
 }
 
 model Guild {

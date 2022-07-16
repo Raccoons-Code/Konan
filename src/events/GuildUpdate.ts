@@ -14,10 +14,8 @@ export default class GuildUpdate extends Event {
       const oldOwner = await this.prisma.user.findFirst({
         where: {
           id: oldGuild.ownerId,
-        },
-        include: {
           guilds: {
-            where: {
+            some: {
               id: oldGuild.id,
             },
           },

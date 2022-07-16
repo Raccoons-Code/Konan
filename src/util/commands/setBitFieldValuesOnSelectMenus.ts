@@ -21,6 +21,7 @@ export function setBitFieldValuesOnSelectMenus(
           const value = safeParseJSON(option.value) || {};
 
           return new SelectMenuOptionBuilder(option)
+            .setEmoji(values.includes(option.value) ? value.v ? '❌' : '✅' : option.emoji ?? {})
             .setValue(JSON.stringify({
               ...value,
               v: values.includes(option.value) ? value.v ? 0 : 1 : value.v,

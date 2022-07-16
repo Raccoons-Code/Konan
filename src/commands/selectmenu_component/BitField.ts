@@ -1,4 +1,4 @@
-import { EmbedBuilder, PermissionFlagsBits, PermissionsBitField, SelectMenuInteraction } from 'discord.js';
+import { EmbedBuilder, GatewayIntentBits, inlineCode, IntentsBitField, PermissionFlagsBits, PermissionsBitField, SelectMenuInteraction } from 'discord.js';
 import { SelectMenuComponentInteraction } from '../../structures';
 
 export default class extends SelectMenuComponentInteraction {
@@ -19,6 +19,29 @@ export default class extends SelectMenuComponentInteraction {
     return this[scg ?? sc]?.(interaction);
   }
 
+  async intents(interaction: SelectMenuInteraction) {
+    const { customId, locale, message, values } = interaction;
+
+    const components = this.Util.setBitFieldValuesOnSelectMenus(message.components, values, customId);
+
+    const bits = this.Util.calculateBitFieldFromSelectMenus(components);
+
+    const bitField = new IntentsBitField(Number(bits));
+
+    const intents = bitField.toArray()
+      .map(x => `${this.t(x, { locale })}: ${inlineCode(`${GatewayIntentBits[x]}`)}`);
+
+    const embeds = [
+      new EmbedBuilder()
+        .setColor('Random')
+        .setTitle('Bitfield of the intents.')
+        .setDescription(intents.join('\n') || null)
+        .setFields({ name: `BitField [${intents.length}]`, value: inlineCode(`${bitField.bitfield}`) }),
+    ];
+
+    return interaction.update({ components, embeds });
+  }
+
   async permissions(interaction: SelectMenuInteraction) {
     const { customId, locale, message, values } = interaction;
 
@@ -26,17 +49,17 @@ export default class extends SelectMenuComponentInteraction {
 
     const bits = this.Util.calculateBitFieldFromSelectMenus(components);
 
-    const permissionsBitField = new PermissionsBitField(bits);
+    const bitField = new PermissionsBitField(bits);
 
-    const permissions = permissionsBitField.toArray()
-      .map(x => `${this.t(x, { locale })}: ${PermissionFlagsBits[x]}`);
+    const permissions = bitField.toArray()
+      .map(x => `${this.t(x, { locale })}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
 
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
         .setTitle('Bitfield of the permissions.')
-        .setDescription(permissions.join('\n ') || null)
-        .setFields({ name: `BitField [${permissions.length}]`, value: `${permissionsBitField.bitfield}` }),
+        .setDescription(permissions.join('\n') || null)
+        .setFields({ name: `BitField [${permissions.length}]`, value: inlineCode(`${bitField.bitfield}`) }),
     ];
 
     return interaction.update({ components, embeds });
