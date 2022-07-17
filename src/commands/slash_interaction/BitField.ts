@@ -1,4 +1,4 @@
-import { APIRole, ChatInputCommandInteraction, EmbedBuilder, GatewayIntentBits, GatewayIntentsString, inlineCode, IntentsBitField, PermissionFlagsBits, PermissionsBitField, PermissionsString, Role, SelectMenuOptionBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GatewayIntentBits, GatewayIntentsString, GuildMember, inlineCode, IntentsBitField, PermissionFlagsBits, PermissionsBitField, PermissionsString, Role, SelectMenuOptionBuilder, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 const permissionsString = <PermissionsString[]>Object.keys(PermissionFlagsBits);
@@ -17,7 +17,9 @@ export default class BitField extends SlashCommand {
       .addSubcommand(subcommand => subcommand.setName('permissions')
         .setDescription('Bitfield of the permissions.')
         .addRoleOption(option => option.setName('role')
-          .setDescription('Role to get the permissions from.')))
+          .setDescription('Role to get the permissions from.'))
+        .addUserOption(option => option.setName('user')
+          .setDescription('User to get the permissions from.')))
       .addSubcommand(subcommand => subcommand.setName('intents')
         .setDescription('Bitfield of the intents.'));
   }
@@ -58,9 +60,10 @@ export default class BitField extends SlashCommand {
   async permissions(interaction: ChatInputCommandInteraction) {
     const { locale, options } = interaction;
 
-    const role = options.getRole('role');
+    const role = <Role>options.getRole('role');
+    const member = <GuildMember>options.getMember('user');
 
-    if (role) return this.permissionsForRole(interaction, role);
+    if (role || member) return this.permissionsForMention(interaction, { role, member });
 
     const permissionsOptions = permissionsString.map((key) =>
       new SelectMenuOptionBuilder().setEmoji('❌')
@@ -82,22 +85,48 @@ export default class BitField extends SlashCommand {
     });
   }
 
-  async permissionsForRole(interaction: ChatInputCommandInteraction, role: Role | APIRole) {
+  async permissionsForMention(interaction: ChatInputCommandInteraction, mentions: MentionsOptions) {
     const { locale } = interaction;
 
-    const bitField = new PermissionsBitField(<PermissionsBitField>role.permissions);
+    const { role, member } = mentions;
 
-    const permissions = bitField.toArray()
-      .map(x => `${this.t(x, { locale })}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
+    const embeds = <EmbedBuilder[]>[];
 
-    const embeds = [
-      new EmbedBuilder()
-        .setColor('Random')
-        .setTitle('Bitfield of the permissions.')
-        .setDescription(permissions.join('\n') || null)
-        .setFields({ name: `BitField [${permissions.length}]`, value: `${inlineCode(`${bitField.bitfield}`)}` }),
-    ];
+    if (role) {
+      const bitField = new PermissionsBitField(<PermissionsBitField>role.permissions);
+
+      const permissions = bitField.toArray()
+        .map(x => `${this.t(x, { locale })}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
+
+      embeds.push(
+        new EmbedBuilder()
+          .setColor('Random')
+          .setTitle(`Bitfield of the role ${role.name} permissions.`)
+          .setDescription(permissions.join('\n') || null)
+          .setFields({ name: `BitField [${permissions.length}]`, value: `${inlineCode(`${bitField.bitfield}`)}` }),
+      );
+    }
+
+    if (member) {
+      const bitField = new PermissionsBitField(<PermissionsBitField>member.permissions);
+
+      const permissions = bitField.toArray()
+        .map(x => `${this.t(x, { locale })}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
+
+      embeds.push(
+        new EmbedBuilder()
+          .setColor('Random')
+          .setTitle(`Bitfield of the user ${member.displayName} permissions.`)
+          .setDescription(permissions.join('\n') || null)
+          .setFields({ name: `BitField [${permissions.length}]`, value: `${inlineCode(`${bitField.bitfield}`)}` }),
+      );
+    }
 
     return interaction.editReply({ embeds });
   }
+}
+
+interface MentionsOptions {
+  role?: Role;
+  member?: GuildMember;
 }
