@@ -20,8 +20,12 @@ export default class extends ButtonComponentInteraction {
 
     const embedJson = this.resolvePressedKey(embed.toJSON(), k);
 
+    if (embedJson.description!.length > 254)
+      embedJson.description = this.displayBlock(`${Infinity}`);
+
     const embeds = [
-      new EmbedBuilder(embedJson),
+      new EmbedBuilder(embedJson)
+        .setColor('Random'),
     ];
 
     return interaction.update({
@@ -29,11 +33,11 @@ export default class extends ButtonComponentInteraction {
     });
   }
 
-  calculate(oldNumber: number | string, k: string, newNumber: number | string) {
+  calculate(oldNumber: bigint | number | string, k: string, newNumber: bigint | number | string) {
     if (!newNumber) return `${oldNumber}`;
 
-    oldNumber = Number(oldNumber);
-    newNumber = Number(newNumber);
+    oldNumber = BigInt(oldNumber);
+    newNumber = BigInt(newNumber);
 
     switch (k) {
       case '+':
@@ -57,6 +61,8 @@ export default class extends ButtonComponentInteraction {
       return this.setOperation(embedJson, k);
     }
 
+    embedJson.description = this.scapeMd(embedJson.description!);
+
     switch (k) {
       case '=': {
         if (!embedJson.author) break;
@@ -64,7 +70,6 @@ export default class extends ButtonComponentInteraction {
         const [old, key] = embedJson.author.name.split(' ');
 
         embedJson.author = undefined;
-        embedJson.description = this.scapeMd(embedJson.description!);
         embedJson.description = this.calculate(old, key, embedJson.description!);
         break;
       }
@@ -74,7 +79,7 @@ export default class extends ButtonComponentInteraction {
         break;
 
       case '<':
-        if (this.scapeMd(embedJson.description!) === '0')
+        if (embedJson.description === '0')
           if (embedJson.author) {
             embedJson.description = embedJson.author.name.split(' ')[0];
             embedJson.author = undefined;
@@ -85,16 +90,12 @@ export default class extends ButtonComponentInteraction {
         break;
 
       case '+/-':
-        embedJson.description = this.scapeMd(embedJson.description!);
-
         embedJson.description = embedJson.description?.startsWith('-') ?
           embedJson.description!.slice(1) : `-${embedJson.description}`;
         break;
 
       case 'x²':
-        embedJson.description = this.scapeMd(embedJson.description!);
-
-        embedJson.description = `${Math.pow(Number(embedJson.description), 2)}`;
+        embedJson.description = `${BigInt(embedJson.description) * BigInt(embedJson.description)}`;
         break;
 
       default:
@@ -108,15 +109,13 @@ export default class extends ButtonComponentInteraction {
   }
 
   addChar(text: string, char: string) {
-    text = this.scapeMd(text);
-
     if (['0', '-0'].includes(text)) text = text.replace(/0/, '');
 
     return `${text}${char}`;
   }
 
   removeChar(text: string) {
-    text = this.scapeMd(text).slice(0, -1) || '0';
+    text = text.slice(0, -1) || '0';
 
     return text === '-' ? '0' : text;
   }

@@ -118,6 +118,7 @@ export default class extends SlashCommand {
       ],
       embeds: [
         new EmbedBuilder()
+          .setColor('Random')
           .setDescription(codeBlock(`${invisibleLine}${result}`)),
       ],
       ephemeral: true,
