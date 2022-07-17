@@ -19,9 +19,13 @@ export default class BitField extends SlashCommand {
         .addRoleOption(option => option.setName('role')
           .setDescription('Role to get the permissions from.'))
         .addUserOption(option => option.setName('user')
-          .setDescription('User to get the permissions from.')))
+          .setDescription('User to get the permissions from.'))
+        .addStringOption(option => option.setName('bits')
+          .setDescription('Intents to get the bitfield of.')))
       .addSubcommand(subcommand => subcommand.setName('intents')
-        .setDescription('Bitfield of the intents.'));
+        .setDescription('Bitfield of the intents.')
+        .addStringOption(option => option.setName('bits')
+          .setDescription('Intents to get the bitfield of.')));
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
@@ -35,7 +39,11 @@ export default class BitField extends SlashCommand {
   }
 
   async intents(interaction: ChatInputCommandInteraction) {
-    const { locale } = interaction;
+    const { locale, options } = interaction;
+
+    const bits = options.getString('bits');
+
+    if (bits) return this.intentsForBits(interaction, { bits });
 
     const intentsOptions = intentsString.map((key) =>
       new SelectMenuOptionBuilder().setEmoji('❌')
@@ -57,13 +65,39 @@ export default class BitField extends SlashCommand {
     });
   }
 
+  async intentsForBits(interaction: ChatInputCommandInteraction, Intents: IntentsOptions) {
+    const { locale } = interaction;
+
+    const { bits } = Intents;
+
+    const embeds = <EmbedBuilder[]>[];
+
+    if (bits) {
+      const bitField = new IntentsBitField(<any[]>bits.split(','));
+
+      const intents = bitField.toArray()
+        .map(x => `${this.t(x, { locale })}: ${inlineCode(`${GatewayIntentBits[x]}`)}`);
+
+      embeds.push(
+        new EmbedBuilder()
+          .setColor('Random')
+          .setTitle('Bitfield of the intents.')
+          .setDescription(intents.join('\n') || null)
+          .setFields({ name: `BitField [${intents.length}]`, value: inlineCode(`${bitField.bitfield}`) }),
+      );
+    }
+
+    return interaction.editReply({ embeds });
+  }
+
   async permissions(interaction: ChatInputCommandInteraction) {
     const { locale, options } = interaction;
 
     const role = <Role>options.getRole('role');
     const member = <GuildMember>options.getMember('user');
+    const bits = <string>options.getString('bits');
 
-    if (role || member) return this.permissionsForMention(interaction, { role, member });
+    if (role || member || bits) return this.permissionsForMention(interaction, { role, member, bits });
 
     const permissionsOptions = permissionsString.map((key) =>
       new SelectMenuOptionBuilder().setEmoji('❌')
@@ -88,7 +122,7 @@ export default class BitField extends SlashCommand {
   async permissionsForMention(interaction: ChatInputCommandInteraction, mentions: MentionsOptions) {
     const { locale } = interaction;
 
-    const { role, member } = mentions;
+    const { role, member, bits } = mentions;
 
     const embeds = <EmbedBuilder[]>[];
 
@@ -122,6 +156,21 @@ export default class BitField extends SlashCommand {
       );
     }
 
+    if (bits) {
+      const bitField = new PermissionsBitField(<any[]>bits.split(','));
+
+      const intents = bitField.toArray()
+        .map(x => `${this.t(x, { locale })}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
+
+      embeds.push(
+        new EmbedBuilder()
+          .setColor('Random')
+          .setTitle('Bitfield of the intents.')
+          .setDescription(intents.join('\n') || null)
+          .setFields({ name: `BitField [${intents.length}]`, value: inlineCode(`${bitField.bitfield}`) }),
+      );
+    }
+
     return interaction.editReply({ embeds });
   }
 }
@@ -129,4 +178,9 @@ export default class BitField extends SlashCommand {
 interface MentionsOptions {
   role?: Role;
   member?: GuildMember;
+  bits?: string;
+}
+
+interface IntentsOptions {
+  bits?: string;
 }
