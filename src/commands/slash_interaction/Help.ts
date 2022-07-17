@@ -38,7 +38,7 @@ export default class Help extends SlashCommand {
 
     const me = guild?.members.me ?? client.user;
 
-    const avatarURL = <string>me?.displayAvatarURL();
+    const avatarURL = me?.displayAvatarURL() || null;
 
     const embeds = [
       new EmbedBuilder()

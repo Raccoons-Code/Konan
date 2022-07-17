@@ -19,7 +19,7 @@ export default class Help extends Command {
 
     const me = guild?.members.me ?? client.user;
 
-    const avatarURL = <string>me?.displayAvatarURL();
+    const avatarURL = me?.displayAvatarURL() || null;
 
     const embeds = [
       new EmbedBuilder()

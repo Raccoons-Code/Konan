@@ -80,7 +80,7 @@ export default class Help extends ButtonComponentInteraction {
       new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page - 1 }))
         .setDisabled(page < 1)
-        .setLabel('Back')
+        .setLabel('<')
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: '' }))
@@ -90,7 +90,7 @@ export default class Help extends ButtonComponentInteraction {
       new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page + 1 }))
         .setDisabled(page >= total)
-        .setLabel('Next')
+        .setLabel('>')
         .setStyle(ButtonStyle.Secondary),
     ];
   }

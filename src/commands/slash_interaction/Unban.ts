@@ -38,7 +38,7 @@ export default class Unban extends SlashCommand {
       return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
     }
 
-    const { guild, member, memberPermissions, options } = interaction;
+    const { appPermissions, guild, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
@@ -54,7 +54,7 @@ export default class Unban extends SlashCommand {
       });
     }
 
-    const clientPerms = guild.members.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length) {
       if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);

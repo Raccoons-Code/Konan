@@ -34,7 +34,7 @@ export default class Kick extends SlashCommand {
     if (!interaction.inCachedGuild())
       return interaction.editReply(this.t('onlyOnServer', { locale }));
 
-    const { guild, member, memberPermissions, options } = interaction;
+    const { appPermissions, guild, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
@@ -44,7 +44,7 @@ export default class Kick extends SlashCommand {
         permission: this.t(userPerms[0], { locale }),
       }));
 
-    const clientPerms = guild.members.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {

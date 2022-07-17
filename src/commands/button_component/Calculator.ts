@@ -28,9 +28,7 @@ export default class extends ButtonComponentInteraction {
         .setColor('Random'),
     ];
 
-    return interaction.update({
-      embeds,
-    });
+    return interaction.update({ embeds });
   }
 
   calculate(oldNumber: bigint | number | string, k: string, newNumber: bigint | number | string) {
@@ -56,12 +54,8 @@ export default class extends ButtonComponentInteraction {
   resolvePressedKey(embedJson: APIEmbed, k: string) {
     embedJson.description = this.scapeMd(embedJson.description!);
 
-    if (['+', '-', '*', '/'].includes(k)) {
-      if (!embedJson.author)
-        return this.addOperation(embedJson, k);
-
+    if (['+', '-', '*', '/'].includes(k))
       return this.setOperation(embedJson, k);
-    }
 
     switch (k) {
       case '=': {

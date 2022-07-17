@@ -11,7 +11,7 @@ export default abstract class Command extends BaseCommand {
   }
 
   regexCommandName(string: string) {
-    return /^[\w-]{1,32}$/.test(string);
+    return /^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u.test(string);
   }
 
   abstract execute(message: Message): Promise<any>;

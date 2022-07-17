@@ -114,9 +114,9 @@ export default class extends SlashCommand {
     if (!interaction.inCachedGuild())
       return interaction.editReply(this.t('onlyOnServer', { locale }));
 
-    const { guild, guildId, user } = interaction;
+    const { appPermissions, guild, guildId, user } = interaction;
 
-    const clientPerms = guild.members.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -252,9 +252,9 @@ export default class extends SlashCommand {
     if (!interaction.inCachedGuild())
       return interaction.editReply(this.t('onlyOnServer', { locale }));
 
-    const { guild, options } = interaction;
+    const { appPermissions, guild, options } = interaction;
 
-    const clientPerms = guild.members.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {
@@ -293,9 +293,9 @@ export default class extends SlashCommand {
     if (!interaction.inCachedGuild())
       return interaction.editReply(this.t('onlyOnServer', { locale }));
 
-    const { guild, options } = interaction;
+    const { appPermissions, guild, options } = interaction;
 
-    const clientPerms = guild.members.me?.permissions.missing(this.props!.clientPermissions!);
+    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
 
     if (clientPerms?.length)
       return interaction.editReply(this.t('missingPermission', {

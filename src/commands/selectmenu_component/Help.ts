@@ -31,7 +31,7 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const me = guild?.members.me ?? client.user;
 
-    const avatarURL = <string>me?.displayAvatarURL();
+    const avatarURL = me?.displayAvatarURL() || null;
 
     const embeds = [
       new EmbedBuilder()
@@ -161,7 +161,7 @@ export default class Help extends SelectMenuComponentInteraction {
       new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page - 1 }))
         .setDisabled(page < 1)
-        .setLabel('Back')
+        .setLabel('<')
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: '' }))
@@ -171,7 +171,7 @@ export default class Help extends SelectMenuComponentInteraction {
       new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page + 1 }))
         .setDisabled(page >= total)
-        .setLabel('Next')
+        .setLabel('>')
         .setStyle(ButtonStyle.Secondary),
     ];
   }
