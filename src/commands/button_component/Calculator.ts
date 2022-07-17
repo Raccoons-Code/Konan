@@ -36,8 +36,8 @@ export default class extends ButtonComponentInteraction {
   calculate(oldNumber: bigint | number | string, k: string, newNumber: bigint | number | string) {
     if (!newNumber) return `${oldNumber}`;
 
-    oldNumber = BigInt(oldNumber);
-    newNumber = BigInt(newNumber);
+    oldNumber = Number(oldNumber);
+    newNumber = Number(newNumber);
 
     switch (k) {
       case '+':
@@ -54,14 +54,14 @@ export default class extends ButtonComponentInteraction {
   }
 
   resolvePressedKey(embedJson: APIEmbed, k: string) {
+    embedJson.description = this.scapeMd(embedJson.description!);
+
     if (['+', '-', '*', '/'].includes(k)) {
       if (!embedJson.author)
         return this.addOperation(embedJson, k);
 
       return this.setOperation(embedJson, k);
     }
-
-    embedJson.description = this.scapeMd(embedJson.description!);
 
     switch (k) {
       case '=': {
@@ -70,7 +70,12 @@ export default class extends ButtonComponentInteraction {
         const [old, key] = embedJson.author.name.split(' ');
 
         embedJson.author = undefined;
-        embedJson.description = this.calculate(old, key, embedJson.description!);
+
+        try {
+          embedJson.description = this.calculate(old, key, embedJson.description!);
+        } catch (error: any) {
+          embedJson.description = `Error: ${error?.message}`;
+        }
         break;
       }
 
@@ -95,7 +100,7 @@ export default class extends ButtonComponentInteraction {
         break;
 
       case 'x²':
-        embedJson.description = `${BigInt(embedJson.description) * BigInt(embedJson.description)}`;
+        embedJson.description = `${Math.pow(Number(embedJson.description!), 2)}`;
         break;
 
       default:
@@ -109,6 +114,8 @@ export default class extends ButtonComponentInteraction {
   }
 
   addChar(text: string, char: string) {
+    if (char === '.' && text.includes('.')) return text;
+
     if (['0', '-0'].includes(text)) text = text.replace(/0/, '');
 
     return `${text}${char}`;
@@ -121,7 +128,7 @@ export default class extends ButtonComponentInteraction {
   }
 
   addOperation(embedJson: APIEmbed, k: string) {
-    embedJson.author = { name: `${this.scapeMd(embedJson.description!)} ${k}` };
+    embedJson.author = { name: `${embedJson.description} ${k}` };
     embedJson.description = this.displayBlock('');
 
     return embedJson;
@@ -133,8 +140,14 @@ export default class extends ButtonComponentInteraction {
     const [old, key] = embedJson.author.name.split(' ');
 
     embedJson.author = undefined;
-    embedJson.description = this.scapeMd(embedJson.description!);
-    embedJson.description = this.calculate(old, key, embedJson.description!);
+
+    try {
+      embedJson.description = this.calculate(old, key, embedJson.description!);
+    } catch (error: any) {
+      embedJson.description = this.displayBlock(`Error: ${error?.message}`);
+
+      return embedJson;
+    }
 
     return this.addOperation(embedJson, k);
   }
