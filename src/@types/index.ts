@@ -78,7 +78,7 @@ export interface ComponentInteractionData {
 }
 
 export interface EventData {
-  intents?: GatewayIntentsString[]
+  intents?: BitFieldResolvable<GatewayIntentsString, number>
   listener?: ListenerString
   name: keyof ClientEvents
   partials?: Partials[]

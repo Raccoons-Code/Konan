@@ -14,13 +14,11 @@ export default class Client extends DJS.Client {
   }
 
   static init() {
-    const client = new Client({
+    return new Client({
       intents: eventHandler.intents,
       failIfNotExists: false,
       partials: eventHandler.partials,
     });
-
-    return client;
   }
 
   async login(token = this.token ?? undefined) {
@@ -55,10 +53,6 @@ export default class Client extends DJS.Client {
           new EmbedBuilder()
             .setColor('Red')
             .setDescription(codeBlock('ts', `${reason.stack}`.slice(0, 4087)))
-            .setFields([{
-              name: 'Cause',
-              value: `${reason.cause}`.slice(0, 1024),
-            }])
             .setTitle(`${reason.name}: ${reason.message}`.slice(0, 256)),
         ],
         username: this.user.username,
