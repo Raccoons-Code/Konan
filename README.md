@@ -2,6 +2,8 @@
 
 # Konan
 
+## Version with Discord.js@v13 deprecated
+
 [![Discord Support Server](https://img.shields.io/discord/930290056600641586?label=Discord%20Support%20Server&logo=discord&logoColor=white)](https://discord.gg/YCRyk39Tqt)
 [![Discord Bots](https://top.gg/api/widget/status/930281485301317633.svg)](https://top.gg/bot/930281485301317633)
 [![Discord Bots](https://top.gg/api/widget/servers/930281485301317633.svg?noavatar=true)](https://top.gg/bot/930281485301317633)
