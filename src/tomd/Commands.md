@@ -2,7 +2,7 @@
 
 # Commands
 
-Last modified: July 16, 2022
+Last modified: July 17, 2022
 
 ## Application Commands (/) - 26
 
@@ -335,8 +335,11 @@ Last modified: July 16, 2022
 
 - {`permissions`}: Bitfield of the permissions.
   - [`role`]: Role to get the permissions from.
+  - [`user`]: User to get the permissions from.
+  - [`bits`]: Intents to get the bitfield of.
 
 - {`intents`}: Bitfield of the intents.
+  - [`bits`]: Intents to get the bitfield of.
 
 #### calculator
 

@@ -6,10 +6,6 @@ export const defaults: Options = {
     prefix: '\\{\\{',
     suffix: '\\}\\}',
   },
-  plural: {
-    pluralSuffix: '_other',
-    singularSuffix: '_one',
-  },
   translation: {
     fallbackLocale: 'en',
     keySeparator: '.',
