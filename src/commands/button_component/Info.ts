@@ -30,7 +30,7 @@ export default class Info extends ButtonComponentInteraction {
     this[sc]?.(interaction, embeds);
   }
 
-  async application(interaction: ButtonInteraction, embeds: EmbedBuilder[]) {
+  async app(interaction: ButtonInteraction, embeds: EmbedBuilder[]) {
     const { client, guild } = interaction;
 
     const { readyAt, user, ws } = client;
@@ -44,25 +44,25 @@ export default class Info extends ButtonComponentInteraction {
     const { heapUsed } = memoryUsage();
 
     const engine = stripIndents(`
-      Node : ${versions.node}
+        Node : ${versions.node}
       `);
 
     const library = stripIndents(`
-      Discord.js : ${(npm_package_dependencies_discord_js ?? djsVersion).match(/(?:\D*)([\d\D]+)/)?.[1]}
+        Discord.js : ${(npm_package_dependencies_discord_js ?? djsVersion).match(/(?:\D*)([\d\D]+)/)?.[1]}
       `);
 
     const machine = stripIndents(`
-      Memory : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
-      CPU    : ${CPUs[0].model} (${CPUs.length} cores)
-      OS     : ${OS}
+        CPU : ${CPUs[0].model} (${CPUs.length} cores)
+        OS  : ${OS}
+        RAM : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
       `);
 
     const stats = stripIndents(`
-      Servers  : ${client.stats.guilds}
-      Channels : ${client.stats.channels}
-      Members  : ${client.stats.members}
-      Ping     : ${ws.ping} ms
-      Version  : ${npm_package_version}
+        Servers  : ${client.stats.guilds}
+        Channels : ${client.stats.channels}
+        Members  : ${client.stats.members}
+        Ping     : ${ws.ping} ms
+        Version  : ${npm_package_version}
       `);
 
     embeds[0].setAuthor({ name: username!, iconURL: avatarURL })

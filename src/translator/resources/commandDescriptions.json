@@ -100,7 +100,7 @@
   "helpDescription": "Show the help message.",
   "helpCommandDescription": "The command to show the help message for.",
   "infoDescription": "Show the info message.",
-  "infoApplicationDescription": "Show the bot info.",
+  "infoAppDescription": "Show the bot info.",
   "infoChannelDescription": "Show the channel info.",
   "infoChannelChannelDescription": "Select a channel to show the info for.",
   "infoRoleDescription": "Show the role info.",

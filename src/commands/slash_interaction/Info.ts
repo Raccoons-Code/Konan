@@ -24,10 +24,10 @@ export default class Info extends SlashCommand {
       .setDescription('Show the info message.')
       .setNameLocalizations(this.getLocalizations('infoName'))
       .setDescriptionLocalizations(this.getLocalizations('infoDescription'))
-      .addSubcommand(subCommand => subCommand.setName('application')
+      .addSubcommand(subCommand => subCommand.setName('app')
         .setDescription('Show the bot info.')
-        .setNameLocalizations(this.getLocalizations('infoApplicationName'))
-        .setDescriptionLocalizations(this.getLocalizations('infoApplicationDescription')))
+        .setNameLocalizations(this.getLocalizations('infoAppName'))
+        .setDescriptionLocalizations(this.getLocalizations('infoAppDescription')))
       .addSubcommand(subcommand => subcommand.setName('channel')
         .setDescription('Show the channel info.')
         .setNameLocalizations(this.getLocalizations('infoChannelName'))
@@ -73,7 +73,7 @@ export default class Info extends SlashCommand {
     return this[subcommand]?.(interaction, embeds, components);
   }
 
-  async application(
+  async app(
     interaction: ChatInputCommandInteraction,
     embeds: EmbedBuilder[],
     components: ActionRowBuilder<ButtonBuilder>[],
@@ -91,25 +91,25 @@ export default class Info extends SlashCommand {
     const { heapUsed } = memoryUsage();
 
     const engine = stripIndents(`
-      Node : ${versions.node}
+        Node : ${versions.node}
       `);
 
     const library = stripIndents(`
-      Discord.js : ${(npm_package_dependencies_discord_js ?? djsVersion).match(/(?:\D*)([\d\D]+)/)?.[1]}
+        Discord.js : ${(npm_package_dependencies_discord_js ?? djsVersion).match(/(?:\D*)([\d\D]+)/)?.[1]}
       `);
 
     const machine = stripIndents(`
-      CPU : ${CPUs[0].model} (${CPUs.length} cores)
-      OS  : ${OS}
-      RAM : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
+        CPU : ${CPUs[0].model} (${CPUs.length} cores)
+        OS  : ${OS}
+        RAM : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
       `);
 
     const stats = stripIndents(`
-      Servers  : ${client.stats.guilds}
-      Channels : ${client.stats.channels}
-      Members  : ${client.stats.members}
-      Ping     : ${ws.ping} ms
-      Version  : ${npm_package_version}
+        Servers  : ${client.stats.guilds}
+        Channels : ${client.stats.channels}
+        Members  : ${client.stats.members}
+        Ping     : ${ws.ping} ms
+        Version  : ${npm_package_version}
       `);
 
     embeds[0]
@@ -124,9 +124,8 @@ export default class Info extends SlashCommand {
 
     components[0].setComponents([
       new ButtonBuilder()
-        .setCustomId(JSON.stringify({ c: this.data.name, sc: 'application' }))
+        .setCustomId(JSON.stringify({ c: 'info', sc: 'app' }))
         .setEmoji('🔄')
-        .setLabel('Update')
         .setStyle(Secondary),
     ]);
 

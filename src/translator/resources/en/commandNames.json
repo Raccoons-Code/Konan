@@ -105,7 +105,7 @@
   "helpName": "help",
   "helpCommandName": "command",
   "infoName": "info",
-  "infoApplicationName": "application",
+  "infoAppName": "application",
   "infoChannelName": "channel",
   "infoChannelChannelName": "channel",
   "infoRoleName": "role",
