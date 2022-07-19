@@ -1,11 +1,11 @@
 import BitField from './BitField';
 import Bytes from './Byte';
-import bytes from './bytes';
 import capitalize from './capitalize';
 import { addButtonRoles, addSelectRoles, calculateBitFieldFromSelectMenus, ComponentLink, componentsHasRoles, createButtonRoles, createSelectMenusFromOptions, createSelectRoles, filterRolesId, removeButtonRoles, removeSelectRoles, setBitFieldValuesOnSelectMenus, setDefaultRole } from './commands';
 import composition from './composition';
 import Constants from './Constants';
 import djsLimits from './djsLimits';
+import Emoji from './Emoji';
 import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
 import getApplicationOwners from './getApplicationOwners';
@@ -31,11 +31,11 @@ import waitSync from './waitSync';
 export default abstract class Util {
   static BitField = BitField;
   static Bytes = Bytes;
-  static bytes = bytes;
   static capitalize = capitalize;
   static composition = composition;
   static Constants = Constants;
   static djsLimits = djsLimits;
+  static Emoji = Emoji;
   static filterObjectByKeys = filterObjectByKeys;
   static findDuplicatesInArray = findDuplicatesInArray;
   static getApplicationOwners = getApplicationOwners;

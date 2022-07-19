@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, EmbedBuilder, EmbedFieldData } from 'discord.js';
+import { ActionRowBuilder, APIEmbedField, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, EmbedBuilder } from 'discord.js';
 import commandHandler from '..';
 import { HelpButtonCustomId } from '../../@types';
 import { ButtonComponentInteraction, SlashCommand } from '../../structures';
@@ -58,8 +58,8 @@ export default class Help extends ButtonComponentInteraction {
   convertCommandsToEmbedFields(
     commands: SlashCommand[],
     page = 0,
-    fields: EmbedFieldData[] = [],
-  ): EmbedFieldData[] {
+    fields: APIEmbedField[] = [],
+  ): APIEmbedField[] {
     for (let i = (page * this.limit); i < commands.length; i++) {
       const { data } = commands[i];
 

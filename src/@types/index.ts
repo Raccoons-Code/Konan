@@ -6,28 +6,28 @@ export * from './quickdb';
 export * from './util';
 
 export type AnyInteraction = Interaction & (
-  AutocompleteInteraction |
-  ButtonInteraction |
-  ChatInputCommandInteraction |
-  CommandInteraction |
-  ContextMenuCommandInteraction |
-  MessageComponentInteraction |
-  MessageContextMenuCommandInteraction |
-  ModalSubmitInteraction |
-  SelectMenuInteraction |
-  UserContextMenuCommandInteraction
+  | AutocompleteInteraction
+  | ButtonInteraction
+  | ChatInputCommandInteraction
+  | CommandInteraction
+  | ContextMenuCommandInteraction
+  | MessageComponentInteraction
+  | MessageContextMenuCommandInteraction
+  | ModalSubmitInteraction
+  | SelectMenuInteraction
+  | UserContextMenuCommandInteraction
 )
 
 export interface ApplicationCommandsCollection {
   [k: string]: Collection<string, Interaction & (
-    AutocompleteInteraction |
-    ButtonInteraction |
-    ChatInputCommandInteraction |
-    CommandInteraction |
-    MessageContextMenuCommandInteraction |
-    ModalSubmitInteraction |
-    SelectMenuInteraction |
-    UserContextMenuCommandInteraction
+    | AutocompleteInteraction
+    | ButtonInteraction
+    | ChatInputCommandInteraction
+    | CommandInteraction
+    | MessageContextMenuCommandInteraction
+    | ModalSubmitInteraction
+    | SelectMenuInteraction
+    | UserContextMenuCommandInteraction
   )>
 }
 
@@ -58,12 +58,12 @@ export interface CommandData {
 
 export interface CommandCollectionTypes {
   [k: string]: Collection<string,
-    ButtonComponentInteraction |
-    Command |
-    MessageContextMenu |
-    SelectMenuComponentInteraction |
-    SlashCommand |
-    UserContextMenu
+    | ButtonComponentInteraction
+    | Command
+    | MessageContextMenu
+    | SelectMenuComponentInteraction
+    | SlashCommand
+    | UserContextMenu
   >
 }
 

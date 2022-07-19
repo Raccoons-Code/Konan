@@ -1,11 +1,15 @@
-import { ActionRow, ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ComponentType, MessageActionRowComponent, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+import { ActionRow, ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ComponentEmojiResolvable, ComponentType, MessageActionRowComponent, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+import Emoji from '../Emoji';
 import { safeParseJSON } from './safeParseJSON';
 
 export function setBitFieldValuesOnSelectMenus(
   components: ActionRow<MessageActionRowComponent>[],
   values: string[],
   customId: string,
+  emojis: EmojisData = { Success: Emoji.Success, Danger: Emoji.Danger },
 ) {
+  const { Danger = {}, Success = {} } = emojis;
+
   return components.map(component => {
     const componentJson = <APIActionRowComponent<APISelectMenuComponent>>component.toJSON();
 
@@ -21,7 +25,7 @@ export function setBitFieldValuesOnSelectMenus(
           const value = safeParseJSON(option.value) || {};
 
           return new SelectMenuOptionBuilder(option)
-            .setEmoji(values.includes(option.value) ? value.v ? '❌' : '✅' : option.emoji ?? {})
+            .setEmoji(values.includes(option.value) ? value.v ? Danger : Success : option.emoji ?? {})
             .setValue(JSON.stringify({
               ...value,
               v: values.includes(option.value) ? value.v ? 0 : 1 : value.v,
@@ -29,4 +33,9 @@ export function setBitFieldValuesOnSelectMenus(
         }));
       }));
   }, []);
+}
+
+export interface EmojisData {
+  Success?: ComponentEmojiResolvable;
+  Danger?: ComponentEmojiResolvable;
 }

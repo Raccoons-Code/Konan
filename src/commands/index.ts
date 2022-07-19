@@ -2,7 +2,7 @@ import { Collection } from 'discord.js';
 import { GlobSync } from 'glob';
 import { readdirSync, statSync } from 'node:fs';
 import { join, posix } from 'node:path';
-import client from '../client';
+import { client } from '../client';
 import { SlashCommand } from '../structures';
 import Util from '../util';
 

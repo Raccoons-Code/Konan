@@ -252,7 +252,11 @@ export default class Info extends SlashCommand {
         { name: this.t('members', { locale }), value: `${guild.memberCount}`, inline },
         { name: this.t('channels', { locale }), value: `${guild.channels.cache.size}`, inline },
         { name: this.t('emojis', { locale }), value: `${guild.emojis.cache.size}`, inline },
-        { name: this.t('serverCreatedAt', { locale }), value: time(guild.createdAt), inline },
+        {
+          name: this.t('serverCreatedAt', { locale }),
+          value: `${time(guild.createdAt)}${time(guild.createdAt, 'R')}`,
+          inline,
+        },
       )
       .setImage(guild.bannerURL({ size: 512 }))
       .setThumbnail(guild.iconURL());

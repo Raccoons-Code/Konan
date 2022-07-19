@@ -7,6 +7,8 @@ import ApplicationStats from './ApplicationStats';
 const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
 
 export default class Client extends DJS.Client {
+  #ERROR_WEBHOOK!: WebhookClient;
+
   constructor(options: ClientOptions) {
     super(options);
 
@@ -39,15 +41,15 @@ export default class Client extends DJS.Client {
     if (!(ERROR_WEBHOOK && this.isReady()))
       return console.error(reason);
 
-    if (!this.ERROR_WEBHOOK)
+    if (!this.#ERROR_WEBHOOK)
       try {
-        this.ERROR_WEBHOOK = new WebhookClient({ url: ERROR_WEBHOOK });
+        this.#ERROR_WEBHOOK = new WebhookClient({ url: ERROR_WEBHOOK });
       } catch {
         return console.error(reason);
       }
 
     try {
-      await this.ERROR_WEBHOOK.send({
+      await this.#ERROR_WEBHOOK.send({
         avatarURL: this.user.displayAvatarURL(),
         embeds: [
           new EmbedBuilder()

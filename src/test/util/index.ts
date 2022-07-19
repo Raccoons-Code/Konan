@@ -1,7 +1,6 @@
 import './BitField.test';
 import './buttonroles';
 import './byte.test';
-import './bytes.test';
 import './ComponentLink.test';
 import './componentsHasRoles.test';
 import './filterRolesId.test';

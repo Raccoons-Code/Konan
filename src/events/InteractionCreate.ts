@@ -14,7 +14,7 @@ const descriptionLength = 4096 - codeBlockLength;
 export default class InteractionCreate extends Event {
   constructor() {
     super({
-      intents: ['Guilds', 'GuildBans', 'GuildIntegrations', 'GuildVoiceStates', 'GuildWebhooks'],
+      intents: ['Guilds', 'GuildBans', 'GuildIntegrations', 'GuildInvites', 'GuildVoiceStates', 'GuildWebhooks'],
       name: 'interactionCreate',
       partials: [Partials.ThreadMember],
     });

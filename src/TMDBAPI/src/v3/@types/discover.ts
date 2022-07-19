@@ -232,17 +232,17 @@ export type MonetizationTypes = 'ads' | 'buy' | 'flatrate' | 'free' | 'rent'
  * @default 'popularity.desc'
  */
 export type SortTypes =
-  'original_title.asc' |
-  'original_title.desc' |
-  'popularity.asc' |
-  'popularity.desc' |
-  'primary_release_date.asc' |
-  'primary_release_date.desc' |
-  'release_date.asc' |
-  'release_date.desc' |
-  'revenue.asc' |
-  'revenue.desc' |
-  'vote_average.asc' |
-  'vote_average.desc' |
-  'vote_count.asc' |
-  'vote_count.desc'
+  | 'original_title.asc'
+  | 'original_title.desc'
+  | 'popularity.asc'
+  | 'popularity.desc'
+  | 'primary_release_date.asc'
+  | 'primary_release_date.desc'
+  | 'release_date.asc'
+  | 'release_date.desc'
+  | 'revenue.asc'
+  | 'revenue.desc'
+  | 'vote_average.asc'
+  | 'vote_average.desc'
+  | 'vote_count.asc'
+  | 'vote_count.desc'

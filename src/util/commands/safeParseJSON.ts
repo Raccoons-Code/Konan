@@ -1,7 +1,7 @@
-export function safeParseJSON<T = { [k: number | string]: any }>(string: string): T | undefined {
+export function safeParseJSON<T = Record<any, any>>(string: string): T | null {
   try {
     return JSON.parse(string);
   } catch {
-    return;
+    return null;
   }
 }

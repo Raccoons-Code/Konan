@@ -1,6 +1,6 @@
 import { DiscordTogether } from 'discord-together';
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChannelType, ChatInputCommandInteraction, InteractionType, SlashCommandBuilder } from 'discord.js';
-import client from '../../client';
+import { client } from '../../client';
 import { SlashCommand } from '../../structures';
 
 const { GuildVoice } = ChannelType;

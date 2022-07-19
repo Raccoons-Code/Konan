@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, EmbedFieldData, RouteBases, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, APIEmbedField, ButtonBuilder, ButtonStyle, EmbedBuilder, RouteBases, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
 import { env } from 'node:process';
 import commandHandler from '..';
 import { SelectMenuComponentInteraction, SlashCommand } from '../../structures';
@@ -179,8 +179,8 @@ export default class Help extends SelectMenuComponentInteraction {
   convertCommandsToEmbedFields(
     commands: SlashCommand[],
     page = 0,
-    fields: EmbedFieldData[] = [],
-  ): EmbedFieldData[] {
+    fields: APIEmbedField[] = [],
+  ): APIEmbedField[] {
     for (let i = (page * this.limit); i < commands.length; i++) {
       const { data } = commands[i];
 

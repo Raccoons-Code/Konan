@@ -6,7 +6,6 @@ declare module 'discord.js' {
   interface Client {
     commands: Record<Collection<string, any>>;
     discordTogether: DiscordTogether<Record<string, string>>;
-    ERROR_WEBHOOK: WebhookClient;
     invite: string;
     stats: ApplicationStats;
 

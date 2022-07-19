@@ -1,7 +1,7 @@
-import { GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
+import { BitFieldResolvable, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
 import { GlobSync } from 'glob';
 import { posix } from 'node:path';
-import client from '../client';
+import { client } from '../client';
 import { Event } from '../structures';
 import Util from '../util';
 
@@ -49,13 +49,13 @@ class EventHandler {
     return events;
   }
 
-  #loadIntents(intents: GatewayIntentsString[] = []) {
+  #loadIntents(intents: BitFieldResolvable<GatewayIntentsString, number>[] = []) {
     for (let i = 0; i < this.events.length; i++) {
 
       const event = this.events[i];
 
-      if (event.data?.intents?.length)
-        intents.push(...event.data.intents);
+      if (event.data?.intents)
+        intents = intents.concat(event.data.intents);
     }
 
     intents.length ? intents = [...new Set(intents)] : intents;

@@ -1,7 +1,5 @@
 declare namespace NodeJS {
   interface ProcessEnv {
-    /** @deprecated use DISCORD_APPLICATION_ID */
-    CLIENT_ID?: string
     CLIENT_SECRET?: string
     CROWDIN_KEY?: string
     CROWDIN_TOKEN?: string
@@ -12,9 +10,8 @@ declare namespace NodeJS {
     DISCORD_TOKEN?: string
     DONATE_LINK?: string
     ERROR_WEBHOOK?: string
-    /** @deprecated use DISCORD_TEST_GUILD_ID */
-    GUILD_ID?: string
     GUILD_INVITE?: string
+    LOGGER_WEBHOOK?: string
     NODE_ENV?: 'development' | 'production'
     OWNER_ID?: string
     PAYPAL_DONATE_LINK?: string

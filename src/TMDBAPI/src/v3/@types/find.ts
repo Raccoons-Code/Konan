@@ -20,14 +20,14 @@ export interface GetFindById {
 }
 
 export type ExternalSourceTypes =
-  'imdb_id' |
-  'freebase_mid' |
-  'freebase_id' |
-  'tvdb_id' |
-  'tvrage_id' |
-  'facebook_id' |
-  'twitter_id' |
-  'instagram_id'
+  | 'imdb_id'
+  | 'freebase_mid'
+  | 'freebase_id'
+  | 'tvdb_id'
+  | 'tvrage_id'
+  | 'facebook_id'
+  | 'twitter_id'
+  | 'instagram_id'
 
 /**
  * https://developers.themoviedb.org/3/find/find-by-id
