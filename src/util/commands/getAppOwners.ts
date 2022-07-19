@@ -1,7 +1,7 @@
 import { Client, Team } from 'discord.js';
 import { env } from 'node:process';
 
-export const getApplicationOwners = new class GetApplicationOwners {
+export const getAppOwners = new class GetAppOwners {
   async getOwnersId(client: Client) {
     const ownersId = [];
 
@@ -19,6 +19,10 @@ export const getApplicationOwners = new class GetApplicationOwners {
 
     return ownersId;
   }
+
+  async isOwner(client: Client, userId: string) {
+    return this.getOwnersId(client).then(o => o.includes(userId));
+  }
 };
 
-export default getApplicationOwners;
+export default getAppOwners;

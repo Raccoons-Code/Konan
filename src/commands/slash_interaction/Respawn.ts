@@ -17,9 +17,7 @@ export default class Respawn extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction) {
     const { client, user } = interaction;
 
-    const owners = await this.Util.getApplicationOwners.getOwnersId(client);
-
-    if (!owners.includes(user.id)) return;
+    if (!await this.Util.getAppOwners.isOwner(client, user.id)) return;
 
     await interaction.reply({ content: 'Respawned!', ephemeral: true });
 

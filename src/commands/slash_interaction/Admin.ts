@@ -32,9 +32,7 @@ export default class Admin extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
     const { client, user } = interaction;
 
-    const owners = await this.Util.getApplicationOwners.getOwnersId(client);
-
-    if (!owners.includes(user.id)) return;
+    if (!await this.Util.getAppOwners.isOwner(client, user.id)) return;
 
     if (interaction.type === InteractionType.ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);

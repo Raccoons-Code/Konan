@@ -1,9 +1,9 @@
 import { Locale } from 'discord.js';
-import { t } from '../translator';
+import { t } from '../../translator';
 
 const localeString = Object.values(Locale);
 
-export = function getLocalizations(
+export function getLocalizations(
   key: string,
   options?: { [k: string]: any },
 ): Partial<Record<`${Locale}`, string | null>> {

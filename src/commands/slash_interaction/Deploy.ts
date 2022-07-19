@@ -40,9 +40,8 @@ export default class Deploy extends SlashCommand {
     const { client, locale, options, user } = interaction;
 
     const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
-    const owners = await this.Util.getApplicationOwners.getOwnersId(client);
 
-    if (!owners.includes(user.id)) return;
+    if (!await this.Util.getAppOwners.isOwner(client, user.id)) return;
 
     await interaction.deferReply({ ephemeral: true });
 

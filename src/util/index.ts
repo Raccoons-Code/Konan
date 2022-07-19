@@ -1,15 +1,13 @@
 import BitField from './BitField';
 import Bytes from './Byte';
 import capitalize from './capitalize';
-import { addButtonRoles, addSelectRoles, calculateBitFieldFromSelectMenus, ComponentLink, componentsHasRoles, createButtonRoles, createSelectMenusFromOptions, createSelectRoles, filterRolesId, removeButtonRoles, removeSelectRoles, setBitFieldValuesOnSelectMenus, setDefaultRole } from './commands';
+import { addButtonRoles, addSelectRoles, calculateBitFieldFromSelectMenus, ComponentLink, componentsHasRoles, createButtonRoles, createSelectMenusFromOptions, createSelectRoles, filterRolesId, getAppOwners, getLocalizations, removeButtonRoles, removeSelectRoles, setBitFieldValuesOnSelectMenus, setDefaultRole } from './commands';
 import composition from './composition';
 import Constants from './Constants';
 import djsLimits from './djsLimits';
 import Emoji from './Emoji';
 import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
-import getApplicationOwners from './getApplicationOwners';
-import getLocalizations from './getLocalizations';
 import getRandomFromArray from './getRandomFromArray';
 import hasDuplicatesInArray from './hasDuplicatesInArray';
 import isClass from './isClass';
@@ -38,8 +36,6 @@ export default abstract class Util {
   static Emoji = Emoji;
   static filterObjectByKeys = filterObjectByKeys;
   static findDuplicatesInArray = findDuplicatesInArray;
-  static getApplicationOwners = getApplicationOwners;
-  static getLocalizations = getLocalizations;
   static getRandomFromArray = getRandomFromArray;
   static hasDuplicatesInArray = hasDuplicatesInArray;
   static isClass = isClass;
@@ -68,6 +64,8 @@ export default abstract class Util {
   static createSelectMenusFromOptions = createSelectMenusFromOptions;
   static createSelectRoles = createSelectRoles;
   static filterRolesId = filterRolesId;
+  static getAppOwners = getAppOwners;
+  static getLocalizations = getLocalizations;
   static removeButtonRoles = removeButtonRoles;
   static removeSelectRoles = removeSelectRoles;
   static setBitFieldValuesOnSelectMenus = setBitFieldValuesOnSelectMenus;
