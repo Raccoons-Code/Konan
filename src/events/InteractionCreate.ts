@@ -6,8 +6,6 @@ import commandHandler from '../commands';
 import { InteractionError } from '../errors';
 import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
-const { GUILD_INVITE, NODE_ENV } = env;
-
 const codeBlockLength = codeBlock('properties', '').length;
 const descriptionLength = 4096 - codeBlockLength;
 
@@ -51,12 +49,12 @@ export default class InteractionCreate extends Event {
 
       const components = [];
 
-      if (GUILD_INVITE)
+      if (env.GUILD_INVITE)
         components.push(new ActionRowBuilder<ButtonBuilder>()
           .setComponents(new ButtonBuilder()
             .setStyle(ButtonStyle.Link)
             .setLabel(this.t('supportServer', { locale }))
-            .setURL(`${RouteBases.invite}/${GUILD_INVITE}`)));
+            .setURL(`${RouteBases.invite}/${env.GUILD_INVITE}`)));
 
       try {
         if (interaction.type !== InteractionType.ApplicationCommandAutocomplete) {
@@ -71,7 +69,7 @@ export default class InteractionCreate extends Event {
       } catch { null; }
     }
 
-    if (NODE_ENV === 'production' && !await this.Util.getAppOwners.isOwner(client, user.id))
+    if (env.NODE_ENV === 'production' && !await this.Util.getAppOwners.isOwner(client, user.id))
       ShardingClient.postCommand(command.data.name, user.id, client);
   }
 

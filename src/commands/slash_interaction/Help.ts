@@ -3,8 +3,6 @@ import { env } from 'node:process';
 import commandHandler from '../../commands';
 import { SlashCommand } from '../../structures';
 
-const { DONATE_LINK, GUILD_INVITE } = env;
-const { Link } = ButtonStyle;
 const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Help extends SlashCommand {
@@ -56,23 +54,23 @@ export default class Help extends SlashCommand {
       new ButtonBuilder()
         .setEmoji('📮') // :postbox:
         .setLabel(this.t('inviteLink', { locale }))
-        .setStyle(Link)
+        .setStyle(ButtonStyle.Link)
         .setURL(client.invite),
     ];
 
-    if (GUILD_INVITE)
+    if (env.GUILD_INVITE)
       buttons.push(new ButtonBuilder()
         .setEmoji('🪤') // :mouse_trap:
         .setLabel(this.t('supportServer', { locale }))
-        .setStyle(Link)
-        .setURL(`${RouteBases.invite}/${GUILD_INVITE}`));
+        .setStyle(ButtonStyle.Link)
+        .setURL(`${RouteBases.invite}/${env.GUILD_INVITE}`));
 
-    if (DONATE_LINK)
+    if (env.DONATE_LINK)
       buttons.push(new ButtonBuilder()
         .setEmoji('💸') // :money_with_wings:
         .setLabel(this.t('donate', { locale }))
-        .setStyle(Link)
-        .setURL(`${DONATE_LINK}`));
+        .setStyle(ButtonStyle.Link)
+        .setURL(`${env.DONATE_LINK}`));
 
     const menus = [
       new SelectMenuBuilder()

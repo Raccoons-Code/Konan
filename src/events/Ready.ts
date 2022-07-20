@@ -6,7 +6,6 @@ import commandHandler from '../commands';
 import { Event } from '../structures';
 
 const deployCommands = new Deploy();
-const { NODE_ENV } = env;
 const { Listening, Playing, Streaming, Watching } = ActivityType;
 const { ApplicationsCommands, Bot } = OAuth2Scopes;
 
@@ -35,12 +34,12 @@ export default class Ready extends Event {
     client.topggAutoposter();
     this.logCommandsErrors(client);
 
-    if (NODE_ENV === 'production')
+    if (env.NODE_ENV === 'production')
       deployCommands.online(client);
   }
 
   async logCommandsErrors(client: Client) {
-    if (NODE_ENV === 'production')
+    if (env.NODE_ENV === 'production')
       for (let i = 0; i < commandHandler.errors.length; i++) {
         client.sendError(commandHandler.errors[i]);
       }

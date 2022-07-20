@@ -4,7 +4,6 @@ import commandHandler from '..';
 import { SlashCommand } from '../../structures';
 
 const { applicationCommandTypes } = commandHandler;
-const { DISCORD_TEST_GUILD_ID } = env;
 
 export default class Deploy extends SlashCommand {
   constructor() {
@@ -39,7 +38,7 @@ export default class Deploy extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     const { client, locale, options, user } = interaction;
 
-    const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
+    const guilds = env.DISCORD_TEST_GUILD_ID?.split(',') ?? [];
 
     if (!await this.Util.getAppOwners.isOwner(client, user.id)) return;
 

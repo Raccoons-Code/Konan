@@ -1,20 +1,18 @@
 import { ApplicationCommandType, Client, codeBlock, CommandInteractionOptionResolver, ComponentType, EmbedBuilder, InteractionType, WebhookClient } from 'discord.js';
 import { env } from 'node:process';
 
-const { ERROR_WEBHOOK } = env;
-
 export default class InteractionError {
   ERROR_WEBHOOK!: WebhookClient;
 
   constructor(public data: InteractionErrorData) { }
 
   async send(data = this.data) {
-    if (!(ERROR_WEBHOOK && data.client.isReady()))
+    if (!(env.ERROR_WEBHOOK && data.client.isReady()))
       return console.error(data.error);
 
     if (!this.ERROR_WEBHOOK)
       try {
-        this.ERROR_WEBHOOK = new WebhookClient({ url: ERROR_WEBHOOK });
+        this.ERROR_WEBHOOK = new WebhookClient({ url: env.ERROR_WEBHOOK });
       } catch {
         return console.error(this.data.error);
       }

@@ -1,4 +1,4 @@
-import { ButtonBuilder, ButtonStyle, ComponentEmojiResolvable, parseEmoji, resolvePartialEmoji } from 'discord.js';
+import { ButtonBuilder, ButtonStyle, ComponentEmojiResolvable, resolvePartialEmoji } from 'discord.js';
 import assert from 'node:assert';
 import Util from './util';
 
@@ -10,7 +10,7 @@ import Util from './util';
 
   const button = new ButtonBuilder({
     label: params.label,
-    emoji: <ComponentEmojiResolvable>parseEmoji(''),
+    emoji: {},
     style: ButtonStyle.Link,
     type: 2,
     url: `https://${params.url}`,

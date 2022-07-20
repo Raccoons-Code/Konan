@@ -4,8 +4,6 @@ import AutoPoster from 'topgg-autoposter';
 import eventHandler from '../events';
 import ApplicationStats from './ApplicationStats';
 
-const { ERROR_WEBHOOK, TOPGG_TOKEN } = env;
-
 export default class Client extends DJS.Client {
   #ERROR_WEBHOOK!: WebhookClient;
 
@@ -16,7 +14,7 @@ export default class Client extends DJS.Client {
   }
 
   static init() {
-    return new Client({
+    return new this({
       intents: eventHandler.intents,
       failIfNotExists: false,
       partials: eventHandler.partials,
@@ -38,12 +36,12 @@ export default class Client extends DJS.Client {
   }
 
   async sendError(reason: Error) {
-    if (!(ERROR_WEBHOOK && this.isReady()))
+    if (!(env.ERROR_WEBHOOK && this.isReady()))
       return console.error(reason);
 
     if (!this.#ERROR_WEBHOOK)
       try {
-        this.#ERROR_WEBHOOK = new WebhookClient({ url: ERROR_WEBHOOK });
+        this.#ERROR_WEBHOOK = new WebhookClient({ url: env.ERROR_WEBHOOK });
       } catch {
         return console.error(reason);
       }
@@ -64,7 +62,7 @@ export default class Client extends DJS.Client {
     }
   }
 
-  async topggAutoposter(token = TOPGG_TOKEN) {
+  async topggAutoposter(token = env.TOPGG_TOKEN) {
     if (token)
       AutoPoster(token, this);
   }

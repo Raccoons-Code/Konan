@@ -1,5 +1,4 @@
-import { SelectMenuOptionBuilder } from '@discordjs/builders';
-import { ActionRowBuilder, SelectMenuBuilder } from 'discord.js';
+import { ActionRowBuilder, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 import splitArrayInGroups from '../splitArrayInGroups';
 
 export function createSelectMenusFromOptions(options: SelectMenuOptionBuilder[], customId: CustomId) {

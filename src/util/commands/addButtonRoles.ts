@@ -1,8 +1,5 @@
 import { ActionRow, ActionRowBuilder, APIRole, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent, Role } from 'discord.js';
 
-const { Primary } = ButtonStyle;
-const { Button } = ComponentType;
-
 export function addButtonRoles(
   roles: APIRole | Role | (APIRole | Role)[],
   components: ActionRow<MessageActionRowComponent>[] = [],
@@ -14,7 +11,7 @@ export function addButtonRoles(
     .map(component => {
       const componentJson = component.toJSON();
 
-      if (componentJson.components[0].type !== Button) return component;
+      if (componentJson.components[0].type !== ComponentType.Button) return component;
       if (componentJson.components.length === 5) return component;
 
       const newComponent = new ActionRowBuilder<ButtonBuilder>(componentJson);
@@ -28,7 +25,7 @@ export function addButtonRoles(
               roleId: role.id,
             }))
             .setLabel(`${role.name.slice(0, 63)} 0`)
-            .setStyle(Primary)));
+            .setStyle(ButtonStyle.Primary)));
     });
 
   for (let i = 0; i < 5 - newComponents.length; i++) {
@@ -42,7 +39,7 @@ export function addButtonRoles(
           roleId: role.id,
         }))
         .setLabel(`${role.name.slice(0, 63)} 0`)
-        .setStyle(Primary))));
+        .setStyle(ButtonStyle.Primary))));
   }
 
   return newComponents;

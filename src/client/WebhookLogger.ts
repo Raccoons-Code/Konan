@@ -4,28 +4,23 @@ import { env } from 'node:process';
 const inline = true;
 
 class WebhookLogger {
-  #WEBHOOK_LOGGER!: WebhookClient;
+  #LOGGER_WEBHOOK!: WebhookClient;
 
-  get WEBHOOK_LOGGER() {
-    if (!env.LOGGER_WEBHOOK) return;
-
-    if (!this.#WEBHOOK_LOGGER)
-      try {
-        this.#WEBHOOK_LOGGER = new WebhookClient({ url: env.LOGGER_WEBHOOK });
-      } catch {
-        return console.error('Fail to initialize webhook logger.');
-      }
-
-    return this.#WEBHOOK_LOGGER;
+  constructor() {
+    try {
+      this.#LOGGER_WEBHOOK = new WebhookClient({ url: env.LOGGER_WEBHOOK! });
+    } catch {
+      return console.error('Fail to initialize webhook logger.')!;
+    }
   }
 
   async newGuild(guild: Guild) {
-    if (!this.WEBHOOK_LOGGER) return;
+    if (!this.#LOGGER_WEBHOOK) return;
 
     const invites = await guild.invites.fetch();
     const invite = invites.find(i => !i.temporary);
 
-    await this.WEBHOOK_LOGGER.send({
+    await this.#LOGGER_WEBHOOK.send({
       avatarURL: guild.client.user?.displayAvatarURL(),
       embeds: [
         new EmbedBuilder()
@@ -51,9 +46,9 @@ class WebhookLogger {
   }
 
   async oldGuild(guild: Guild) {
-    if (!this.WEBHOOK_LOGGER) return;
+    if (!this.#LOGGER_WEBHOOK) return;
 
-    await this.WEBHOOK_LOGGER.send({
+    await this.#LOGGER_WEBHOOK.send({
       avatarURL: guild.client.user?.displayAvatarURL(),
       embeds: [
         new EmbedBuilder()

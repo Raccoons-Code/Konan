@@ -438,7 +438,7 @@ export default class ButtonRoles extends SlashCommand {
       const button_disabled = Boolean(options.getBoolean('button_disabled'));
       const button_emoji = options.getString('button_emoji');
       const button_name = (options.getString('button_name') ?? role.name).slice(0, 63);
-      const button_style = options.getInteger('button_style') || Primary;
+      const button_style = options.getInteger('button_style') ?? Primary;
 
       const emoji = button_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(button_emoji) : {};
 

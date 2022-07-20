@@ -1,7 +1,5 @@
 import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIRole, APISelectMenuComponent, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 
-const { SelectMenu } = ComponentType;
-
 export function addSelectRoles(
   roles: (APIRole | Role)[],
   components: ActionRow<MessageActionRowComponent>[] = [],
@@ -14,7 +12,7 @@ export function addSelectRoles(
     .map(component => {
       const componentJson = <APIActionRowComponent<APISelectMenuComponent>>component.toJSON();
 
-      if (componentJson.components[0].type !== SelectMenu) return component;
+      if (componentJson.components[0].type !== ComponentType.SelectMenu) return component;
       if (componentJson.components[0].options.length === 25) return component;
 
       const newComponent = new ActionRowBuilder<SelectMenuBuilder>(componentJson);

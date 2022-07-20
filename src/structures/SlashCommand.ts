@@ -2,7 +2,6 @@ import { APIApplicationCommandOptionChoice, ApplicationCommandOptionAllowedChann
 import { SlashCommandProps } from '../@types';
 import BaseCommand from './BaseCommand';
 
-const { Danger, Primary, Secondary, Success } = ButtonStyle;
 const { GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText } = ChannelType;
 
 export default abstract class SlashCommand extends BaseCommand {
@@ -17,10 +16,10 @@ export default abstract class SlashCommand extends BaseCommand {
   abstract execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any>;
 
   buttonStyles: { name: keyof typeof ButtonStyle, value: ButtonStyle }[] = [
-    { name: 'Danger', value: Danger },
-    { name: 'Primary', value: Primary },
-    { name: 'Secondary', value: Secondary },
-    { name: 'Success', value: Success },
+    { name: 'Danger', value: ButtonStyle.Danger },
+    { name: 'Primary', value: ButtonStyle.Primary },
+    { name: 'Secondary', value: ButtonStyle.Secondary },
+    { name: 'Success', value: ButtonStyle.Success },
   ];
 
   ButtonStylesChoices: APIApplicationCommandOptionChoice<number>[] = this.buttonStyles.map(style => ({

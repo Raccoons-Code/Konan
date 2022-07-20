@@ -8,7 +8,6 @@ import { SlashCommand } from '../../structures';
 const CPUs = cpus();
 const OS = version();
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
-const { Link, Secondary } = ButtonStyle;
 const { GuildCategory, GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildStageVoice, GuildText, GuildVoice } = ChannelType;
 const inline = true;
 
@@ -126,7 +125,7 @@ export default class Info extends SlashCommand {
       new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: 'info', sc: 'app' }))
         .setEmoji('🔄')
-        .setStyle(Secondary),
+        .setStyle(ButtonStyle.Secondary),
     ]);
 
     return interaction.editReply({ components, embeds });
@@ -332,14 +331,14 @@ export default class Info extends SlashCommand {
           components[0]
             .addComponents(new ButtonBuilder()
               .setLabel('Privacy policy')
-              .setStyle(Link)
+              .setStyle(ButtonStyle.Link)
               .setURL(privacyPolicyURL));
 
         if (termsOfServiceURL)
           components[0]
             .addComponents(new ButtonBuilder()
               .setLabel('Terms of service')
-              .setStyle(Link)
+              .setStyle(ButtonStyle.Link)
               .setURL(termsOfServiceURL));
       }
     }

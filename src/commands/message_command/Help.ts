@@ -1,8 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Message, RouteBases, SelectMenuBuilder } from 'discord.js';
+import { env } from 'node:process';
 import { Command } from '../../structures';
-
-const { env } = process;
-const { DONATE_LINK, GUILD_INVITE } = env;
 
 export default class Help extends Command {
   constructor() {
@@ -37,19 +35,19 @@ export default class Help extends Command {
         .setURL(client.invite),
     ];
 
-    if (GUILD_INVITE)
+    if (env.GUILD_INVITE)
       buttons.push(new ButtonBuilder()
         .setEmoji('🪤') // :mouse_trap:
         .setLabel(this.t('supportServer', { locale }))
         .setStyle(ButtonStyle.Link)
-        .setURL(`${RouteBases.invite}/${GUILD_INVITE}`));
+        .setURL(`${RouteBases.invite}/${env.GUILD_INVITE}`));
 
-    if (DONATE_LINK)
+    if (env.DONATE_LINK)
       buttons.push(new ButtonBuilder()
         .setEmoji('💸') // :money_with_wings:
         .setLabel(this.t('donate', { locale }))
         .setStyle(ButtonStyle.Link)
-        .setURL(`${DONATE_LINK}`));
+        .setURL(`${env.DONATE_LINK}`));
 
     const menus = [
       new SelectMenuBuilder()
