@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "musíte být na hlasovém kanálu.",
   "userMustChooseVoiceChannel": "musíte si vybrat hlasový kanál.",
   "userNotOwner": "Nejste vlastníkem serveru.",
-  "userTimedOut": "{{member}} byl úspěšně potrestán. Do {{time}} {{timeR}}.",
+  "userTimedOut": "Uživatel byl úspěšně potrestán. Do {{time}} {{timeR}}.",
   "userUnbanned": "Uživatel byl úspěšně odbanován!",
   "wordsnack": "Snack slov",
   "CATEGORY": "Kategorie",

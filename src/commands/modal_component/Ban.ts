@@ -16,7 +16,7 @@ export default class Ban extends ModalSubmit {
 
     const user = await guild.members.fetch(userId);
 
-    if (!(user.bannable && this.isBannable({ author: member, guild, target: user })))
+    if (!(user.bannable && user.isBannableBy(member)))
       return interaction.reply({
         content: this.t('banHierarchyError', { locale }),
         ephemeral: true,

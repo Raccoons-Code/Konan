@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "musisz być na kanale głosowym.",
   "userMustChooseVoiceChannel": "musisz wybrać kanał głosowy.",
   "userNotOwner": "Nie jesteś właścicielem serwera.",
-  "userTimedOut": "{{member}} został ukarany. Do {{time}} {{timeR}}.",
+  "userTimedOut": "Użytkownik został ukarany. Do {{time}} {{timeR}}.",
   "userUnbanned": "Użytkownik pomyślnie odbanowany!",
   "wordsnack": "Przekąski Słowa",
   "CATEGORY": "Kategoria",

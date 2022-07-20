@@ -33,7 +33,7 @@ export default class Ban extends ButtonComponentInteraction {
 
     const banUsers = guild.members.fetch({ user: usersId })
       .then(collection => collection.toJSON().map(user =>
-        (user.bannable && this.isBannable({ author: member, guild, target: user })) ?
+        (user.bannable && user.isBannableBy(member)) ?
           guild.bans.create(user.id, { deleteMessageDays, reason })
             .catch(() => failed.push(`<@${user.id}>`) && undefined) :
           failed.push(`<@${user.id}>`) && undefined));

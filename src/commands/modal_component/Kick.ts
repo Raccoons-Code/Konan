@@ -16,7 +16,7 @@ export default class Kick extends ModalSubmit {
 
     const user = await guild.members.fetch(userId);
 
-    if (!(user.kickable && this.isKickable({ author: member, guild, target: user })))
+    if (!(user.kickable && user.isKickableBy(member)))
       return interaction.reply({
         content: this.t('kickHierarchyError', { locale }),
         ephemeral: true,

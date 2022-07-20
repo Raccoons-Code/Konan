@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "vous devez être sur un salon vocal.",
   "userMustChooseVoiceChannel": "vous devez choisir un salon vocal.",
   "userNotOwner": "Vous n'êtes pas le propriétaire du serveur.",
-  "userTimedOut": "{{member}} punie avec succès. Jusqu'à {{time}} {{timeR}}.",
+  "userTimedOut": "Utilisateur punie avec succès. Jusqu'à {{time}} {{timeR}}.",
   "userUnbanned": "Utilisateur débanni avec succès !",
   "wordsnack": "Grignotines de mots",
   "CATEGORY": "Catégorie",

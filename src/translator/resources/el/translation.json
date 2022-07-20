@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "πρέπει να είστε σε ένα φωνητικό κανάλι.",
   "userMustChooseVoiceChannel": "πρέπει να επιλέξετε ένα φωνητικό κανάλι.",
   "userNotOwner": "Δεν είστε ο ιδιοκτήτης του διακομιστή.",
-  "userTimedOut": "{{member}} τιμωρήθηκε με επιτυχία. Μέχρι {{time}} {{timeR}}.",
+  "userTimedOut": "Ο χρήστης τιμωρήθηκε με επιτυχία. Μέχρι {{time}} {{timeR}}.",
   "userUnbanned": "Ο χρήστης αποσύρθηκε επιτυχώς!",
   "wordsnack": "Σνακ Λέξεων",
   "CATEGORY": "Κατηγορία",

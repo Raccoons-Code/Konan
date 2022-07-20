@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "あなたは声チャンネルに出てるに違いない",
   "userMustChooseVoiceChannel": "音声チャンネルを選んでくれ",
   "userNotOwner": "あなたはサーバーの所有者ではありません。",
-  "userTimedOut": "{{member}} は正常に罰せられました。 {{time}} {{timeR}} まで。",
+  "userTimedOut": "ユーザーは正常に罰せられました。 {{time}} {{timeR}} まで。",
   "userUnbanned": "ユーザーの禁止を解除しました！",
   "wordsnack": "ワードスナックス",
   "CATEGORY": "カテゴリ",

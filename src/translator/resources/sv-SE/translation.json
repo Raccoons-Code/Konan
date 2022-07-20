@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "du måste vara på en röstkanal.",
   "userMustChooseVoiceChannel": "du måste välja en röstkanal.",
   "userNotOwner": "Du är inte ägaren av servern.",
-  "userTimedOut": "{{member}} straffades framgångsrikt. Till {{time}} {{timeR}}.",
+  "userTimedOut": "Användaren har straffades framgångsrikt. Till {{time}} {{timeR}}.",
   "userUnbanned": "Användaren har blivit bannad!",
   "wordsnack": "Ord mellanmål",
   "CATEGORY": "Kategori",

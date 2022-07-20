@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "sinun täytyy olla äänikanavalla.",
   "userMustChooseVoiceChannel": "sinun täytyy valita äänikanava.",
   "userNotOwner": "Et ole palvelimen omistaja.",
-  "userTimedOut": "{{member}} rangaistus onnistui. Kunnes {{time}} {{timeR}}",
+  "userTimedOut": "Käyttäjän rangaistus onnistui. Kunnes {{time}} {{timeR}}",
   "userUnbanned": "Käyttäjän porttikielto poistettu!",
   "wordsnack": "Sanan Välipalat",
   "CATEGORY": "Kategoria",

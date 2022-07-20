@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "você deve estar em um canal de voz.",
   "userMustChooseVoiceChannel": "você deve escolher um canal de voz.",
   "userNotOwner": "Você não é o dono do servidor.",
-  "userTimedOut": "{{member}} punido com sucesso. Até {{time}} {{timeR}}.",
+  "userTimedOut": "Usuário punido com sucesso. Até {{time}} {{timeR}}.",
   "userUnbanned": "Usuário desbanido com sucesso!",
   "wordsnack": "Caça palavras",
   "CATEGORY": "Categoria",

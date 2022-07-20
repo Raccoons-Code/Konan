@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "trebuie să fiţi pe un canal de voce.",
   "userMustChooseVoiceChannel": "trebuie să alegeți un canal de voce.",
   "userNotOwner": "Nu sunteți proprietarul serverului.",
-  "userTimedOut": "{{member}} a fost pedepsit cu succes. Până la {{time}} {{timeR}}.",
+  "userTimedOut": "Utilizator a fost pedepsit cu succes. Până la {{time}} {{timeR}}.",
   "userUnbanned": "Utilizator debanat cu succes!",
   "wordsnack": "Snack-uri cuvânt",
   "CATEGORY": "Categorie",

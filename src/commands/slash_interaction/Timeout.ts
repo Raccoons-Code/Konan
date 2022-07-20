@@ -68,7 +68,7 @@ export default class Timeout extends SlashCommand {
     if (!interaction.inCachedGuild())
       return interaction.editReply(this.t('onlyOnServer', { locale }));
 
-    const { appPermissions, guild, member, memberPermissions, options } = interaction;
+    const { appPermissions, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
@@ -87,8 +87,8 @@ export default class Timeout extends SlashCommand {
       }));
 
     const user = options.getMember('user');
-
-    if (!(user?.moderatable && this.isModeratable({ author: member, guild, target: user })))
+    console.log(user?.isModeratableBy(member));
+    if (!(user?.moderatable && user.isModeratableBy(member)))
       return interaction.editReply(this.t('moderateHierarchyError', { locale }));
 
     const timeout = options.getInteger('time', true);

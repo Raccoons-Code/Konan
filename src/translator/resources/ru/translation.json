@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "Вы должны быть в голосовом канале.",
   "userMustChooseVoiceChannel": "Вы должны выбрать голосовой канал.",
   "userNotOwner": "Вы не являетесь владельцем сервера.",
-  "userTimedOut": "{{member}} успешно наказан. До {{time}} {{timeR}}.",
+  "userTimedOut": "Пользователь успешно наказан. До {{time}} {{timeR}}.",
   "userUnbanned": "Пользователь успешно разблокирован!",
   "wordsnack": "Мелодии слов",
   "CATEGORY": "Категория",

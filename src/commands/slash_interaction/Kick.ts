@@ -54,7 +54,7 @@ export default class Kick extends SlashCommand {
 
     const user = options.getMember('user');
 
-    if (!(user?.kickable && this.isKickable({ author: member, guild, target: user })))
+    if (!(user?.kickable && user.isKickableBy(member)))
       return interaction.editReply(this.t('kickHierarchyError', { locale }));
 
     const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;

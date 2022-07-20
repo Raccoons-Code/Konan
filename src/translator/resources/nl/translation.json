@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "je moet in een spraakkanaal zitten.",
   "userMustChooseVoiceChannel": "je moet een spraakkanaal kiezen.",
   "userNotOwner": "Je bent niet de eigenaar van de server.",
-  "userTimedOut": "{{member}} heeft gestraft. Tot {{time}} {{timeR}}.",
+  "userTimedOut": "Gebruiker heeft gestraft. Tot {{time}} {{timeR}}.",
   "userUnbanned": "Gebruiker succesvol unbanned!",
   "wordsnack": "Woord snacks",
   "CATEGORY": "categorie",

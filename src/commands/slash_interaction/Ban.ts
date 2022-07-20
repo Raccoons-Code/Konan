@@ -107,7 +107,7 @@ export default class Ban extends SlashCommand {
 
     const user = options.getMember('user');
 
-    if (!(user?.bannable && this.isBannable({ author: member, guild, target: user! })))
+    if (!(user?.bannable && user.isBannableBy(member)))
       return interaction.editReply(this.t('banHierarchyError', { locale }));
 
     const deleteMessageDays = options.getInteger('delete_messages') ?? 0;

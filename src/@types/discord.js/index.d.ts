@@ -18,4 +18,11 @@ declare module 'discord.js' {
     commandName: string;
     text: string;
   }
+
+  interface GuildMember {
+    isManageableBy(member: GuildMember): boolean
+    isBannableBy(member: GuildMember): boolean
+    isKickableBy(member: GuildMember): boolean
+    isModeratableBy(member: GuildMember): boolean
+  }
 }

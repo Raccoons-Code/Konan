@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "ви повинні бути у голосовому каналі.",
   "userMustChooseVoiceChannel": "необхідно вибрати голосовий канал.",
   "userNotOwner": "Ви не є власником сервера.",
-  "userTimedOut": "{{member}} успішно покарано. До {{time}} {{timeR}}.",
+  "userTimedOut": "Користувач успішно покарано. До {{time}} {{timeR}}.",
   "userUnbanned": "Користувач успішно розблокований!",
   "wordsnack": "Перекушування слів",
   "CATEGORY": "Категорія",

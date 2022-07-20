@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "您必须在语音频道上。",
   "userMustChooseVoiceChannel": "您需要选择一个语音频道。",
   "userNotOwner": "您不是服务器的所有者。",
-  "userTimedOut": "{{member}} 成功惩罚。直到 {{time}} {{timeR}}。",
+  "userTimedOut": "用户成功处罚。直到 {{time}} {{timeR}}。",
   "userUnbanned": "用户已成功取消封禁！",
   "wordsnack": "单词套装",
   "CATEGORY": "类别",

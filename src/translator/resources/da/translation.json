@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "du skal være på en stemmekanal.",
   "userMustChooseVoiceChannel": "du skal vælge en stemmekanal.",
   "userNotOwner": "Du er ikke ejer af serveren.",
-  "userTimedOut": "{{member}} straf. Indtil {{time}} {{timeR}}.",
+  "userTimedOut": "Bruger straf. Indtil {{time}} {{timeR}}.",
   "userUnbanned": "Bruger fjernet fra forbuddet!",
   "wordsnack": "Ord Snacks",
   "CATEGORY": "Kategori",

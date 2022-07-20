@@ -107,7 +107,7 @@
   "userMustBeOnVoiceChannel": "du må være på en talekanal.",
   "userMustChooseVoiceChannel": "du må velge en talekanal.",
   "userNotOwner": "Du er ikke eier av serveren.",
-  "userTimedOut": "{{member}} ble straffet. Til {{time}} {{timeR}}.",
+  "userTimedOut": "Vellykket ble straffet. Til {{time}} {{timeR}}.",
   "userUnbanned": "Vellykket fjerning av bruker!",
   "wordsnack": "Ordsnacks",
   "CATEGORY": "Kategori",
