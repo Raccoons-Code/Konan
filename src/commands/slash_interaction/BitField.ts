@@ -21,7 +21,7 @@ export default class BitField extends SlashCommand {
         .addUserOption(option => option.setName('user')
           .setDescription('User to get the permissions from.'))
         .addStringOption(option => option.setName('bits')
-          .setDescription('Intents to get the bitfield of.')))
+          .setDescription('Permissions to get the bitfield of.')))
       .addSubcommand(subcommand => subcommand.setName('intents')
         .setDescription('Bitfield of the intents.')
         .addStringOption(option => option.setName('bits')
