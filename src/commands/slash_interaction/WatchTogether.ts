@@ -1,24 +1,15 @@
-import { DiscordTogether } from 'discord-together';
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChannelType, ChatInputCommandInteraction, InteractionType, SlashCommandBuilder } from 'discord.js';
-import { client } from '../../client';
+import { watchTogether } from '../../modules/WatchTogether';
 import { SlashCommand } from '../../structures';
 
-const { GuildVoice } = ChannelType;
 const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class WatchTogether extends SlashCommand {
-  discordTogether!: DiscordTogether<{ [k: string]: string }>;
-  applications!: (keyof DiscordTogether<{ [k: string]: string }>['applications'])[];
-
   constructor() {
     super({
       category: 'Utility',
       clientPermissions: ['CreateInstantInvite'],
     });
-
-    this.discordTogether = new DiscordTogether(<any>client);
-    this.applications = Object.keys(this.discordTogether.applications);
-    client.discordTogether = this.discordTogether;
 
     this.data = new SlashCommandBuilder().setName('party')
       .setDescription('Create an activity party together - Powered by Discord Together.')
@@ -34,7 +25,7 @@ export default class WatchTogether extends SlashCommand {
         .setDescription('Select a voice channel.')
         .setNameLocalizations(this.getLocalizations('partyChannelName'))
         .setDescriptionLocalizations(this.getLocalizations('partyChannelDescription'))
-        .addChannelTypes(GuildVoice));
+        .addChannelTypes(ChannelType.GuildVoice));
   }
 
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
@@ -49,11 +40,11 @@ export default class WatchTogether extends SlashCommand {
     if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);
 
-    const { member, options } = interaction;
+    const { client, member, options } = interaction;
 
     const channel = options.getChannel('channel') ?? member.voice.channel;
 
-    if (!channel || channel.type !== GuildVoice)
+    if (!channel || channel.type !== ChannelType.GuildVoice)
       return interaction.reply({
         content: `${member}, ${this.t('userMustBeOnVoiceChannel', { locale })}`,
         ephemeral: true,
@@ -73,7 +64,7 @@ export default class WatchTogether extends SlashCommand {
     const activity = options.getString('activity', true).toLowerCase();
 
     try {
-      const invite = await this.discordTogether.createTogetherCode(channel.id, activity);
+      const invite = await watchTogether.discordTogether.createTogetherCode(channel.id, activity);
 
       return interaction.reply({ content: `${invite.code}`, fetchReply: true });
     } catch (error: any) {
@@ -97,7 +88,7 @@ export default class WatchTogether extends SlashCommand {
     const activity = options.getString('activity', true);
     const pattern = RegExp(activity, 'i');
 
-    const applications = this.applications.filter(app =>
+    const applications = watchTogether.applications.filter(app =>
       pattern.test(`${app}`) ||
       pattern.test(this.t(`${app}`, { locale })));
 

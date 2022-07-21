@@ -20,8 +20,6 @@ export default class Ready extends Event {
   async execute(client: Client) {
     console.log(`Ready! ${client.user?.tag} is on ${client.guilds.cache.size} servers.`);
 
-    await commandHandler.loadCommands();
-
     client.application?.fetch();
 
     client.invite = client.generateInvite({

@@ -23,4 +23,4 @@ if (env.STATCORD_KEY) {
 
 manager.on('shardCreate', shard => console.log(`Launched shard ${shard.id}`));
 
-manager.spawn();
+manager.spawn({ timeout: 60000 });

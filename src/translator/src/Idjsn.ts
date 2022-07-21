@@ -14,7 +14,7 @@ class Idjsn {
   constructor(options: Options = defaults) {
     this.options = { ...defaults, ...options };
 
-    Util.bindMemberFunctions(this);
+    Util.bindFunctions(this);
   }
 
   init(options: Options) {
@@ -33,14 +33,12 @@ class Idjsn {
 
     key = this.translator.translate(key, options)!;
 
-    if (!key) return undefined!;
-
     if (typeof key === 'string') {
       key = this.interpolator.interpolate(key, options);
 
-      if (options.capitalize !== null &&
-        (typeof options.capitalize === 'boolean' || typeof this.options.capitalize === 'boolean'))
-        key = this.postProcessor.capitalize(key, options);
+      if (typeof options.capitalize === 'boolean' || typeof this.options.capitalize === 'boolean')
+        if (options.capitalize !== null)
+          key = this.postProcessor.capitalize(key, options);
     }
 
     return key;

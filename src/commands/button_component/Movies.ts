@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder } from 'discord.js';
 import { MoviesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
-import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../TMDBAPI';
+import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../modules/TMDBApi';
 
 const { Primary, Secondary } = ButtonStyle;
 const inline = true;

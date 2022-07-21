@@ -52,7 +52,7 @@ class CommandHandler {
     return commandTypes;
   }
 
-  async loadCommands(commandTypes = this.commandTypes, commands: any = {}) {
+  async loadCommands(commandTypes = this.commandTypes, commands: { [k: string]: Collection<string, any> } = {}) {
     const dirs = Object.values(commandTypes).flat();
 
     for (let i = 0; i < dirs.length; i++) {
@@ -85,12 +85,8 @@ class CommandHandler {
 
         if (!(command.data && command.execute)) continue;
 
-        if (command.props?.category) {
-          if (!this.commandsByCategory[command.props.category])
-            this.commandsByCategory[command.props.category] = new Collection();
-
-          this.commandsByCategory[command.props.category].set(command.data.name, command);
-        }
+        if (command.props?.category)
+          this.#setCommandByCategory(command);
 
         commands[dir].set(command.data.name, command);
 
@@ -98,11 +94,21 @@ class CommandHandler {
       }
     }
 
-    if (this.#commands)
-      return <{ [k: string]: Collection<string, any> }>commands;
-
     client.commands = this.#commands = commands;
 
+    this.#afterLoadCommands();
+
+    return commands;
+  }
+
+  async #setCommandByCategory(command: any) {
+    if (!this.commandsByCategory[command.props.category])
+      this.commandsByCategory[command.props.category] = new Collection();
+
+    this.commandsByCategory[command.props.category].set(command.data.name, command);
+  }
+
+  async #afterLoadCommands() {
     this.commandsSize = Object.keys(this.commands).reduce((acc, key) =>
       ({ ...acc, [key]: this.commands[key].size }), this.commandsSize);
 
@@ -110,8 +116,6 @@ class CommandHandler {
       .reduce((acc, category) => acc + category.size, 0);
 
     console.log(`Loaded ${this.commandsSize.applicationCommands} application commands.`);
-
-    return <{ [k: string]: Collection<string, any> }>commands;
   }
 }
 

@@ -1,6 +1,7 @@
 import DJS, { ClientOptions, codeBlock, EmbedBuilder, WebhookClient } from 'discord.js';
 import { env } from 'node:process';
 import AutoPoster from 'topgg-autoposter';
+import commandHandler from '../commands';
 import eventHandler from '../events';
 import ApplicationStats from './ApplicationStats';
 
@@ -25,6 +26,8 @@ export default class Client extends DJS.Client {
     process.on('unhandledRejection', this.sendError);
 
     await eventHandler.loadEvents();
+
+    await commandHandler.loadCommands();
 
     return super.login(token);
   }

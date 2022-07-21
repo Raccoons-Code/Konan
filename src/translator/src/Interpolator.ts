@@ -17,30 +17,29 @@ export default class Interpolator {
   }
 
   interpolate(key: string, options: Options & { [k: string]: string[] }) {
-    const { locale } = options;
+    const locale = options.locale;
 
     const matched = key.match(this.patterng);
 
-    if (matched)
-      key = key.split(this.patterng).reduce((acc: any[], value, index) => {
-        return [...acc, value, matched[index]?.match(this.pattern)?.[1]
-          ?.match(/(?:[^.[\]'\\]+)/g)?.reduce((pv: any, cv) => {
-            if (Array.isArray(options[cv])) {
-              const ca = idjsn.t(cv, { locale });
+    if (!matched) return key;
 
-              for (let i = 0; i < options[cv].length; i++) {
-                const v = <any>options[cv][i];
+    return key.split(this.patterng).reduce((acc: any[], value, index) => {
+      return acc.concat(value, matched[index]?.match(this.pattern)?.[1]
+        ?.match(/(?:[^.[\]'\\]+)/g)?.reduce((pv: any, cv) => {
+          if (Array.isArray(options[cv])) {
+            const ca = idjsn.t(cv, { locale });
 
-                options[cv][i] = ca[v] ?? idjsn.t(cv)[v] ?? v;
-              }
+            for (let i = 0; i < options[cv].length; i++) {
+              const v = <any>options[cv][i];
 
-              return [...pv, ...options[cv]];
+              options[cv][i] = ca[v] ?? idjsn.t(cv)[v] ?? v;
             }
 
-            return options[cv] ?? pv[cv] ?? cv ?? [...pv, cv];
-          }, [])];
-      }, []).join('');
+            return pv.concat(options[cv]);
+          }
 
-    return key;
+          return options[cv] ?? pv[cv] ?? cv ?? pv.concat(cv);
+        }, []));
+    }, []).join('');
   }
 }

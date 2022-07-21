@@ -9,7 +9,7 @@ export default class PostProcessor {
   }
 
   capitalize(string: string, options: Options) {
-    if (options.capitalize ?? this.options.capitalize)
+    if (options.capitalize || this.options.capitalize)
       return `${string.charAt(0).toUpperCase()}${string.slice(1)}`;
 
     return `${string.charAt(0).toLowerCase()}${string.slice(1)}`;

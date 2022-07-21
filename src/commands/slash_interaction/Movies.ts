@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import ms from 'ms';
 import { SlashCommand } from '../../structures';
-import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../TMDBAPI';
+import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../modules/TMDBApi';
 
 const { Primary, Secondary } = ButtonStyle;
 const { ApplicationCommandAutocomplete } = InteractionType;

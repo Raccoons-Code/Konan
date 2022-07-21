@@ -1,5 +1,5 @@
 export default class Util {
-  static bindMemberFunctions(instance: any) {
+  static bindFunctions(instance: any) {
     const propertyNames = Object.getOwnPropertyNames(Object.getPrototypeOf(instance));
 
     for (let i = 0; i < propertyNames.length; i++) {
