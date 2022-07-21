@@ -2,7 +2,8 @@ import { ChatInputCommandInteraction, EmbedBuilder, GatewayIntentBits, GatewayIn
 import { SlashCommand } from '../../structures';
 
 const permissionsString = <PermissionsString[]>Object.keys(PermissionFlagsBits);
-const intentsString = new IntentsBitField(<GatewayIntentsString[]>Object.keys(GatewayIntentBits)).toArray();
+const intentsBitField = new IntentsBitField(<GatewayIntentsString[]>Object.keys(GatewayIntentBits));
+const intentsString = intentsBitField.toArray();
 
 export default class BitField extends SlashCommand {
   [k: string]: any;
@@ -73,7 +74,10 @@ export default class BitField extends SlashCommand {
     const embeds = <EmbedBuilder[]>[];
 
     if (bits) {
-      const bitField = new IntentsBitField(<any[]>bits.split(','));
+      const bitField = new IntentsBitField(<any[]>bits.split(',').map(bit => isNaN(+bit) ? bit : Number(bit)));
+
+      if (bitField.bitfield > intentsBitField.bitfield)
+        bitField.bitfield = intentsBitField.bitfield;
 
       const intents = bitField.toArray()
         .map(x => `${this.t(x, { locale })}: ${inlineCode(`${GatewayIntentBits[x]}`)}`);
@@ -157,7 +161,10 @@ export default class BitField extends SlashCommand {
     }
 
     if (bits) {
-      const bitField = new PermissionsBitField(<any[]>bits.split(','));
+      const bitField = new PermissionsBitField(<any[]>bits.split(',').map(bit => isNaN(+bit) ? bit : BigInt(bit)));
+
+      if (bitField.bitfield > PermissionsBitField.All)
+        bitField.bitfield = PermissionsBitField.All;
 
       const intents = bitField.toArray()
         .map(x => `${this.t(x, { locale })}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
