@@ -1,7 +1,7 @@
 import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIRole, APISelectMenuComponent, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 
 export function addSelectRoles(
-  roles: (APIRole | Role)[],
+  roles: APIRole | Role | (APIRole | Role)[],
   components: ActionRow<MessageActionRowComponent>[] = [],
   menuPlaceholder: string | null = '',
 ): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<SelectMenuBuilder>)[] {
@@ -28,9 +28,9 @@ export function addSelectRoles(
                 .setValue(JSON.stringify({
                   count: 0,
                   roleId: role.id,
-                })).toJSON()))
+                }))))
             .setMaxValues(newElement.options.length)
-            .setPlaceholder(menuPlaceholder ?? '');
+            .setPlaceholder(menuPlaceholder ?? newElement.data.placeholder ?? '');
         }));
     });
 
@@ -50,7 +50,7 @@ export function addSelectRoles(
           .setValue(JSON.stringify({
             count: 0,
             roleId: role.id,
-          })).toJSON()))
+          }))))
         .setMaxValues(array.length)
         .setPlaceholder(menuPlaceholder ?? '')));
   }

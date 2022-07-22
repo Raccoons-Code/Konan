@@ -14,7 +14,7 @@ export function setDefaultRole(
         const selectMenu = new SelectMenuBuilder(element);
 
         return selectMenu.setOptions(element.options.map(option => new SelectMenuOptionBuilder(option)
-          .setDefault(JSON.parse(option.value).roleId === defaultRole.id).toJSON()));
+          .setDefault(JSON.parse(option.value).roleId === defaultRole.id)));
       }));
   });
 }

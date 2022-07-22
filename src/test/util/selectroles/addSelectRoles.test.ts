@@ -70,7 +70,7 @@ import Util from './../util';
           .setValue(JSON.stringify({
             count: 0,
             roleId: role.id,
-          })).toJSON()))
+          }))))
         .setMaxValues(5)
         .setPlaceholder(menuPlaceholder)),
   ];
@@ -87,7 +87,7 @@ import Util from './../util';
           .setValue(JSON.stringify({
             count: 0,
             roleId: role.id,
-          })).toJSON()))
+          }))))
         .setMaxValues(25)
         .setPlaceholder(menuPlaceholder)),
     new ActionRowBuilder<SelectMenuBuilder>()
@@ -101,7 +101,7 @@ import Util from './../util';
           .setValue(JSON.stringify({
             count: 0,
             roleId: role.id,
-          })).toJSON()))
+          }))))
         .setMaxValues(params.slice(25, 30).length)
         .setPlaceholder(menuPlaceholder)),
   ];

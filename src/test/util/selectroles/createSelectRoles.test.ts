@@ -26,7 +26,7 @@ import Util from './../util';
         .setValue(JSON.stringify({
           count: 0,
           roleId: role.id,
-        })).toJSON()))
+        }))))
       .setPlaceholder(roles[0][4].name)));
 
   assert.deepStrictEqual(Util.createSelectRoles({

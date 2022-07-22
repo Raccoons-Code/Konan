@@ -2,7 +2,7 @@ import { ActionRowBuilder, SelectMenuBuilder, SelectMenuOptionBuilder } from 'di
 import splitArrayInGroups from '../splitArrayInGroups';
 
 export function createSelectMenusFromOptions(options: SelectMenuOptionBuilder[], customId: CustomId) {
-  return splitArrayInGroups(options.map(option => option.toJSON()), 25).map((group, i) =>
+  return splitArrayInGroups(options, 25).map((group, i) =>
     new ActionRowBuilder<SelectMenuBuilder>()
       .setComponents(new SelectMenuBuilder()
         .setCustomId(JSON.stringify({

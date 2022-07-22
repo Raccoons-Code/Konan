@@ -29,7 +29,7 @@ export function setBitFieldValuesOnSelectMenus(
             .setValue(JSON.stringify({
               ...value,
               v: values.includes(option.value) ? value.v ? 0 : 1 : value.v,
-            })).toJSON();
+            }));
         }));
       }));
   }, []);

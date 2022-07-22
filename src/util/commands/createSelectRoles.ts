@@ -2,9 +2,7 @@ import { ActionRowBuilder, SelectMenuBuilder, SelectMenuOptionBuilder } from 'di
 import { ManageSelectRolesOptions } from '../../@types';
 
 export function createSelectRoles(options: ManageSelectRolesOptions) {
-  const { roles, defaultRole, menuPlaceholder } = options;
-
-  return roles.map(array => new ActionRowBuilder<SelectMenuBuilder>()
+  return options.roles.map(array => new ActionRowBuilder<SelectMenuBuilder>()
     .setComponents(new SelectMenuBuilder()
       .setCustomId(JSON.stringify({
         c: 'selectroles',
@@ -12,11 +10,11 @@ export function createSelectRoles(options: ManageSelectRolesOptions) {
       }))
       .setMaxValues(array.length)
       .setOptions(array.map(role => new SelectMenuOptionBuilder()
-        .setDefault(role.id === defaultRole?.id)
+        .setDefault(role.id === options.defaultRole?.id)
         .setLabel(`${role.name.slice(0, 83)} 0`)
         .setValue(JSON.stringify({
           count: 0,
           roleId: role.id,
-        })).toJSON()))
-      .setPlaceholder(menuPlaceholder ?? '')));
+        }))))
+      .setPlaceholder(options.menuPlaceholder ?? '')));
 }

@@ -1,7 +1,7 @@
 import BitField from './BitField';
 import Bytes from './Byte';
 import capitalize from './capitalize';
-import { addButtonRoles, addSelectRoles, calculateBitFieldFromSelectMenus, ComponentLink, componentsHasRoles, createButtonRoles, createSelectMenusFromOptions, createSelectRoles, filterRolesId, getAppOwners, getLocalizations, removeButtonRoles, removeSelectRoles, setBitFieldValuesOnSelectMenus, setDefaultRole } from './commands';
+import { addButtonRoles, addSelectRoles, calculateBitFieldFromSelectMenus, ComponentLink, componentsHasRoles, createButtonRoles, createSelectMenusFromOptions, createSelectRoles, filterRolesId, getAppOwners, getLocalizations, removeButtonRoles, removeSelectRoles, reorganizeButtonRoles, setBitFieldValuesOnSelectMenus, setDefaultRole } from './commands';
 import composition from './composition';
 import Constants from './Constants';
 import djsLimits from './djsLimits';
@@ -68,6 +68,7 @@ export default abstract class Util {
   static getLocalizations = getLocalizations;
   static removeButtonRoles = removeButtonRoles;
   static removeSelectRoles = removeSelectRoles;
+  static reorganizeButtonRoles = reorganizeButtonRoles;
   static setBitFieldValuesOnSelectMenus = setBitFieldValuesOnSelectMenus;
   static setDefaultRole = setDefaultRole;
 }
