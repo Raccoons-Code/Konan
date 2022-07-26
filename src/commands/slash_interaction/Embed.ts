@@ -113,7 +113,7 @@ export default class Embed extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const content = options.getString('content')?.slice(0, 4096);
     const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
-    const attachment = options.getAttachment('attachment')!;
+    const attachment = options.getAttachment('attachment');
 
     const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
 
@@ -128,7 +128,7 @@ export default class Embed extends SlashCommand {
         .setColor('RANDOM')
         .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
         .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
-        .setImage(attachment.url)
+        .setImage(attachment?.url ?? 'https://cdn.discordapp.com')
         .setTimestamp(Date.now())
         .setTitle(title),
     ];
@@ -161,14 +161,14 @@ export default class Embed extends SlashCommand {
     if (subcommand === 'embed') {
       const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
       const content = options.getString('content')?.slice(0, 4096);
-      const attachment = options.getAttachment('attachment')!;
+      const attachment = options.getAttachment('attachment');
 
       const embeds = [
         new MessageEmbed()
           .setColor('RANDOM')
           .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
           .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
-          .setImage(attachment.url)
+          .setImage(attachment?.url ?? 'https://cdn.discordapp.com')
           .setTimestamp(Date.now())
           .setTitle(title),
       ];
