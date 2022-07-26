@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEmbed, TextChannel } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, Client, CommandInteraction, MessageEditOptions, MessageEmbed, TextChannel } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Embed extends SlashCommand {
@@ -8,7 +8,7 @@ export default class Embed extends SlashCommand {
   constructor(client: Client) {
     super(client, {
       category: 'Utility',
-      clientPermissions: ['SEND_MESSAGES'],
+      clientPermissions: ['SEND_MESSAGES', 'ATTACH_FILES'],
       userPermissions: ['MANAGE_MESSAGES'],
     });
 
@@ -81,7 +81,7 @@ export default class Embed extends SlashCommand {
       return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
     }
 
-    const { memberPermissions, options } = interaction;
+    const { channel, client, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
@@ -90,6 +90,20 @@ export default class Embed extends SlashCommand {
 
       return interaction.reply({
         content: this.t('missingUserPermission', {
+          locale,
+          permission: this.t(userPerms[0], { locale }),
+        }),
+        ephemeral: true,
+      });
+    }
+
+    const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
+
+    if (clientPerms?.length) {
+      if (interaction.isAutocomplete()) return interaction.respond([]);
+
+      return interaction.reply({
+        content: this.t('missingChannelPermission', {
           locale,
           permission: this.t(userPerms[0], { locale }),
         }),
@@ -108,20 +122,12 @@ export default class Embed extends SlashCommand {
   }
 
   async send(interaction: CommandInteraction<'cached'>) {
-    const { client, locale, member, options } = interaction;
+    const { member, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const content = options.getString('content')?.slice(0, 4096);
     const [, title, description] = options.getString('embed')?.match(this.pattern.embed) ?? [];
     const attachment = options.getAttachment('attachment');
-
-    const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
-
-    if (clientPerms?.length)
-      return interaction.editReply(this.t('missingChannelPermission', {
-        locale,
-        permission: this.t(clientPerms[0], { locale }),
-      }));
 
     const embeds = [
       new MessageEmbed()
@@ -133,19 +139,17 @@ export default class Embed extends SlashCommand {
         .setTitle(title),
     ];
 
-    if (!clientPerms?.includes('SEND_MESSAGES')) {
-      try {
-        await channel.send({ content, embeds });
+    try {
+      await channel.send({ content, embeds });
 
-        return interaction.editReply('☑️').catch(() => null);
-      } catch (error) {
-        return interaction.editReply('❌').catch(() => null);
-      }
+      return interaction.editReply('☑️').catch(() => null);
+    } catch (error) {
+      return interaction.editReply('❌').catch(() => null);
     }
   }
 
   async edit(interaction: CommandInteraction<'cached'>) {
-    const { client, locale, member, options } = interaction;
+    const { locale, member, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.pattern.messageURL)?.[1];
@@ -163,26 +167,43 @@ export default class Embed extends SlashCommand {
       const content = options.getString('content')?.slice(0, 4096);
       const attachment = options.getAttachment('attachment');
 
-      const embeds = [
-        new MessageEmbed()
-          .setColor('RANDOM')
-          .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : '')
-          .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
-          .setImage(attachment?.url ?? 'https://cdn.discordapp.com')
-          .setTimestamp(Date.now())
-          .setTitle(title),
-      ];
+      if (`${content} ${title || description}` === 'null null')
+        return interaction.editReply('Unable to delete all fields.');
 
-      const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
+      const embeds = (title || description) ?
+        ['null'].includes(title || description) ?
+          [] :
+          [
+            new MessageEmbed()
+              .setColor('RANDOM')
+              .setDescription(description ? description?.replace(/(\s{2})/g, '\n') : ' ')
+              .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
+              .setImage(attachment?.url ?? message.attachments.first()?.url ?? 'https://cdn.discordapp.com')
+              .setTimestamp(Date.now())
+              .setTitle(title),
+          ] :
+        message.embeds;
 
-      if (!clientPerms?.includes('SEND_MESSAGES')) {
-        try {
-          await message.edit({ content, embeds });
+      const files = embeds.length ?
+        [] :
+        attachment ?
+          [attachment] :
+          message.embeds[0].image ?
+            [message.embeds[0].image.url] :
+            message.attachments.toJSON();
 
-          return interaction.editReply('❌');
-        } catch (error) {
-          return interaction.editReply('❌');
-        }
+      const messageOptions: MessageEditOptions = {
+        content: content == 'null' ? null : content || message.content,
+        embeds,
+        files,
+      };
+
+      try {
+        await message.edit(messageOptions);
+
+        return interaction.editReply('☑️');
+      } catch (error) {
+        return interaction.editReply('❌');
       }
     }
   }
