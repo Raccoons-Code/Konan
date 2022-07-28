@@ -31,8 +31,6 @@ export default class Clear extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<any> {
-    await interaction.deferReply({ ephemeral: true });
-
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
@@ -54,6 +52,8 @@ export default class Clear extends SlashCommand {
 
     const limit = options.getInteger('amount', true);
 
+    await interaction.deferReply({ ephemeral: true });
+
     try {
       const size = await this.bulkDelete(channel, limit);
 
@@ -71,13 +71,13 @@ export default class Clear extends SlashCommand {
     for (let i = 0; i < amount;) {
       const limit = amount - count > 100 ? 100 : amount - count;
 
-      const { size } = await channel.bulkDelete(limit, true);
+      const deletedMessages = await channel.bulkDelete(limit, true);
 
-      if (!size) break;
+      if (!deletedMessages.size) break;
 
-      i = count += size;
+      i = count += deletedMessages.size;
 
-      await waitAsync(500);
+      await waitAsync(2000);
     }
 
     return count;
