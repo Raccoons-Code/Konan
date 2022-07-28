@@ -6,7 +6,7 @@
   "automatic": "automaattinen",
   "backup404": "Varmuuskopiota ei löytynyt.",
   "backupDeleted": "Varmuuskopiointi poistettu onnistuneesti.",
-  "backupError": "Virhe! Ei voitu varmuuskopioida!",
+  "backupError": "Ei voitu varmuuskopioida!",
   "backupDone": "Varmuuskopiointi onnistui",
   "ban404": "Tätä käyttäjää ei ole estetty!",
   "banError": "Virhe! Tämän käyttäjän porttikielto ei onnistunut.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Olet jo yrittänyt {{number}}!\n:arrow_up_small: Tämä on suurempi!",
   "numberRepeatSmaller": "Olet jo yrittänyt {{number}}!\n:arrow_down_small: Tämä on pienempi!",
   "numberSmaller": "{{number}} on pienempi!",
-  "onlyOnServer": "Virhe! Tätä komentoa voi käyttää vain yhdellä palvelimella.",
+  "onlyOnServer": "Tätä komentoa voi käyttää vain yhdellä palvelimella.",
   "owner": "omistaja",
   "PERMISSION": "{{permission}}",
   "permissions": "käyttöoikeudet",
@@ -109,13 +109,5 @@
   "userNotOwner": "Et ole palvelimen omistaja.",
   "userTimedOut": "Käyttäjän rangaistus onnistui. Kunnes {{time}} {{timeR}}",
   "userUnbanned": "Käyttäjän porttikielto poistettu!",
-  "wordsnack": "Sanan Välipalat",
-  "CATEGORY": "Kategoria",
-  "DM": "Suora viesti",
-  "NEWS": "Uutiset",
-  "STORE": "Kauppa",
-  "TEXT": "Teksti",
-  "THREAD": "Säie",
-  "UNKNOWN": "Tuntematon",
-  "VOICE": "Ääni"
+  "wordsnack": "Sanan Välipalat"
 }

@@ -1,10 +1,11 @@
 import BitField from './BitField';
 import Bytes from './Byte';
 import capitalize from './capitalize';
-import { addButtonRoles, addSelectRoles, calculateBitFieldFromSelectMenus, ComponentLink, componentsHasRoles, createButtonRoles, createSelectMenusFromOptions, createSelectRoles, filterRolesId, getAppOwners, getLocalizations, removeButtonRoles, removeSelectRoles, reorganizeButtonRoles, setBitFieldValuesOnSelectMenus, setDefaultRole } from './commands';
+import { addButtonsByRoles, addButtonsToRows, addOptionsToSelectMenuInRow, addSelectMenuByRoles, calculateBitFieldFromSelectMenus, ComponentLink, componentsHasRoles, createButtonsByRoles, createSelectMenuByRoles, createSelectMenuFromOptions, filterRolesId, getAppOwners, getDefaultOptionFromSelectMenu, getLocalizations, removeButtonsById, removeButtonsByRoleId, removeOptionsByRolesFromSelectMenu, removeOptionsFromSelectMenu, reorganizeButtons, reorganizeOptionsByDefaultInSelectMenu, setBitFieldValuesOnSelectMenus, setDefaultRole } from './commands';
 import composition from './composition';
 import Constants from './Constants';
 import djsLimits from './djsLimits';
+import { EmbedHelper } from './EmbedHelper';
 import Emoji from './Emoji';
 import filterObjectByKeys from './filterObjectByKeys';
 import findDuplicatesInArray from './findDuplicatesInArray';
@@ -14,9 +15,9 @@ import isClass from './isClass';
 import isDuplicate from './isDuplicate';
 import isJSON from './isJSON';
 import isSameDate from './isSameDate';
+import JSONparse from './JSONparse';
 import keyGen from './keyGen';
 import mathRandom from './mathRandom';
-import parseJSON from './parseJSON';
 import randomizeArray from './randomizeArray';
 import regexp from './regexp';
 import removeDuplicatesInArray from './removeDuplicatesInArray';
@@ -33,6 +34,7 @@ export default abstract class Util {
   static composition = composition;
   static Constants = Constants;
   static djsLimits = djsLimits;
+  static EmbedHelper = EmbedHelper;
   static Emoji = Emoji;
   static filterObjectByKeys = filterObjectByKeys;
   static findDuplicatesInArray = findDuplicatesInArray;
@@ -44,7 +46,7 @@ export default abstract class Util {
   static isSameDate = isSameDate;
   static keyGen = keyGen;
   static mathRandom = mathRandom;
-  static parseJSON = parseJSON;
+  static JSONparse = JSONparse;
   static regexp = regexp;
   static randomizeArray = randomizeArray;
   static removeDuplicatesInArray = removeDuplicatesInArray;
@@ -55,20 +57,26 @@ export default abstract class Util {
   static waitSync = waitSync;
 
   // Commands utils
-  static addButtonRoles = addButtonRoles;
-  static addSelectRoles = addSelectRoles;
+  static addButtonsByRoles = addButtonsByRoles;
+  static addSelectMenuByRoles = addSelectMenuByRoles;
+  static addOptionsToSelectMenuInRow = addOptionsToSelectMenuInRow;
+  static addButtonsToRows = addButtonsToRows;
   static calculateBitFieldFromSelectMenus = calculateBitFieldFromSelectMenus;
   static ComponentLink = ComponentLink;
   static componentsHasRoles = componentsHasRoles;
-  static createButtonRoles = createButtonRoles;
-  static createSelectMenusFromOptions = createSelectMenusFromOptions;
-  static createSelectRoles = createSelectRoles;
+  static createButtonsByRoles = createButtonsByRoles;
+  static createSelectMenuFromOptions = createSelectMenuFromOptions;
+  static createSelectMenuByRoles = createSelectMenuByRoles;
   static filterRolesId = filterRolesId;
   static getAppOwners = getAppOwners;
+  static getDefaultOptionFromSelectMenu = getDefaultOptionFromSelectMenu;
   static getLocalizations = getLocalizations;
-  static removeButtonRoles = removeButtonRoles;
-  static removeSelectRoles = removeSelectRoles;
-  static reorganizeButtonRoles = reorganizeButtonRoles;
+  static removeButtonsById = removeButtonsById;
+  static removeButtonsByRoleId = removeButtonsByRoleId;
+  static removeOptionsFromSelectMenu = removeOptionsFromSelectMenu;
+  static removeOptionsByRolesFromSelectMenu = removeOptionsByRolesFromSelectMenu;
+  static reorganizeButtons = reorganizeButtons;
+  static reorganizeOptionsByDefaultInSelectMenu = reorganizeOptionsByDefaultInSelectMenu;
   static setBitFieldValuesOnSelectMenus = setBitFieldValuesOnSelectMenus;
   static setDefaultRole = setDefaultRole;
 }

@@ -1,8 +1,5 @@
-export = <T = any>(array: T[], length: length = 10) => {
-  const groups = [];
-
-  for (let i = 0; i < array.length; i += length)
-    groups.push(array.slice(i, (i + length)));
+export = <T = any>(array: T[], length: length = 10, groups: T[][] = []) => {
+  for (; array.length;) groups.push(array.splice(0, length));
 
   return groups;
 };

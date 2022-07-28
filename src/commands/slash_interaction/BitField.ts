@@ -6,7 +6,7 @@ const intentsBitField = new IntentsBitField(<GatewayIntentsString[]>Object.keys(
 const intentsString = intentsBitField.toArray();
 
 export default class BitField extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({
@@ -51,7 +51,7 @@ export default class BitField extends SlashCommand {
         .setLabel(`${this.t(key, { locale })} #${GatewayIntentBits[key]}`)
         .setValue(JSON.stringify({ n: `${GatewayIntentBits[key]}`, v: 0 })));
 
-    const intentsRows = this.Util.createSelectMenusFromOptions(intentsOptions, {
+    const intentsRows = this.Util.createSelectMenuFromOptions(intentsOptions, {
       c: 'bitfield',
       sc: 'intents',
     });
@@ -108,7 +108,7 @@ export default class BitField extends SlashCommand {
         .setLabel(`${this.t(key, { locale })} #${PermissionFlagsBits[key]}`)
         .setValue(JSON.stringify({ n: `${PermissionFlagsBits[key]}`, v: 0 })));
 
-    const permissionsRows = this.Util.createSelectMenusFromOptions(permissionsOptions, {
+    const permissionsRows = this.Util.createSelectMenuFromOptions(permissionsOptions, {
       c: 'bitfield',
       sc: 'permissions',
     });

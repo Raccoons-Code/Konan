@@ -2,20 +2,19 @@ import { ApplicationCommandType, Client, codeBlock, CommandInteractionOptionReso
 import { env } from 'node:process';
 
 export default class InteractionError {
-  ERROR_WEBHOOK!: WebhookClient;
+  #ERROR_WEBHOOK!: WebhookClient;
 
-  constructor(public data: InteractionErrorData) { }
+  constructor() {
+    try {
+      this.#ERROR_WEBHOOK = new WebhookClient({ url: env.ERROR_WEBHOOK! });
+    } catch {
+      return console.error('Fail to initialize interaction error webhook logger.')!;
+    }
+  }
 
-  async send(data = this.data) {
-    if (!(env.ERROR_WEBHOOK && data.client.isReady()))
+  async send(data: InteractionErrorData) {
+    if (!(this.#ERROR_WEBHOOK && data.client.isReady()))
       return console.error(data.error);
-
-    if (!this.ERROR_WEBHOOK)
-      try {
-        this.ERROR_WEBHOOK = new WebhookClient({ url: env.ERROR_WEBHOOK });
-      } catch {
-        return console.error(this.data.error);
-      }
 
     const commandName = [
       data.commandName,
@@ -30,7 +29,7 @@ export default class InteractionError {
     ].filter(a => a);
 
     try {
-      await this.ERROR_WEBHOOK.send({
+      await this.#ERROR_WEBHOOK.send({
         avatarURL: data.client.user?.displayAvatarURL(),
         embeds: [
           new EmbedBuilder()

@@ -5,12 +5,12 @@ import { SlashCommand } from '../../structures';
 const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({
       category: 'Utility',
-      clientPermissions: ['BanMembers', 'ManageChannels', 'ManageEmojisAndStickers', 'ManageGuild', 'ManageMessages', 'ManageRoles', 'ManageWebhooks', 'ReadMessageHistory', 'ViewChannel'],
+      appPermissions: ['BanMembers', 'ManageChannels', 'ManageEmojisAndStickers', 'ManageGuild', 'ManageMessages', 'ManageRoles', 'ManageWebhooks', 'ReadMessageHistory', 'ViewChannel'],
       userPermissions: ['Administrator'],
     });
 
@@ -82,21 +82,12 @@ export default class extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<any> {
-    const { locale, memberPermissions, options } = interaction;
+    const { memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions?.missing(this.props!.userPermissions!, true);
 
-    if (userPerms?.length) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
-
-      return interaction.reply({
-        content: this.t('missingUserPermission', {
-          locale,
-          permission: this.t(userPerms[0], { locale }),
-        }),
-        ephemeral: true,
-      });
-    }
+    if (userPerms?.length)
+      return this.replyMissingPermission(interaction, userPerms, 'missingUserPermission');
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
@@ -112,17 +103,14 @@ export default class extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return this.replyOnlyOnServer(interaction);
 
     const { appPermissions, guild, guildId, user } = interaction;
 
-    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
+    const appPerms = appPermissions?.missing(this.props!.appPermissions!);
 
-    if (clientPerms?.length)
-      return interaction.editReply(this.t('missingPermission', {
-        locale,
-        permission: this.t(clientPerms[0], { locale }),
-      }));
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingPermission');
 
     const dbUser = await this.prisma.user.findFirst({
       where: { id: guild.ownerId },
@@ -250,17 +238,14 @@ export default class extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return this.replyOnlyOnServer(interaction);
 
     const { appPermissions, guild, options } = interaction;
 
-    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
+    const appPerms = appPermissions?.missing(this.props!.appPermissions!);
 
-    if (clientPerms?.length)
-      return interaction.editReply(this.t('missingPermission', {
-        locale,
-        permission: this.t(clientPerms[0], { locale }),
-      }));
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingPermission');
 
     const key = options.getString('key', true);
 
@@ -291,17 +276,14 @@ export default class extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return this.replyOnlyOnServer(interaction);
 
     const { appPermissions, guild, options } = interaction;
 
-    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
+    const appPerms = appPermissions?.missing(this.props!.appPermissions!);
 
-    if (clientPerms?.length)
-      return interaction.editReply(this.t('missingPermission', {
-        locale,
-        permission: this.t(clientPerms[0], { locale }),
-      }));
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingPermission');
 
     const key = options.getString('key', true);
 

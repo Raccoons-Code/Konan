@@ -3,7 +3,7 @@ import Util from './util';
 
 const { BitField } = Util;
 
-const PermissionFlagsBits = {
+const PermissionFlags = {
   CreateInstantInvite: 1n << 0n,
   KickMembers: 1n << 1n,
   BanMembers: 1n << 2n,
@@ -47,21 +47,21 @@ const PermissionFlagsBits = {
   ModerateMembers: 1n << 40n,
 };
 
-class PermissionsBitField extends BitField<keyof typeof PermissionFlagsBits, bigint> {
-  static All = Object.values(PermissionFlagsBits).reduce((all, p) => all | p, 0n);
+class PermissionsBitField extends BitField<keyof typeof PermissionFlags, bigint> {
+  static All = Object.values(PermissionFlags).reduce((all, p) => all | p, 0n);
   static Default = BigInt(104324673);
-  static Flags = PermissionFlagsBits;
+  static Flags = PermissionFlags;
 }
 
 assert.deepStrictEqual(PermissionsBitField.All, BigInt(2199023255551));
 assert.deepStrictEqual(PermissionsBitField.Default, BigInt(104324673));
-assert.deepStrictEqual(PermissionsBitField.Flags, PermissionFlagsBits);
-assert.deepStrictEqual(PermissionsBitField.Flags.Administrator, PermissionFlagsBits.Administrator);
+assert.deepStrictEqual(PermissionsBitField.Flags, PermissionFlags);
+assert.deepStrictEqual(PermissionsBitField.Flags.Administrator, PermissionFlags.Administrator);
 
 const permissionsBitField = new PermissionsBitField(PermissionsBitField.Default);
 
-assert.deepStrictEqual(permissionsBitField.has(PermissionFlagsBits.ViewChannel), true);
+assert.deepStrictEqual(permissionsBitField.has(PermissionFlags.ViewChannel), true);
 assert.deepStrictEqual(permissionsBitField.has('ViewChannel'), true);
 assert.deepStrictEqual(permissionsBitField.has(['ViewChannel', 'SendMessages']), true);
 assert.deepStrictEqual(permissionsBitField.has(['ViewChannel', 'SendMessages', 'BanMembers']), false);
-assert.deepStrictEqual(permissionsBitField.has(PermissionFlagsBits.BanMembers), false);
+assert.deepStrictEqual(permissionsBitField.has(PermissionFlags.BanMembers), false);

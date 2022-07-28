@@ -9,7 +9,7 @@ const Choices = <[string, string][]>Object.keys(languages)
   .map((l) => [languages[<'auto'>l], l]);
 
 export default class Translate extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
   cache = new Map();
 
   constructor() {

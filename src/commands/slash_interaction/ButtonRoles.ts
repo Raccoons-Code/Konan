@@ -1,18 +1,17 @@
-import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonComponent, ButtonStyle, ChatInputCommandInteraction, ComponentEmojiResolvable, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, resolvePartialEmoji, Role, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ActionRowBuilder, APIActionRowComponent, APIButtonComponent, APIButtonComponentWithCustomId, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, Role, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
 import { SlashCommand } from '../../structures';
 
-const { Primary } = ButtonStyle;
-const { Button } = ComponentType;
 const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class ButtonRoles extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
+  CommandNameRegExp = /"c":"buttonroles"/;
 
   constructor() {
     super({
       category: 'Moderation',
-      clientPermissions: ['EmbedLinks', 'ManageRoles', 'SendMessages'],
+      appPermissions: ['EmbedLinks', 'ManageRoles', 'SendMessages'],
       userPermissions: ['ManageRoles'],
     });
 
@@ -260,34 +259,20 @@ export default class ButtonRoles extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<any> {
-    const { locale } = interaction;
-
-    if (!interaction.inCachedGuild()) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
-
-      return interaction.reply(this.t('onlyOnServer', { locale }));
-    }
+    if (!interaction.inCachedGuild())
+      return this.replyOnlyOnServer(interaction);
 
     const { memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
-    if (userPerms.length) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
-
-      return interaction.reply({
-        content: this.t('missingUserPermission', {
-          locale,
-          permission: this.t(userPerms[0], { locale }),
-        }),
-        ephemeral: true,
-      });
-    }
+    if (userPerms.length)
+      return this.replyMissingPermission(interaction, userPerms, 'missingUserPermission');
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
     if (interaction.type === ApplicationCommandAutocomplete)
-      return this[`${subcommand}Autocomplete`]?.(interaction);
+      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -297,15 +282,13 @@ export default class ButtonRoles extends SlashCommand {
   async create(interaction: ChatInputCommandInteraction<'cached'>): Promise<any> {
     const { locale, options } = interaction;
 
-    const [, title, description] = options.getString('text')?.match(this.regexp.embed) ?? [];
-    const button_emoji = options.getString('button_emoji');
-    const button_disabled = Boolean(options.getBoolean('button_disabled'));
-    const button_style = options.getInteger('button_style') ?? Primary;
-    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const role = options.getRole('role', true);
+    const button_emoji = options.getString('button_emoji') ?? {};
+    const button_disabled = Boolean(options.getBoolean('button_disabled'));
     const button_name = (options.getString('button_name') ?? role.name).slice(0, 63);
-
-    const emoji = button_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(button_emoji) : {};
+    const button_style = options.getInteger('button_style') ?? ButtonStyle.Primary;
+    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+    const [, title, description] = options.getString('text')?.match(this.regexp.embed) ?? [];
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
@@ -314,10 +297,10 @@ export default class ButtonRoles extends SlashCommand {
             .setCustomId(JSON.stringify({
               c: this.data.name,
               count: 0,
-              roleId: role.id,
+              id: role.id,
             }))
             .setDisabled(button_disabled)
-            .setEmoji(emoji)
+            .setEmoji(button_emoji)
             .setLabel(`${button_name} 0`)
             .setStyle(button_style),
         ]),
@@ -345,8 +328,7 @@ export default class ButtonRoles extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = await channel.messages.safeFetch(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
@@ -377,32 +359,32 @@ export default class ButtonRoles extends SlashCommand {
       if (role ? this.Util.componentsHasRoles(message.components, [role]) : false)
         return interaction.editReply(this.t('editError', { locale, string: 'Button Role' }));
 
+      const buttonId = options.getString('button', true);
       const button_disabled = options.getBoolean('button_disabled');
       const button_emoji = options.getString('button_emoji');
       const button_name = options.getString('button_name')?.slice(0, 63);
       const button_style = options.getInteger('button_style');
-      const buttonId = options.getString('button', true);
-
-      const emoji = button_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(button_emoji) : null;
 
       const components = message.components.map(row => {
-        if (row.components[0].type !== Button) return row;
-        if (row.components.every(element => element.customId !== buttonId)) return row;
+        const rowJson = <APIActionRowComponent<APIButtonComponentWithCustomId>>row.toJSON();
 
-        return new ActionRowBuilder<ButtonBuilder>(row.toJSON())
-          .setComponents(row.components.map(button => {
-            const newButton = new ButtonBuilder(button.toJSON());
+        if (rowJson.components[0].type !== ComponentType.Button) return row;
+        if (rowJson.components.every(element => element.custom_id !== buttonId)) return row;
 
-            if (button.customId !== buttonId) return newButton;
+        return new ActionRowBuilder<ButtonBuilder>()
+          .setComponents(rowJson.components.map(button => {
+            const newButton = new ButtonBuilder(button);
 
-            const { c, count, d, roleId } = <ButtonRolesCustomId>JSON.parse(button.customId);
+            if (button.custom_id !== buttonId) return newButton;
+
+            const { c, count, id, roleId } = <ButtonRolesCustomId>JSON.parse(button.custom_id);
 
             return newButton
-              .setCustomId(JSON.stringify({ c, count, d, roleId: role?.id ?? roleId }))
+              .setCustomId(JSON.stringify({ c, count, id: role?.id ?? id ?? roleId }))
               .setDisabled(Boolean(typeof button_disabled === 'boolean' ? button_disabled : button.disabled))
-              .setEmoji(emoji ?? newButton.data.emoji ?? {})
-              .setLabel(button_name ? `${button_name} ${count}` : `${newButton.data.label}`)
-              .setStyle(button_style ?? newButton.data.style!);
+              .setEmoji(button_emoji ?? button.emoji ?? {})
+              .setLabel(button_name ? `${button_name} ${count}` : `${button.label}`)
+              .setStyle(button_style ?? button.style);
           }));
       });
 
@@ -422,8 +404,7 @@ export default class ButtonRoles extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = await channel.messages.safeFetch(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
@@ -436,45 +417,24 @@ export default class ButtonRoles extends SlashCommand {
 
     if (subcommand === 'button') {
       const button_disabled = Boolean(options.getBoolean('button_disabled'));
-      const button_emoji = options.getString('button_emoji');
+      const button_emoji = options.getString('button_emoji') ?? {};
       const button_name = (options.getString('button_name') ?? role.name).slice(0, 63);
-      const button_style = options.getInteger('button_style') ?? Primary;
-
-      const emoji = button_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(button_emoji) : {};
+      const button_style = options.getInteger('button_style') ?? ButtonStyle.Primary;
 
       const buttons = [
         new ButtonBuilder()
           .setCustomId(JSON.stringify({
             c: this.data.name,
             count: 0,
-            roleId: role.id,
+            id: role.id,
           }))
           .setDisabled(button_disabled)
-          .setEmoji(emoji)
+          .setEmoji(button_emoji)
           .setLabel(`${button_name} 0`)
           .setStyle(button_style),
       ];
 
-      const buttonsLength = message.components.reduce((acc: number[], row) => [
-        ...acc, row.components[0].type === Button ? row.components.length : 5,
-      ], []);
-
-      const components = [];
-
-      if (!buttonsLength.length || buttonsLength.every(v => v === 5)) {
-        components.push(...message.components, new ActionRowBuilder<ButtonBuilder>().setComponents(buttons));
-      } else {
-        let index = 0;
-
-        components.push(...message.components.map(row => {
-          if (row.components[0].type !== Button || row.components.length === 5 || index) return row;
-
-          index++;
-
-          return new ActionRowBuilder<ButtonBuilder>(row.toJSON())
-            .addComponents(buttons);
-        }));
-      }
+      const components = this.Util.addButtonsToRows(message.components, buttons);
 
       try {
         await message.edit({ components });
@@ -492,8 +452,7 @@ export default class ButtonRoles extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = await channel.messages.safeFetch(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
@@ -502,17 +461,7 @@ export default class ButtonRoles extends SlashCommand {
     if (subcommand === 'button') {
       const buttonId = options.getString('button', true);
 
-      const components = message.components.map(row => {
-        if (row.components[0].type !== Button) return row;
-        if (row.components.every(element => element.customId !== buttonId)) return row;
-
-        return new ActionRowBuilder<ButtonBuilder>()
-          .setComponents(row.components.reduce((acc: ButtonBuilder[], button) => {
-            if (button.customId === buttonId) return acc;
-
-            return acc.concat(new ButtonBuilder(button.toJSON()));
-          }, <ButtonBuilder[]>[]));
-      }).filter(row => row.components.length);
+      const components = this.Util.reorganizeButtons(this.Util.removeButtonsById(message.components, buttonId));
 
       try {
         await message.edit({ components });
@@ -525,43 +474,41 @@ export default class ButtonRoles extends SlashCommand {
   }
 
   async executeAutocomplete(interaction: AutocompleteInteraction): Promise<any> {
+    if (interaction.responded) return;
+
     const { options } = interaction;
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
-    const res = this[`${subcommand}Autocomplete`]?.(interaction);
+    const response = await this[`${subcommand}Autocomplete`]?.(interaction);
 
-    return interaction.respond(res);
+    return interaction.respond(response);
   }
 
   async editAutocomplete(
     interaction: AutocompleteInteraction<'cached'>,
     res: ApplicationCommandOptionChoiceData[] = [],
   ) {
-    if (interaction.responded) return;
-
     const { client, guild, options } = interaction;
 
-    const channelId = <string>options.get('channel', true).value;
+    const channelId = options.get('channel')?.value;
+    if (!channelId) return res;
 
-    const channel = await guild.channels.fetch(channelId);
-
-    if (!(channel instanceof TextChannel))
-      return interaction.respond(res);
+    const channel = await guild.channels.fetch(`${channelId}`);
+    if (!channel?.isTextBased()) return res;
 
     const focused = options.getFocused(true);
     const pattern = RegExp(`${focused.value}`, 'i');
 
     if (focused.name === 'message_id') {
-      const messages = await channel.messages.fetch({ limit: 100 });
+      const messages = await channel.messages.fetch({ limit: 100 })
+        .then(ms => ms.toJSON().filter(m =>
+          m.author.id === client.user?.id &&
+          m.components.some(c => this.CommandNameRegExp.test(c.components[0].customId!)) &&
+          pattern.test(m.id)));
 
-      const messagesArray = messages.filter(m =>
-        m.author.id === client.user?.id &&
-        m.components.some(c => RegExp(`"c":"${this.data.name}"`).test(c.components[0].customId!)) &&
-        pattern.test(m.id)).toJSON();
-
-      for (let i = 0; i < messagesArray.length; i++) {
-        const { embeds, id } = messagesArray[i];
+      for (let i = 0; i < messages.length; i++) {
+        const { embeds, id } = messages[i];
 
         const { title, description } = embeds[0];
 
@@ -579,46 +526,50 @@ export default class ButtonRoles extends SlashCommand {
 
         if (res.length === 25) break;
       }
+
+      return res;
     }
 
+    const message_id = options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
+    if (!message_id) return res;
+
     if (focused.name === 'button') {
-      const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
-
-      const message = await channel.messages.fetch(message_id);
-
-      if (!(message && message.editable)) return interaction.respond(res);
+      const message = await channel.messages.safeFetch(message_id);
+      if (!message?.editable) return res;
 
       for (let i = 0; i < message.components.length; i++) {
-        const component = message.components[i];
+        const component = <APIActionRowComponent<APIButtonComponent>>message.components[i].toJSON();
 
-        if (component.components[0].type !== Button) continue;
+        if (component.components[0].type !== ComponentType.Button) continue;
 
         for (let j = 0; j < component.components.length; j++) {
-          const button = <ButtonComponent>component.components[j];
+          const button = component.components[j];
 
-          const { customId, disabled, emoji, label, style } = button;
+          if (button.style === ButtonStyle.Link) continue;
 
-          const { roleId } = <ButtonRolesCustomId>JSON.parse(customId!);
+          const { id, roleId } = <ButtonRolesCustomId>(this.Util.JSONparse(button.custom_id) ?? {});
 
-          const role = await guild.roles.fetch(roleId);
+          const role = await guild.roles.fetch(id ?? roleId);
 
           const name = [
             `${i + 1} - ${j + 1}`,
-            emoji?.id ? '' : emoji?.name,
-            label ? ` | ${label}` : '',
+            button.emoji?.id ? '' : button.emoji?.name,
+            button.label ? ` | ${button.label}` : '',
             ` | ${role?.name}`,
-            ` | ${roleId}`,
-            ` | ${style}`,
-            disabled ? ' | disabled' : '',
+            ` | ${id ?? roleId}`,
+            ` | ${button.style}`,
+            button.disabled ? ' | disabled' : '',
           ].join('').slice(0, 100);
 
           if (pattern.test(name))
             res.push({
               name,
-              value: `${customId}`,
+              value: button.custom_id,
             });
         }
       }
+
+      return res;
     }
 
     return res;
@@ -643,21 +594,13 @@ export default class ButtonRoles extends SlashCommand {
   async bulk_create(interaction: ChatInputCommandInteraction<'cached'>): Promise<any> {
     const { guild, locale, options } = interaction;
 
-    const rolesId = options.getString('roles', true).match(/\d{17,}/g)
-      ?.map(id => guild.roles.fetch(id));
+    const rolesId = options.getString('roles', true).match(/\d{17,}/g)?.map(id => guild.roles.fetch(id));
+    if (!rolesId) return interaction.editReply('No IDs were found in the roles input.');
 
-    if (!rolesId)
-      return interaction.editReply('No IDs were found in the roles input.');
+    const roles = await Promise.all(rolesId).then(rs => <Role[]>rs.filter(r => r).slice(0, 25));
+    if (!roles.length) return interaction.editReply('No roles were found in the roles input.');
 
-    const rolesArray = await Promise.all(rolesId)
-      .then(roles => <Role[]>roles.filter(role => role));
-
-    if (!rolesArray.length)
-      return interaction.editReply('No roles were found in the roles input.');
-
-    const rolesGroups = this.Util.splitArrayInGroups(rolesArray.slice(0, 25), 5);
-
-    const components = this.Util.createButtonRoles(rolesGroups);
+    const components = this.Util.createButtonsByRoles({ roles });
 
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
 
@@ -682,28 +625,21 @@ export default class ButtonRoles extends SlashCommand {
   async bulk_add(interaction: ChatInputCommandInteraction<'cached'>): Promise<any> {
     const { guild, locale, options } = interaction;
 
-    let rolesId = options.getString('roles', true).match(/\d{17,}/g);
-
-    if (!rolesId)
-      return interaction.editReply('No IDs were found in the roles input.');
+    const rolesId = options.getString('roles', true).match(/\d{17,}/g);
+    if (!rolesId) return interaction.editReply('No IDs were found in the roles input.');
 
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = await channel.messages.safeFetch(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
-    rolesId = this.Util.filterRolesId(message.components, rolesId);
+    const roles = await Promise.all(this.Util.filterRolesId(message.components, rolesId).map(id =>
+      guild.roles.fetch(id))).then(rs => <Role[]>rs.filter(r => r).slice(0, 25));
+    if (!roles.length) return interaction.editReply('No roles were found in the roles input.');
 
-    const rolesArray = await Promise.all(rolesId.map(id => guild.roles.fetch(id)))
-      .then(roles => <Role[]>roles.filter(role => role));
-
-    if (!rolesArray.length)
-      return interaction.editReply('No roles were found in the roles input.');
-
-    const components = this.Util.addButtonRoles(rolesArray, message.components).slice(0, 5);
+    const components = this.Util.addButtonsByRoles({ roles }, message.components).slice(0, 5);
 
     try {
       await message.edit({ components });
@@ -718,19 +654,16 @@ export default class ButtonRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const rolesId = options.getString('roles', true).match(/\d{17,}/g);
-
-    if (!rolesId)
-      return interaction.editReply('No IDs were found in the roles input.');
+    if (!rolesId) return interaction.editReply('No IDs were found in the roles input.');
 
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = await channel.messages.safeFetch(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
-    const components = this.Util.removeButtonRoles(message.components, rolesId);
+    const components = this.Util.reorganizeButtons(this.Util.removeButtonsByRoleId(message.components, rolesId));
 
     try {
       await message.edit({ components });

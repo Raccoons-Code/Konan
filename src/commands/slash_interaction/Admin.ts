@@ -1,8 +1,8 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, InteractionType, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, InteractionType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Admin extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({
@@ -11,6 +11,8 @@ export default class Admin extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('admin')
       .setDescription('Admin commands (Restricted for bot\'owners).')
+      .setDMPermission(false)
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('guilds')
         .setDescription('Guild management commands.')
         .addSubcommand(subcommand => subcommand.setName('search')

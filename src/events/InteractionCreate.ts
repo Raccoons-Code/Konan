@@ -1,9 +1,9 @@
-import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, codeBlock, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, codeBlock, Colors, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { env } from 'node:process';
 import { ShardingClient } from 'statcord.js';
 import { AnyInteraction } from '../@types';
 import commandHandler from '../commands';
-import { InteractionError } from '../errors';
+import { interactionError } from '../errors';
 import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 const codeBlockLength = codeBlock('properties', '').length;
@@ -28,7 +28,7 @@ export default class InteractionCreate extends Event {
     try {
       await command.execute(<any>interaction);
     } catch (error: any) {
-      new InteractionError({
+      interactionError.send({
         client: client,
         commandName: command.data.name,
         commandType: (<CommandInteraction>interaction).commandType,
@@ -36,11 +36,11 @@ export default class InteractionCreate extends Event {
         error: error,
         options: (<any>interaction).options,
         type: type,
-      }).send();
+      });
 
       const embeds = [
         new EmbedBuilder()
-          .setColor('DarkRed')
+          .setColor(Colors.DarkRed)
           .setTitle(this.t('There was an error while executing this command!', { locale }))
           .setDescription(codeBlock('properties', `${error.name}: ${error.message}`.slice(0, descriptionLength)))
           .setFooter({ text: command.data?.name ?? '' })
@@ -87,33 +87,33 @@ export default class InteractionCreate extends Event {
       ComponentType[interaction.componentType]]?.(<any>interaction);
   }
 
-  ModalSubmit(interaction: ModalSubmitInteraction): ModalSubmit {
-    const { c, command } = this.Util.parseJSON(interaction.customId) ?? {};
+  ModalSubmit(interaction: ModalSubmitInteraction): ModalSubmit | undefined {
+    const { c, command } = this.Util.JSONparse(interaction.customId) ?? {};
 
     return commandHandler.commands.modal_component?.get(c ?? command);
   }
 
-  Button(interaction: ButtonInteraction): ButtonComponentInteraction {
-    const { c, command } = this.Util.parseJSON(interaction.customId) ?? {};
+  Button(interaction: ButtonInteraction): ButtonComponentInteraction | undefined {
+    const { c, command } = this.Util.JSONparse(interaction.customId) ?? {};
 
     return commandHandler.commands.button_component?.get(c ?? command);
   }
 
-  ChatInput(interaction: ChatInputCommandInteraction | AutocompleteInteraction): SlashCommand {
+  ChatInput(interaction: ChatInputCommandInteraction | AutocompleteInteraction): SlashCommand | undefined {
     return commandHandler.commands.slash_interaction?.get(interaction.commandName);
   }
 
-  Message(interaction: MessageContextMenuCommandInteraction): MessageContextMenu {
+  Message(interaction: MessageContextMenuCommandInteraction): MessageContextMenu | undefined {
     return commandHandler.commands.message_context?.get(interaction.commandName);
   }
 
-  SelectMenu(interaction: SelectMenuInteraction): SelectMenuComponentInteraction {
-    const { c, command } = this.Util.parseJSON(interaction.customId) ?? {};
+  SelectMenu(interaction: SelectMenuInteraction): SelectMenuComponentInteraction | undefined {
+    const { c, command } = this.Util.JSONparse(interaction.customId) ?? {};
 
     return commandHandler.commands.selectmenu_component?.get(c ?? command);
   }
 
-  User(interaction: UserContextMenuCommandInteraction): UserContextMenu {
+  User(interaction: UserContextMenuCommandInteraction): UserContextMenu | undefined {
     return commandHandler.commands.user_context?.get(interaction.commandName);
   }
 }

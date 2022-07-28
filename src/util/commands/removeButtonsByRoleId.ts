@@ -1,23 +1,27 @@
 import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIButtonComponent, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent } from 'discord.js';
-import { safeParseJSON } from './safeParseJSON';
+import { ButtonRolesCustomId } from '../../@types';
+import { JSONparse } from './JSONparse';
 
-export function removeButtonRoles(
+export function removeButtonsByRoleId(
   components: ActionRow<MessageActionRowComponent>[] = [],
   roles: string | string[],
 ): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<ButtonBuilder>)[] {
-  if (!Array.isArray(roles)) return removeButtonRoles(components, [roles]);
+  if (!Array.isArray(roles)) return removeButtonsByRoleId(components, [roles]);
 
   return components.map(row => {
     const rowJson = <APIActionRowComponent<APIButtonComponent>>row.toJSON();
 
     if (rowJson.components[0].type !== ComponentType.Button) return row;
 
-    return new ActionRowBuilder<ButtonBuilder>(rowJson)
+    return new ActionRowBuilder<ButtonBuilder>()
       .setComponents(rowJson.components.reduce((acc, element) => {
         const newElement = new ButtonBuilder(element);
 
         if (element.style === ButtonStyle.Link) return acc.concat(newElement);
-        if (roles.includes(safeParseJSON(element.custom_id)?.roleId)) return acc;
+
+        const id = JSONparse<ButtonRolesCustomId>(element.custom_id);
+
+        if (roles.includes(`${id?.id ?? id?.roleId}`)) return acc;
 
         return acc.concat(newElement);
       }, <ButtonBuilder[]>[]));

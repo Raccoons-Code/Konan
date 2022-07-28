@@ -1,4 +1,6 @@
 import { ActionRow, ButtonStyle, ComponentType, MessageActionRowComponent } from 'discord.js';
+import { ButtonRolesCustomId, SelectRolesOptionValue } from '../../@types';
+import { JSONparse } from './JSONparse';
 
 export function filterRolesId(components: ActionRow<MessageActionRowComponent>[], rolesId: string | string[]) {
   if (!Array.isArray(rolesId)) rolesId = [rolesId];
@@ -10,10 +12,10 @@ export function filterRolesId(components: ActionRow<MessageActionRowComponent>[]
       const element = componentJson.components[j];
 
       if (element.type === ComponentType.Button && element.style !== ButtonStyle.Link) {
-        const roleId = JSON.parse(`${element.custom_id}`).roleId;
+        const id = JSONparse<ButtonRolesCustomId>(`${element.custom_id}`);
 
-        if (rolesId.includes(roleId))
-          rolesId.splice(rolesId.indexOf(roleId), 1);
+        if (rolesId.includes(`${id?.id ?? id?.roleId}`))
+          rolesId.splice(rolesId.indexOf(`${id?.id ?? id?.roleId}`), 1);
 
         continue;
       }
@@ -22,10 +24,10 @@ export function filterRolesId(components: ActionRow<MessageActionRowComponent>[]
         for (let k = 0; k < element.options.length; k++) {
           const option = element.options[k];
 
-          const roleId = JSON.parse(`${option.value}`).roleId;
+          const id = JSONparse<SelectRolesOptionValue>(`${option.value}`);
 
-          if (rolesId.includes(roleId))
-            rolesId.splice(rolesId.indexOf(roleId), 1);
+          if (rolesId.includes(`${id?.id ?? id?.roleId}`))
+            rolesId.splice(rolesId.indexOf(`${id?.id ?? id?.roleId}`), 1);
 
           continue;
         }

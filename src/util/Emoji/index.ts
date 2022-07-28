@@ -1,6 +1,9 @@
 const Emoji = new class Emoji {
-  Success = '✅';
   Danger = '❌';
+  Error = '❌';
+  Info = '💬';
+  Success = '✅';
+  Warning = '⚠️';
 };
 
 export default Emoji;

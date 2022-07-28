@@ -29,10 +29,8 @@ export default class Translate extends MessageContextMenu {
           .setColor('Random')
           .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
           .setTitle([
-            'Translation from',
-            languages[<'auto'>translation.from.language.iso],
-            'to',
-            languages[<'auto'>to],
+            'Translation from', languages[<'auto'>translation.from.language.iso],
+            'to', languages[<'auto'>to],
           ].join(' ')),
       ],
     });

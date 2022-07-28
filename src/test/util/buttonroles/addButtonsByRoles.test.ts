@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Role } from 'discord.js';
 import assert from 'node:assert';
-import Util from './../util';
+import Util from '../util';
 
 {
   const params = <Role[]><unknown>[
@@ -18,7 +18,7 @@ import Util from './../util';
         .setCustomId(JSON.stringify({
           c: 'buttonroles',
           count: 0,
-          roleId: role.id,
+          id: role.id,
         }))
         .setLabel(`${role.name} 0`)
         .setStyle(ButtonStyle.Primary))),
@@ -30,7 +30,7 @@ import Util from './../util';
         .setCustomId(JSON.stringify({
           c: 'buttonroles',
           count: 0,
-          roleId: role.id,
+          id: role.id,
         }))
         .setLabel(`${role.name} 0`)
         .setStyle(ButtonStyle.Primary))),
@@ -39,13 +39,13 @@ import Util from './../util';
         .setCustomId(JSON.stringify({
           c: 'buttonroles',
           count: 0,
-          roleId: role.id,
+          id: role.id,
         }))
         .setLabel(`${role.name} 0`)
         .setStyle(ButtonStyle.Primary))),
   ];
 
-  const buttonRoles = Util.addButtonRoles(params.slice(3), <any[]>components);
+  const buttonRoles = Util.addButtonsByRoles({ roles: params.slice(3) }, <any[]>components);
 
   assert.deepEqual(buttonRoles, expected);
 }

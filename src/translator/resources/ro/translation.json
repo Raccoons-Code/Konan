@@ -6,7 +6,7 @@
   "automatic": "automat",
   "backup404": "Copia de rezervă nu a putut fi găsită.",
   "backupDeleted": "Backup şters cu succes.",
-  "backupError": "Eroare! Nu se poate copia de rezervă!",
+  "backupError": "Nu se poate copia de rezervă!",
   "backupDone": "Backup realizat cu succes.",
   "ban404": "Acest utilizator nu este interzis!",
   "banError": "Eroare! Acest utilizator nu poate fi interzis.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Ați încercat deja {{number}}!\n:arrow_up_small: Acest lucru este mai mare!",
   "numberRepeatSmaller": "Ați încercat deja {{number}}!\n:arrow_down_small: Este mai mic!",
   "numberSmaller": "{{number}} este mai mică!",
-  "onlyOnServer": "Eroare! Această comandă poate fi utilizată doar pe un singur server.",
+  "onlyOnServer": "Această comandă poate fi utilizată doar pe un singur server.",
   "owner": "proprietar",
   "PERMISSION": "{{permission}}",
   "permissions": "permisiuni",
@@ -109,13 +109,5 @@
   "userNotOwner": "Nu sunteți proprietarul serverului.",
   "userTimedOut": "Utilizator a fost pedepsit cu succes. Până la {{time}} {{timeR}}.",
   "userUnbanned": "Utilizator debanat cu succes!",
-  "wordsnack": "Snack-uri cuvânt",
-  "CATEGORY": "Categorie",
-  "DM": "Mesaj direct",
-  "NEWS": "Știri",
-  "STORE": "Magazin",
-  "TEXT": "Text",
-  "THREAD": "Discuchar@@0ie",
-  "UNKNOWN": "Necunoscut",
-  "VOICE": "Voce"
+  "wordsnack": "Snack-uri cuvânt"
 }

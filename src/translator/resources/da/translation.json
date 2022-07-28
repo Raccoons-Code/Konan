@@ -6,7 +6,7 @@
   "automatic": "automatisk",
   "backup404": "Kunne ikke finde sikkerhedskopien.",
   "backupDeleted": "Backup slettet.",
-  "backupError": "Fejl! Kan ikke sikkerhedskopiere!",
+  "backupError": "Kan ikke sikkerhedskopiere!",
   "backupDone": "Backup udført.",
   "ban404": "Denne bruger er ikke udelukket!",
   "banError": "Fejl! Denne bruger kan ikke udelukkes.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Du har allerede prøvet {{number}}!\n:arrow_up_small: Dette er større!",
   "numberRepeatSmaller": "Du har allerede prøvet {{number}}!\n:arrow_down_small: Dette er mindre!",
   "numberSmaller": "{{number}} er mindre!",
-  "onlyOnServer": "Fejl! Denne kommando kan kun bruges på én server.",
+  "onlyOnServer": "Denne kommando kan kun bruges på én server.",
   "owner": "ejer",
   "PERMISSION": "{{permission}}",
   "permissions": "tilladelser",
@@ -109,13 +109,5 @@
   "userNotOwner": "Du er ikke ejer af serveren.",
   "userTimedOut": "Bruger straf. Indtil {{time}} {{timeR}}.",
   "userUnbanned": "Bruger fjernet fra forbuddet!",
-  "wordsnack": "Ord Snacks",
-  "CATEGORY": "Kategori",
-  "DM": "Direkte besked",
-  "NEWS": "Nyheder",
-  "STORE": "Butik",
-  "TEXT": "Tekst",
-  "THREAD": "Tråd",
-  "UNKNOWN": "Ukendt",
-  "VOICE": "Stemme"
+  "wordsnack": "Ord Snacks"
 }

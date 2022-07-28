@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ComponentType } from 'discord.js';
+import { ActionRowBuilder, APIActionRowComponent, APIButtonComponentWithCustomId, ButtonBuilder, ButtonInteraction, Colors, ComponentType, EmbedBuilder } from 'discord.js';
 import { ButtonRolesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
@@ -7,60 +7,85 @@ export default class ButtonRoles extends ButtonComponentInteraction {
     super({
       name: 'buttonroles',
       description: 'Button roles',
-      clientPermissions: ['ManageRoles'],
+      appPermissions: ['ManageRoles'],
     });
   }
 
   async execute(interaction: ButtonInteraction<'cached'>) {
-    const { customId, member } = interaction;
+    const { appPermissions, customId, member } = interaction;
 
-    const { roleId } = <ButtonRolesCustomId>JSON.parse(customId);
+    const appPerms = appPermissions?.missing(this.data.appPermissions!);
+
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingPermission');
+
+    const { id, roleId } = <ButtonRolesCustomId>JSON.parse(customId);
+
+    const memberHasRole = member.roles.cache.has(id ?? roleId);
 
     try {
-      if (member.roles.resolve(roleId)) {
-        await member.roles.remove(roleId);
-
-        return this.setComponents(interaction, false);
+      if (memberHasRole) {
+        await member.roles.remove(id ?? roleId);
       } else {
-        await member.roles.add(roleId);
-
-        return this.setComponents(interaction, true);
+        await member.roles.add(id ?? roleId);
       }
+
+      await this.setComponents(interaction, memberHasRole);
+      this.sendResponse(interaction, id ?? roleId, memberHasRole);
     } catch {
       await interaction.deferUpdate();
     }
   }
 
-  async setComponents(interaction: ButtonInteraction<'cached'>, boolean: boolean) {
+  async setComponents(interaction: ButtonInteraction<'cached'>, memberHasRole: boolean) {
     const { customId, component, message } = interaction;
 
-    const { c, count, d, roleId } = <ButtonRolesCustomId>JSON.parse(customId);
+    const { c, count, id, roleId } = <ButtonRolesCustomId>JSON.parse(customId);
 
     const newCustomId = {
       c,
-      count: count + (boolean ? count < Number.MAX_SAFE_INTEGER ? 1 : 0 : count > 0 ? -1 : 0),
-      d,
-      roleId,
+      count: count + (memberHasRole ? count < Number.MAX_SAFE_INTEGER ? 1 : 0 : count > 0 ? -1 : 0),
+      id: id ?? roleId,
     };
 
     const [, label] = component.label?.match(this.regexp.labelWithCount) ?? [];
 
     const components = message.components.map(row => {
-      if (row.components[0].type !== ComponentType.Button) return row;
-      if (row.components.every(element => element.customId !== customId)) return row;
+      const rowJson = <APIActionRowComponent<APIButtonComponentWithCustomId>>row.toJSON();
 
-      return new ActionRowBuilder<ButtonBuilder>(row.toJSON())
-        .setComponents(row.components.map(element => {
-          const button = new ButtonBuilder(element.toJSON());
+      if (rowJson.components[0].type !== ComponentType.Button) return row;
+      if (rowJson.components.every(element => element.custom_id !== customId)) return row;
 
-          if (element.customId !== customId) return button;
+      return new ActionRowBuilder<ButtonBuilder>()
+        .setComponents(rowJson.components.map(element => {
+          const button = new ButtonBuilder(element);
+
+          if (element.custom_id !== customId) return button;
 
           return button
             .setCustomId(JSON.stringify(newCustomId))
-            .setLabel([label, newCustomId.count].join(' ').trim());
+            .setLabel(`${label} ${newCustomId.count}`);
         }));
     });
 
     return interaction.update({ components });
+  }
+
+  async sendResponse(interaction: ButtonInteraction<'cached'>, id: string, memberHasRole: boolean) {
+    const { guild } = interaction;
+
+    const role = guild.roles.resolve(id);
+    if (!role) return;
+
+    const embeds = [
+      new EmbedBuilder()
+        .setColor(memberHasRole ? Colors.Green : Colors.Red),
+    ];
+
+    embeds[0].addFields(memberHasRole ?
+      { name: 'Added', value: `${role}` } :
+      { name: 'Removed', value: `${role}` });
+
+    return interaction.followUp({ embeds, ephemeral: true });
   }
 }

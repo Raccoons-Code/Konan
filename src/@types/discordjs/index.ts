@@ -4,16 +4,16 @@ import ApplicationStats from '../../client/ApplicationStats';
 
 declare module 'discord.js' {
   interface BaseInteraction {
-    isAutocomplete(): this is AutocompleteInteraction;
-    isMessageComponent(): this is MessageComponentInteraction;
-    isModalSubmit(): this is ModalSubmitInteraction;
+    isAutocomplete(): this is AutocompleteInteraction
+    isMessageComponent(): this is MessageComponentInteraction
+    isModalSubmit(): this is ModalSubmitInteraction
   }
 
   interface Client {
-    commands: Record<Collection<string, any>>;
-    discordTogether: DiscordTogether<Record<string, string>>;
-    invite: string;
-    stats: ApplicationStats;
+    commands: Record<string, Collection<string, any>>
+    discordTogether: DiscordTogether<Record<string, string>>
+    invite: string
+    stats: ApplicationStats
 
     sendError(reason: Error): Promise<void>
     topggAutoposter(token?: string | undefined): Promise<void>
@@ -26,9 +26,17 @@ declare module 'discord.js' {
     isModeratableBy(member: GuildMember): boolean
   }
 
+  interface GuildMemberRoleManager {
+    get lowest(): Role
+  }
+
   interface Message {
-    args: string[];
-    commandName: string;
-    text: string;
+    args: string[]
+    commandName: string
+    text: string
+  }
+
+  interface MessageManager {
+    safeFetch(options: MessageResolvable): Promise<Message | null>
   }
 }

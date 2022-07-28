@@ -1,8 +1,9 @@
-import { ActionRow, ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIRole, APISelectMenuComponent, ComponentType, MessageActionRowComponent, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+import { JSONparse } from './JSONparse';
 
 export function setDefaultRole(
   components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<SelectMenuBuilder>)[],
-  defaultRole: Role,
+  defaultRole: APIRole | Role,
 ) {
   return components.map(row => {
     const rowJson = <APIActionRowComponent<APISelectMenuComponent>>row.toJSON();
@@ -13,8 +14,12 @@ export function setDefaultRole(
       .setComponents(rowJson.components.map(element => {
         const selectMenu = new SelectMenuBuilder(element);
 
-        return selectMenu.setOptions(element.options.map(option => new SelectMenuOptionBuilder(option)
-          .setDefault(JSON.parse(option.value).roleId === defaultRole.id)));
+        return selectMenu.setOptions(element.options.map(option => {
+          const value = JSONparse(option.value);
+
+          return new SelectMenuOptionBuilder(option)
+            .setDefault(defaultRole.id === (value?.id ?? value?.roleId));
+        }));
       }));
   });
 }

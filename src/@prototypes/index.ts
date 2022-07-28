@@ -1,1 +1,1 @@
-import './discord.js';
+import './discordjs';

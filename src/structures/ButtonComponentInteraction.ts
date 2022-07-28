@@ -1,8 +1,8 @@
 import { ButtonInteraction } from 'discord.js';
 import { ComponentInteractionData } from '../@types';
-import BaseCommand from './BaseCommand';
+import BaseApplicationCommand from './BaseApplicationCommand';
 
-export default abstract class ButtonComponentInteraction extends BaseCommand {
+export default abstract class ButtonComponentInteraction extends BaseApplicationCommand {
   constructor(public data: ComponentInteractionData) {
     super();
   }

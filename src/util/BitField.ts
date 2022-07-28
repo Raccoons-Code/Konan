@@ -1,12 +1,28 @@
 /**
- * Data structure that makes it easy to interact with a bitfield.
+ * @internal
  */
-export default class BitField<S extends string, N extends bigint> {
+export interface BitFieldConstructor<S extends string, N extends bigint> {
+  new(): BitField<S, N>;
+  new(bits: BitFieldResolvable<S, N>): BitField<S, N>;
+  DefaultBit: N;
+  Flags: EnumLike<S, N>;
+  resolve(bit: BitFieldResolvable<S, N>): N
+}
+
+// Represents an immutable version of a collection
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export interface BitField<S extends string, N extends bigint> {
+  constructor: BitFieldConstructor<S, N>;
   /**
    * Bitfield of the packed bits
    */
   bitField: bigint | N;
+}
 
+/**
+ * Data structure that makes it easy to interact with a bitfield.
+ */
+export class BitField<S extends string, N extends bigint> {
   static DefaultBit = 0n;
 
   /**
@@ -15,12 +31,8 @@ export default class BitField<S extends string, N extends bigint> {
    */
   static Flags: EnumLike<any, bigint> = {};
 
-  constructor(bits: BitFieldResolvable<S, N> = <N>BitField.DefaultBit) {
-    this.bitField = this.#_constructor.resolve(bits);
-  }
-
-  get #_constructor() {
-    return this.constructor as typeof BitField;
+  constructor(bits: BitFieldResolvable<S, N> = BitField.DefaultBit) {
+    this.bitField = this.constructor.resolve(bits);
   }
 
   /**
@@ -29,9 +41,10 @@ export default class BitField<S extends string, N extends bigint> {
    * @returns These bits or new BitField if the instance is frozen.
    */
   add(...bits: BitFieldResolvable<S, N>[]) {
-    const total = <N>bits.reduce((prev, p) => prev | this.#_constructor.resolve(p), this.#_constructor.DefaultBit);
+    const total = bits.reduce((prev: bigint, p) =>
+      prev | this.constructor.resolve(p), this.constructor.DefaultBit);
 
-    if (Object.isFrozen(this)) return new this.#_constructor(this.bitField | total);
+    if (Object.isFrozen(this)) return new this.constructor(this.bitField | total);
 
     this.bitField |= total;
 
@@ -43,7 +56,7 @@ export default class BitField<S extends string, N extends bigint> {
    * @param bits Bit(s) to check for
    */
   any(...bits: BitFieldResolvable<S, N>[]) {
-    return (this.bitField & this.#_constructor.resolve(bits)) !== this.#_constructor.DefaultBit;
+    return (this.bitField & this.constructor.resolve(bits)) !== this.constructor.DefaultBit;
   }
 
   /**
@@ -51,7 +64,7 @@ export default class BitField<S extends string, N extends bigint> {
    * @param bits Bit(s) to check for
    */
   equals(...bits: BitFieldResolvable<S, N>[]) {
-    return this.bitField === this.#_constructor.resolve(bits);
+    return this.bitField === this.constructor.resolve(bits);
   }
 
   /**
@@ -66,7 +79,7 @@ export default class BitField<S extends string, N extends bigint> {
    * @param bits Bit(s) to check for
    */
   has(...bits: BitFieldResolvable<S, N>[]) {
-    const bit = this.#_constructor.resolve(bits) as N;
+    const bit = this.constructor.resolve(bits);
     return (this.bitField & bit) === bit;
   }
 
@@ -75,7 +88,7 @@ export default class BitField<S extends string, N extends bigint> {
    * @param bits Bit(s) to check for
    */
   missing(...bits: BitFieldResolvable<S, N>[]): S[] {
-    return new this.#_constructor(bits).remove(this).toArray() as S[];
+    return new this.constructor(bits).remove(this).toArray() as S[];
   }
 
   /**
@@ -84,9 +97,10 @@ export default class BitField<S extends string, N extends bigint> {
    * @returns These bits or new BitField if the instance is frozen.
    */
   remove(...bits: BitFieldResolvable<S, N>[]) {
-    const total = bits.reduce((prev, p) => prev | this.#_constructor.resolve(p), this.#_constructor.DefaultBit);
+    const total = bits.reduce((prev: bigint, p) =>
+      prev | this.constructor.resolve(p), this.constructor.DefaultBit);
 
-    if (Object.isFrozen(this)) return new this.#_constructor(this.bitField & ~total);
+    if (Object.isFrozen(this)) return new this.constructor(this.bitField & ~total);
 
     this.bitField &= ~total;
 
@@ -98,16 +112,16 @@ export default class BitField<S extends string, N extends bigint> {
    * bit is available.
    */
   serialize() {
-    return Object.entries(this.#_constructor.Flags)
-      .reduce((acc, [flag, bit]) => ({ ...acc, [flag]: this.has(<N>bit) }),
+    return Object.entries(this.constructor.Flags)
+      .reduce((acc, [flag, bit]) => ({ ...acc, [flag]: this.has(bit) }),
         <Record<S, boolean>>{});
   }
 
   /**
    * Gets an {@link Array} of bitfield names based on the bits available.
    */
-  toArray(): S[] {
-    return Object.keys(this.#_constructor.Flags).filter(bit => this.has(<S>bit)) as S[];
+  toArray() {
+    return Object.keys(this.constructor.Flags).filter((bit) => this.has(<S>bit)) as S[];
   }
 
   toJSON() {
@@ -145,6 +159,8 @@ export default class BitField<S extends string, N extends bigint> {
   }
 }
 
+export default BitField;
+
 /**
  * Data that can be resolved to give a bitfield. This can be:
  * * A bit number (this can be a number literal or a value taken from {@link BitField.Flags})
@@ -156,7 +172,9 @@ export type BitFieldResolvable<S extends string, N extends bigint> =
   | `${bigint}`
   | BitField<S, N>
   | BitFieldResolvable<S, N>[]
+  | bigint
+  | number
   | N
-  | S;
+  | S
 
 type EnumLike<E, V> = Record<keyof E, V>

@@ -6,7 +6,7 @@
   "automatic": "automatisch",
   "backup404": "Sicherung konnte nicht gefunden werden.",
   "backupDeleted": "Sicherung erfolgreich gelöscht.",
-  "backupError": "Fehler! Sicherung nicht möglich!",
+  "backupError": "Sicherung nicht möglich!",
   "backupDone": "Sicherung erfolgreich abgeschlossen.",
   "ban404": "Dieser Benutzer ist nicht gesperrt!",
   "banError": "Fehler! Benutzer konnte nicht gesperrt werden.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Du hast bereits {{number}}ausprobiert!\n:arrow_up_small: Das ist besser!",
   "numberRepeatSmaller": "Du hast bereits {{number}}ausprobiert!\n:arrow_down_small: Das ist kleiner!",
   "numberSmaller": "{{number}} ist kleiner!",
-  "onlyOnServer": "Fehler! Dieser Befehl kann nur auf einem Server verwendet werden.",
+  "onlyOnServer": "Dieser Befehl kann nur auf einem Server verwendet werden.",
   "owner": "besitzer",
   "PERMISSION": "{{permission}}",
   "permissions": "berechtigungen",
@@ -109,13 +109,5 @@
   "userNotOwner": "Sie sind nicht der Besitzer des Servers.",
   "userTimedOut": "Benutzer erfolgreich bestraft. Bis {{time}} {{timeR}}.",
   "userUnbanned": "Benutzer erfolgreich entbannt!",
-  "wordsnack": "Wort Snacks",
-  "CATEGORY": "Kategorie",
-  "DM": "Direkte Nachricht",
-  "NEWS": "Nachrichten",
-  "STORE": "Shop",
-  "TEXT": "Text",
-  "THREAD": "Thread",
-  "UNKNOWN": "Unbekannt",
-  "VOICE": "Stimme"
+  "wordsnack": "Wort Snacks"
 }

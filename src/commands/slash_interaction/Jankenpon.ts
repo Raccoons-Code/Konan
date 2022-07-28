@@ -3,8 +3,8 @@ import JKP from '../../JKP';
 import { SlashCommand } from '../../structures';
 
 export default class Jankenpon extends SlashCommand {
-  [k: string]: any;
-  emoji: { [k: string]: string } = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };
+  [x: string]: any;
+  emoji: { [x: string]: string } = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };
 
   constructor() {
     super({
@@ -104,7 +104,7 @@ export default class Jankenpon extends SlashCommand {
   }
 
   async game(interaction: ChatInputCommandInteraction) {
-    const { locale, member, options, user } = <ChatInputCommandInteraction<'cached'>>interaction;
+    const { member, options, user } = <ChatInputCommandInteraction<'cached'>>interaction;
 
     const name = member?.displayName ?? user.username;
 
@@ -128,7 +128,7 @@ export default class Jankenpon extends SlashCommand {
 
     if (subcommand === 'multiplayer') {
       if (!interaction.inCachedGuild())
-        return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
+        return this.replyOnlyOnServer(interaction);
 
       const player2 = options.getMember('opponent');
 
@@ -156,7 +156,7 @@ export default class Jankenpon extends SlashCommand {
   }
 
   async spock(interaction: ChatInputCommandInteraction) {
-    const { locale, member, options, user } = <ChatInputCommandInteraction<'cached'>>interaction;
+    const { member, options, user } = <ChatInputCommandInteraction<'cached'>>interaction;
 
     const name = member?.displayName ?? user.username;
 
@@ -180,7 +180,7 @@ export default class Jankenpon extends SlashCommand {
 
     if (subcommand === 'multiplayer') {
       if (!interaction.inCachedGuild())
-        return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
+        return this.replyOnlyOnServer(interaction);
 
       const player2 = options.getMember('opponent');
 

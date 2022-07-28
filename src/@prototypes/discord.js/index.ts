@@ -1,2 +1,0 @@
-import './BaseInteraction';
-import './GuildMember';

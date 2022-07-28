@@ -16,12 +16,12 @@ const journals = [{
   url: 'https://game-news-api.herokuapp.com/all',
 }];
 
-const languages: { [k: string]: string } = {
+const languages: { [x: string]: string } = {
   pt: 'Portuguese',
 };
 
 export default class News extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({

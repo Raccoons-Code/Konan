@@ -5,7 +5,7 @@ import { ButtonComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
 
 export default class Help extends ButtonComponentInteraction {
-  [k: string]: any;
+  [x: string]: any;
   limit = Util.Constants.helpPageLimit;
 
   constructor() {

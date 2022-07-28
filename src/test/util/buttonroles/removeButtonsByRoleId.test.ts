@@ -1,6 +1,6 @@
 import { ActionRow, APIActionRowComponent, APIButtonComponent, APISelectMenuComponent, ComponentType, MessageActionRowComponent } from 'discord.js';
 import assert from 'node:assert';
-import Util from './../util';
+import Util from '../util';
 
 const rows = <ActionRow<MessageActionRowComponent>[]>[
   {
@@ -35,5 +35,5 @@ const rows = <ActionRow<MessageActionRowComponent>[]>[
 
 const expected = rows[0].toJSON().components;
 
-assert.deepStrictEqual(Util.removeButtonRoles(rows, '2')[0].components[0].toJSON(), expected[0]);
-assert.deepStrictEqual(Util.removeButtonRoles(rows, '1')[0].components[0].toJSON(), expected[1]);
+assert.deepStrictEqual(Util.removeButtonsByRoleId(rows, '2')[0].components[0].toJSON(), expected[0]);
+assert.deepStrictEqual(Util.removeButtonsByRoleId(rows, '1')[0].components[0].toJSON(), expected[1]);

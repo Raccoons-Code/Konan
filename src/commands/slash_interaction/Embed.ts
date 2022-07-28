@@ -1,15 +1,15 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, InteractionType, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, InteractionType, RouteBases, SlashCommandBuilder, TextChannel } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Embed extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({
       category: 'Utility',
-      clientPermissions: ['SendMessages'],
+      appPermissions: ['SendMessages', 'AttachFiles'],
       userPermissions: ['ManageMessages'],
     });
 
@@ -74,34 +74,25 @@ export default class Embed extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
-    const { locale } = interaction;
+    if (!interaction.inCachedGuild())
+      return this.replyOnlyOnServer(interaction);
 
-    if (!interaction.inCachedGuild()) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
-
-      return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
-    }
-
-    const { memberPermissions, options } = interaction;
+    const { channel, client, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
-    if (userPerms.length) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
+    if (userPerms.length)
+      return this.replyMissingPermission(interaction, userPerms, 'missingUserPermission');
 
-      return interaction.reply({
-        content: this.t('missingUserPermission', {
-          locale,
-          permission: this.t(userPerms[0], { locale }),
-        }),
-        ephemeral: true,
-      });
-    }
+    const appPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.appPermissions!);
+
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingChannelPermission');
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
     if (interaction.type === ApplicationCommandAutocomplete)
-      return this[`${subcommand}Autocomplete`]?.(interaction);
+      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -109,20 +100,17 @@ export default class Embed extends SlashCommand {
   }
 
   async send(interaction: ChatInputCommandInteraction<'cached'>) {
-    const { client, locale, member, options } = interaction;
+    const { client, member, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const content = options.getString('content')?.slice(0, 4096);
     const [, title, description] = options.getString('embed')?.match(this.regexp.embed) ?? [];
     const attachment = options.getAttachment('attachment')!;
 
-    const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
+    const appPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.appPermissions!);
 
-    if (clientPerms?.length)
-      return interaction.editReply(this.t('missingChannelPermission', {
-        locale,
-        permission: this.t(clientPerms[0], { locale }),
-      }));
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingChannelPermission');
 
     const embeds = [
       new EmbedBuilder()
@@ -134,27 +122,23 @@ export default class Embed extends SlashCommand {
         .setTitle(title || null),
     ];
 
-    if (!clientPerms?.includes('SendMessages')) {
-      try {
-        await channel.send({ content, embeds });
+    try {
+      await channel.send({ content, embeds });
 
-        return interaction.editReply('☑️').catch(() => null);
-      } catch (error) {
-        return interaction.editReply('❌').catch(() => null);
-      }
+      return interaction.editReply('☑️').catch(() => null);
+    } catch (error) {
+      return interaction.editReply('❌').catch(() => null);
     }
   }
 
   async edit(interaction: ChatInputCommandInteraction<'cached'>) {
-    const { client, locale, member, options } = interaction;
+    const { locale, member, options } = interaction;
 
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = await channel.messages.safeFetch(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
-
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     const subcommand = options.getSubcommand();
@@ -162,30 +146,53 @@ export default class Embed extends SlashCommand {
     if (subcommand === 'embed') {
       const [, title, description] = options.getString('embed')?.match(this.regexp.embed) ?? [];
       const content = options.getString('content')?.slice(0, 4096);
-      const attachment = options.getAttachment('attachment')!;
+      const attachment = options.getAttachment('attachment');
 
-      const embeds = [
-        new EmbedBuilder()
-          .setColor('Random')
-          .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
-          .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
-          .setImage(attachment.url)
-          .setTimestamp(Date.now())
-          .setTitle(title || null),
-      ];
+      if (`${content} ${title || description}` === 'null null')
+        return interaction.editReply('Unable to delete all fields.');
 
-      const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
+      const embeds = (title || description) ?
+        ['null'].includes(title || description) ?
+          [] :
+          [
+            new EmbedBuilder()
+              .setColor('Random')
+              .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
+              .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
+              .setImage(attachment?.url ?? message.attachments.first()?.url ?? RouteBases.cdn)
+              .setTimestamp(Date.now())
+              .setTitle(title || null),
+          ] :
+        message.embeds;
 
-      if (!clientPerms?.includes('SendMessages')) {
-        try {
-          await message.edit({ content, embeds });
+      const files = embeds.length ?
+        [] :
+        attachment ?
+          [attachment] :
+          message.embeds[0].image ?
+            [message.embeds[0].image.url] :
+            message.attachments.toJSON();
 
-          return interaction.editReply('❌');
-        } catch (error) {
-          return interaction.editReply('❌');
-        }
+      try {
+        await message.edit({ content: content == 'null' ? null : content || message.content, embeds, files });
+
+        return interaction.editReply(this.Util.Emoji.Success);
+      } catch (error) {
+        return interaction.editReply(this.Util.Emoji.Danger);
       }
     }
+  }
+
+  async executeAutocomplete(interaction: AutocompleteInteraction) {
+    if (interaction.responded) return;
+
+    const { options } = interaction;
+
+    const subcommand = options.getSubcommand();
+
+    const response = await this[`${subcommand}Autocomplete`]?.(interaction);
+
+    return interaction.respond(response);
   }
 
   async editAutocomplete(
@@ -196,26 +203,24 @@ export default class Embed extends SlashCommand {
 
     const { client, guild, options } = interaction;
 
-    const channelId = <string>options.get('channel', true).value;
+    const channelId = options.get('channel')?.value;
+    if (!channelId) return res;
 
-    const channel = await guild.channels.fetch(channelId);
-
-    if (!(channel instanceof TextChannel))
-      return interaction.respond(res);
+    const channel = await guild.channels.fetch(`${channelId}`);
+    if (!channel?.isTextBased()) return res;
 
     const focused = options.getFocused(true);
     const pattern = RegExp(`${focused.value}`, 'i');
 
     if (focused.name === 'message_id') {
-      const messages = await channel.messages.fetch({ limit: 100 });
+      const messages = await channel.messages.fetch({ limit: 100 })
+        .then(ms => ms.toJSON().filter(m =>
+          m.author.id === client.user?.id &&
+          m.embeds.length &&
+          pattern.test(`${m.id}`)));
 
-      const messages_array = messages.filter(m =>
-        m.author.id === client.user?.id &&
-        m.embeds.length > 0 &&
-        pattern.test(`${m.id}`)).toJSON();
-
-      for (let i = 0; i < messages_array.length; i++) {
-        const { embeds, id } = messages_array[i];
+      for (let i = 0; i < messages.length; i++) {
+        const { embeds, id } = messages[i];
 
         const { title, description } = embeds[0];
 
@@ -225,16 +230,17 @@ export default class Embed extends SlashCommand {
           description ? ` | ${description}` : '',
         ].join('').slice(0, 100);
 
-        if (title || description)
-          res.push({
-            name,
-            value: `${id}`,
-          });
+        res.push({
+          name,
+          value: `${id}`,
+        });
 
         if (res.length === 25) break;
       }
+
+      return res;
     }
 
-    return interaction.respond(res);
+    return res;
   }
 }

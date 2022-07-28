@@ -5,7 +5,7 @@ export default class Kick extends SlashCommand {
   constructor() {
     super({
       category: 'Moderation',
-      clientPermissions: ['KickMembers'],
+      appPermissions: ['KickMembers'],
       userPermissions: ['KickMembers'],
     });
 
@@ -32,25 +32,19 @@ export default class Kick extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return this.replyOnlyOnServer(interaction);
 
     const { appPermissions, guild, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
     if (userPerms.length)
-      return interaction.editReply(this.t('missingUserPermission', {
-        locale,
-        permission: this.t(userPerms[0], { locale }),
-      }));
+      return this.replyMissingPermission(interaction, userPerms, 'missingUserPermission');
 
-    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
+    const appPerms = appPermissions?.missing(this.props!.appPermissions!);
 
-    if (clientPerms?.length)
-      return interaction.editReply(this.t('missingPermission', {
-        locale,
-        permission: this.t(clientPerms[0], { locale }),
-      }));
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingPermission');
 
     const user = options.getMember('user');
 

@@ -2,16 +2,17 @@ import { Collection } from 'discord.js';
 import { GlobSync } from 'glob';
 import { readdirSync, statSync } from 'node:fs';
 import { join, posix } from 'node:path';
+import { AnyCommandCollection } from '../@types';
 import { client } from '../client';
 import { SlashCommand } from '../structures';
 import Util from '../util';
 
 class CommandHandler {
   #applicationCommandTypes!: string[];
-  #commands!: { [k: string]: Collection<string, any> };
-  #commandTypes!: { [k: string]: string[] } | string[];
-  commandsByCategory: { [k: string]: Collection<string, SlashCommand> } = {};
-  commandsSize: { [k: string]: number } = {};
+  #commands!: Record<string, Collection<string, AnyCommandCollection>>;
+  #commandTypes!: Record<string, string[]> | string[];
+  commandsByCategory: Record<string, Collection<string, SlashCommand>> = {};
+  commandsSize: Record<string, number> = {};
   errors: Error[] = [];
 
   get applicationCommandTypes(): string[] {
@@ -23,7 +24,7 @@ class CommandHandler {
     this.#applicationCommandTypes = value;
   }
 
-  get commandTypes(): { [k: string]: string[] } | string[] {
+  get commandTypes(): Record<string, string[]> | string[] {
     return this.#commandTypes ? this.#commandTypes : this.commandTypes = this.getCommandTypes();
   }
 
@@ -31,11 +32,11 @@ class CommandHandler {
     this.#commandTypes = value;
   }
 
-  get commands(): { [k: string]: Collection<string, any> } {
+  get commands(): Record<string, Collection<string, any>> {
     return this.#commands;
   }
 
-  getCommandTypes(commandTypes: { [k: string]: string[] } = {}) {
+  getCommandTypes(commandTypes: Record<string, string[]> = {}) {
     const types = readdirSync(__dirname).filter(f => statSync(join(__dirname, f)).isDirectory());
 
     for (let i = 0; i < types.length; i++) {
@@ -52,7 +53,10 @@ class CommandHandler {
     return commandTypes;
   }
 
-  async loadCommands(commandTypes = this.commandTypes, commands: { [k: string]: Collection<string, any> } = {}) {
+  async loadCommands(
+    commandTypes = this.commandTypes,
+    commands: Record<string, Collection<string, any>> = {},
+  ) {
     const dirs = Object.values(commandTypes).flat();
 
     for (let i = 0; i < dirs.length; i++) {

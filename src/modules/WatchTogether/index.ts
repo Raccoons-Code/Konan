@@ -2,8 +2,8 @@ import { DiscordTogether } from 'discord-together';
 import { client } from '../../client';
 
 class WatchTogether {
-  discordTogether!: DiscordTogether<{ [k: string]: string }>;
-  applications!: (keyof DiscordTogether<{ [k: string]: string }>['applications'])[];
+  discordTogether!: DiscordTogether<Record<string, string>>;
+  applications!: (keyof DiscordTogether<Record<string, string>>['applications'])[];
 
   constructor() {
     this.discordTogether = new DiscordTogether(<any>client);

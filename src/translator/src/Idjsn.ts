@@ -31,7 +31,7 @@ class Idjsn {
     if (Array.isArray(key))
       return key.reduce((acc, k) => `${acc} ${this.t(k, options)}`, '');
 
-    key = this.translator.translate(key, options)!;
+    key = this.translator.translate(key, options);
 
     if (typeof key === 'string') {
       key = this.interpolator.interpolate(key, options);

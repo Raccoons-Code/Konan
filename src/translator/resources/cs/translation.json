@@ -6,7 +6,7 @@
   "automatic": "automatický",
   "backup404": "Zálohu nelze najít.",
   "backupDeleted": "Záloha byla úspěšně odstraněna.",
-  "backupError": "Chyba! Nelze zálohovat!",
+  "backupError": "Nelze zálohovat!",
   "backupDone": "Záloha byla úspěšně dokončena.",
   "ban404": "Tento uživatel není zabanovaný!",
   "banError": "Chyba! Nelze zabanovat tohoto uživatele.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Již jsi zkusil {{number}}!\n:arrow_up_small: To je vyšší!",
   "numberRepeatSmaller": "Již jsi zkusil {{number}}!\n:arrow_down_small: Toto je menší!",
   "numberSmaller": "{{number}} je menší!",
-  "onlyOnServer": "Chyba! Tento příkaz může být použit pouze na jednom serveru.",
+  "onlyOnServer": "Tento příkaz může být použit pouze na jednom serveru.",
   "owner": "vlastník",
   "PERMISSION": "{{permission}}",
   "permissions": "oprávnění",
@@ -109,13 +109,5 @@
   "userNotOwner": "Nejste vlastníkem serveru.",
   "userTimedOut": "Uživatel byl úspěšně potrestán. Do {{time}} {{timeR}}.",
   "userUnbanned": "Uživatel byl úspěšně odbanován!",
-  "wordsnack": "Snack slov",
-  "CATEGORY": "Kategorie",
-  "DM": "Přímá zpráva",
-  "NEWS": "Novinky",
-  "STORE": "Obchod",
-  "TEXT": "Text",
-  "THREAD": "Vlákno",
-  "UNKNOWN": "Neznámý",
-  "VOICE": "Hlas"
+  "wordsnack": "Snack slov"
 }

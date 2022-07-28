@@ -1,14 +1,14 @@
 import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import ms from 'ms';
-import { SlashCommand } from '../../structures';
 import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../modules/TMDBApi';
+import { SlashCommand } from '../../structures';
 
 const { Primary, Secondary } = ButtonStyle;
 const { ApplicationCommandAutocomplete } = InteractionType;
 const inline = true;
 
 export default class Movies extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({

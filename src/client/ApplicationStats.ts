@@ -3,7 +3,7 @@ import { setTimeout as waitAsync } from 'node:timers/promises';
 import { FetchStatsOptions, Stats } from '../@types';
 
 export default class ApplicationStats {
-  [k: string]: any;
+  [x: string]: any;
 
   channels = 0;
   guilds = 0;

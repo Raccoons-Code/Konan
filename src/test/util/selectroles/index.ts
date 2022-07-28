@@ -1,4 +1,4 @@
-import './addSelectRoles.test';
-import './createSelectRoles.test';
-import './removeSelectRoles.test';
+import './addSelectMenuByRoles.test';
+import './createSelectMenuByRoles.test';
+import './removeOptionsByRolesFromSelectMenu.test';
 import './setDefaultRoles.test';

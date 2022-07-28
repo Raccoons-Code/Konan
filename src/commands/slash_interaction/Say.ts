@@ -6,7 +6,7 @@ export default class Say extends SlashCommand {
   constructor() {
     super({
       category: 'Fun',
-      clientPermissions: ['ManageWebhooks'],
+      appPermissions: ['ManageWebhooks'],
     });
 
     this.data = new SlashCommandBuilder().setName('say')
@@ -33,7 +33,7 @@ export default class Say extends SlashCommand {
 
     const username = member?.displayName ?? user.username;
 
-    if (!channel?.permissionsFor(client.user!)?.has(this.props!.clientPermissions!))
+    if (!channel?.permissionsFor(client.user!)?.has(this.props!.appPermissions!))
       return interaction.reply({ content: `${user} says:`, files: [{ attachment: url, name: 'say.mp3' }] });
 
     const webhook = await (<TextChannel>channel).fetchWebhooks()

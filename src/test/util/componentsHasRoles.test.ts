@@ -15,11 +15,11 @@ import Util from './util';
             options: [
               {
                 label: '1',
-                value: JSON.stringify({ roleId: '1' }),
+                value: JSON.stringify({ id: '1' }),
               },
               {
                 label: '2',
-                value: JSON.stringify({ roleId: '2' }),
+                value: JSON.stringify({ id: '2' }),
               },
             ],
             custom_id: '1',

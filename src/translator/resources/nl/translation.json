@@ -6,7 +6,7 @@
   "automatic": "automatisch",
   "backup404": "Kon de back-up niet vinden.",
   "backupDeleted": "Back-up met succes verwijderd.",
-  "backupError": "Fout! Kan geen back-up maken!",
+  "backupError": "Kan geen back-up maken!",
   "backupDone": "Back-up succesvol voltooid.",
   "ban404": "Deze gebruiker is niet gebanned!",
   "banError": "Fout! Kan deze gebruiker niet verbannen.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Je hebt {{number}}al uitgeprobeerd!\n:arrow_up_small: Dit is hoger!",
   "numberRepeatSmaller": "Je hebt {{number}}al uitgeprobeerd!\n:arrow_down_small: Dit is kleiner!",
   "numberSmaller": "{{number}} is kleiner!",
-  "onlyOnServer": "Fout! Deze opdracht kan slechts op één server worden gebruikt.",
+  "onlyOnServer": "Deze opdracht kan slechts op één server worden gebruikt.",
   "owner": "eigenaar",
   "PERMISSION": "{{permission}}",
   "permissions": "permissies",
@@ -109,13 +109,5 @@
   "userNotOwner": "Je bent niet de eigenaar van de server.",
   "userTimedOut": "Gebruiker heeft gestraft. Tot {{time}} {{timeR}}.",
   "userUnbanned": "Gebruiker succesvol unbanned!",
-  "wordsnack": "Woord snacks",
-  "CATEGORY": "categorie",
-  "DM": "Direct bericht",
-  "NEWS": "Nieuws",
-  "STORE": "Winkel",
-  "TEXT": "Tekstveld",
-  "THREAD": "Conversatie",
-  "UNKNOWN": "onbekend",
-  "VOICE": "Stem"
+  "wordsnack": "Woord snacks"
 }

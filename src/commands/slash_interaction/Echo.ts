@@ -5,7 +5,7 @@ export default class Echo extends SlashCommand {
   constructor() {
     super({
       category: 'Fun',
-      clientPermissions: ['ManageWebhooks'],
+      appPermissions: ['ManageWebhooks'],
     });
 
     this.data = new SlashCommandBuilder().setName('echo')
@@ -28,7 +28,7 @@ export default class Echo extends SlashCommand {
 
     const username = member?.displayName ?? user.username;
 
-    if (!channel?.permissionsFor(client.user!)?.has(this.props!.clientPermissions!)) {
+    if (!channel?.permissionsFor(client.user!)?.has(this.props!.appPermissions!)) {
       const [, title, description] = content.match(this.regexp.embed) ?? [];
 
       return interaction.reply({

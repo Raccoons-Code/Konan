@@ -1,17 +1,17 @@
-import { ActionRowBuilder, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, ComponentEmojiResolvable, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, resolvePartialEmoji, Role, SelectMenuBuilder, SelectMenuComponent, SelectMenuOptionBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
-import { SelectRolesItemOptionValue } from '../../@types';
+import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, Role, SelectMenuBuilder, SelectMenuOptionBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { SelectRolesOptionValue } from '../../@types';
 import { SlashCommand } from '../../structures';
 
-const { SelectMenu } = ComponentType;
 const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class SelectRoles extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
+  CommandNameRegExp = /"c":"selectroles"/;
 
   constructor() {
     super({
       category: 'Moderation',
-      clientPermissions: ['EmbedLinks', 'ManageRoles', 'SendMessages'],
+      appPermissions: ['EmbedLinks', 'ManageRoles', 'SendMessages'],
       userPermissions: ['ManageRoles'],
     });
 
@@ -30,22 +30,22 @@ export default class SelectRoles extends SlashCommand {
           .setNameLocalizations(this.getLocalizations('selectrolesCreateRoleName'))
           .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateRoleDescription'))
           .setRequired(true))
-        .addStringOption(option => option.setName('item_name')
-          .setDescription('The name of the item. {0,83} - default: <role>')
-          .setNameLocalizations(this.getLocalizations('selectrolesCreateItemNameName'))
-          .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateItemNameDescription')))
-        .addStringOption(option => option.setName('item_description')
-          .setDescription('The description of the item. {0,100}')
-          .setNameLocalizations(this.getLocalizations('selectrolesCreateItemDescriptionName'))
-          .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateItemDescriptionDescription')))
-        .addBooleanOption(option => option.setName('item_default')
+        .addStringOption(option => option.setName('option_name')
+          .setDescription('The name of the option. {0,83} - default: <role>')
+          .setNameLocalizations(this.getLocalizations('selectrolesCreateOptionNameName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateOptionNameDescription')))
+        .addStringOption(option => option.setName('option_description')
+          .setDescription('The description of the option. {0,100}')
+          .setNameLocalizations(this.getLocalizations('selectrolesCreateOptionDescriptionName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateOptionDescriptionDescription')))
+        .addBooleanOption(option => option.setName('option_default')
           .setDescription('Used to always add this role with other roles.')
-          .setNameLocalizations(this.getLocalizations('selectrolesCreateItemDefaultName'))
-          .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateItemDefaultDescription')))
-        .addStringOption(option => option.setName('item_emoji')
-          .setDescription('The emoji of the item.')
-          .setNameLocalizations(this.getLocalizations('selectrolesCreateItemEmojiName'))
-          .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateItemEmojiDescription')))
+          .setNameLocalizations(this.getLocalizations('selectrolesCreateOptionDefaultName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateOptionDefaultDescription')))
+        .addStringOption(option => option.setName('option_emoji')
+          .setDescription('The emoji of the option.')
+          .setNameLocalizations(this.getLocalizations('selectrolesCreateOptionEmojiName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesCreateOptionEmojiDescription')))
         .addBooleanOption(option => option.setName('menu_disabled')
           .setDescription('Whether the menu is disabled.')
           .setNameLocalizations(this.getLocalizations('selectrolesCreateMenuDisabledName'))
@@ -118,54 +118,54 @@ export default class SelectRoles extends SlashCommand {
             .setDescription('The place holder of the menu. {0,150}')
             .setNameLocalizations(this.getLocalizations('selectrolesEditMenuMenuPlaceHolderName'))
             .setDescriptionLocalizations(this.getLocalizations('selectrolesEditMenuMenuPlaceHolderDescription'))))
-        .addSubcommand(subcommand => subcommand.setName('item')
-          .setDescription('Edit the item of the Select roles.')
-          .setNameLocalizations(this.getLocalizations('selectrolesEditItemName'))
-          .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemDescription'))
+        .addSubcommand(subcommand => subcommand.setName('option')
+          .setDescription('Edit the option of the Select roles.')
+          .setNameLocalizations(this.getLocalizations('selectrolesEditOptionName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionDescription'))
           .addChannelOption(option => option.setName('channel')
-            .setDescription('Select the channel of the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesEditItemChannelName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemChannelDescription'))
+            .setDescription('Select the channel of the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesEditOptionChannelName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionChannelDescription'))
             .setRequired(true)
             .addChannelTypes(...this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
-            .setNameLocalizations(this.getLocalizations('selectrolesEditItemMessageIdName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemMessageIdDescription'))
+            .setNameLocalizations(this.getLocalizations('selectrolesEditOptionMessageIdName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionMessageIdDescription'))
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('menu')
-            .setDescription('Select the menu of the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesEditItemMenuName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemMenuDescription'))
+            .setDescription('Select the menu of the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesEditOptionMenuName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionMenuDescription'))
             .setAutocomplete(true)
             .setRequired(true))
-          .addStringOption(option => option.setName('item')
-            .setDescription('Select the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesEditItemItemName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemItemDescription'))
+          .addStringOption(option => option.setName('option')
+            .setDescription('Select the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesEditOptionOptionName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionOptionDescription'))
             .setAutocomplete(true)
             .setRequired(true))
           .addRoleOption(option => option.setName('role')
             .setDescription('Select a new role.')
-            .setNameLocalizations(this.getLocalizations('selectrolesEditItemRoleName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemRoleDescription')))
-          .addStringOption(option => option.setName('item_name')
-            .setDescription('Input a new name for the item. {0,83}')
-            .setNameLocalizations(this.getLocalizations('selectrolesEditItemItemNameName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemItemNameDescription')))
-          .addStringOption(option => option.setName('item_description')
-            .setDescription('Input a new description for the item. {0,100}')
-            .setNameLocalizations(this.getLocalizations('selectrolesEditItemItemDescriptionName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemItemDescriptionDescription')))
-          .addBooleanOption(option => option.setName('item_default')
+            .setNameLocalizations(this.getLocalizations('selectrolesEditOptionRoleName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionRoleDescription')))
+          .addStringOption(option => option.setName('option_name')
+            .setDescription('Input a new name for the option. {0,83}')
+            .setNameLocalizations(this.getLocalizations('selectrolesEditOptionOptionNameName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionOptionNameDescription')))
+          .addStringOption(option => option.setName('option_description')
+            .setDescription('Input a new description for the option. {0,100}')
+            .setNameLocalizations(this.getLocalizations('selectrolesEditOptionOptionDescriptionName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionOptionDescriptionDescription')))
+          .addBooleanOption(option => option.setName('option_default')
             .setDescription('Used to always add this role with other roles.')
-            .setNameLocalizations(this.getLocalizations('selectrolesEditItemItemDefaultName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemItemDefaultDescription')))
-          .addStringOption(option => option.setName('item_emoji')
-            .setDescription('Input a new emoji for the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesEditItemItemEmojiName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditItemItemEmojiDescription')))))
+            .setNameLocalizations(this.getLocalizations('selectrolesEditOptionOptionDefaultName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionOptionDefaultDescription')))
+          .addStringOption(option => option.setName('option_emoji')
+            .setDescription('Input a new emoji for the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesEditOptionOptionEmojiName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesEditOptionOptionEmojiDescription')))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('add')
         .setDescription('Add to the Select roles.')
         .setNameLocalizations(this.getLocalizations('selectrolesAddName'))
@@ -191,22 +191,22 @@ export default class SelectRoles extends SlashCommand {
             .setNameLocalizations(this.getLocalizations('selectrolesAddMenuRoleName'))
             .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuRoleDescription'))
             .setRequired(true))
-          .addStringOption(option => option.setName('item_name')
-            .setDescription('The name of the item. {0,83} - default: <role>')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddMenuItemNameName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuItemNameDescription')))
-          .addStringOption(option => option.setName('item_description')
-            .setDescription('The description of the item. {0,100}')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddMenuItemDescriptionName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuItemDescriptionDescription')))
-          .addBooleanOption(option => option.setName('item_default')
+          .addStringOption(option => option.setName('option_name')
+            .setDescription('The name of the option. {0,83} - default: <role>')
+            .setNameLocalizations(this.getLocalizations('selectrolesAddMenuOptionNameName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuOptionNameDescription')))
+          .addStringOption(option => option.setName('option_description')
+            .setDescription('The description of the option. {0,100}')
+            .setNameLocalizations(this.getLocalizations('selectrolesAddMenuOptionDescriptionName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuOptionDescriptionDescription')))
+          .addBooleanOption(option => option.setName('option_default')
             .setDescription('Used to always add this role with other roles.')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddMenuItemDefaultName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuItemDefaultDescription')))
-          .addStringOption(option => option.setName('item_emoji')
-            .setDescription('The emoji of the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddMenuItemEmojiName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuItemEmojiDescription')))
+            .setNameLocalizations(this.getLocalizations('selectrolesAddMenuOptionDefaultName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuOptionDefaultDescription')))
+          .addStringOption(option => option.setName('option_emoji')
+            .setDescription('The emoji of the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesAddMenuOptionEmojiName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuOptionEmojiDescription')))
           .addBooleanOption(option => option.setName('menu_disabled')
             .setDescription('Whether the menu is disabled.')
             .setNameLocalizations(this.getLocalizations('selectrolesAddMenuMenuDisabledName'))
@@ -215,49 +215,49 @@ export default class SelectRoles extends SlashCommand {
             .setDescription('The place holder of the menu. {0,150}')
             .setNameLocalizations(this.getLocalizations('selectrolesAddMenuMenuPlaceHolderName'))
             .setDescriptionLocalizations(this.getLocalizations('selectrolesAddMenuMenuPlaceHolderDescription'))))
-        .addSubcommand(subcommand => subcommand.setName('item')
-          .setDescription('Add an item to the Select roles.')
-          .setNameLocalizations(this.getLocalizations('selectrolesAddItemName'))
-          .setDescriptionLocalizations(this.getLocalizations('selectrolesAddItemDescription'))
+        .addSubcommand(subcommand => subcommand.setName('option')
+          .setDescription('Add an option to the Select roles.')
+          .setNameLocalizations(this.getLocalizations('selectrolesAddOptionName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesAddOptionDescription'))
           .addChannelOption(option => option.setName('channel')
-            .setDescription('Select the channel of the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddItemChannelName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddItemChannelDescription'))
+            .setDescription('Select the channel of the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesAddOptionChannelName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddOptionChannelDescription'))
             .setRequired(true)
             .addChannelTypes(...this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddItemMessageIdName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddItemMessageIdDescription'))
+            .setNameLocalizations(this.getLocalizations('selectrolesAddOptionMessageIdName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddOptionMessageIdDescription'))
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('menu')
-            .setDescription('Select the menu of the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddItemMenuName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddItemMenuDescription'))
+            .setDescription('Select the menu of the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesAddOptionMenuName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddOptionMenuDescription'))
             .setAutocomplete(true)
             .setRequired(true))
           .addRoleOption(option => option.setName('role')
-            .setDescription('Select a role to add to the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddItemRoleName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddItemRoleDescription'))
+            .setDescription('Select a role to add to the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesAddOptionRoleName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddOptionRoleDescription'))
             .setRequired(true))
-          .addStringOption(option => option.setName('item_name')
-            .setDescription('The name of the item. {0,83} - default: <role>')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddItemItemNameName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddItemItemNameDescription')))
-          .addStringOption(option => option.setName('item_description')
-            .setDescription('The description of the item. {0,100}')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddItemItemDescriptionName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddItemItemDescriptionDescription')))
-          .addBooleanOption(option => option.setName('item_default')
+          .addStringOption(option => option.setName('option_name')
+            .setDescription('The name of the option. {0,83} - default: <role>')
+            .setNameLocalizations(this.getLocalizations('selectrolesAddOptionOptionNameName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddOptionOptionNameDescription')))
+          .addStringOption(option => option.setName('option_description')
+            .setDescription('The description of the option. {0,100}')
+            .setNameLocalizations(this.getLocalizations('selectrolesAddOptionOptionDescriptionName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddOptionOptionDescriptionDescription')))
+          .addBooleanOption(option => option.setName('option_default')
             .setDescription('Used to always add this role with other roles.')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddItemItemDefaultName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddItemItemDefaultDescription')))
-          .addStringOption(option => option.setName('item_emoji')
-            .setDescription('The emoji of the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesAddItemItemEmojiName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddItemItemEmojiDescription')))))
+            .setNameLocalizations(this.getLocalizations('selectrolesAddOptionOptionDefaultName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddOptionOptionDefaultDescription')))
+          .addStringOption(option => option.setName('option_emoji')
+            .setDescription('The emoji of the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesAddOptionOptionEmojiName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesAddOptionOptionEmojiDescription')))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('remove')
         .setDescription('Remove from the Select roles.')
         .setNameLocalizations(this.getLocalizations('selectrolesRemoveName'))
@@ -284,32 +284,32 @@ export default class SelectRoles extends SlashCommand {
             .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveMenuMenuDescription'))
             .setAutocomplete(true)
             .setRequired(true)))
-        .addSubcommand(subcommand => subcommand.setName('item')
-          .setDescription('Remove an item from the Select roles.')
-          .setNameLocalizations(this.getLocalizations('selectrolesRemoveItemName'))
-          .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveItemDescription'))
+        .addSubcommand(subcommand => subcommand.setName('option')
+          .setDescription('Remove an option from the Select roles.')
+          .setNameLocalizations(this.getLocalizations('selectrolesRemoveOptionName'))
+          .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveOptionDescription'))
           .addChannelOption(option => option.setName('channel')
-            .setDescription('Select the channel of the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesRemoveItemChannelName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveItemChannelDescription'))
+            .setDescription('Select the channel of the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesRemoveOptionChannelName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveOptionChannelDescription'))
             .setRequired(true)
             .addChannelTypes(...this.GuildTextChannelTypes))
           .addStringOption(option => option.setName('message_id')
             .setDescription('Message ID | Message URL')
-            .setNameLocalizations(this.getLocalizations('selectrolesRemoveItemMessageIdName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveItemMessageIdDescription'))
+            .setNameLocalizations(this.getLocalizations('selectrolesRemoveOptionMessageIdName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveOptionMessageIdDescription'))
             .setAutocomplete(true)
             .setRequired(true))
           .addStringOption(option => option.setName('menu')
-            .setDescription('Select the menu of the item.')
-            .setNameLocalizations(this.getLocalizations('selectrolesRemoveItemMenuName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveItemMenuDescription'))
+            .setDescription('Select the menu of the option.')
+            .setNameLocalizations(this.getLocalizations('selectrolesRemoveOptionMenuName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveOptionMenuDescription'))
             .setAutocomplete(true)
             .setRequired(true))
-          .addStringOption(option => option.setName('item')
-            .setDescription('Select the item to remove.')
-            .setNameLocalizations(this.getLocalizations('selectrolesRemoveItemItemName'))
-            .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveItemItemDescription'))
+          .addStringOption(option => option.setName('option')
+            .setDescription('Select the option to remove.')
+            .setNameLocalizations(this.getLocalizations('selectrolesRemoveOptionOptionName'))
+            .setDescriptionLocalizations(this.getLocalizations('selectrolesRemoveOptionOptionDescription'))
             .setAutocomplete(true)
             .setRequired(true))))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('bulk')
@@ -394,35 +394,21 @@ export default class SelectRoles extends SlashCommand {
             .setRequired(true))));
   }
 
-  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<any> {
-    const { locale } = interaction;
-
-    if (!interaction.inCachedGuild()) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
-
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
-    }
+  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
+    if (!interaction.inCachedGuild())
+      return this.replyOnlyOnServer(interaction);
 
     const { memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
-    if (userPerms.length) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
-
-      return interaction.reply({
-        content: this.t('missingUserPermission', {
-          locale,
-          permission: this.t(userPerms[0], { locale }),
-        }),
-        ephemeral: true,
-      });
-    }
+    if (userPerms.length)
+      return this.replyMissingPermission(interaction, userPerms, 'missingUserPermission');
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
     if (interaction.type === ApplicationCommandAutocomplete)
-      return this[`${subcommand}Autocomplete`]?.(interaction);
+      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -432,17 +418,15 @@ export default class SelectRoles extends SlashCommand {
   async create(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
-    const [, title, embed_description] = options.getString('text')?.match(this.regexp.embed) ?? [];
-    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
-    const item_default = options.getBoolean('item_default') ?? false;
-    const description = options.getString('item_description')?.slice(0, 100) ?? '';
-    const item_emoji = options.getString('item_emoji');
-    const menu_disabled = Boolean(options.getBoolean('menu_disabled'));
-    const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150) ?? '';
     const role = options.getRole('role', true);
-    const label = (options.getString('item_name') ?? role.name).slice(0, 83);
-
-    const emoji = item_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(item_emoji) : {};
+    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+    const option_description = options.getString('option_description')?.slice(0, 100);
+    const option_default = Boolean(options.getBoolean('option_default'));
+    const option_emoji = options.getString('option_emoji') ?? {};
+    const option_name = (options.getString('option_name') ?? role.name).slice(0, 83);
+    const menu_disabled = Boolean(options.getBoolean('menu_disabled'));
+    const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150) || '';
+    const [, title, description] = options.getString('text')?.match(this.regexp.embed) ?? [];
 
     const components = [
       new ActionRowBuilder<SelectMenuBuilder>()
@@ -454,23 +438,24 @@ export default class SelectRoles extends SlashCommand {
           }))
           .setDisabled(menu_disabled)
           .setMaxValues(1)
-          .setOptions(new SelectMenuOptionBuilder()
-            .setDefault(item_default)
-            .setDescription(description)
-            .setEmoji(emoji)
-            .setLabel(label)
-            .setValue(JSON.stringify({
+          .setOptions(new SelectMenuOptionBuilder({
+            default: option_default,
+            description: option_description,
+            emoji: option_emoji,
+            label: `${option_name} 0`,
+            value: JSON.stringify({
               count: 0,
-              roleId: role.id,
-            })))
+              id: role.id,
+            }),
+          }))
           .setPlaceholder(menu_place_holder)),
     ];
 
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
-        .setDescription(embed_description?.replace(/(\s{2})/g, '\n') || null)
-        .setTitle(title ? title : embed_description ? null : 'SelectRoles'),
+        .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
+        .setTitle(title ? title : description ? null : 'SelectRoles'),
     ];
 
     try {
@@ -488,8 +473,7 @@ export default class SelectRoles extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = channel.messages.cache.get(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
@@ -521,18 +505,18 @@ export default class SelectRoles extends SlashCommand {
       const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150) ?? '';
 
       const components = message.components.map(row => {
-        if (row.components[0].type !== SelectMenu) return row;
+        const rowJson = <APIActionRowComponent<APISelectMenuComponent>>row.toJSON();
 
-        return new ActionRowBuilder<SelectMenuBuilder>(row.toJSON())
-          .setComponents(row.components.map(element => {
-            const newSelectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
+        if (rowJson.components[0].type !== ComponentType.SelectMenu) return row;
 
-            if (element.customId !== menuId) return newSelectMenu;
+        return new ActionRowBuilder<SelectMenuBuilder>()
+          .setComponents(rowJson.components.map(element => {
+            const newSelectMenu = new SelectMenuBuilder(element);
 
-            const { disabled, placeholder } = newSelectMenu.data;
+            if (element.custom_id !== menuId) return newSelectMenu;
 
-            return newSelectMenu.setDisabled(typeof menu_disabled === 'boolean' ? menu_disabled : disabled)
-              .setPlaceholder(menu_place_holder ?? placeholder);
+            return newSelectMenu.setDisabled(menu_disabled ?? element.disabled)
+              .setPlaceholder(menu_place_holder ?? element.placeholder);
           }));
       });
 
@@ -545,53 +529,45 @@ export default class SelectRoles extends SlashCommand {
       }
     }
 
-    const item = options.getString('item', true);
+    const optionId = options.getString('option', true);
 
-    if (subcommand === 'item') {
-      const role = options.getRole('role');
+    if (subcommand === 'option') {
+      const role = options.getRole('role')!;
 
-      if (role ? this.Util.componentsHasRoles(message.components, [role]) : false)
+      if (this.Util.componentsHasRoles(message.components, role))
         return interaction.editReply(this.t('itemAddError', { locale }));
 
-      const description = options.getString('item_description')?.slice(0, 100);
-      const item_default = options.getBoolean('item_default');
-      const item_emoji = options.getString('item_emoji');
-      const label = options.getString('item_name')?.slice(0, 83);
-
-      const emoji = item_emoji ? <ComponentEmojiResolvable>resolvePartialEmoji(item_emoji) : null;
+      const option_description = options.getString('option_description')?.slice(0, 100);
+      const option_default = options.getBoolean('option_default');
+      const option_emoji = options.getString('option_emoji');
+      const option_name = options.getString('option_name')?.slice(0, 83);
 
       const components = message.components.map(row => {
-        if (row.components[0].type !== SelectMenu) return row;
-        if (row.components.every(element => element.customId !== menuId)) return row;
+        const rowJson = <APIActionRowComponent<APISelectMenuComponent>>row.toJSON();
 
-        return new ActionRowBuilder<SelectMenuBuilder>(row.toJSON())
-          .setComponents(row.components.map(element => {
-            const newSelectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
+        if (rowJson.components[0].type !== ComponentType.SelectMenu) return row;
 
-            if (element.customId !== menuId)
-              return newSelectMenu.setOptions(newSelectMenu.toJSON().options.map(option =>
-                new SelectMenuOptionBuilder(option)
-                  .setDefault(Boolean(typeof item_default === 'boolean' ? false : option.default))));
+        return new ActionRowBuilder<SelectMenuBuilder>()
+          .setComponents(rowJson.components.map(element => {
+            return new SelectMenuBuilder(element)
+              .setOptions(element.options.map(option => {
+                if (option.value !== optionId) {
+                  if (typeof option_default === 'boolean')
+                    option.default = false;
 
-            newSelectMenu.setOptions(newSelectMenu.toJSON().options.map(option => {
-              if (option.value !== item) {
-                if (typeof item_default === 'boolean')
-                  option.default = false;
+                  return option;
+                }
 
-                return option;
-              }
+                const value = <SelectRolesOptionValue>JSON.parse(option.value);
 
-              const { count, d } = <SelectRolesItemOptionValue>JSON.parse(option.value);
-
-              return new SelectMenuOptionBuilder(option)
-                .setDefault(Boolean(typeof item_default === 'boolean' ? item_default : option.default))
-                .setDescription(description ? description : option.description ?? '')
-                .setEmoji(emoji ?? option.emoji ?? {})
-                .setLabel(label ? `${label} ${count}` : option.label)
-                .setValue(role ? JSON.stringify({ count, d: d, roleId: role.id }) : option.value);
-            }));
-
-            return newSelectMenu;
+                return new SelectMenuOptionBuilder({
+                  default: option_default ?? option.default,
+                  description: option_description ?? option.description,
+                  emoji: option_emoji ?? option.emoji,
+                  label: option_name ? `${option_name} ${value.count}` : option.label ?? option.label,
+                  value: option.value,
+                });
+              }));
           }));
       });
 
@@ -611,38 +587,19 @@ export default class SelectRoles extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = await channel.messages.safeFetch(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
     const role = options.getRole('role', true);
 
-    if (this.Util.componentsHasRoles(message.components, [role]))
+    if (this.Util.componentsHasRoles(message.components, role))
       return interaction.editReply(this.t('itemAddError', { locale }));
 
-    const item_default = options.getBoolean('item_default');
-    const description = options.getString('item_description')?.slice(0, 100) ?? '';
-    const emoji = <ComponentEmojiResolvable>options.getString('item_emoji');
-    const label = (options.getString('item_name') ?? role.name).slice(0, 83);
-
-    const components = [];
-
-    if (typeof item_default === 'boolean')
-      components.push(...message.components.map(row => {
-        if (row.components[0].type !== SelectMenu) return row;
-
-        return new ActionRowBuilder<SelectMenuBuilder>(row.toJSON())
-          .setComponents(row.components.map(element => {
-            const newSelectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
-
-            if (element.type !== SelectMenu) return newSelectMenu;
-
-            return newSelectMenu
-              .setOptions(element.options.map(option => new SelectMenuOptionBuilder(option)
-                .setDefault(false)));
-          }));
-      }));
+    const option_default = options.getBoolean('option_default');
+    const option_description = options.getString('option_description')?.slice(0, 100);
+    const option_emoji = options.getString('option_emoji');
+    const option_name = (options.getString('option_name') ?? role.name).slice(0, 83);
 
     const subcommand = options.getSubcommand();
 
@@ -650,7 +607,8 @@ export default class SelectRoles extends SlashCommand {
       const menu_disabled = options.getBoolean('menu_disabled')!;
       const menu_place_holder = options.getString('menu_place_holder')?.slice(0, 150) ?? '';
 
-      components.push(...message.components,
+      let components = [
+        ...message.components,
         new ActionRowBuilder<SelectMenuBuilder>()
           .setComponents(new SelectMenuBuilder()
             .setCustomId(JSON.stringify({
@@ -660,16 +618,21 @@ export default class SelectRoles extends SlashCommand {
             }))
             .setDisabled(menu_disabled)
             .setMaxValues(1)
-            .setOptions(new SelectMenuOptionBuilder()
-              .setDefault(Boolean(item_default))
-              .setDescription(description)
-              .setEmoji(emoji)
-              .setLabel(`${label} 0`)
-              .setValue(JSON.stringify({
+            .setOptions(new SelectMenuOptionBuilder({
+              default: Boolean(option_default),
+              description: option_description,
+              emoji: option_emoji ?? {},
+              label: `${option_name} 0`,
+              value: JSON.stringify({
                 count: 0,
-                roleId: role.id,
-              })))
-            .setPlaceholder(menu_place_holder)));
+                id: role.id,
+              }),
+            }))
+            .setPlaceholder(menu_place_holder)),
+      ];
+
+      if (typeof option_default === 'boolean')
+        components = this.Util.setDefaultRole(components, role);
 
       try {
         await message.edit({ components });
@@ -680,34 +643,24 @@ export default class SelectRoles extends SlashCommand {
       }
     }
 
-    if (subcommand === 'item') {
-      const menuId = options.getString('menu', true);
+    const menuId = options.getString('menu', true);
 
-      components.push(...message.components.map(row => {
-        if (row.components[0].type !== SelectMenu) return row;
-        if (row.components.every(element => element.customId !== menuId)) return row;
+    if (subcommand === 'option') {
+      let components = this.Util.addOptionsToSelectMenuInRow(message.components, menuId, [
+        new SelectMenuOptionBuilder({
+          default: Boolean(option_default),
+          description: option_description,
+          emoji: option_emoji ?? {},
+          label: `${option_name} 0`,
+          value: JSON.stringify({
+            count: 0,
+            id: role.id,
+          }),
+        }),
+      ]);
 
-        return new ActionRowBuilder<SelectMenuBuilder>(row.toJSON())
-          .setComponents(row.components.map(element => {
-            const newSelectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
-
-            if (element.customId !== menuId) return newSelectMenu;
-
-            newSelectMenu.addOptions(new SelectMenuOptionBuilder()
-              .setDefault(Boolean(item_default))
-              .setDescription(description)
-              .setEmoji(emoji)
-              .setLabel(`${label} 0`)
-              .setValue(JSON.stringify({
-                count: 0,
-                d: Date.now(),
-                roleId: role.id,
-              })))
-              .setMaxValues(newSelectMenu.options.length);
-
-            return newSelectMenu.setOptions(newSelectMenu.options.sort(a => a.data.default ? -1 : 1));
-          }));
-      }));
+      if (typeof option_default === 'boolean')
+        components = this.Util.setDefaultRole(components, role);
 
       try {
         await message.edit({ components });
@@ -725,8 +678,7 @@ export default class SelectRoles extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = await channel.messages.safeFetch(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
@@ -735,9 +687,7 @@ export default class SelectRoles extends SlashCommand {
     const menuId = options.getString('menu', true);
 
     if (subcommand === 'menu') {
-      const components = message.components.filter(row =>
-        row.components[0].type !== SelectMenu ||
-        row.components.some(selectmenu => selectmenu.customId !== menuId));
+      const components = message.components.filter(row => row.components[0].customId !== menuId);
 
       try {
         await message.edit({ components });
@@ -748,23 +698,10 @@ export default class SelectRoles extends SlashCommand {
       }
     }
 
-    if (subcommand === 'item') {
-      const item = options.getString('item', true);
+    const optionId = options.getString('option', true);
 
-      const components = message.components.map(row => {
-        if (row.components[0].type !== SelectMenu) return row;
-        if (row.components.every(element => element.customId !== menuId)) return row;
-
-        return new ActionRowBuilder<SelectMenuBuilder>(row.toJSON())
-          .setComponents(row.components.map(element => {
-            const newSelectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
-
-            if (element.customId !== menuId) return newSelectMenu;
-
-            return newSelectMenu.setOptions(newSelectMenu.options.filter(option => option.data.value !== item))
-              .setMaxValues(newSelectMenu.options.length);
-          }));
-      });
+    if (subcommand === 'option') {
+      const components = this.Util.removeOptionsFromSelectMenu(message.components, menuId, optionId);
 
       try {
         await message.edit({ components });
@@ -774,153 +711,6 @@ export default class SelectRoles extends SlashCommand {
         return interaction.editReply(this.t('itemRemoveError', { locale }));
       }
     }
-  }
-
-  async executeAutocomplete(interaction: AutocompleteInteraction<'cached'>): Promise<any> {
-    const { options } = interaction;
-
-    const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
-
-    const res = await this[`${subcommand}Autocomplete`]?.(interaction);
-
-    return interaction.respond(res);
-  }
-
-  async editAutocomplete(
-    interaction: AutocompleteInteraction<'cached'>,
-    res: ApplicationCommandOptionChoiceData[] = [],
-  ) {
-    if (interaction.responded) return;
-
-    const { client, guild, options } = interaction;
-
-    const channelId = <string>options.get('channel', true).value;
-
-    const channel = await guild.channels.fetch(channelId);
-
-    if (!(channel instanceof TextChannel))
-      return interaction.respond(res);
-
-    const focused = options.getFocused(true);
-    const pattern = RegExp(`${focused.value}`, 'i');
-
-    if (focused.name === 'message_id') {
-      const messages = await channel.messages.fetch({ limit: 100 });
-
-      const messagesArray = messages.filter(m =>
-        m.author.id === client.user?.id &&
-        m.components.some(c => RegExp(`"c":"${this.data.name}"`).test(c.components[0].customId!)) &&
-        pattern.test(m.id)).toJSON();
-
-      for (let i = 0; i < messagesArray.length; i++) {
-        const { embeds, id } = messagesArray[i];
-
-        const { title, description } = embeds[0];
-
-        const name = [
-          id,
-          title ? ` | ${title}` : '',
-          description ? ` | ${description}` : '',
-        ].join('').slice(0, 100);
-
-        if (title || description)
-          res.push({
-            name,
-            value: `${id}`,
-          });
-
-        if (res.length === 25) break;
-      }
-    }
-
-    if (focused.name === 'menu') {
-      const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
-
-      const message = await channel.messages.fetch(message_id);
-
-      if (!(message && message.editable)) return interaction.respond(res);
-
-      for (let i = 0; i < message.components.length; i++) {
-        const component = message.components[i];
-
-        if (component.components[0].type !== SelectMenu) continue;
-
-        for (let i2 = 0; i2 < component.components.length; i2++) {
-          const element = <SelectMenuComponent>component.components[i2];
-
-          const { customId, disabled, maxValues, placeholder } = element;
-
-          const name = [
-            `${i + 1} - ${i2 + 1}`,
-            placeholder ? ` | ${placeholder}` : '',
-            maxValues ? ` | ${maxValues} ${maxValues > 1 ? 'options' : 'option'}` : '',
-            disabled ? ' | disabled' : '',
-          ].join('').slice(0, 100);
-
-          if (pattern.test(name))
-            res.push({
-              name,
-              value: `${customId}`,
-            });
-        }
-      }
-    }
-
-    if (focused.name === 'item') {
-      const menuId = options.getString('menu', true);
-      const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
-
-      const message = await channel.messages.fetch(message_id);
-
-      if (!(message && message.editable)) return interaction.respond(res);
-
-      for (let i = 0; i < message.components.length; i++) {
-        const component = message.components[i];
-
-        if (component.components[0].type !== SelectMenu) continue;
-
-        for (let i2 = 0; i2 < component.components.length; i2++) {
-          const element = <SelectMenuComponent>component.components[i2];
-
-          const { customId, options: menuOptions } = element;
-
-          if (customId !== menuId) continue;
-
-          for (let i3 = 0; i3 < menuOptions.length; i3++) {
-            const option = menuOptions[i3];
-
-            const { description, emoji, label, value } = option;
-
-            const { roleId } = <SelectRolesItemOptionValue>JSON.parse(value);
-
-            const role = await guild.roles.fetch(roleId);
-
-            const name = [
-              emoji?.id ? '' : emoji?.name,
-              label ? label : ` Item ${i2 + 1}`,
-              ` | ${role?.name}`,
-              ` | ${roleId}`,
-              description ? ` | ${description}` : '',
-            ].join('').slice(0, 100);
-
-            res.push({
-              name,
-              value,
-            });
-          }
-        }
-      }
-    }
-
-    return res;
-  }
-
-  async addAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
-    return this.editAutocomplete(interaction);
-  }
-
-  async removeAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
-    return this.editAutocomplete(interaction);
   }
 
   async bulk(interaction: ChatInputCommandInteraction): Promise<any> {
@@ -940,18 +730,16 @@ export default class SelectRoles extends SlashCommand {
     if (!rolesId)
       return interaction.editReply('No IDs were found in the roles input.');
 
-    const rolesArray = await Promise.all(rolesId)
-      .then(roles => <Role[]>roles.filter(role => role));
+    const roles = await Promise.all(rolesId)
+      .then(rs => <Role[]>rs.filter(role => role));
 
-    if (!rolesArray.length)
+    if (!roles.length)
       return interaction.editReply('No roles were found in the roles input.');
 
     const defaultRole = options.getRole('default_role');
     const menuPlaceholder = options.getString('menu_place_holder');
 
-    const roles = this.Util.splitArrayInGroups(rolesArray.slice(0, 125), 25);
-
-    const components = this.Util.createSelectRoles({ roles, defaultRole, menuPlaceholder });
+    const components = this.Util.createSelectMenuByRoles({ roles, defaultRole, menuPlaceholder });
 
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
 
@@ -976,35 +764,28 @@ export default class SelectRoles extends SlashCommand {
   async bulk_add(interaction: ChatInputCommandInteraction<'cached'>) {
     const { guild, locale, options } = interaction;
 
-    let rolesId = options.getString('roles', true).match(/\d{17,}/g);
-
+    const rolesId = options.getString('roles', true).match(/\d{17,}/g);
     if (!rolesId)
       return interaction.editReply('No IDs were found in the roles input.');
 
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
-
+    const message = await channel.messages.safeFetch(message_id);
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
-    rolesId = this.Util.filterRolesId(message.components, rolesId);
-
-    const rolesArray = await Promise.all(rolesId.map(id => guild.roles.fetch(id)))
-      .then(roles => <Role[]>roles.filter(role => role).slice(0, 125));
-
-    if (!rolesArray.length)
-      return interaction.editReply('No roles were found in the roles input.');
+    const roles = await Promise.all(this.Util.filterRolesId(message.components, rolesId).map(id =>
+      guild.roles.fetch(id))).then(rs => <Role[]>rs.filter(r => r).slice(0, 125));
+    if (!roles.length)
+      return interaction.editReply('No new role were found in roles input.');
 
     const menuPlaceholder = options.getString('menu_place_holder');
 
-    let components = this.Util.addSelectRoles(rolesArray, message.components, menuPlaceholder).slice(0, 5);
-
     const defaultRole = options.getRole('default_role');
 
-    if (defaultRole)
-      components = this.Util.setDefaultRole(components, defaultRole);
+    const components = this.Util.addSelectMenuByRoles({ defaultRole, menuPlaceholder, roles }, message.components)
+      .slice(0, 5);
 
     try {
       await message.edit({ components });
@@ -1026,12 +807,12 @@ export default class SelectRoles extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
-    const message = await channel.messages.fetch(message_id);
+    const message = await channel.messages.safeFetch(message_id);
 
     if (!message) return interaction.editReply(this.t('message404', { locale }));
     if (!message.editable) return interaction.editReply(this.t('messageNotEditable', { locale }));
 
-    const components = this.Util.removeSelectRoles(message.components, rolesId);
+    const components = this.Util.removeOptionsByRolesFromSelectMenu(message.components, rolesId);
 
     try {
       await message.edit({ components });
@@ -1040,6 +821,18 @@ export default class SelectRoles extends SlashCommand {
     } catch {
       return interaction.editReply(this.t('itemRemoveError', { locale }));
     }
+  }
+
+  async executeAutocomplete(interaction: AutocompleteInteraction) {
+    if (interaction.responded) return;
+
+    const { options } = interaction;
+
+    const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
+
+    const response = await this[`${subcommand}Autocomplete`]?.(interaction);
+
+    return interaction.respond(response);
   }
 
   async bulkAutocomplete(interaction: AutocompleteInteraction): Promise<any> {
@@ -1056,5 +849,136 @@ export default class SelectRoles extends SlashCommand {
 
   async bulk_removeAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
     return this.editAutocomplete(interaction);
+  }
+
+  async addAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
+  }
+
+  async removeAutocomplete(interaction: AutocompleteInteraction<'cached'>) {
+    return this.editAutocomplete(interaction);
+  }
+
+  async editAutocomplete(
+    interaction: AutocompleteInteraction<'cached'>,
+    res: ApplicationCommandOptionChoiceData[] = [],
+  ) {
+    const { client, guild, options } = interaction;
+
+    const channelId = <string>options.get('channel')?.value;
+    if (!channelId) return res;
+
+    const channel = await guild.channels.fetch(channelId);
+    if (!channel?.isTextBased()) return res;
+
+    const focused = options.getFocused(true);
+    const pattern = RegExp(`${focused.value}`, 'i');
+
+    if (focused.name === 'message_id') {
+      const messages = await channel.messages.fetch({ limit: 100 })
+        .then(ms => ms.toJSON().filter(m =>
+          m.author.id === client.user?.id &&
+          m.components.some(c => this.CommandNameRegExp.test(c.components[0].customId!)) &&
+          pattern.test(m.id)));
+
+      for (let i = 0; i < messages.length; i++) {
+        const { embeds, id } = messages[i];
+
+        const { title, description } = embeds[0];
+
+        const name = [
+          id,
+          title ? ` | ${title}` : '',
+          description ? ` | ${description}` : '',
+        ].join('').slice(0, 100);
+
+        if (title || description)
+          res.push({
+            name,
+            value: `${id}`,
+          });
+
+        if (res.length === 25) break;
+      }
+
+      return res;
+    }
+
+    const message_id = options.getString('message_id')?.match(this.regexp.messageURL)?.[1];
+    if (!message_id) return res;
+
+    const message = await channel.messages.safeFetch(message_id);
+    if (!message?.editable) return res;
+
+    if (focused.name === 'menu') {
+      for (let i = 0; i < message.components.length; i++) {
+        const componentJson = <APIActionRowComponent<APISelectMenuComponent>>message.components[i].toJSON();
+
+        if (componentJson.components[0].type !== ComponentType.SelectMenu) continue;
+
+        for (let j = 0; j < componentJson.components.length; j++) {
+          const element = componentJson.components[j];
+
+          const name = [
+            `${i + 1} - ${j + 1}`,
+            element.placeholder ? ` | ${element.placeholder}` : '',
+            ` | ${element.options.length} ${element.options.length > 1 ? 'options' : 'option'}`,
+            element.disabled ? ' | disabled' : '',
+          ].join('').slice(0, 100);
+
+          if (pattern.test(name))
+            res.push({
+              name,
+              value: `${element.custom_id}`,
+            });
+        }
+      }
+
+      return res;
+    }
+
+    if (focused.name === 'option') {
+      const menuId = options.getString('menu');
+
+      if (!menuId) return res;
+
+      for (let i = 0; i < message.components.length; i++) {
+        const componentJson = <APIActionRowComponent<APISelectMenuComponent>>message.components[i].toJSON();
+
+        if (componentJson.components[0].type !== ComponentType.SelectMenu) continue;
+
+        for (let j = 0; j < componentJson.components.length; j++) {
+          const element = componentJson.components[j];
+
+          if (element.custom_id !== menuId) continue;
+
+          for (let k = 0; k < element.options.length; k++) {
+            const option = element.options[k];
+
+            const value = this.Util.JSONparse(option.value);
+            if (!value) continue;
+
+            const role = await guild.roles.fetch(value.id ?? value.roleId);
+
+            const name = [
+              option.emoji?.id ? '' : option.emoji?.name,
+              option.label ? option.label : ` Option ${j + 1}`,
+              ` | ${role?.name}`,
+              ` | ${value.id ?? value.roleId}`,
+              option.description ? ` | ${option.description}` : '',
+            ].join('').slice(0, 100);
+
+            res.push({
+              name,
+              value: `${option.value}`,
+            });
+          }
+        }
+      }
+
+      return res;
+    }
+
+    return res;
   }
 }

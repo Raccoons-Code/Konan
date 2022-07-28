@@ -1,7 +1,6 @@
-import { ButtonBuilder } from '@discordjs/builders';
-import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIButtonComponent, ComponentType, MessageActionRowComponent, MessageActionRowComponentBuilder } from 'discord.js';
+import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIButtonComponent, ButtonBuilder, ComponentType, MessageActionRowComponent, MessageActionRowComponentBuilder } from 'discord.js';
 
-export function reorganizeButtonRoles(
+export function reorganizeButtons(
   components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<MessageActionRowComponentBuilder>)[],
 ) {
   const buttons = components.reduce<APIButtonComponent[]>((acc, row) => {
@@ -19,6 +18,6 @@ export function reorganizeButtonRoles(
     if (!buttons.length) return acc;
 
     return acc.concat(new ActionRowBuilder<ButtonBuilder>()
-      .setComponents(buttons.splice(0, 5).map(element => new ButtonBuilder(element))));
+      .setComponents(buttons.splice(0, 5).map(button => new ButtonBuilder(button))));
   }, <(ActionRow<MessageActionRowComponent> | ActionRowBuilder<MessageActionRowComponentBuilder>)[]>[]);
 }

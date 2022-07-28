@@ -7,7 +7,7 @@ export default class Button extends Command {
       name: 'button',
       description: 'Makes a link button.',
       aliases: ['http', 'https'],
-      clientPermissions: ['ManageWebhooks'],
+      appPermissions: ['ManageWebhooks'],
     });
   }
 

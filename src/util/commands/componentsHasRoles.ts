@@ -1,5 +1,6 @@
 import { ActionRow, APIRole, ButtonStyle, ComponentType, MessageActionRowComponent, Role } from 'discord.js';
-import { safeParseJSON } from './safeParseJSON';
+import { ButtonRolesCustomId, SelectRolesOptionValue } from '../../@types';
+import { JSONparse } from './JSONparse';
 
 export function componentsHasRoles(
   components: ActionRow<MessageActionRowComponent>[],
@@ -9,10 +10,17 @@ export function componentsHasRoles(
   if (!Array.isArray(roles)) return componentsHasRoles(components, [roles]);
 
   return roles.every(role => components.some(row => row.toJSON().components.some(element => {
-    if (element.type === ComponentType.Button && element.style !== ButtonStyle.Link)
-      return safeParseJSON(element.custom_id)?.roleId === role.id;
+    if (element.type === ComponentType.Button && element.style !== ButtonStyle.Link) {
+      const value = JSONparse<ButtonRolesCustomId>(element.custom_id);
+
+      return role.id === (value?.id ?? value?.roleId);
+    }
 
     if (element.type === ComponentType.SelectMenu)
-      return element.options.some(option => safeParseJSON(option.value)?.roleId === role.id);
+      return element.options.some(option => {
+        const value = JSONparse<SelectRolesOptionValue>(option.value);
+
+        return role.id === (value?.id ?? value?.roleId);
+      });
   })));
 }

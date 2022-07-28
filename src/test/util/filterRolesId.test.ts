@@ -13,11 +13,11 @@ import Util from './util';
         components: [
           {
             type: ComponentType.Button,
-            custom_id: JSON.stringify({ roleId: '1' }),
+            custom_id: JSON.stringify({ id: '1' }),
           },
           {
             type: ComponentType.Button,
-            custom_id: JSON.stringify({ roleId: '2' }),
+            custom_id: JSON.stringify({ id: '2' }),
           },
         ],
       }),
@@ -33,11 +33,11 @@ import Util from './util';
             options: [
               {
                 label: '3',
-                value: JSON.stringify({ roleId: '3' }),
+                value: JSON.stringify({ id: '3' }),
               },
               {
                 label: '4',
-                value: JSON.stringify({ roleId: '4' }),
+                value: JSON.stringify({ id: '4' }),
               },
             ],
             type: ComponentType.SelectMenu,

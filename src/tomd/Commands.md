@@ -2,7 +2,7 @@
 
 # Commands
 
-Last modified: July 17, 2022
+Last modified: July 24, 2022
 
 ## Application Commands (/) - 26
 
@@ -191,10 +191,10 @@ Last modified: July 17, 2022
 
 - {`create`}: Create a select menu.
   - <`role`>: Select a role to add to the select menu.
-  - [`item_name`]: The name of the item. {0,83} - default: <role>
-  - [`item_description`]: The description of the item. {0,100}
-  - [`item_default`]: Used to always add this role with other roles.
-  - [`item_emoji`]: The emoji of the item.
+  - [`option_name`]: The name of the option. {0,83} - default: <role>
+  - [`option_description`]: The description of the option. {0,100}
+  - [`option_default`]: Used to always add this role with other roles.
+  - [`option_emoji`]: The emoji of the option.
   - [`menu_disabled`]: Whether the menu is disabled.
   - [`menu_place_holder`]: The placeholder of the menu. {0,150}
   - [`text`]: The text of the message. Title {0,256} | Description {0,4096} - default: SelectRoles
@@ -214,16 +214,16 @@ Last modified: July 17, 2022
     - [`menu_disabled`]: Whether the menu is disabled.
     - [`menu_place_holder`]: The place holder of the menu. {0,150}
 
-  - {`item`}: Edit the item of the Select roles.
-    - <`channel`>: Select the channel of the item.
+  - {`option`}: Edit the option of the Select roles.
+    - <`channel`>: Select the channel of the option.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`menu`>: Select the menu of the item. - `Autocomplete`
-    - <`item`>: Select the item. - `Autocomplete`
+    - <`menu`>: Select the menu of the option. - `Autocomplete`
+    - <`option`>: Select the option. - `Autocomplete`
     - [`role`]: Select a new role.
-    - [`item_name`]: Input a new name for the item. {0,83}
-    - [`item_description`]: Input a new description for the item. {0,100}
-    - [`item_default`]: Used to always add this role with other roles.
-    - [`item_emoji`]: Input a new emoji for the item.
+    - [`option_name`]: Input a new name for the option. {0,83}
+    - [`option_description`]: Input a new description for the option. {0,100}
+    - [`option_default`]: Used to always add this role with other roles.
+    - [`option_emoji`]: Input a new emoji for the option.
 
 - {`add`}: Add to the Select roles.
 
@@ -231,22 +231,22 @@ Last modified: July 17, 2022
     - <`channel`>: Select the channel of the menu.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
     - <`role`>: Select a role to add to the menu.
-    - [`item_name`]: The name of the item. {0,83} - default: <role>
-    - [`item_description`]: The description of the item. {0,100}
-    - [`item_default`]: Used to always add this role with other roles.
-    - [`item_emoji`]: The emoji of the item.
+    - [`option_name`]: The name of the option. {0,83} - default: <role>
+    - [`option_description`]: The description of the option. {0,100}
+    - [`option_default`]: Used to always add this role with other roles.
+    - [`option_emoji`]: The emoji of the option.
     - [`menu_disabled`]: Whether the menu is disabled.
     - [`menu_place_holder`]: The place holder of the menu. {0,150}
 
-  - {`item`}: Add an item to the Select roles.
-    - <`channel`>: Select the channel of the item.
+  - {`option`}: Add an option to the Select roles.
+    - <`channel`>: Select the channel of the option.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`menu`>: Select the menu of the item. - `Autocomplete`
-    - <`role`>: Select a role to add to the item.
-    - [`item_name`]: The name of the item. {0,83} - default: <role>
-    - [`item_description`]: The description of the item. {0,100}
-    - [`item_default`]: Used to always add this role with other roles.
-    - [`item_emoji`]: The emoji of the item.
+    - <`menu`>: Select the menu of the option. - `Autocomplete`
+    - <`role`>: Select a role to add to the option.
+    - [`option_name`]: The name of the option. {0,83} - default: <role>
+    - [`option_description`]: The description of the option. {0,100}
+    - [`option_default`]: Used to always add this role with other roles.
+    - [`option_emoji`]: The emoji of the option.
 
 - {`remove`}: Remove from the Select roles.
 
@@ -255,11 +255,11 @@ Last modified: July 17, 2022
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
     - <`menu`>: Select the menu to remove. - `Autocomplete`
 
-  - {`item`}: Remove an item from the Select roles.
-    - <`channel`>: Select the channel of the item.
+  - {`option`}: Remove an option from the Select roles.
+    - <`channel`>: Select the channel of the option.
     - <`message_id`>: Message ID | Message URL - `Autocomplete`
-    - <`menu`>: Select the menu of the item. - `Autocomplete`
-    - <`item`>: Select the item to remove. - `Autocomplete`
+    - <`menu`>: Select the menu of the option. - `Autocomplete`
+    - <`option`>: Select the option to remove. - `Autocomplete`
 
 - {`bulk`}: Bulk manage Select roles.
 
@@ -336,7 +336,7 @@ Last modified: July 17, 2022
 - {`permissions`}: Bitfield of the permissions.
   - [`role`]: Role to get the permissions from.
   - [`user`]: User to get the permissions from.
-  - [`bits`]: Intents to get the bitfield of.
+  - [`bits`]: Permissions to get the bitfield of.
 
 - {`intents`}: Bitfield of the intents.
   - [`bits`]: Intents to get the bitfield of.
@@ -364,11 +364,11 @@ Last modified: July 17, 2022
     - [`embed`]: The embed to edit. Title {0,256} | Description {0,4096}
     - [`content`]: The content of the message.
 
-#### info {`application`  | `channel`  | `role`  | `server`  | `user`}
+#### info {`app`  | `channel`  | `role`  | `server`  | `user`}
 
 > Show the info message.
 
-- {`application`}: Show the bot info.
+- {`app`}: Show the bot info.
 
 - {`channel`}: Show the channel info.
   - [`channel`]: Select a channel to show the info for.

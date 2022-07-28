@@ -1,5 +1,5 @@
-import { ActionRowBuilder, APISelectMenuComponent, ComponentType, SelectMenuBuilder, SelectMenuComponent, SelectMenuInteraction } from 'discord.js';
-import { RolesManager, SelectRolesCustomId, SelectRolesItemOptionValue } from '../../@types';
+import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, Colors, ComponentType, EmbedBuilder, Role, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
+import { RolesManager, SelectRolesCustomId, SelectRolesOptionValue } from '../../@types';
 import { SelectMenuComponentInteraction } from '../../structures';
 
 export default class SelectRoles extends SelectMenuComponentInteraction {
@@ -7,40 +7,38 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
     super({
       name: 'selectroles',
       description: 'Select Roles',
-      clientPermissions: ['ManageRoles'],
+      appPermissions: ['ManageRoles'],
     });
   }
 
   async execute(interaction: SelectMenuInteraction<'cached'>, roles: RolesManager = { add: [], remove: [] }) {
-    const { member, message, values } = interaction;
+    const { appPermissions, member, message, values } = interaction;
 
-    const actionRow = message.components.find(c =>
-      c.components.some(co => co.type === ComponentType.SelectMenu &&
-        co.options.some(option => option.default)));
+    const appPerms = appPermissions?.missing(this.data.appPermissions!);
 
-    if (actionRow) {
-      const component = <SelectMenuComponent>actionRow.components.find(co =>
-        co.type === ComponentType.SelectMenu && co.options.some(option => option.default));
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingPermission');
 
-      const item_default = component.options.find(option => option.default)!;
+    const optionDefault = this.Util.getDefaultOptionFromSelectMenu(message.components);
 
-      const { roleId } = <SelectRolesItemOptionValue>JSON.parse(item_default.value);
+    if (optionDefault) {
+      const { id, roleId } = <SelectRolesOptionValue>JSON.parse(optionDefault.value);
 
-      roles.add.push(roleId);
+      roles.add.push(id ?? roleId);
 
-      roles.default = member.roles.resolve(roleId)?.id;
+      roles.default = member.roles.resolve(id ?? roleId)?.id;
     }
 
     for (let i = 0; i < values.length; i++) {
       const value = values[i];
 
-      const { roleId } = <SelectRolesItemOptionValue>JSON.parse(value);
+      const { id, roleId } = <SelectRolesOptionValue>JSON.parse(value);
 
-      if (roles.add.includes(roleId)) continue;
+      if (roles.add.includes(id ?? roleId)) continue;
 
-      const role = member.roles.resolve(roleId);
+      const role = member.roles.resolve(id ?? roleId);
 
-      role ? roles.remove.push(role.id) : roles.add.push(roleId);
+      role ? roles.remove.push(role.id) : roles.add.push(id ?? roleId);
     }
 
     if (roles.remove.length)
@@ -49,30 +47,32 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
     if (roles.add.length)
       await member.roles.add(roles.add).catch(console.log);
 
-    return this.setComponents(interaction, roles);
+    await this.setComponents(interaction, roles);
+    this.sendResponse(interaction, roles);
   }
 
   async setComponents(interaction: SelectMenuInteraction<'cached'>, roles: RolesManager) {
     const { customId, message, values } = interaction;
 
     const components = message.components.map(row => {
-      if (row.components[0].type !== ComponentType.SelectMenu) return row;
-      if (row.components.every(element => element.customId !== customId)) return row;
+      const rowJson = <APIActionRowComponent<APISelectMenuComponent>>row.toJSON();
 
-      return new ActionRowBuilder<SelectMenuBuilder>(row.toJSON())
-        .setComponents(row.components.map(element => {
-          const selectMenu = new SelectMenuBuilder(<APISelectMenuComponent>element.toJSON());
+      if (rowJson.components[0].type !== ComponentType.SelectMenu) return row;
+      if (rowJson.components.every(element => element.custom_id !== customId)) return row;
 
-          if (element.customId !== customId ||
-            element.type !== ComponentType.SelectMenu) return selectMenu;
+      return new ActionRowBuilder<SelectMenuBuilder>()
+        .setComponents(rowJson.components.map(element => {
+          const selectMenu = new SelectMenuBuilder(element);
+
+          if (element.custom_id !== customId) return selectMenu;
 
           selectMenu.setOptions(element.options.map(option => {
             if (!values.includes(option.value)) return option;
 
-            const { count, d, roleId } = <SelectRolesItemOptionValue>JSON.parse(option.value);
+            const { count, id, roleId } = <SelectRolesOptionValue>JSON.parse(option.value);
 
-            const add = roles.add.includes(roleId) ? roleId === roles.default ? 0 : 1 : 0;
-            const rem = roles.remove.includes(roleId) ? -1 : 0;
+            const add = roles.add.includes(id ?? roleId) ? (id ?? roleId) === roles.default ? 0 : 1 : 0;
+            const rem = roles.remove.includes(id ?? roleId) ? -1 : 0;
 
             let sum = add + rem;
 
@@ -84,13 +84,12 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
 
             const newValue = {
               count: count + sum,
-              d,
-              roleId,
+              id: id ?? roleId,
             };
 
             const [, label] = option.label.match(this.regexp.labelWithCount) ?? [];
 
-            option.label = [label, newValue.count].join(' ').trim();
+            option.label = `${label} ${newValue.count}`;
 
             option.value = JSON.stringify(newValue);
 
@@ -116,5 +115,42 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
     });
 
     return interaction.update({ components });
+  }
+
+  async sendResponse(interaction: SelectMenuInteraction<'cached'>, roles: RolesManager) {
+    const { guild } = interaction;
+
+    const added = roles.add.reduce((acc, id) => {
+      const role = guild.roles.resolve(id);
+      if (!role) return acc;
+      return acc.concat(role);
+    }, <Role[]>[]);
+
+    const removed = roles.remove.reduce((acc, id) => {
+      const role = guild.roles.resolve(id);
+      if (!role) return acc;
+      return acc.concat(role);
+    }, <Role[]>[]);
+
+    const embeds = [
+      new EmbedBuilder()
+        .setColor(Colors.Blue),
+    ];
+
+    if (added.length)
+      embeds[0].addFields({
+        name: `${this.Util.Emoji.Success} Added [${added.length}]`,
+        value: added.join('\n'),
+        inline: true,
+      });
+
+    if (removed.length)
+      embeds[0].addFields({
+        name: `${this.Util.Emoji.Danger} Removed [${removed.length}]`,
+        value: removed.join('\n'),
+        inline: true,
+      });
+
+    return interaction.followUp({ embeds, ephemeral: true });
   }
 }

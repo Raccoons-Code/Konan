@@ -6,7 +6,7 @@ export default class Clear extends SlashCommand {
   constructor() {
     super({
       category: 'Moderation',
-      clientPermissions: ['ManageMessages', 'ReadMessageHistory'],
+      appPermissions: ['ManageMessages', 'ReadMessageHistory'],
       userPermissions: ['ManageMessages'],
     });
 
@@ -36,7 +36,7 @@ export default class Clear extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return interaction.editReply({ content: this.t('onlyOnServer', { locale }) });
+      return this.replyOnlyOnServer(interaction);
 
     const { client, member, options } = interaction;
 
@@ -45,18 +45,12 @@ export default class Clear extends SlashCommand {
     const userPerms = channel.permissionsFor(member).missing(this.props!.userPermissions!);
 
     if (userPerms.length)
-      return interaction.editReply(this.t('missingUserChannelPermission', {
-        locale,
-        permission: this.t(userPerms[0], { locale }),
-      }));
+      return this.replyMissingPermission(interaction, userPerms, 'missingUserChannelPermission');
 
-    const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
+    const appPerms = channel.permissionsFor(client.user!)?.missing(this.props!.appPermissions!);
 
-    if (clientPerms?.length)
-      return interaction.editReply(this.t('missingChannelPermission', {
-        locale,
-        permission: this.t(clientPerms[0], { locale }),
-      }));
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingChannelPermission');
 
     const limit = options.getInteger('amount', true);
 

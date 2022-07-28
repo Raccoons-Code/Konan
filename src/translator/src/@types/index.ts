@@ -4,7 +4,7 @@ export interface InterpolationData {
 }
 
 export interface Options {
-  [k: string]: any
+  [x: string]: any
   capitalize?: boolean | null
   count?: number
   interpolation?: InterpolationData
@@ -13,7 +13,7 @@ export interface Options {
   translation?: TranslationData
 }
 
-export interface Resources { [k: string]: { [k: string]: string } }
+export type Resources = Record<string, Record<string, string>>
 
 export interface TranslationData {
   fallbackLocale?: string

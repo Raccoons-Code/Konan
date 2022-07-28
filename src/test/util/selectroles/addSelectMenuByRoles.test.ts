@@ -1,6 +1,6 @@
-import { ActionRowBuilder, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
+import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 import assert from 'node:assert';
-import Util from './../util';
+import Util from '../util';
 
 {
   const params = <Role[]><unknown>[
@@ -58,6 +58,8 @@ import Util from './../util';
 
   const menuPlaceholder = 'Select roles';
 
+  const now = Date.now();
+
   const components = [
     new ActionRowBuilder<SelectMenuBuilder>()
       .setComponents(new SelectMenuBuilder()
@@ -66,10 +68,11 @@ import Util from './../util';
           count: 0,
         }))
         .setOptions(params.slice(0, 5).map(role => new SelectMenuOptionBuilder()
+          .setDefault(false)
           .setLabel(`${role.name.slice(0, 83)} 0`)
           .setValue(JSON.stringify({
             count: 0,
-            roleId: role.id,
+            id: role.id,
           }))))
         .setMaxValues(5)
         .setPlaceholder(menuPlaceholder)),
@@ -81,12 +84,14 @@ import Util from './../util';
         .setCustomId(JSON.stringify({
           c: 'selectroles',
           count: 0,
+          d: now,
         }))
         .addOptions(params.slice(5, 25).map(role => new SelectMenuOptionBuilder()
+          .setDefault(false)
           .setLabel(`${role.name.slice(0, 83)} 0`)
           .setValue(JSON.stringify({
             count: 0,
-            roleId: role.id,
+            id: role.id,
           }))))
         .setMaxValues(25)
         .setPlaceholder(menuPlaceholder)),
@@ -95,18 +100,29 @@ import Util from './../util';
         .setCustomId(JSON.stringify({
           c: 'selectroles',
           count: 0,
+          d: now,
         }))
         .setOptions(params.slice(25, 30).map(role => new SelectMenuOptionBuilder()
+          .setDefault(false)
           .setLabel(`${role.name.slice(0, 83)} 0`)
           .setValue(JSON.stringify({
             count: 0,
-            roleId: role.id,
+            id: role.id,
           }))))
         .setMaxValues(params.slice(25, 30).length)
         .setPlaceholder(menuPlaceholder)),
   ];
 
-  const selectRoles = Util.addSelectRoles(params.slice(5, 30), <any[]>components, menuPlaceholder);
+  const selectRoles = Util.addSelectMenuByRoles({
+    roles: params.slice(5, 30),
+    menuPlaceholder,
+  }, <any[]>components).map(row => new ActionRowBuilder<SelectMenuBuilder>()
+    .setComponents((<APIActionRowComponent<APISelectMenuComponent>>row.toJSON()).components.map(element =>
+      new SelectMenuBuilder(element)
+        .setCustomId(JSON.stringify({
+          ...JSON.parse(element.custom_id),
+          d: now,
+        })))));
 
   assert.deepEqual(selectRoles, expected);
 }

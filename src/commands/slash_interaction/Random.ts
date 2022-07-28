@@ -37,12 +37,12 @@ const Choices = new class {
 };
 
 export default class Random extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({
       category: 'Fun',
-      clientPermissions: ['AttachFiles'],
+      appPermissions: ['AttachFiles'],
     });
 
     this.data = new SlashCommandBuilder().setName('random')
@@ -57,18 +57,12 @@ export default class Random extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const { channel, client, locale, options } = <ChatInputCommandInteraction<'cached'>>interaction;
+    const { channel, client, options } = <ChatInputCommandInteraction<'cached'>>interaction;
 
-    const clientPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
+    const appPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.appPermissions!);
 
-    if (clientPerms?.length)
-      return interaction.reply({
-        content: this.t('missingChannelPermission', {
-          locale,
-          permission: this.t(clientPerms[0], { locale }),
-        }),
-        ephemeral: true,
-      });
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingChannelPermission');
 
     await interaction.deferReply();
 

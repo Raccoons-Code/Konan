@@ -5,7 +5,7 @@ const localeString = Object.values(Locale);
 
 export function getLocalizations(
   key: string,
-  options?: { [k: string]: any },
+  options?: Record<string, any>,
 ): Partial<Record<`${Locale}`, string | null>> {
   return localeString.reduce((acc, locale) => {
     const translation = t(key, { locale, capitalize: null, translation: { noScape: true }, ...options });
@@ -18,5 +18,5 @@ export function getLocalizations(
       acc[locale] = acc[locale].replace(/\s+|['°]/g, '_').toLowerCase().slice(0, 32);
 
     return acc;
-  }, <{ [k: string]: string }>{});
+  }, <Record<string, string>>{});
 }

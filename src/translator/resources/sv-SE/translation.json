@@ -6,7 +6,7 @@
   "automatic": "automatisk",
   "backup404": "Kunde inte hitta säkerhetskopian.",
   "backupDeleted": "Säkerhetskopieringen har tagits bort.",
-  "backupError": "Fel! Kan inte säkerhetskopiera!",
+  "backupError": "Kan inte säkerhetskopiera!",
   "backupDone": "Säkerhetskopiering slutförd.",
   "ban404": "Den här användaren är inte bannad!",
   "banError": "Fel! Kan inte bannlysa den här användaren.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Du har redan provat {{number}}!\n:arrow_up_small: Detta är störst!",
   "numberRepeatSmaller": "Du har redan provat {{number}}!\n:arrow_down_small: Detta är mindre!",
   "numberSmaller": "{{number}} är mindre!",
-  "onlyOnServer": "Fel! Detta kommando kan endast användas på en server.",
+  "onlyOnServer": "Detta kommando kan endast användas på en server.",
   "owner": "ägare",
   "PERMISSION": "{{permission}}",
   "permissions": "behörigheter",
@@ -109,13 +109,5 @@
   "userNotOwner": "Du är inte ägaren av servern.",
   "userTimedOut": "Användaren har straffades framgångsrikt. Till {{time}} {{timeR}}.",
   "userUnbanned": "Användaren har blivit bannad!",
-  "wordsnack": "Ord mellanmål",
-  "CATEGORY": "Kategori",
-  "DM": "Direkt meddelande",
-  "NEWS": "Nyheter",
-  "STORE": "Butik",
-  "TEXT": "Text",
-  "THREAD": "Tråd",
-  "UNKNOWN": "Okänd",
-  "VOICE": "Röst"
+  "wordsnack": "Ord mellanmål"
 }

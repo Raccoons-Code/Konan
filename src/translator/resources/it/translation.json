@@ -6,7 +6,7 @@
   "automatic": "automatico",
   "backup404": "Impossibile trovare il backup.",
   "backupDeleted": "Backup eliminato con successo.",
-  "backupError": "Errore! Impossibile eseguire il backup!",
+  "backupError": "Impossibile eseguire il backup!",
   "backupDone": "Backup completato con successo.",
   "ban404": "Questo utente non è bandito!",
   "banError": "Errore! Impossibile bandire questo utente.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Hai già provato {{number}}!\n:arrow_up_small: Questo è più grande!",
   "numberRepeatSmaller": "Hai già provato {{number}}!\n:arrow_down_small: Questo è più piccolo!",
   "numberSmaller": "{{number}} è più piccolo!",
-  "onlyOnServer": "Errore! Questo comando può essere usato solo su un server.",
+  "onlyOnServer": "Questo comando può essere usato solo su un server.",
   "owner": "proprietario",
   "PERMISSION": "{{permission}}",
   "permissions": "autorizzazioni",
@@ -109,13 +109,5 @@
   "userNotOwner": "Non sei il proprietario del server.",
   "userTimedOut": "Utente punito con successo. Fino a {{time}} {{timeR}}.",
   "userUnbanned": "Utente sbloccato con successo!",
-  "wordsnack": "Snack Di Word",
-  "CATEGORY": "Categoria",
-  "DM": "Messaggio diretto",
-  "NEWS": "Notizie",
-  "STORE": "Negozio",
-  "TEXT": "Testo",
-  "THREAD": "Thread",
-  "UNKNOWN": "Sconosciuto",
-  "VOICE": "Voce"
+  "wordsnack": "Snack Di Word"
 }

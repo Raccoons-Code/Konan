@@ -6,7 +6,7 @@
   "automatic": "automático",
   "backup404": "Não foi possível encontrar o backup.",
   "backupDeleted": "O backup foi excluído com sucesso.",
-  "backupError": "Erro! Não foi possível fazer backup!",
+  "backupError": "Não foi possível fazer backup!",
   "backupDone": "Backup feito com sucesso.",
   "ban404": "Este usuário não está banido!",
   "banError": "Erro! Não foi possível banir este usuário.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Você já tentou {{number}}!\n:arrow_up_small: Isso é maior!",
   "numberRepeatSmaller": "Você já tentou {{number}}!\n:arrow_down_small: Isso é menor!",
   "numberSmaller": "{{number}} é menor!",
-  "onlyOnServer": "Erro! Este comando só pode ser usado em um servidor.",
+  "onlyOnServer": "Este comando só pode ser usado em um servidor.",
   "owner": "dono",
   "PERMISSION": "{{permission}}",
   "permissions": "permissões",
@@ -109,13 +109,5 @@
   "userNotOwner": "Você não é o dono do servidor.",
   "userTimedOut": "Usuário punido com sucesso. Até {{time}} {{timeR}}.",
   "userUnbanned": "Usuário desbanido com sucesso!",
-  "wordsnack": "Caça palavras",
-  "CATEGORY": "Categoria",
-  "DM": "Mensagem direta",
-  "NEWS": "Notícias",
-  "STORE": "Loja",
-  "TEXT": "Texto",
-  "THREAD": "Tópico",
-  "UNKNOWN": "Desconhecido",
-  "VOICE": "Voz"
+  "wordsnack": "Caça palavras"
 }

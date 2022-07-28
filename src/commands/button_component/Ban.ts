@@ -3,7 +3,7 @@ import { BanCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
 export default class Ban extends ButtonComponentInteraction {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({

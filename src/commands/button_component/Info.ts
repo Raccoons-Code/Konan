@@ -11,7 +11,7 @@ const { npm_package_dependencies_discord_js, npm_package_version } = env;
 const inline = true;
 
 export default class Info extends ButtonComponentInteraction {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({

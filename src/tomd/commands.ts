@@ -1,6 +1,6 @@
 import { APIApplicationCommandOption, ApplicationCommandAutocompleteOption, ApplicationCommandChannelOptionData, ApplicationCommandChoicesData, ApplicationCommandNonOptionsData, ApplicationCommandNumericOptionData, ApplicationCommandSubCommandData } from 'discord.js';
 import { writeFileSync } from 'node:fs';
-import Commands from '../commands';
+import CommandHandler from '../commands';
 import { SlashCommand } from '../structures';
 
 function convertOptionsToString(
@@ -88,9 +88,9 @@ function convertCommandsToString(commands: SlashCommand[], text = ['']) {
 }
 
 (async () => {
-  const ApplicationCommands = await Commands.loadCommands(Commands.applicationCommandTypes);
+  const ApplicationCommands = await CommandHandler.loadCommands(CommandHandler.applicationCommandTypes);
 
-  const { commandsByCategory } = Commands;
+  const { commandsByCategory } = CommandHandler;
 
   const txtCommands = Object.keys(commandsByCategory).reverse().map(category => {
     const commands = commandsByCategory[category];
@@ -101,7 +101,7 @@ function convertCommandsToString(commands: SlashCommand[], text = ['']) {
   });
 
   ApplicationCommands.slash_interaction = ApplicationCommands.slash_interaction
-    .filter((command) => !!(<SlashCommand>command).props?.category);
+    .filter((command) => !!(<any>command).props?.category);
 
   const text = [
     '<!-- markdownlint-disable MD032 MD033 -->\n\n',

@@ -1,4 +1,4 @@
-import { ButtonBuilder, ButtonStyle, ComponentEmojiResolvable, resolvePartialEmoji } from 'discord.js';
+import { ButtonBuilder, ButtonStyle, ComponentEmojiResolvable, ComponentType, resolvePartialEmoji } from 'discord.js';
 import assert from 'node:assert';
 import Util from './util';
 
@@ -12,7 +12,7 @@ import Util from './util';
     label: params.label,
     emoji: {},
     style: ButtonStyle.Link,
-    type: 2,
+    type: ComponentType.Button,
     url: `https://${params.url}`,
   });
 
@@ -30,7 +30,7 @@ import Util from './util';
     label: params.label,
     emoji: <ComponentEmojiResolvable>resolvePartialEmoji(params.emoji),
     style: ButtonStyle.Link,
-    type: 2,
+    type: ComponentType.Button,
     url: `https://${params.url}`,
   });
 

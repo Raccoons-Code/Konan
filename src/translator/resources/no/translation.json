@@ -6,7 +6,7 @@
   "automatic": "automatisk",
   "backup404": "Finner ikke sikkerhetskopien.",
   "backupDeleted": "Sikkerhetskopien ble slettet.",
-  "backupError": "Feil! Kan ikke sikkerhetskopiere!",
+  "backupError": "Kan ikke sikkerhetskopiere!",
   "backupDone": "Sikkerhetskopiering utført.",
   "ban404": "Denne brukeren er ikke utestengt!",
   "banError": "Feil! Kan ikke utestenge denne brukeren.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Du har allerede prøvd {{number}}!\n:arrow_up_small: Dette er større!",
   "numberRepeatSmaller": "Du har allerede prøvd {{number}}!\n:arrow_down_small: Dette er mindre!",
   "numberSmaller": "{{number}} er mindre!",
-  "onlyOnServer": "Feil! Denne kommandoen kan bare bli brukt på en server.",
+  "onlyOnServer": "Denne kommandoen kan bare bli brukt på en server.",
   "owner": "eier",
   "PERMISSION": "{{permission}}",
   "permissions": "tillatelser",
@@ -109,13 +109,5 @@
   "userNotOwner": "Du er ikke eier av serveren.",
   "userTimedOut": "Vellykket ble straffet. Til {{time}} {{timeR}}.",
   "userUnbanned": "Vellykket fjerning av bruker!",
-  "wordsnack": "Ordsnacks",
-  "CATEGORY": "Kategori",
-  "DM": "Send melding",
-  "NEWS": "Nyheter",
-  "STORE": "Butikk",
-  "TEXT": "Tekst",
-  "THREAD": "Tråd",
-  "UNKNOWN": "Ukjent",
-  "VOICE": "Stemme"
+  "wordsnack": "Ordsnacks"
 }

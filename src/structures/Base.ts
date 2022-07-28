@@ -22,5 +22,5 @@ export default abstract class Base extends Utils {
     });
   }
 
-  abstract execute(...args: any): Promise<any>;
+  abstract execute(...args: any[]): Promise<any>;
 }

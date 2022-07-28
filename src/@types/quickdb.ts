@@ -3,6 +3,4 @@ export interface GuessGameData {
   user: number[]
 }
 
-export interface JKPGameData {
-  [k: string]: number
-}
+export type JKPGameData = Record<string, number>

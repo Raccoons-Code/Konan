@@ -23,7 +23,7 @@ export default class Translator {
     key = keys.reduce<any>((acc, k) => {
       const pluralKey = `${k}_${new Intl.PluralRules(locale).select(options.count ?? 0)}`;
 
-      return acc?.[pluralKey] ?? acc?.[k] ?? (noScape ? undefined : fallbackLocale?.[k] ?? k);
+      return acc?.[pluralKey] ?? acc?.[k] ?? (noScape ? null : fallbackLocale?.[k] ?? k);
     }, translation);
 
     return key;

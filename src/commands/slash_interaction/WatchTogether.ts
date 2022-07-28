@@ -8,7 +8,7 @@ export default class WatchTogether extends SlashCommand {
   constructor() {
     super({
       category: 'Utility',
-      clientPermissions: ['CreateInstantInvite'],
+      appPermissions: ['CreateInstantInvite'],
     });
 
     this.data = new SlashCommandBuilder().setName('party')
@@ -31,11 +31,8 @@ export default class WatchTogether extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
     const { locale } = interaction;
 
-    if (!interaction.inCachedGuild()) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
-
-      return interaction.reply(this.t('onlyOnServer', { locale }));
-    }
+    if (!interaction.inCachedGuild())
+      return this.replyOnlyOnServer(interaction);
 
     if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);
@@ -50,16 +47,10 @@ export default class WatchTogether extends SlashCommand {
         ephemeral: true,
       });
 
-    const clientPerms = channel.permissionsFor(client.user!)?.missing(this.props!.clientPermissions!);
+    const appPerms = channel.permissionsFor(client.user!)?.missing(this.props!.appPermissions!);
 
-    if (clientPerms?.length)
-      return interaction.reply({
-        content: `${member}, ${this.t('missingChannelPermission', {
-          locale,
-          permission: this.t(clientPerms[0], { locale }),
-        })}`,
-        ephemeral: true,
-      });
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingChannelPermission');
 
     const activity = options.getString('activity', true).toLowerCase();
 

@@ -7,7 +7,7 @@ export default class Unban extends SlashCommand {
   constructor() {
     super({
       category: 'Moderation',
-      clientPermissions: ['BanMembers'],
+      appPermissions: ['BanMembers'],
       userPermissions: ['BanMembers'],
     });
 
@@ -32,41 +32,20 @@ export default class Unban extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
     const { locale } = interaction;
 
-    if (!interaction.inCachedGuild()) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
-
-      return interaction.reply({ content: this.t('onlyOnServer', { locale }), ephemeral: true });
-    }
+    if (!interaction.inCachedGuild())
+      return this.replyOnlyOnServer(interaction);
 
     const { appPermissions, guild, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
-    if (userPerms.length) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
+    if (userPerms.length)
+      return this.replyMissingPermission(interaction, userPerms, 'missingUserPermission');
 
-      return interaction.reply({
-        content: this.t('missingUserPermission', {
-          locale,
-          permission: this.t(userPerms[0], { locale }),
-        }),
-        ephemeral: true,
-      });
-    }
+    const appPerms = appPermissions?.missing(this.props!.appPermissions!);
 
-    const clientPerms = appPermissions?.missing(this.props!.clientPermissions!);
-
-    if (clientPerms?.length) {
-      if (interaction.type === ApplicationCommandAutocomplete) return interaction.respond([]);
-
-      return interaction.reply({
-        content: this.t('missingPermission', {
-          locale,
-          permission: this.t(clientPerms[0], { locale }),
-        }),
-        ephemeral: true,
-      });
-    }
+    if (appPerms?.length)
+      return this.replyMissingPermission(interaction, appPerms, 'missingPermission');
 
     if (interaction.type === ApplicationCommandAutocomplete)
       return this.executeAutocomplete(interaction);

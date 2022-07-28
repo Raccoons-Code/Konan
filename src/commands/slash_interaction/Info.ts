@@ -12,7 +12,7 @@ const { GuildCategory, GuildNews, GuildNewsThread, GuildPrivateThread, GuildPubl
 const inline = true;
 
 export default class Info extends SlashCommand {
-  [k: string]: any;
+  [x: string]: any;
 
   constructor() {
     super({
@@ -168,7 +168,7 @@ export default class Info extends SlashCommand {
       ]);
 
     if ([GuildNews, GuildText].includes(type)) {
-      const arrayThreads = threads.cache.map(thread => thread);
+      const arrayThreads = threads.cache.toJSON();
       const textThreads = arrayThreads.join(' ').trim() || '-';
 
       embeds[0].addFields([
@@ -237,7 +237,7 @@ export default class Info extends SlashCommand {
     const { locale } = interaction;
 
     if (!interaction.inCachedGuild())
-      return interaction.editReply(this.t('onlyOnServer', { locale }));
+      return this.replyOnlyOnServer(interaction);
 
     const { guild } = interaction;
 
@@ -275,14 +275,14 @@ export default class Info extends SlashCommand {
     const components = <ActionRowBuilder<ButtonBuilder>[]>[];
 
     const flagsArray = flags?.toArray();
-    const textFlags = flagsArray?.map(flag => this.t(flag, { locale })).join('\n') || '-';
+    const textFlags = flagsArray?.map(flag => inlineCode(this.t(flag, { locale }))).join('\n') || '-';
 
     embeds[0]
       .setDescription(`${user}`)
       .setFields([
         { name: this.t('discordTag', { locale }), value: inlineCode(tag), inline },
         { name: this.t('discordId', { locale }), value: inlineCode(id), inline },
-        { name: `Flags [${flagsArray?.length ?? 0}]`, value: codeBlock(textFlags) },
+        { name: `Flags [${flagsArray?.length ?? 0}]`, value: textFlags },
         { name: this.t('creationDate', { locale }), value: `${time(createdAt)}${time(createdAt, 'R')}`, inline },
       ])
       .setThumbnail(user.displayAvatarURL())

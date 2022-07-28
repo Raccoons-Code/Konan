@@ -8,7 +8,7 @@ const { DONATE_LINK, GUILD_INVITE } = env;
 /* const resetProps = { attachments: [], components: [], content: null, embeds: [], files: [] }; */
 
 export default class Help extends SelectMenuComponentInteraction {
-  [k: string]: any;
+  [x: string]: any;
   limit = Util.Constants.helpPageLimit;
 
   constructor() {

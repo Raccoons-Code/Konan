@@ -7,13 +7,15 @@ export interface BaseComponentCustomId {
   c: string
   /** subcommand */
   sc: string
+  /** subcommandgroup */
+  scg: string
 }
 
 export interface ButtonRolesCustomId extends BaseComponentCustomId {
   count: number
-  /** date */
-  d: number
-  roleId: string
+  id: string
+  /** @deprecated Use id instead! d22m07y2022 */
+  roleId?: string
 }
 
 export interface HelpButtonCustomId extends BaseComponentCustomId {

@@ -1,9 +1,31 @@
 import { AutocompleteInteraction, BitFieldResolvable, ButtonInteraction, ChatInputCommandInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuCommandInteraction, GatewayIntentsString, Interaction, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, PermissionsString, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
-import { ButtonComponentInteraction, Command, MessageContextMenu, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
+import { BaseCommand, ButtonComponentInteraction, Command, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 export * from './customid';
+export * from './enum';
 export * from './quickdb';
 export * from './util';
+
+export type AnyApplicationCommand = BaseCommand & (
+  | ButtonComponentInteraction
+  | MessageContextMenu
+  | ModalSubmit
+  | SelectMenuComponentInteraction
+  | SlashCommand
+  | UserContextMenu
+)
+
+export type AnyCommandCollection = Record<string, Collection<string, AnyCommand>>
+
+export type AnyCommand = BaseCommand & (
+  | ButtonComponentInteraction
+  | Command
+  | MessageContextMenu
+  | ModalSubmit
+  | SelectMenuComponentInteraction
+  | SlashCommand
+  | UserContextMenu
+)
 
 export type AnyInteraction = Interaction & (
   | AutocompleteInteraction
@@ -18,20 +40,9 @@ export type AnyInteraction = Interaction & (
   | UserContextMenuCommandInteraction
 )
 
-export interface ApplicationCommandsCollection {
-  [k: string]: Collection<string, Interaction & (
-    | AutocompleteInteraction
-    | ButtonInteraction
-    | ChatInputCommandInteraction
-    | CommandInteraction
-    | MessageContextMenuCommandInteraction
-    | ModalSubmitInteraction
-    | SelectMenuInteraction
-    | UserContextMenuCommandInteraction
-  )>
-}
+export type ApplicationCommandCollection = Record<string, Collection<string, AnyApplicationCommand>>
 
-export type CategoryTypes = 'Fun' | 'Game' | 'General' | 'Moderation' | 'Utility';
+export type CategoryTypes = 'Fun' | 'Game' | 'General' | 'Moderation' | 'Utility'
 
 export interface CommandArgsData {
   name: string
@@ -46,35 +57,22 @@ export interface CommandChoicesData {
   value: any
 }
 
+export type CommandCollection = Record<string, Collection<string, Command>>
+
 export interface CommandData {
   aliases?: string[]
   args?: CommandArgsData[]
-  clientPermissions?: BitFieldResolvable<PermissionsString, bigint>
+  appPermissions?: BitFieldResolvable<PermissionsString, bigint>
   description: string
   emoji?: string
   name: string
   userPermissions?: BitFieldResolvable<PermissionsString, bigint>
 }
 
-export interface CommandCollectionTypes {
-  [k: string]: Collection<string,
-    | ButtonComponentInteraction
-    | Command
-    | MessageContextMenu
-    | SelectMenuComponentInteraction
-    | SlashCommand
-    | UserContextMenu
-  >
-}
-
-export interface CommandsCollection {
-  [k: string]: Collection<string, Command>
-}
-
 export interface ComponentInteractionData {
   name: string
   description: string
-  clientPermissions?: BitFieldResolvable<PermissionsString, bigint>
+  appPermissions?: BitFieldResolvable<PermissionsString, bigint>
 }
 
 export interface EventData {
@@ -102,22 +100,18 @@ export interface RolesManager {
   remove: string[]
 }
 
-export interface SelectRolesItemOptionValue {
+export interface SelectRolesOptionValue {
   count: number
-  /** date */
-  d: number
-  roleId: string
+  id: string
+  /** @deprecated Use id instead! d22m07y2022 */
+  roleId?: string
 }
 
 export interface SlashCommandProps {
-  category?: CategoryTypes;
-  clientPermissions?: BitFieldResolvable<PermissionsString, bigint>
+  appPermissions?: BitFieldResolvable<PermissionsString, bigint>
+  category?: CategoryTypes
   ownerOnly?: boolean
   userPermissions?: BitFieldResolvable<PermissionsString, bigint>
-}
-
-export interface SlashCommandsCollection {
-  [k: string]: Collection<string, SlashCommand>
 }
 
 export interface Stats {

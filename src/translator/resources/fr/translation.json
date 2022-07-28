@@ -6,7 +6,7 @@
   "automatic": "automatique",
   "backup404": "Impossible de trouver la sauvegarde.",
   "backupDeleted": "Sauvegarde supprimée avec succès.",
-  "backupError": "Erreur! Impossible de sauvegarder !",
+  "backupError": "Impossible de sauvegarder !",
   "backupDone": "Sauvegarde effectuée avec succès.",
   "ban404": "Cet utilisateur n'est pas banni !",
   "banError": "Erreur! Impossible de bannir cet utilisateur.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Vous avez déjà essayé {{number}}!\n:arrow_up_small: C'est plus grand !",
   "numberRepeatSmaller": "Vous avez déjà essayé {{number}}!\n:arrow_down_small: C'est plus petit !",
   "numberSmaller": "{{number}} est plus petit !",
-  "onlyOnServer": "Erreur! Cette commande ne peut être utilisée que sur un serveur.",
+  "onlyOnServer": "Cette commande ne peut être utilisée que sur un serveur.",
   "owner": "Propriétaire",
   "PERMISSION": "{{permission}}",
   "permissions": "permissions",
@@ -109,13 +109,5 @@
   "userNotOwner": "Vous n'êtes pas le propriétaire du serveur.",
   "userTimedOut": "Utilisateur punie avec succès. Jusqu'à {{time}} {{timeR}}.",
   "userUnbanned": "Utilisateur débanni avec succès !",
-  "wordsnack": "Grignotines de mots",
-  "CATEGORY": "Catégorie",
-  "DM": "Message direct",
-  "NEWS": "Actualités",
-  "STORE": "Magasin",
-  "TEXT": "Texte du texte",
-  "THREAD": "Fil de discussion",
-  "UNKNOWN": "Inconnu",
-  "VOICE": "Voix"
+  "wordsnack": "Grignotines de mots"
 }

@@ -1,13 +1,13 @@
 import Util from './Util';
 
 export default class JKP {
-  readonly emoji: { [k: string]: string } = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };
+  readonly emoji: Record<string, string> = { rock: '✊', scissors: '✌️', paper: '✋', lizard: '🦎', spock: '🖖' };
 
   readonly index = ['rock', 'paper', 'scissors', 'lizard', 'spock'];
 
   readonly results = ['Draw', 'Won', 'Lost'];
 
-  readonly rules: { [k: string]: { [k: string]: number } } = {
+  readonly rules: Record<string, Record<string, number>> = {
     rock: { rock: 0, scissors: 1, paper: 2, lizard: 1, spock: 2 },
     paper: { paper: 0, rock: 1, scissors: 2, spock: 1, lizard: 2 },
     scissors: { scissors: 0, paper: 1, rock: 2, lizard: 1, spock: 2 },

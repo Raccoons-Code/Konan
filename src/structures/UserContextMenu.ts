@@ -1,7 +1,7 @@
 import { ContextMenuCommandBuilder, UserContextMenuCommandInteraction } from 'discord.js';
-import BaseCommand from './BaseCommand';
+import BaseApplicationCommand from './BaseApplicationCommand';
 
-export default abstract class UserContextMenu extends BaseCommand {
+export default abstract class UserContextMenu extends BaseApplicationCommand {
   data!: ContextMenuCommandBuilder;
 
   constructor() {

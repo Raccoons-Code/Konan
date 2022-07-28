@@ -6,7 +6,7 @@
   "automatic": "automatyczny",
   "backup404": "Nie można znaleźć kopii zapasowej.",
   "backupDeleted": "Kopia zapasowa została usunięta.",
-  "backupError": "Błąd! Nie można utworzyć kopii zapasowej!",
+  "backupError": "Nie można utworzyć kopii zapasowej!",
   "backupDone": "Kopia zapasowa zakończona pomyślnie.",
   "ban404": "Ten użytkownik nie jest zbanowany!",
   "banError": "Błąd! Nie można zbanować tego użytkownika.",
@@ -75,7 +75,7 @@
   "numberRepeatGreater": "Już wypróbowałeś {{number}}!\n:arrow_up_small: To jest lepsze!",
   "numberRepeatSmaller": "Już wypróbowałeś {{number}}!\n:arrow_down_small: Jest mniejszy!",
   "numberSmaller": "{{number}} jest mniejszy!",
-  "onlyOnServer": "Błąd! Ta komenda może być użyta tylko na jednym serwerze.",
+  "onlyOnServer": "Ta komenda może być użyta tylko na jednym serwerze.",
   "owner": "właściciel",
   "PERMISSION": "{{permission}}",
   "permissions": "uprawnienia",
@@ -109,13 +109,5 @@
   "userNotOwner": "Nie jesteś właścicielem serwera.",
   "userTimedOut": "Użytkownik został ukarany. Do {{time}} {{timeR}}.",
   "userUnbanned": "Użytkownik pomyślnie odbanowany!",
-  "wordsnack": "Przekąski Słowa",
-  "CATEGORY": "Kategoria",
-  "DM": "Bezpośrednia wiadomość",
-  "NEWS": "Wiadomości",
-  "STORE": "Sklep",
-  "TEXT": "Tekst",
-  "THREAD": "Wątek",
-  "UNKNOWN": "Nieznane",
-  "VOICE": "Głos"
+  "wordsnack": "Przekąski Słowa"
 }

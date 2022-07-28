@@ -16,7 +16,7 @@ export default class Interpolator {
     this.patterng = RegExp(`${this.prefix}.*?${this.suffix}`, 'g');
   }
 
-  interpolate(key: string, options: Options & { [k: string]: string[] }) {
+  interpolate(key: string, options: Options & Record<string, string[]>) {
     const locale = options.locale;
 
     const matched = key.match(this.patterng);

@@ -1,6 +1,6 @@
 import { ActionRow, ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ComponentEmojiResolvable, ComponentType, MessageActionRowComponent, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 import Emoji from '../Emoji';
-import { safeParseJSON } from './safeParseJSON';
+import { JSONparse } from './JSONparse';
 
 export function setBitFieldValuesOnSelectMenus(
   components: ActionRow<MessageActionRowComponent>[],
@@ -15,14 +15,14 @@ export function setBitFieldValuesOnSelectMenus(
 
     if (componentJson.components[0].type !== ComponentType.SelectMenu) return component;
 
-    return new ActionRowBuilder<SelectMenuBuilder>(componentJson)
+    return new ActionRowBuilder<SelectMenuBuilder>()
       .setComponents(componentJson.components.map(element => {
         const newSelectMenu = new SelectMenuBuilder(element);
 
         if (element.custom_id !== customId) return newSelectMenu;
 
         return newSelectMenu.setOptions(element.options.map(option => {
-          const value = safeParseJSON(option.value) || {};
+          const value = JSONparse(option.value) ?? {};
 
           return new SelectMenuOptionBuilder(option)
             .setEmoji(values.includes(option.value) ? value.v ? Danger : Success : option.emoji ?? {})
@@ -32,7 +32,7 @@ export function setBitFieldValuesOnSelectMenus(
             }));
         }));
       }));
-  }, []);
+  });
 }
 
 export interface EmojisData {

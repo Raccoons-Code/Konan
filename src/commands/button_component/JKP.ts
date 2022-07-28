@@ -30,7 +30,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
       acc.player2 = p[i];
 
       return acc;
-    }, <{ [k: string]: any }>{});
+    }, <Record<string, any>>{});
 
     if (!await quickDb.has(`${message.id}`))
       await quickDb.set(`${message.id}`, { [user.id]: v });
@@ -45,7 +45,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
     await interaction.deferUpdate();
   }
 
-  async mathPoint(interaction: ButtonInteraction<'cached'>, players: { [k: string]: any }) {
+  async mathPoint(interaction: ButtonInteraction<'cached'>, players: Record<string, any>) {
     const { message } = interaction;
 
     const { changed, player1, player2 } = players;
