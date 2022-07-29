@@ -1,8 +1,8 @@
 import { Message } from 'discord.js';
 import { CommandData } from '../@types';
-import BaseApplicationCommand from './BaseApplicationCommand';
+import BaseCommand from './BaseCommand';
 
-export default abstract class Command extends BaseApplicationCommand {
+export default abstract class Command extends BaseCommand {
   constructor(public data: CommandData) {
     super();
 
