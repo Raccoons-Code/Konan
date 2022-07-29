@@ -7,6 +7,7 @@ export default class extends MessageContextMenu {
     super();
 
     this.data = new ContextMenuCommandBuilder().setName('Clear up to here')
+      .setNameLocalizations(this.getLocalizations('clearUpToHereName'))
       .setType(ApplicationCommandType.Message)
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages);

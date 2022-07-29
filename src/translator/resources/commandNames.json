@@ -82,6 +82,7 @@
   "clearName": "clear",
   "clearAmountOptionName": "amount",
   "clearChannelOptionName": "channel",
+  "clearUpToHereName": "Clear up to here",
   "deployName": "deploy",
   "deployTypeOptionName": "type",
   "deployResetOptionName": "reset",
