@@ -1,4 +1,4 @@
-import { BitFieldResolvable, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
+import { BitFieldResolvable, ClientEvents, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
 import { GlobSync } from 'glob';
 import { posix } from 'node:path';
 import { client } from '../client';
@@ -7,7 +7,7 @@ import Util from '../util';
 
 class EventHandler {
   errors: Error[] = [];
-  #events: Event[] = [];
+  #events: Event<keyof ClientEvents>[] = [];
 
   #eventFiles = this.#getEventFiles();
 
@@ -31,7 +31,7 @@ class EventHandler {
     return new GlobSync(posix.resolve('src', 'events', '*.@(j|t)s'), { ignore: ['**/index.@(j|t)s'] }).found;
   }
 
-  #requireEvents(events: Event[] = []) {
+  #requireEvents(events: Event<keyof ClientEvents>[] = []) {
     if (this.#events.length === this.#eventFiles.length) return this.#events;
 
     for (let i = 0; i < this.eventFiles.length; i++) {
@@ -39,7 +39,7 @@ class EventHandler {
 
       const eventFile = importedFile.default ?? importedFile;
 
-      const event = <Event>(Util.isClass(eventFile) ? new eventFile() : eventFile);
+      const event = <Event<keyof ClientEvents>>(Util.isClass(eventFile) ? new eventFile() : eventFile);
 
       events.push(event);
     }
@@ -76,7 +76,7 @@ class EventHandler {
     return partials;
   }
 
-  async importEvents(events: Event[] = []) {
+  async importEvents(events: Event<keyof ClientEvents>[] = []) {
     const importedFiles = await Promise.all(this.eventFiles.reduce((acc, file) =>
       acc.concat(import(`${file}`).then(importedFile => importedFile.default ?? importedFile)),
       <Promise<any>[]>[]));
@@ -86,7 +86,7 @@ class EventHandler {
 
       const eventFile = importedFile.default ?? importedFile;
 
-      const event = <Event>(Util.isClass(eventFile) ? new eventFile() : eventFile);
+      const event = <Event<keyof ClientEvents>>(Util.isClass(eventFile) ? new eventFile() : eventFile);
 
       events.push(event);
     }
