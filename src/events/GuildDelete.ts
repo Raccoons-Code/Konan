@@ -1,5 +1,5 @@
 import { Guild } from 'discord.js';
-import webhookLogger from '../client/WebhookLogger';
+import { logger } from '../client';
 import { Event } from '../structures';
 
 export default class GuildDelete extends Event<'guildDelete'> {
@@ -11,7 +11,7 @@ export default class GuildDelete extends Event<'guildDelete'> {
   }
 
   async execute(guild: Guild) {
-    webhookLogger.oldGuild(guild);
+    logger.oldGuild(guild);
     guild.client.stats.fetch();
   }
 }

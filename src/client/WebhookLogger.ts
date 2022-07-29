@@ -69,6 +69,4 @@ class WebhookLogger {
   }
 }
 
-const webhookLogger = new WebhookLogger();
-
-export default webhookLogger;
+export default WebhookLogger;
