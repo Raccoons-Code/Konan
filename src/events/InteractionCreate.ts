@@ -9,7 +9,7 @@ import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, Sel
 const codeBlockLength = codeBlock('properties', '').length;
 const descriptionLength = 4096 - codeBlockLength;
 
-export default class InteractionCreate extends Event {
+export default class InteractionCreate extends Event<'interactionCreate'> {
   constructor() {
     super({
       intents: ['Guilds', 'GuildBans', 'GuildIntegrations', 'GuildInvites', 'GuildVoiceStates', 'GuildWebhooks'],
