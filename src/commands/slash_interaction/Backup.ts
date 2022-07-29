@@ -92,7 +92,7 @@ export default class extends SlashCommand {
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
     if (interaction.type === ApplicationCommandAutocomplete)
-      return this[`${subcommand}Autocomplete`]?.(interaction);
+      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true, fetchReply: true });
 
@@ -258,7 +258,7 @@ export default class extends SlashCommand {
 
     const clear = options.getBoolean('clear_server') ?? false;
 
-    await interaction.editReply(`${this.t('restoring'), { locale }}...`);
+    await interaction.editReply(`${this.t('restoring', { locale })}...`);
 
     try {
       await Backup.load(<string>data, <any>guild, {
@@ -304,9 +304,17 @@ export default class extends SlashCommand {
     return interaction.editReply(`${this.t(['backupDone', 'userKeyIs'], { locale })} \`${newBackup.id}\``);
   }
 
-  async deleteAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
+  async executeAutocomplete(interaction: AutocompleteInteraction): Promise<any> {
     if (interaction.responded) return;
 
+    const subcommand = interaction.options.getSubcommandGroup() ?? interaction.options.getSubcommand();
+
+    const response = await this[`${subcommand}Autocomplete`]?.(interaction);
+
+    return interaction.respond(response);
+  }
+
+  async deleteAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     const { client, guild, guildId, locale, options, user } = interaction;
 
     const userId = guild?.ownerId || user.id;
@@ -324,7 +332,7 @@ export default class extends SlashCommand {
         },
       });
 
-      if (!dbUser?.guilds) return interaction.respond(res);
+      if (!dbUser?.guilds) return res;
 
       for (let i = 0; i < dbUser.guilds.length; i++) {
         const dbGuild = dbUser.guilds[i];
@@ -373,19 +381,17 @@ export default class extends SlashCommand {
       }
     }
 
-    return interaction.respond(res);
+    return res;
   }
 
   async restoreAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
-    if (!interaction.inCachedGuild()) return interaction.respond(res);
+    if (!interaction.inCachedGuild()) return res;
 
     return this.deleteAutocomplete(interaction, res);
   }
 
   async updateAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
-    if (interaction.responded) return;
-
-    if (!interaction.inCachedGuild()) return interaction.respond(res);
+    if (!interaction.inCachedGuild()) return res;
 
     const { guild, guildId } = interaction;
 
@@ -394,7 +400,7 @@ export default class extends SlashCommand {
       include: { backups: { where: { guildId } } },
     });
 
-    if (!dbUser) return interaction.respond(res);
+    if (!dbUser) return res;
 
     for (let i = 0; i < dbUser.backups.length; i++) {
       const backup = dbUser.backups[i];
@@ -415,7 +421,7 @@ export default class extends SlashCommand {
       if (res.length === 25) break;
     }
 
-    return interaction.respond(res);
+    return res;
   }
 
   async createBackup(guild: Guild, options: { premium: boolean }) {
