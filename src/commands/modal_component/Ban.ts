@@ -26,7 +26,7 @@ export default class Ban extends ModalSubmit {
 
     const deleteMessageDays = Math.max(0, Math.min(7, days));
 
-    const reason = `${member.displayName}: ${fields.getTextInputValue('reason') || '-'}`;
+    const reason = `${member.displayName}: ${fields.getTextInputValue('reason') || '-'}`.slice(0, 512);
 
     try {
       await guild.bans.create(userId, { deleteMessageDays, reason });

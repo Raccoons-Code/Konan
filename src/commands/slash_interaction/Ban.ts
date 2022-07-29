@@ -42,7 +42,8 @@ export default class Ban extends SlashCommand {
         .addStringOption(option => option.setName('reason')
           .setDescription('The reason for the ban.')
           .setNameLocalizations(this.getLocalizations('banSingleReasonName'))
-          .setDescriptionLocalizations(this.getLocalizations('banSingleReasonDescription'))))
+          .setDescriptionLocalizations(this.getLocalizations('banSingleReasonDescription'))
+          .setMaxLength(512)))
       .addSubcommand(subcommand => subcommand.setName('chunk')
         .setDescription('Bans a chunk of users from the server.')
         .setNameLocalizations(this.getLocalizations('banChunkName'))
@@ -68,7 +69,8 @@ export default class Ban extends SlashCommand {
         .addStringOption(option => option.setName('reason')
           .setDescription('The reason for the ban.')
           .setNameLocalizations(this.getLocalizations('banChunkReasonName'))
-          .setDescriptionLocalizations(this.getLocalizations('banChunkReasonDescription'))));
+          .setDescriptionLocalizations(this.getLocalizations('banChunkReasonDescription'))
+          .setMaxLength(512)));
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<any> {
@@ -104,7 +106,7 @@ export default class Ban extends SlashCommand {
 
     const deleteMessageDays = options.getInteger('delete_messages') ?? 0;
 
-    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
+    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`.slice(0, 512);
 
     try {
       await guild.bans.create(user, { deleteMessageDays, reason });
@@ -138,7 +140,7 @@ export default class Ban extends SlashCommand {
         .setDescription(usersArray.join(' ').slice(0, 4096))
         .setFields([{
           name: 'Reason for ban',
-          value: reason.slice(0, 1024),
+          value: reason,
         }, {
           name: 'Delete messages',
           value: days ? `${days} day${days === 1 ? '' : 's'}` : '-',

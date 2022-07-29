@@ -23,7 +23,8 @@ export default class Kick extends SlashCommand {
       .addStringOption(option => option.setName('reason')
         .setDescription('The reason to kick.')
         .setNameLocalizations(this.getLocalizations('kickReasonName'))
-        .setDescriptionLocalizations(this.getLocalizations('kickReasonDescription')));
+        .setDescriptionLocalizations(this.getLocalizations('kickReasonDescription'))
+        .setMaxLength(512));
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<any> {
@@ -51,7 +52,7 @@ export default class Kick extends SlashCommand {
     if (!(user?.kickable && user.isKickableBy(member)))
       return interaction.editReply(this.t('kickHierarchyError', { locale }));
 
-    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
+    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`.slice(0, 512);
 
     try {
       await guild.members.kick(user, reason);

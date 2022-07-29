@@ -22,7 +22,7 @@ export default class Kick extends ModalSubmit {
         ephemeral: true,
       });
 
-    const reason = `${member.displayName}: ${fields.getTextInputValue('reason') || '-'}`;
+    const reason = `${member.displayName}: ${fields.getTextInputValue('reason') || '-'}`.slice(0, 512);
 
     try {
       await guild.members.kick(user, reason);
