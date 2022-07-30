@@ -1,12 +1,12 @@
 import { AutocompleteInteraction, BitFieldResolvable, ButtonInteraction, ChatInputCommandInteraction, Collection, CommandInteraction, ContextMenuCommandInteraction, Events, GatewayIntentsString, Interaction, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, PermissionsString, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
-import { BaseCommand, ButtonComponentInteraction, Command, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
+import { BaseApplicationCommand, BaseCommand, ButtonComponentInteraction, Command, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 export * from './customid';
 export * from './enum';
 export * from './quickdb';
 export * from './util';
 
-export type AnyApplicationCommand = BaseCommand & (
+export type AnyApplicationCommand = BaseApplicationCommand & (
   | ButtonComponentInteraction
   | MessageContextMenu
   | ModalSubmit
@@ -18,13 +18,7 @@ export type AnyApplicationCommand = BaseCommand & (
 export type AnyCommandCollection = Record<string, Collection<string, AnyCommand>>
 
 export type AnyCommand = BaseCommand & (
-  | ButtonComponentInteraction
   | Command
-  | MessageContextMenu
-  | ModalSubmit
-  | SelectMenuComponentInteraction
-  | SlashCommand
-  | UserContextMenu
 )
 
 export type AnyInteraction = Interaction & (
