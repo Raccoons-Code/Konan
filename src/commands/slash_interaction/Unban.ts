@@ -26,7 +26,8 @@ export default class Unban extends SlashCommand {
       .addStringOption(option => option.setName('reason')
         .setDescription('The reason to unban.')
         .setNameLocalizations(this.getLocalizations('unbanReasonName'))
-        .setDescriptionLocalizations(this.getLocalizations('unbanReasonDescription')));
+        .setDescriptionLocalizations(this.getLocalizations('unbanReasonDescription'))
+        .setMaxLength(512));
   }
 
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
@@ -59,7 +60,7 @@ export default class Unban extends SlashCommand {
     if (!ban)
       return interaction.editReply(this.t('ban404', { locale }));
 
-    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`;
+    const reason = `${member.displayName}: ${options.getString('reason') || '-'}`.slice(0, 512);
 
     try {
       await guild.bans.remove(id, reason);

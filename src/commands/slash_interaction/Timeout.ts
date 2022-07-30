@@ -57,7 +57,8 @@ export default class Timeout extends SlashCommand {
       .addStringOption(option => option.setName('reason')
         .setDescription('The reason to mute the user.')
         .setNameLocalizations(this.getLocalizations('timeoutReasonName'))
-        .setDescriptionLocalizations(this.getLocalizations('timeoutReasonDescription')));
+        .setDescriptionLocalizations(this.getLocalizations('timeoutReasonDescription'))
+        .setMaxLength(512));
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<any> {
