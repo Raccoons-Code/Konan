@@ -1,5 +1,8 @@
 {
+  "Category": "Category",
+  "Directory": "Directory",
   "DM": "DM",
+  "Forum": "Forum",
   "GuildCategory": "Guild Category",
   "GuildDirectory": "Guild Directory",
   "GroupDM": "Group DM",
@@ -10,5 +13,9 @@
   "GuildPublicThread": "Guild Public Thread",
   "GuildStageVoice": "Guild Stage Voice",
   "GuildText": "Guild Text",
-  "GuildVoice": "Guild Voice"
+  "GuildVoice": "Guild Voice",
+  "News": "News",
+  "Text": "Text",
+  "Thread": "Thread",
+  "Voice": "Voice"
 }

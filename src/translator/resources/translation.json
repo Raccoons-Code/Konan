@@ -86,7 +86,7 @@
   "numberSmaller": "{{number}} is smaller!",
   "onlyOnServer": "This command can only be used on one server.",
   "owner": "owner",
-  "PERMISSION":"{{permission}}",
+  "PERMISSION": "{{permission}}",
   "permissions": "permissions",
   "preferredLocale": "Preferred locale",
   "previousGuesses": "Previous guesses",
