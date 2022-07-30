@@ -1,11 +1,9 @@
 /**
  * @internal
  */
-export interface BitFieldConstructor<S extends string, N extends bigint> {
-  new(): BitField<S, N>;
-  new(bits: BitFieldResolvable<S, N>): BitField<S, N>;
-  DefaultBit: N;
-  Flags: EnumLike<S, N>;
+export type BitFieldConstructor<S extends string, N extends bigint> = typeof BitField & {
+  DefaultBit: N
+  Flags: EnumLike<S, N>
   resolve(bit: BitFieldResolvable<S, N>): N
 }
 
