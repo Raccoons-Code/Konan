@@ -14,6 +14,7 @@ export default class Ready extends Event<'ready'> {
     super({
       name: 'ready',
       listener: 'once',
+      intents: ['GuildPresences'],
     });
   }
 
