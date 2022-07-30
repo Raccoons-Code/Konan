@@ -38,6 +38,10 @@ export default class Bytes<T extends number> {
       unit: this.unit,
     };
   }
+
+  *[Symbol.iterator]() {
+    yield* this.toArray();
+  }
 }
 
 export { Bytes };
