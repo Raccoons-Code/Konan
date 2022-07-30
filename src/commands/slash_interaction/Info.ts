@@ -1,5 +1,5 @@
 import { stripIndents } from 'common-tags';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CategoryChannel, Channel, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, GuildMember, inlineCode, Role, SlashCommandBuilder, StageChannel, TextChannel, ThreadChannel, time, userMention, version as djsVersion, VoiceChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CategoryChannel, Channel, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, GuildMember, inlineCode, PresenceStatus, Role, SlashCommandBuilder, StageChannel, TextChannel, ThreadChannel, time, userMention, version as djsVersion, VoiceChannel } from 'discord.js';
 import ms from 'ms';
 import { cpus, totalmem, version } from 'node:os';
 import { env, memoryUsage, versions } from 'node:process';
@@ -8,7 +8,7 @@ import { SlashCommand } from '../../structures';
 const CPUs = cpus();
 const OS = version();
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
-const { GuildCategory, GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildStageVoice, GuildText, GuildVoice } = ChannelType;
+const { GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildStageVoice, GuildText, GuildVoice } = ChannelType;
 const inline = true;
 
 export default class Info extends SlashCommand {
@@ -61,9 +61,7 @@ export default class Info extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply({ ephemeral: true });
 
-    const { options } = interaction;
-
-    const subcommand = options.getSubcommand();
+    const subcommand = interaction.options.getSubcommand();
 
     const embeds = [new EmbedBuilder().setColor('Random')];
 
@@ -152,7 +150,7 @@ export default class Info extends SlashCommand {
     const { bitrate, full, name, rtcRegion, userLimit } = <StageChannel | VoiceChannel>channel;
     const { createdAt, type } = <Channel>channel;
 
-    const t = `${type}`.split('_').pop();
+    const t = `${ChannelType[type]}`.match(/([A-Z]{1,}[a-z]*)+/)?.[1];
 
     embeds[0].addFields({ name: this.t('type', { locale }), value: this.t(`${t}`, { locale }), inline });
 
@@ -185,7 +183,7 @@ export default class Info extends SlashCommand {
         { name: this.t('messageCount', { locale }), value: `${messageCount}`, inline },
       ]);
 
-    if ([GuildCategory].includes(type)) {
+    if (children) {
       const arrayChildren = children.cache.toJSON();
       const textChildren = arrayChildren.join(' ').trim() || '-';
 
@@ -241,13 +239,29 @@ export default class Info extends SlashCommand {
 
     const { guild } = interaction;
 
+    const membersPresenceStatus = guild.members.cache.reduce((acc, member) => {
+      const status = member.presence?.status ?? 'offline';
+
+      acc[status] ? acc[status]++ : acc[status] = 1;
+
+      return acc;
+    }, <Record<PresenceStatus, number>>{
+      online: 0,
+      idle: 0,
+      dnd: 0,
+      offline: 0,
+    });
+
+    const MPSText = Object.entries(membersPresenceStatus)
+      .map(([status, count]) => `${this.Util.Emoji[status]} ${inlineCode(`${count}`)}`).join('\n');
+
     embeds[0]
       .setAuthor({ name: guild.name, iconURL: guild.iconURL()! })
       .setFields(
         { name: this.t('owner', { locale }), value: userMention(guild.ownerId), inline },
         { name: this.t('id', { locale }), value: inlineCode(guild.id), inline },
         { name: this.t('preferredLocale', { locale }), value: inlineCode(guild.preferredLocale), inline },
-        { name: this.t('members', { locale }), value: `${guild.memberCount}`, inline },
+        { name: `${this.t('members', { locale })} [${guild.memberCount}]`, value: MPSText, inline },
         { name: this.t('channels', { locale }), value: `${guild.channels.cache.size}`, inline },
         { name: this.t('emojis', { locale }), value: `${guild.emojis.cache.size}`, inline },
         {
