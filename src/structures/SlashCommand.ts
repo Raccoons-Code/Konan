@@ -1,13 +1,17 @@
-import { APIApplicationCommandOptionChoice, ApplicationCommandOptionAllowedChannelTypes, AutocompleteInteraction, ButtonStyle, ChannelType, CommandInteraction, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionAllowedChannelTypes, AutocompleteInteraction, ButtonStyle, ChannelType, CommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
 import { SlashCommandProps } from '../@types';
 import BaseApplicationCommand from './BaseApplicationCommand';
 
 const { GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText } = ChannelType;
 
 export default abstract class SlashCommand extends BaseApplicationCommand {
-  data!: SlashCommandBuilder |
-    SlashCommandSubcommandsOnlyBuilder |
-    Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
+  data!:
+    | SlashCommandBuilder
+    | SlashCommandOptionsOnlyBuilder
+    | SlashCommandSubcommandBuilder
+    | SlashCommandSubcommandGroupBuilder
+    | SlashCommandSubcommandsOnlyBuilder
+    | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
 
   constructor(public props?: SlashCommandProps) {
     super();
