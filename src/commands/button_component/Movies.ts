@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder } from 'discord.js';
 import { MoviesCustomId } from '../../@types';
+import TMDBApi, { APISearchMoviesResults, SortType, SortTypes, Util as TMDBUtil } from '../../modules/TMDBApi';
 import { ButtonComponentInteraction } from '../../structures';
-import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../modules/TMDBApi';
 
 const { Primary, Secondary } = ButtonStyle;
 const inline = true;
@@ -17,7 +17,7 @@ export default class Movies extends ButtonComponentInteraction {
   async execute(interaction: ButtonInteraction) {
     const { customId, locale } = interaction;
 
-    const { c, target } = <MoviesCustomId>JSON.parse(customId);
+    const { c, s, target } = <MoviesCustomId>JSON.parse(customId);
 
     const { offset, page } = this.getPage(target);
 
@@ -25,6 +25,7 @@ export default class Movies extends ButtonComponentInteraction {
       include_video: true,
       language: locale,
       page: page ? page : 1,
+      sort_by: <SortTypes>SortType[s],
     });
 
     if (!results)
@@ -39,19 +40,19 @@ export default class Movies extends ButtonComponentInteraction {
       new ActionRowBuilder<ButtonBuilder>()
         .setComponents([
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c, d: 0, o: offset, p: page, target: 1 }))
+            .setCustomId(JSON.stringify({ c, d: 0, o: offset, p: page, s, target: 1 }))
             .setDisabled(!a).setLabel('1...').setStyle(a ? Primary : Secondary),
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c, d: 1, o: offset, p: page, target: target - 1 }))
+            .setCustomId(JSON.stringify({ c, d: 1, o: offset, p: page, s, target: target - 1 }))
             .setDisabled(!a).setLabel('<').setStyle(a ? Primary : Secondary),
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c, d: 2, o: offset, p: page }))
+            .setCustomId(JSON.stringify({ c, d: 2, o: offset, p: page, s }))
             .setDisabled(true).setLabel(`${target}`).setStyle(Secondary),
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, target: target + 1 }))
+            .setCustomId(JSON.stringify({ c, d: 3, o: offset, p: page, s, target: target + 1 }))
             .setDisabled(!b).setLabel('>').setStyle(b ? Primary : Secondary),
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, target: 1000 }))
+            .setCustomId(JSON.stringify({ c, d: 4, o: offset, p: page, s, target: 1000 }))
             .setDisabled(!b).setLabel('...1000').setStyle(b ? Primary : Secondary),
         ]),
     ];

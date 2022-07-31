@@ -1,0 +1,30 @@
+{
+  "original_title": {
+    "asc": "Ascending original title",
+    "desc": "Descending original title"
+  },
+  "release_date": {
+    "asc": "Ascending release date",
+    "desc": "Descending release date"
+  },
+  "popularity": {
+    "asc": "Ascending popularity",
+    "desc": "Descending popularity"
+  },
+  "vote_average": {
+    "asc": "Ascending vote average",
+    "desc": "Descending vote average"
+  },
+  "vote_count": {
+    "asc": "Ascending vote count",
+    "desc": "Descending vote count"
+  },
+  "revenue": {
+    "asc": "Ascending revenue",
+    "desc": "Descending revenue"
+  },
+  "primary_release_date": {
+    "asc": "Ascending primary release date",
+    "desc": "Descending primary release date"
+  }
+}

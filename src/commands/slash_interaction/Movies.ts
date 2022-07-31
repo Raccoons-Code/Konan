@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import ms from 'ms';
-import TMDBApi, { APISearchMoviesResults, Util as TMDBUtil } from '../../modules/TMDBApi';
+import TMDBApi, { APISearchMoviesResults, SortType, SortTypes, Util as TMDBUtil } from '../../modules/TMDBApi';
 import { SlashCommand } from '../../structures';
 
 const { Primary, Secondary } = ButtonStyle;
@@ -28,7 +28,10 @@ export default class Movies extends SlashCommand {
           .setNameLocalizations(this.getLocalizations('moviesListPageName'))
           .setDescriptionLocalizations(this.getLocalizations('moviesListPageDescription'))
           .setMinValue(1)
-          .setMaxValue(1000)))
+          .setMaxValue(1000))
+        .addNumberOption(option => option.setName('sort')
+          .setDescription('The sort order of the list.')
+          .setChoices(...this.getChoicesFromEnum(SortType))))
       .addSubcommand(subcommand => subcommand.setName('search')
         .setDescription('Search the movies.')
         .setNameLocalizations(this.getLocalizations('moviesSearchName'))
@@ -59,11 +62,13 @@ export default class Movies extends SlashCommand {
 
     const raw_page = options.getInteger('page') ?? 1;
     const { offset, page } = this.getPage(raw_page);
+    const s = options.getNumber('sort') ?? SortType['popularity.desc'];
 
     const { results } = await TMDBApi.discover.fetchMovies({
       include_video: true,
       language: locale,
       page,
+      sort_by: <SortTypes>SortType[s],
     });
 
     if (!results)
@@ -78,19 +83,19 @@ export default class Movies extends SlashCommand {
       new ActionRowBuilder<ButtonBuilder>()
         .setComponents([
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c: this.data.name, d: 0, o: offset, p: page, target: 1 }))
+            .setCustomId(JSON.stringify({ c: 'movies', d: 0, o: offset, p: page, s, target: 1 }))
             .setDisabled(!a).setLabel('1...').setStyle(a ? Primary : Secondary),
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c: this.data.name, d: 1, o: offset, p: page, target: raw_page - 1 }))
+            .setCustomId(JSON.stringify({ c: 'movies', d: 1, o: offset, p: page, s, target: raw_page - 1 }))
             .setDisabled(!a).setLabel('<').setStyle(a ? Primary : Secondary),
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c: this.data.name, d: 2, o: offset, p: page }))
+            .setCustomId(JSON.stringify({ c: 'movies', d: 2, o: offset, p: page, s }))
             .setDisabled(true).setLabel(`${raw_page}`).setStyle(Secondary),
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c: this.data.name, d: 3, o: offset, p: page, target: raw_page + 1 }))
+            .setCustomId(JSON.stringify({ c: 'movies', d: 3, o: offset, p: page, s, target: raw_page + 1 }))
             .setDisabled(!b).setLabel('>').setStyle(b ? Primary : Secondary),
           new ButtonBuilder()
-            .setCustomId(JSON.stringify({ c: this.data.name, d: 4, o: offset, p: page, target: 1000 }))
+            .setCustomId(JSON.stringify({ c: 'movies', d: 4, o: offset, p: page, s, target: 1000 }))
             .setDisabled(!b).setLabel(`...${1000}`).setStyle(b ? Primary : Secondary),
         ]),
     ];

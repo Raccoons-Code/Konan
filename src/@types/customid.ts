@@ -41,6 +41,8 @@ export interface MoviesCustomId extends BaseComponentCustomId {
   o: number
   /** page */
   p: number
+  /** sort by */
+  s: number
   target: number
 }
 
