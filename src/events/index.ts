@@ -28,7 +28,9 @@ class EventHandler {
   }
 
   #getEventFiles() {
-    return new GlobSync(posix.resolve('src', 'events', '*.@(j|t)s'), { ignore: ['**/index.@(j|t)s'] }).found;
+    return new GlobSync(posix.join(__dirname.replace(/\\/g, '/'), '*.@(j|t)s'), {
+      ignore: ['**/index.@(j|t)s'],
+    }).found;
   }
 
   #requireEvents(events: Event<keyof ClientEvents>[] = []) {

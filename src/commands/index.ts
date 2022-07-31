@@ -2,14 +2,13 @@ import { Collection } from 'discord.js';
 import { GlobSync } from 'glob';
 import { readdirSync, statSync } from 'node:fs';
 import { join, posix } from 'node:path';
-import { AnyCommandCollection } from '../@types';
 import { client } from '../client';
 import { SlashCommand } from '../structures';
 import Util from '../util';
 
 class CommandHandler {
   applicationCommandTypes: string[];
-  commands!: Record<string, Collection<string, AnyCommandCollection>>;
+  commands!: Record<string, Collection<string, any>>;
   commandsByCategory: Record<string, Collection<string, SlashCommand>> = {};
   commandsSize: Record<string, number> = {};
   commandTypes: Record<string, string[]>;
@@ -39,7 +38,7 @@ class CommandHandler {
   }
 
   async loadCommands(
-    commandTypes = this.commandTypes,
+    commandTypes: Record<string, string[]> | string[] = this.commandTypes,
     commands: Record<string, Collection<string, any>> = {},
   ) {
     const dirs = Object.values(commandTypes).flat();
@@ -49,7 +48,7 @@ class CommandHandler {
 
       commands[dir] = new Collection();
 
-      const { found } = new GlobSync(posix.resolve('src', 'commands', dir, '*.@(j|t)s'), {
+      const { found } = new GlobSync(posix.join(__dirname.replace(/\\/g, '/'), dir, '*.@(j|t)s'), {
         ignore: ['**/.ignore_*'],
       });
 
