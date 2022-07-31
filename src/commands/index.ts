@@ -8,32 +8,17 @@ import { SlashCommand } from '../structures';
 import Util from '../util';
 
 class CommandHandler {
-  #applicationCommandTypes!: string[];
-  #commands!: Record<string, Collection<string, AnyCommandCollection>>;
-  #commandTypes!: Record<string, string[]> | string[];
+  applicationCommandTypes: string[];
+  commands!: Record<string, Collection<string, AnyCommandCollection>>;
   commandsByCategory: Record<string, Collection<string, SlashCommand>> = {};
   commandsSize: Record<string, number> = {};
+  commandTypes: Record<string, string[]>;
   errors: Error[] = [];
 
-  get applicationCommandTypes(): string[] {
-    return this.#applicationCommandTypes ? this.#applicationCommandTypes : this.applicationCommandTypes =
-      Object.values(this.commandTypes).flat().filter((f: string) => !/(_(command|component))/i.test(f));
-  }
-
-  set applicationCommandTypes(value) {
-    this.#applicationCommandTypes = value;
-  }
-
-  get commandTypes(): Record<string, string[]> | string[] {
-    return this.#commandTypes ? this.#commandTypes : this.commandTypes = this.getCommandTypes();
-  }
-
-  set commandTypes(value) {
-    this.#commandTypes = value;
-  }
-
-  get commands(): Record<string, Collection<string, any>> {
-    return this.#commands;
+  constructor() {
+    this.commandTypes = this.getCommandTypes();
+    this.applicationCommandTypes = Object.values(this.commandTypes).flat()
+      .filter(f => !/(_(command|component))/i.test(f));
   }
 
   getCommandTypes(commandTypes: Record<string, string[]> = {}) {
@@ -98,7 +83,7 @@ class CommandHandler {
       }
     }
 
-    client.commands = this.#commands = commands;
+    client.commands = this.commands = commands;
 
     this.#afterLoadCommands();
 
