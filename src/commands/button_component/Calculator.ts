@@ -1,8 +1,6 @@
 import { APIEmbed, ButtonInteraction, codeBlock, EmbedBuilder } from 'discord.js';
 import { ButtonComponentInteraction } from '../../structures';
 
-const fullInvisibleLine = '                              ';
-
 export default class extends ButtonComponentInteraction {
   constructor() {
     super({
@@ -154,7 +152,7 @@ export default class extends ButtonComponentInteraction {
   }
 
   displayBlock(text: string) {
-    return codeBlock(fullInvisibleLine.slice(0, fullInvisibleLine.length - text.length) + text);
+    return codeBlock(text.padStart(30, ' '));
   }
 
   scapeMd(text = '') {

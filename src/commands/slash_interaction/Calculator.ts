@@ -1,8 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, codeBlock, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
-const fullInvisibleLine = '                              ';
-
 export default class extends SlashCommand {
   constructor() {
     super({
@@ -15,8 +13,6 @@ export default class extends SlashCommand {
 
   async execute(interaction: ChatInputCommandInteraction) {
     const result = 0;
-
-    const invisibleLine = fullInvisibleLine.slice(0, fullInvisibleLine.length - `${result}`.length);
 
     return interaction.reply({
       components: [
@@ -119,7 +115,7 @@ export default class extends SlashCommand {
       embeds: [
         new EmbedBuilder()
           .setColor('Random')
-          .setDescription(codeBlock(`${invisibleLine}${result}`)),
+          .setDescription(codeBlock(`${result}`.padStart(30, ' '))),
       ],
       ephemeral: true,
     });
