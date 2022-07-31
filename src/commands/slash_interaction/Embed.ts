@@ -105,7 +105,7 @@ export default class Embed extends SlashCommand {
     const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
     const content = options.getString('content')?.slice(0, 4096);
     const [, title, description] = options.getString('embed')?.match(this.regexp.embed) ?? [];
-    const attachment = options.getAttachment('attachment')!;
+    const attachment = options.getAttachment('attachment');
 
     const appPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.appPermissions!);
 
@@ -115,11 +115,11 @@ export default class Embed extends SlashCommand {
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
-        .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
+        .setDescription(description?.replace(/(\s{2}|\\n)/g, '\n') || null)
         .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
-        .setImage(attachment.url)
+        .setImage(attachment?.url ?? RouteBases.cdn)
         .setTimestamp(Date.now())
-        .setTitle(title || null),
+        .setTitle(title?.replace(/(\s{2}|\\n)/g, '\n') || null),
     ];
 
     try {
@@ -157,11 +157,11 @@ export default class Embed extends SlashCommand {
           [
             new EmbedBuilder()
               .setColor('Random')
-              .setDescription(description?.replace(/(\s{2})/g, '\n') || null)
+              .setDescription(description?.replace(/(\s{2}|\\n)/g, '\n') || null)
               .setFooter({ text: member.displayName, iconURL: member.displayAvatarURL() })
               .setImage(attachment?.url ?? message.attachments.first()?.url ?? RouteBases.cdn)
               .setTimestamp(Date.now())
-              .setTitle(title || null),
+              .setTitle(title?.replace(/(\s{2}|\\n)/g, '\n') || null),
           ] :
         message.embeds;
 
