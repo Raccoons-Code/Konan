@@ -240,7 +240,7 @@ export default class Info extends SlashCommand {
     const { guild } = interaction;
 
     const MPSText = Object.entries(guild.members.allMembersPresenceStatus)
-      .map(([status, count]) => `${this.Util.Emoji[status]} ${inlineCode(`${count}`)}`).join('\n');
+      .map(([status, count]) => `${this.Util.Emoji[status] ?? status} ${inlineCode(`${count}`)}`).join('\n');
 
     embeds[0]
       .setAuthor({ name: guild.name, iconURL: guild.iconURL()! })
