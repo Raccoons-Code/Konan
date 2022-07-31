@@ -1,5 +1,6 @@
 import './BaseInteraction';
 import './GuildMember';
-import './MessageManager';
+import './GuildMemberManager';
 import './GuildMemberRoleManager';
+import './MessageManager';
 

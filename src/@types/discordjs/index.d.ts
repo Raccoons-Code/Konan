@@ -26,6 +26,10 @@ declare module 'discord.js' {
     isModeratableBy(member: GuildMember): boolean
   }
 
+  interface GuildMemberManager {
+    get allMembersPresenceStatus(): Record<PresenceStatus, number>
+  }
+
   interface GuildMemberRoleManager {
     get lowest(): Role
   }

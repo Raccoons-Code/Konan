@@ -1,5 +1,5 @@
 import { stripIndents } from 'common-tags';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CategoryChannel, Channel, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, GuildMember, inlineCode, PresenceStatus, Role, SlashCommandBuilder, StageChannel, TextChannel, ThreadChannel, time, userMention, version as djsVersion, VoiceChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CategoryChannel, Channel, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, GuildMember, inlineCode, Role, SlashCommandBuilder, StageChannel, TextChannel, ThreadChannel, time, userMention, version as djsVersion, VoiceChannel } from 'discord.js';
 import ms from 'ms';
 import { cpus, totalmem, version } from 'node:os';
 import { env, memoryUsage, versions } from 'node:process';
@@ -239,20 +239,7 @@ export default class Info extends SlashCommand {
 
     const { guild } = interaction;
 
-    const membersPresenceStatus = guild.members.cache.reduce((acc, member) => {
-      const status = member.presence?.status ?? 'offline';
-
-      acc[status] ? acc[status]++ : acc[status] = 1;
-
-      return acc;
-    }, <Record<PresenceStatus, number>>{
-      online: 0,
-      idle: 0,
-      dnd: 0,
-      offline: 0,
-    });
-
-    const MPSText = Object.entries(membersPresenceStatus)
+    const MPSText = Object.entries(guild.members.allMembersPresenceStatus)
       .map(([status, count]) => `${this.Util.Emoji[status]} ${inlineCode(`${count}`)}`).join('\n');
 
     embeds[0]
