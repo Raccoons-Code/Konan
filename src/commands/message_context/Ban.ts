@@ -27,7 +27,8 @@ export default class Ban extends MessageContextMenu {
                 .setLabel('Reason')
                 .setMaxLength(512)
                 .setPlaceholder('Reason for ban...')
-                .setStyle(TextInputStyle.Paragraph),
+                .setStyle(TextInputStyle.Paragraph)
+                .setValue(targetMessage.url),
             ]),
           new ActionRowBuilder<TextInputBuilder>()
             .setComponents([

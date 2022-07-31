@@ -27,7 +27,8 @@ export default class Kick extends MessageContextMenu {
                 .setLabel('Reason')
                 .setMaxLength(512)
                 .setPlaceholder('Reason for kick...')
-                .setStyle(TextInputStyle.Paragraph),
+                .setStyle(TextInputStyle.Paragraph)
+                .setValue(targetMessage.url),
             ]),
         ]),
     );
