@@ -20,10 +20,10 @@ export default abstract class SlashCommand extends BaseApplicationCommand {
   abstract execute(interaction: CommandInteraction | AutocompleteInteraction): Promise<any>;
 
   buttonStyles: { name: keyof typeof ButtonStyle, value: ButtonStyle }[] = [
-    { name: 'Danger', value: ButtonStyle.Danger },
     { name: 'Primary', value: ButtonStyle.Primary },
     { name: 'Secondary', value: ButtonStyle.Secondary },
     { name: 'Success', value: ButtonStyle.Success },
+    { name: 'Danger', value: ButtonStyle.Danger },
   ];
 
   ButtonStylesChoices: APIApplicationCommandOptionChoice<number>[] = this.buttonStyles.map(style => ({
@@ -37,5 +37,15 @@ export default abstract class SlashCommand extends BaseApplicationCommand {
 
   get randomButtonStyle() {
     return this.buttonStyles[Math.floor(Math.random() * this.buttonStyles.length)];
+  }
+
+  getChoicesFromEnum<T = any>(enumType: T, withLocalizations = true) {
+    const entries = Object.entries(enumType);
+
+    return entries.slice(Math.floor(entries.length / 2), entries.length).map(([key, value]) => ({
+      name: this.t(key, { locale: 'en' }),
+      value,
+      name_localizations: withLocalizations ? this.getLocalizations(key) : {},
+    }));
   }
 }
