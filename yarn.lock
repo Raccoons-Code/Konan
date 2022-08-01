@@ -1502,9 +1502,9 @@ queue-microtask@^1.2.2:
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
 quick.db@^9.0.5:
-  version "9.0.5"
-  resolved "https://registry.yarnpkg.com/quick.db/-/quick.db-9.0.5.tgz#7116187a365806b941faff1219afc8f89f685147"
-  integrity sha512-IJ5T2wTh+AKJIo7dJG9m6ucXoLd9oHsANgMZH0b4lzYQNLtCD25H0ImNLhsRRee8Y0ZVlOzg23fh/P8zrrEHhw==
+  version "9.0.6"
+  resolved "https://registry.yarnpkg.com/quick.db/-/quick.db-9.0.6.tgz#de2070bbbb053d4ca0c58126088f389d54f17865"
+  integrity sha512-3XDapl8dPe2PRYTvrDeDGHQH3beXINpuipBeu8r5VqAFgDO/r3Us8A2VzcGGkhtbBYlvoyPObZ3e7rJX4WVenw==
   dependencies:
     lodash "^4.17.21"
 
