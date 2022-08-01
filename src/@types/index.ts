@@ -2,7 +2,6 @@ import { AutocompleteInteraction, BitFieldResolvable, ButtonInteraction, ChatInp
 import { BaseApplicationCommand, BaseCommand, ButtonComponentInteraction, Command, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 export * from './customid';
-export * from './enum';
 export * from './quickdb';
 export * from './util';
 

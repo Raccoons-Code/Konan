@@ -1,5 +1,5 @@
 import { APIEmbed, EmbedBuilder, EmbedData } from 'discord.js';
-import { EmbedColor, EmbedType } from '../@types';
+import { EmbedColor, EmbedType } from '../@enum';
 import { t } from '../translator';
 import Emoji from './Emoji';
 
