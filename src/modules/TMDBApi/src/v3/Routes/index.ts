@@ -8,7 +8,9 @@ import { Search } from './Search';
 import { TVEpisodes } from './TVEpisodes';
 import { TVSeasons } from './TVSeasons';
 
-const Routes = new class Routes {
+export * from './RouteBases';
+
+export const Routes = new class Routes {
   // Authentication
   authenticationCreateGuestSession = Authentication.createGuestSession;
   authenticationCreateRequestToken = Authentication.createRequestToken;

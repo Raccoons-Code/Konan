@@ -1,4 +1,4 @@
-import RouteBases from '../RouteBases';
+import { RouteBases } from '../Routes';
 
 export const movie = new class Movie {
   baseURL: string;

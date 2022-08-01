@@ -1,4 +1,4 @@
-import RouteBases from '../RouteBases';
+import { RouteBases } from '../Routes';
 
 export default class Constants {
   static baseURL = `${RouteBases.api}/${RouteBases.version}`;
