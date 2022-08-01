@@ -1,5 +1,5 @@
 import { ButtonInteraction, EmbedBuilder } from 'discord.js';
-import { BanCustomId } from '../../@types';
+import type { BanCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
 export default class Ban extends ButtonComponentInteraction {

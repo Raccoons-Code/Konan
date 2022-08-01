@@ -1,5 +1,5 @@
 import { ActionRow, APIRole, ButtonStyle, ComponentType, MessageActionRowComponent, Role } from 'discord.js';
-import { ButtonRolesCustomId, SelectRolesOptionValue } from '../../@types';
+import type { ButtonRolesCustomId, SelectRolesOptionValue } from '../../@types';
 import { JSONparse } from './JSONparse';
 
 export function componentsHasRoles(

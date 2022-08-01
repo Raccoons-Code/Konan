@@ -1,6 +1,6 @@
 import { Client } from 'discord.js';
 import { setTimeout as waitAsync } from 'node:timers/promises';
-import { FetchStatsOptions, Stats } from '../@types';
+import type { FetchStatsOptions, Stats } from '../@types';
 
 export default class ApplicationStats {
   [x: string]: any;

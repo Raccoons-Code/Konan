@@ -1,4 +1,4 @@
-import { TMDB_API_Options } from './@types';
+import type { TMDB_API_Options } from './@types';
 import Authentication from './authentication';
 import Configuration from './configuration';
 import Discover from './discover';

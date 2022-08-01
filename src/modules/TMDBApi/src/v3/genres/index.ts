@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APIGenre, GenresData, GenresOptions, ParseGenresOptions, GetGenres } from '../@types';
+import type { APIGenre, GenresData, GenresOptions, ParseGenresOptions, GetGenres } from '../@types';
 import Routes from '../Routes';
 
 export default class Genres {

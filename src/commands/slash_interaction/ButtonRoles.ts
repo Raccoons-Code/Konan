@@ -1,5 +1,5 @@
 import { ActionRowBuilder, APIActionRowComponent, APIButtonComponent, APIButtonComponentWithCustomId, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, Role, SlashCommandBuilder, TextChannel } from 'discord.js';
-import { ButtonRolesCustomId } from '../../@types';
+import type { ButtonRolesCustomId } from '../../@types';
 import { SlashCommand } from '../../structures';
 
 const { ApplicationCommandAutocomplete } = InteractionType;

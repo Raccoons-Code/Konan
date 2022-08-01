@@ -1,6 +1,6 @@
 import { ActionRowBuilder, APIEmbedField, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, EmbedBuilder } from 'discord.js';
 import commandHandler from '..';
-import { HelpButtonCustomId } from '../../@types';
+import type { HelpButtonCustomId } from '../../@types';
 import { ButtonComponentInteraction, SlashCommand } from '../../structures';
 import Util from '../../util';
 

@@ -2,7 +2,7 @@ import { stripIndents } from 'common-tags';
 import { ButtonInteraction, codeBlock, EmbedBuilder, time, version as djsVersion } from 'discord.js';
 import { cpus, totalmem, version } from 'node:os';
 import { env, memoryUsage, versions } from 'node:process';
-import { InfoCustomId } from '../../@types';
+import type { InfoCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
 const CPUs = cpus();

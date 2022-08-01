@@ -1,5 +1,5 @@
 import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, Colors, ComponentType, EmbedBuilder, Role, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
-import { RolesManager, SelectRolesCustomId, SelectRolesOptionValue } from '../../@types';
+import type { RolesManager, SelectRolesCustomId, SelectRolesOptionValue } from '../../@types';
 import { SelectMenuComponentInteraction } from '../../structures';
 
 export default class SelectRoles extends SelectMenuComponentInteraction {

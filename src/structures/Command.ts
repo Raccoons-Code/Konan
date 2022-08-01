@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { CommandData } from '../@types';
+import type { CommandData } from '../@types';
 import BaseCommand from './BaseCommand';
 
 export default abstract class Command extends BaseCommand {

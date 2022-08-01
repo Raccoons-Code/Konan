@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APIMovieDetails, APINowPlaying, GetLatest, GetMovieDetails, GetNowPlaying, MoviesOptions } from '../@types';
+import type { APIMovieDetails, APINowPlaying, GetLatest, GetMovieDetails, GetNowPlaying, MoviesOptions } from '../@types';
 import Routes from '../Routes';
 
 export default class Movies {

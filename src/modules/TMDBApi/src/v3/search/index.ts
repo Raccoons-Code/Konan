@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APISearchMovies, GetSearchMovies, SearchOptions } from '../@types';
+import type { APISearchMovies, GetSearchMovies, SearchOptions } from '../@types';
 import Routes from '../Routes';
 
 export default class Search {

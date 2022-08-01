@@ -1,5 +1,5 @@
 import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIButtonComponent, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent } from 'discord.js';
-import { ButtonRolesCustomId } from '../../@types';
+import type { ButtonRolesCustomId } from '../../@types';
 import { JSONparse } from './JSONparse';
 
 export function removeButtonsByRoleId(

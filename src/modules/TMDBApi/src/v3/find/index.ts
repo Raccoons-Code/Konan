@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APIFindById, FindOptions, GetFindById } from '../@types';
+import type { APIFindById, FindOptions, GetFindById } from '../@types';
 import Routes from '../Routes';
 
 export default class Find {

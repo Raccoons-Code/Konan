@@ -1,5 +1,5 @@
 import { ActionRowBuilder, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
-import { ManageSelectRolesOptions } from '../../@types';
+import type { ManageSelectRolesOptions } from '../../@types';
 import splitArrayInGroups from '../splitArrayInGroups';
 
 export function createSelectMenuByRoles(options: ManageSelectRolesOptions) {

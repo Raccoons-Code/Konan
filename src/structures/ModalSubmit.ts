@@ -1,5 +1,5 @@
 import { ModalSubmitInteraction } from 'discord.js';
-import { ComponentInteractionData } from '../@types';
+import type { ComponentInteractionData } from '../@types';
 import BaseApplicationCommand from './BaseApplicationCommand';
 
 export default abstract class ModalSubmit extends BaseApplicationCommand {

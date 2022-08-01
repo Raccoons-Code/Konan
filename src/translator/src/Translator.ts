@@ -1,4 +1,4 @@
-import { Options, Resources, TranslationData } from './@types';
+import type { Options, Resources, TranslationData } from './@types';
 import { defaults } from './Defaults';
 
 export default class Translator {

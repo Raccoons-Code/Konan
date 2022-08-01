@@ -1,4 +1,4 @@
-import { Options } from './@types';
+import type { Options } from './@types';
 import { defaults } from './Defaults';
 
 export default class PostProcessor {

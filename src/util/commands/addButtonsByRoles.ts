@@ -1,5 +1,5 @@
 import { ActionRow, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent } from 'discord.js';
-import { ManageButtonRolesOptions } from '../../@types';
+import type { ManageButtonRolesOptions } from '../../@types';
 import { createButtonsByRoles } from './createButtonsByRoles';
 
 export function addButtonsByRoles(

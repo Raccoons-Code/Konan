@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { ManageButtonRolesOptions } from '../../@types';
+import type { ManageButtonRolesOptions } from '../../@types';
 import splitArrayInGroups from '../splitArrayInGroups';
 
 export function createButtonsByRoles(options: ManageButtonRolesOptions) {

@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, codeBlock, Colors, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { env } from 'node:process';
 import { ShardingClient } from 'statcord.js';
-import { AnyInteraction } from '../@types';
+import type { AnyInteraction } from '../@types';
 import commandHandler from '../commands';
 import { interactionError } from '../errors';
 import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';

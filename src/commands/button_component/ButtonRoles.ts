@@ -1,5 +1,5 @@
 import { ActionRowBuilder, APIActionRowComponent, APIButtonComponentWithCustomId, ButtonBuilder, ButtonInteraction, Colors, ComponentType, EmbedBuilder } from 'discord.js';
-import { ButtonRolesCustomId } from '../../@types';
+import type { ButtonRolesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
 export default class ButtonRoles extends ButtonComponentInteraction {

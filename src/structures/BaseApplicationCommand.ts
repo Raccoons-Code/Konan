@@ -1,5 +1,6 @@
 import { InteractionType, PermissionsString } from 'discord.js';
-import { AnyInteraction, MissingPermissionResponse } from '../@types';
+import { MissingPermissionResponse } from '../@enum';
+import type { AnyInteraction } from '../@types';
 import BaseCommand from './BaseCommand';
 
 export default abstract class BaseApplicationCommand extends BaseCommand {

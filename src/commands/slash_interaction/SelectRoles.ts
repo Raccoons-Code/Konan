@@ -1,5 +1,5 @@
 import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, Role, SelectMenuBuilder, SelectMenuOptionBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
-import { SelectRolesOptionValue } from '../../@types';
+import type { SelectRolesOptionValue } from '../../@types';
 import { SlashCommand } from '../../structures';
 
 const { ApplicationCommandAutocomplete } = InteractionType;

@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder } from 'discord.js';
-import { MoviesCustomId } from '../../@types';
+import type { MoviesCustomId } from '../../@types';
 import TMDBApi, { APISearchMoviesResults, SortType, SortTypes, Util as TMDBUtil } from '../../modules/TMDBApi';
 import { ButtonComponentInteraction } from '../../structures';
 

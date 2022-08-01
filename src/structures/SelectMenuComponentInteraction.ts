@@ -1,5 +1,5 @@
 import { SelectMenuInteraction } from 'discord.js';
-import { ComponentInteractionData } from '../@types';
+import type { ComponentInteractionData } from '../@types';
 import BaseApplicationCommand from './BaseApplicationCommand';
 
 export default abstract class MenuComponentInteraction extends BaseApplicationCommand {

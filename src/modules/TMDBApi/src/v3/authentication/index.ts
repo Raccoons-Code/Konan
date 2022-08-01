@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APIDeleteSession, APIGuestSession, APIRequestToken, APISession, APISessionV4, APISessionWithLogin, AuthenticationOptions, DeleteDeleteSession, PostCreateSession, PostCreateSessionV4, PostCreateSessionWithLogin } from '../@types';
+import type { APIDeleteSession, APIGuestSession, APIRequestToken, APISession, APISessionV4, APISessionWithLogin, AuthenticationOptions, DeleteDeleteSession, PostCreateSession, PostCreateSessionV4, PostCreateSessionWithLogin } from '../@types';
 import Routes from '../Routes';
 
 export default class Authentication {

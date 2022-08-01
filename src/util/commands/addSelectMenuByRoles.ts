@@ -1,5 +1,5 @@
 import { ActionRow, ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ComponentType, MessageActionRowComponent, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
-import { ManageSelectRolesOptions } from '../../@types';
+import type { ManageSelectRolesOptions } from '../../@types';
 import { createSelectMenuByRoles } from './createSelectMenuByRoles';
 
 export function addSelectMenuByRoles(

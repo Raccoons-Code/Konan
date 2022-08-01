@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
 import { QuickDB } from 'quick.db';
-import { GuessGameData } from '../../@types';
+import type { GuessGameData } from '../../@types';
 import { SlashCommand } from '../../structures';
 
 const { ApplicationCommandAutocomplete } = InteractionType;

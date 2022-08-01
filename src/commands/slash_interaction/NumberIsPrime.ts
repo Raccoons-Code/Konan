@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, codeBlock, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { PrimeResolveOptions } from '../../@types';
+import type { PrimeResolveOptions } from '../../@types';
 import { SlashCommand } from '../../structures';
 
 export default class NumberIsPrime extends SlashCommand {

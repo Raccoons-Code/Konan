@@ -1,5 +1,5 @@
 import { ClientEvents } from 'discord.js';
-import { EventData, ListenerString } from '../@types';
+import type { EventData, ListenerString } from '../@types';
 import BaseEvent from './BaseEvent';
 
 export default abstract class Event<K extends keyof ClientEvents> extends BaseEvent {

@@ -1,4 +1,4 @@
-import { ImageURLOptions } from '../@types';
+import type { ImageURLOptions } from '../@types';
 import RouteBases from '../RouteBases';
 
 export const image = new class Image {

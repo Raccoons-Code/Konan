@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DiscoverOptions, GetDiscoverMovie, APISearchMovies } from '../@types';
+import type { DiscoverOptions, GetDiscoverMovie, APISearchMovies } from '../@types';
 import Routes from '../Routes';
 
 export default class Discover {

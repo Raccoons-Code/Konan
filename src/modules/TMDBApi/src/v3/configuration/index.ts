@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APIConfiguration, APICountries, APIJobs, APILanguages, APIPrimaryTranslations, APITimezones, ConfigurationOptions, GetLanguageProps } from '../@types';
+import type { APIConfiguration, APICountries, APIJobs, APILanguages, APIPrimaryTranslations, APITimezones, ConfigurationOptions, GetLanguageProps } from '../@types';
 import Routes from '../Routes';
 
 export default class Configuration {
