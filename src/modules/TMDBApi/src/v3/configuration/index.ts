@@ -26,7 +26,7 @@ export default class Configuration {
 
     let language = lang?.name ?? lang?.english_name ?? lang?.iso_639_1 ?? original_language;
 
-    language = ['en', 'No Language'].includes(original_language) ? lang?.name ?
+    language = !['en', 'xx'].includes(original_language) ? lang?.name ?
       `${language} (${lang?.english_name})` : language : language;
 
     return language;
