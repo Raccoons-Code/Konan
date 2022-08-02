@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import JKP from '../../JKP';
+import JKP from '../../modules/JKP';
 import { SlashCommand } from '../../structures';
 
 export default class Jankenpon extends SlashCommand {

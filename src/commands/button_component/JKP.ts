@@ -1,7 +1,7 @@
 import { ButtonInteraction, EmbedBuilder, userMention } from 'discord.js';
 import { QuickDB } from 'quick.db';
 import type { JkpCustomId, JKPGameData } from '../../@types';
-import JKP from '../../JKP';
+import JKP from '../../modules/JKP';
 import { ButtonComponentInteraction } from '../../structures';
 
 const quickDb = new QuickDB();
