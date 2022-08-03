@@ -1,2 +1,3 @@
-export = (value: any) => typeof value === 'function' &&
-  /^((?:class\s*)(\s+(?!extends)\S+\s*)?(?:(?:\s+extends)(\s+\S+\s*))?){/.test(value.toString())
+import regexp from './regexp';
+
+export = (value: any) => typeof value === 'function' && regexp.isClass.test(value.toString())
