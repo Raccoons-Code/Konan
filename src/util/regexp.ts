@@ -27,8 +27,8 @@ export = new class regexp {
   embedTitle = /([\w\W]{0,256})/;
   /** @pattern `/<?(?<animated>a)?:?(?<name>\p{S}|(?:(?!\d{17,})\w{2,32}))?:?(?<id>\d{17,})?>?/u` */
   emoji = /<?(?<animated>a)?:?(?<name>\p{S}|(?:(?!\d{17,})\w{2,32}))?:?(?<id>\d{17,})?>?/u;
-  /** @pattern `/^(?<all>(?:class)(?:\s+(?<name>(?!extends)\w+))?(?:(?:\s+extends)\s+(?<extended>\w+))?)\s*{/` */
-  isClass = /^(?<all>(?:class)(?:\s+(?<name>(?!extends)\w+))?(?:(?:\s+extends)\s+(?<extended>\w+))?)\s*{/;
+  /** @pattern `/^(?<all>(?:class)(?:\s+(?<name>(?!extends)\w+))?(?:(?:\s+extends)\s+(?<extended>\w+(?:\.\w+)?))?)\s*{/` */
+  isClass = /^(?<all>(?:class)(?:\s+(?<name>(?!extends)\w+))?(?:(?:\s+extends)\s+(?<extended>\w+(?:\.\w+)?))?)\s*{/;
   /** @pattern `/([\w\W]{0,100})/` */
   label = /([\w\W]{0,100})/;
   /**

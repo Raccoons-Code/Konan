@@ -138,3 +138,15 @@ const H = class extends G implements D { };
   assert.equal(h[2], hMock[2]);
   assert.equal(h[3], hMock[3]);
 }
+
+{
+  const className = 'class a extends b.c {';
+
+  assert.equal(Util.regexp.isClass.test(className), true);
+}
+
+{
+  const className = 'class a extends b. {';
+
+  assert.equal(Util.regexp.isClass.test(className), false);
+}
