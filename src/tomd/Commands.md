@@ -2,9 +2,9 @@
 
 # Commands
 
-Last modified: July 24, 2022
+Last modified: August 4, 2022
 
-## Application Commands (/) - 26
+## Application Commands (/) - 25
 
 **Optional**: [`foo`]  
 **Required**: <`foo`>  
@@ -68,6 +68,7 @@ Last modified: July 24, 2022
 
 - {`list`}: List all movies.
   - [`page`]: The page of the list.
+  - [`sort`]: The sort order of the list.
 
 - {`search`}: Search the movies.
   - <`keyword`>: The keyword to search. - `Autocomplete`
@@ -297,37 +298,12 @@ Last modified: July 24, 2022
 
 ---
 
-### Utility - 10
+### Utility - 9
 
 #### avatar [`user`]
 
 > Replies with the user's profile picture.
 - [`user`]: Select a user to get their profile picture.
-
-#### backup {`create`  | `delete`  | `list`  | `restore`  | `update`}
-
-> Make backup for your server - Powered by Discord Backup.
-
-- {`create`}: Create a new backup. Only on server!
-
-- {`delete`}: If you are on a server, you will manage server backups.
-
-  - {`server`}: Delete backups from a server.
-    - <`id`>: The id of the server to delete. - `Autocomplete`
-
-  - {`backup`}: Delete a backup.
-    - <`key`>: The key of the backup to delete. - `Autocomplete`
-
-- {`list`}: If you are on a server, this shows the backups for that server.
-
-- {`restore`}: If you are on a server, you will manage server backups.
-
-  - {`backup`}: Restore a backup.
-    - <`key`>: The key of the backup to restore. - `Autocomplete`
-    - [`clear_server`]: Clear the server before restoring?
-
-- {`update`}: Update a backup. Only on server!
-  - <`key`>: The key of the backup to update. - `Autocomplete`
 
 #### bitfield {`permissions`  | `intents`}
 
