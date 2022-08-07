@@ -35,7 +35,13 @@ export type AnyInteraction = Interaction & (
 
 export type ApplicationCommandCollection = Record<string, Collection<string, AnyApplicationCommand>>
 
-export type CategoryTypes = 'Fun' | 'Game' | 'General' | 'Moderation' | 'Utility'
+export enum CommandCategory {
+  Fun = 'Fun',
+  Game = 'Game',
+  General = 'General',
+  Moderation = 'Moderation',
+  Utility = 'Utility',
+}
 
 export interface CommandArgsData {
   name: string
@@ -102,7 +108,7 @@ export interface SelectRolesOptionValue {
 
 export interface SlashCommandProps {
   appPermissions?: BitFieldResolvable<PermissionsString, bigint>
-  category?: CategoryTypes
+  category?: `${CommandCategory}`
   ownerOnly?: boolean
   userPermissions?: BitFieldResolvable<PermissionsString, bigint>
 }

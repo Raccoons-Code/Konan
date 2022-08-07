@@ -10,37 +10,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  ObjectId    String     @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime   @default(now()) @db.Timestamp
-  id          String     @unique
-  email       String?
-  premium     DateTime?  @db.Timestamp
-  usedPremium Boolean?
-  guilds      Guild[]
-  backups     Backup[]
-  purchases   Purchase[]
+model Backup {
+  ObjectId  String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now()) @db.Timestamp
+  id        String   @unique
+  data      Json
+  premium   Boolean?
+  Guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  guildId   String
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String
 }
 
-model Purchase {
-  ObjectId   String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt  DateTime  @default(now()) @db.Timestamp
-  data       Json?
-  User       User      @relation(fields: [userId], references: [id])
-  userId     String
-  productIDs String[]  @db.ObjectId
-  products   Product[] @relation(fields: [productIDs], references: [ObjectId])
-}
-
-model Product {
-  ObjectId    String     @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime   @default(now()) @db.Timestamp
-  id          String     @unique @default(uuid())
-  name        String
-  description String?
-  price       Float
-  purchaseIDs String[]   @db.ObjectId
-  purchases   Purchase[] @relation(fields: [purchaseIDs], references: [ObjectId])
+model CurrencyShop {
+  ObjectId String @id @default(auto()) @map("_id") @db.ObjectId
+  itemId   String @unique
+  Item     Item   @relation(fields: [itemId], references: [ObjectId], onDelete: Cascade, onUpdate: Cascade)
+  cost     Float
 }
 
 model Guild {
@@ -52,14 +38,71 @@ model Guild {
   backups   Backup[]
 }
 
-model Backup {
-  ObjectId  String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now()) @db.Timestamp
-  id        String   @unique
-  data      Json
-  premium   Boolean?
-  Guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  guildId   String
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    String
+model Item {
+  ObjectId     String        @id @default(auto()) @map("_id") @db.ObjectId
+  id           String        @unique @default(cuid())
+  name         String
+  data         Json?
+  CurrencyShop CurrencyShop?
+  UserItem     UserItem[]
+}
+
+model Product {
+  ObjectId    String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime   @default(now()) @db.Timestamp
+  id          String     @unique @default(cuid())
+  name        String
+  description String?
+  price       Float      @default(0)
+  purchaseIds String[]   @db.ObjectId
+  purchases   Purchase[] @relation(fields: [purchaseIds], references: [ObjectId])
+}
+
+model Purchase {
+  ObjectId   String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime  @default(now()) @db.Timestamp
+  data       Json?
+  userId     String
+  User       User      @relation(fields: [userId], references: [id])
+  productIds String[]  @db.ObjectId
+  products   Product[] @relation(fields: [productIds], references: [ObjectId])
+}
+
+model User {
+  ObjectId  String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime   @default(now()) @db.Timestamp
+  id        String     @unique
+  email     String?
+  money     Float      @default(0)
+  backups   Backup[]
+  guilds    Guild[]
+  purchases Purchase[]
+  UserItem  UserItem[]
+}
+
+model UserItem {
+  ObjectId String @id @default(auto()) @map("_id") @db.ObjectId
+  itemId   String @unique
+  Item     Item   @relation(fields: [itemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId   String
+  User     User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amount   Int    @default(0)
+}
+
+model WordleInstance {
+  ObjectId  String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime       @default(now()) @db.Timestamp
+  endedAt   DateTime?      @db.Timestamp
+  channelId String?
+  guildId   String?
+  messageId String         @unique
+  data      WordleGameData
+  players   String[]
+  quitters  String[]
+  winner    String?
+}
+
+type WordleGameData {
+  word String
+  board Json
 }
