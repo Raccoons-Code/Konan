@@ -11,5 +11,13 @@ export default class ChannelDelete extends Event {
 
   async execute(channel: NonThreadGuildBasedChannel) {
     channel.client.stats.fetch({ filter: 'channels' });
+
+    Promise.all([
+      this.prisma.wordleInstance.deleteMany({
+        where: {
+          channelId: channel.id,
+        },
+      }),
+    ]);
   }
 }

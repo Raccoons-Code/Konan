@@ -13,5 +13,13 @@ export default class GuildDelete extends Event {
   async execute(guild: Guild) {
     logger.oldGuild(guild);
     guild.client.stats.fetch();
+
+    Promise.all([
+      this.prisma.wordleInstance.deleteMany({
+        where: {
+          guildId: guild.id,
+        },
+      }),
+    ]);
   }
 }
