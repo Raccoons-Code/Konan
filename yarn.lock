@@ -1678,9 +1678,9 @@ slash@^3.0.0:
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
 statcord.js@^3.4.2:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/statcord.js/-/statcord.js-3.4.2.tgz#a0c8ebb2c832d60825f676e279546243b9759cc8"
-  integrity sha512-fisZH+mK+bYEVAd+XiL7N3ldwgqkXH5t2GcPs0TtbFLlYnvWGaNWPLD/QmSCNVYqRwL2J/qqyR25AhwZiOoH2A==
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/statcord.js/-/statcord.js-3.4.3.tgz#01381c7b4a6ba3883ca9111cb3a2a2c439d8a5a8"
+  integrity sha512-WdNIr2ehF9/h/Yw33IY3EBOXrCji5gzbKdOrAEc6kcWkuBpBOhZEHttc98UJ9VkdbPMs/BaHBrAnfX5BhTMCig==
   dependencies:
     node-fetch "^2.6.7"
     systeminformation "^5.7.12"
