@@ -1,7 +1,7 @@
 import { Guild } from 'discord.js';
 import { Event } from '../structures';
 
-export default class GuildUpdate extends Event<'guildUpdate'> {
+export default class GuildUpdate extends Event {
   constructor() {
     super({
       intents: ['Guilds'],

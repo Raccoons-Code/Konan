@@ -1,7 +1,7 @@
 import { Message, Partials } from 'discord.js';
 import { Command, Event } from '../structures';
 
-export default class MessageCreate extends Event<'messageCreate'> {
+export default class MessageCreate extends Event {
   constructor() {
     super({
       intents: ['Guilds', 'GuildMessages', 'DirectMessages'],

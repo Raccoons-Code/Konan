@@ -1,7 +1,7 @@
 import { NonThreadGuildBasedChannel, Partials } from 'discord.js';
 import { Event } from '../structures';
 
-export default class ChannelCreate extends Event<'channelCreate'> {
+export default class ChannelCreate extends Event {
   constructor() {
     super({
       name: 'channelCreate',
