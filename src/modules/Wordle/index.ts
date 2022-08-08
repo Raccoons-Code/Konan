@@ -35,18 +35,22 @@ export const Wordle = new class Wordle {
     attempt = this.#mapInvalidChars(attempt.toLowerCase());
 
     const letters = attempt.split('');
-    const equalLetters = [];
+    const lettersCount = letters.reduce((acc, l) =>
+      ({ ...acc, [l]: typeof acc[l] === 'number' ? acc[l] + 1 : 0 }),
+      <Record<string, number>>{});
 
     for (let i = 0; i < word.length; i++) {
       if (attempt[i] === word[i]) {
         letters[i] = letters[i].toUpperCase();
-        equalLetters.push(attempt[i]);
+        lettersCount[word[i]]--;
       }
     }
 
     for (let i = 0; i < word.length; i++) {
-      if (word.includes(attempt[i]) && !equalLetters.includes(attempt[i]))
+      if (word.includes(attempt[i]) && attempt[i] !== word[i] && lettersCount[attempt[i]]) {
         letters[i] = `+${letters[i]}`;
+        lettersCount[attempt[i]]--;
+      }
     }
 
     for (let i = 0; i < board.length; i++) {
@@ -59,8 +63,8 @@ export const Wordle = new class Wordle {
 
     return {
       board,
-      win: equalLetters.length === word.length,
-      lose: equalLetters.length !== word.length && board.at(-1)?.[0] !== 'raw',
+      win: attempt === word,
+      lose: attempt !== word && board.at(-1)?.[0] !== 'raw',
     };
   }
 

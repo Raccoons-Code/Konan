@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, hyperlink, messageLink, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, messageLink, SlashCommandBuilder } from 'discord.js';
 import { dictionaries } from '../../modules/Dictionaries';
 import { Wordle } from '../../modules/Wordle';
 import { SlashCommand } from '../../structures';
@@ -39,14 +39,18 @@ export default class extends SlashCommand {
           new ActionRowBuilder<ButtonBuilder>()
             .setComponents([
               new ButtonBuilder()
+                .setEmoji('🔍')
+                .setLabel('Join')
+                .setStyle(ButtonStyle.Link)
+                .setURL(messageLink(oldInstance.channelId!, oldInstance.messageId)),
+              new ButtonBuilder()
                 .setCustomId(JSON.stringify({ c: 'wordle', sc: 'debug' }))
                 .setEmoji('🐛')
-                .setLabel('Delete old game instances.')
-                .setStyle(ButtonStyle.Primary),
+                .setLabel('Delete old game instances')
+                .setStyle(ButtonStyle.Danger),
             ]),
         ],
-        content: `You already have an active Wordle game ${hyperlink('here',
-          messageLink(oldInstance.channelId!, oldInstance.messageId))}.`,
+        content: 'You already have an active Wordle game.',
         ephemeral: true,
       });
 
@@ -54,7 +58,7 @@ export default class extends SlashCommand {
 
     const message = await interaction.deferReply({ fetchReply: true });
 
-    const wordSize = options.getInteger('word_size') || 5;
+    const wordSize = options.getInteger('word_size') || 4;
 
     const word = await dictionaries.random(locale, wordSize);
     if (!word)
