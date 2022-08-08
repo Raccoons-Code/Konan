@@ -1,3 +1,4 @@
+import { WordleInstance } from '@prisma/client';
 import { ActionRowBuilder, ButtonInteraction, EmbedBuilder, inlineCode, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { ButtonComponentInteraction } from '../../structures';
 
@@ -127,6 +128,7 @@ export default class extends ButtonComponentInteraction {
           messageId: wordleInstance.messageId,
         },
       })
+        .then(data => (!playersId.length && this.#giveupByMessageId(interaction, data)) && data || data)
         .catch(() => null));
     }
 
@@ -136,5 +138,29 @@ export default class extends ButtonComponentInteraction {
       content: `${wordleInstancesUpdated.filter(w => w).length} wordle games canceled.`,
       components: [],
     });
+  }
+
+  async #giveupByMessageId(interaction: ButtonInteraction, data: WordleInstance) {
+    if (!data.channelId) return;
+
+    const channel = await interaction.client.channels.fetch(data.channelId);
+    if (!channel?.isTextBased()) return;
+
+    const message = await channel.messages.safeFetch(data.messageId);
+    if (!message) return;
+
+    try {
+      message.edit({
+        embeds: [
+          new EmbedBuilder()
+            .setColor('DarkRed')
+            .setTitle('Wordle game canceled by WO.')
+            .setFields([
+              { name: 'The word was:', value: inlineCode(data.data.word) },
+            ]),
+        ],
+        components: [],
+      });
+    } catch { null; }
   }
 }
