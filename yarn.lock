@@ -266,10 +266,15 @@
     "@types/node" "*"
     form-data "^3.0.0"
 
-"@types/node@*", "@types/node@^18.6.3":
+"@types/node@*":
   version "18.6.3"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.6.3.tgz#4e4a95b6fe44014563ceb514b2598b3e623d1c98"
   integrity sha512-6qKpDtoaYLM+5+AFChLhHermMQxc3TOEFIDzrZLPRGHPrLEwqFkkT5Kx3ju05g6X7uDPazz3jHbKPX0KzCjntg==
+
+"@types/node@^18.6.4":
+  version "18.6.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.6.4.tgz#fd26723a8a3f8f46729812a7f9b4fc2d1608ed39"
+  integrity sha512-I4BD3L+6AWiUobfxZ49DlU43gtI+FTHSv9pE2Zekg6KjMpre4ByusaljW3vYSLJrvQ1ck1hUaeVu8HVlY3vzHg==
 
 "@types/ws@^8.5.3":
   version "8.5.3"
@@ -1673,10 +1678,10 @@ slash@^3.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
 
-statcord.js@^3.4.2:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/statcord.js/-/statcord.js-3.4.2.tgz#a0c8ebb2c832d60825f676e279546243b9759cc8"
-  integrity sha512-fisZH+mK+bYEVAd+XiL7N3ldwgqkXH5t2GcPs0TtbFLlYnvWGaNWPLD/QmSCNVYqRwL2J/qqyR25AhwZiOoH2A==
+statcord.js@^3.4.3:
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/statcord.js/-/statcord.js-3.4.3.tgz#01381c7b4a6ba3883ca9111cb3a2a2c439d8a5a8"
+  integrity sha512-WdNIr2ehF9/h/Yw33IY3EBOXrCji5gzbKdOrAEc6kcWkuBpBOhZEHttc98UJ9VkdbPMs/BaHBrAnfX5BhTMCig==
   dependencies:
     node-fetch "^2.6.7"
     systeminformation "^5.7.12"
