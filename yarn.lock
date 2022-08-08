@@ -756,9 +756,9 @@ discord.js@^13.1.0, discord.js@^13.6.0:
     ws "^8.7.0"
 
 discord.js@^14.0.3:
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.1.1.tgz#7948a2f4e85f67402e7d0b9ff28bdfbb16c3a24a"
-  integrity sha512-6Oa2f+Y0+s6B5HTTqcAP7Z6tUmguNTKpzbuTmE1JIeT/aUTr9dVe397D/bvcBSRpJERQzMyEWyEiVQnMRHcx4A==
+  version "14.1.2"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.1.2.tgz#6897f9019be3213388950c1cf6d7c9ea4661d42a"
+  integrity sha512-apdWNLkjAkeEnuNpB8H6rS/4OgrXQlSAjuuzeodjCOdIXy3OwOjD314V/HiSttcAlr9+r3ONhaT5qvbDad5SIg==
   dependencies:
     "@discordjs/builders" "^1.1.0"
     "@discordjs/collection" "^1.0.1"
