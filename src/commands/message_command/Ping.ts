@@ -12,7 +12,7 @@ export default class Ping extends Command {
   async execute(message: Message) {
     const sent = await message.reply('Pong!');
 
-    const ping = sent.createdTimestamp - message.createdTimestamp;
+    const ping = sent.createdTimestamp - (message.editedTimestamp ?? message.createdTimestamp);
 
     return sent.edit(`Pong! \`API: ${message.client.ws.ping}ms\`, \`BOT: ${ping}ms\``);
   }
