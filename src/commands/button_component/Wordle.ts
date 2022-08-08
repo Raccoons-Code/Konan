@@ -1,5 +1,4 @@
-import { ActionRowBuilder, ButtonInteraction, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
-import { Wordle } from '../../modules/Wordle';
+import { ActionRowBuilder, ButtonInteraction, EmbedBuilder, inlineCode, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { ButtonComponentInteraction } from '../../structures';
 
 export default class extends ButtonComponentInteraction {
@@ -81,20 +80,18 @@ export default class extends ButtonComponentInteraction {
       },
     });
 
-    if (!playersId.length) {
+    if (!playersId.length)
       return interaction.update({
         embeds: [
           new EmbedBuilder()
             .setColor('DarkRed')
             .setTitle('Wordle game canceled by WO.')
-            .setDescription(Wordle.transformToString(Wordle.transformToEmojis(<string[][]>wordleInstance.data.board)))
             .setFields([
-              { name: 'The word was:', value: wordleInstance.data.word },
+              { name: 'The word was:', value: inlineCode(wordleInstance.data.word) },
             ]),
         ],
         components: [],
       });
-    }
   }
 
   async debug(interaction: ButtonInteraction) {

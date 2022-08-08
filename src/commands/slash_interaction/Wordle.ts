@@ -74,7 +74,7 @@ export default class extends SlashCommand {
         guildId: guild?.id,
         messageId: message.id,
         data: {
-          word,
+          word: word.toLowerCase(),
           board: gameBoard,
         },
         players: playersId.concat([user.id]),
