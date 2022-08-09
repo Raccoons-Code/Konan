@@ -14,7 +14,7 @@ export function getLocalizations(
 
     acc[locale] = translation.slice(0, 100);
 
-    if (/\w+Name$/i.test(key))
+    if (/\w+Name$/.test(key))
       acc[locale] = acc[locale].replace(/\s+|['°]/g, '_').toLowerCase().slice(0, 32);
 
     return acc;
