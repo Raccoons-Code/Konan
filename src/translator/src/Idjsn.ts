@@ -10,6 +10,8 @@ class Idjsn {
   postProcessor!: PostProcessor;
   translator!: Translator;
   options: Options;
+  availableLocales!: Record<string, boolean>;
+  stats!: Record<string, number>;
 
   constructor(options: Options = defaults) {
     this.options = { ...defaults, ...options };
@@ -19,6 +21,10 @@ class Idjsn {
 
   init(options: Options) {
     this.options = { ...defaults, ...options };
+
+    this.availableLocales = Util.getAvailableLocales(this.options.resources!);
+
+    this.stats = Util.getTranslationsStats(this.options.resources!, this.options.translation!.fallbackLocale!);
 
     this.interpolator = new Interpolator(this.options);
 
