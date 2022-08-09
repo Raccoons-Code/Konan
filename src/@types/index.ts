@@ -1,4 +1,4 @@
-import { AutocompleteInteraction, BitFieldResolvable, ButtonInteraction, ChatInputCommandInteraction, Collection, CommandInteraction, ContextMenuCommandInteraction, Events, GatewayIntentsString, Interaction, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, PermissionsString, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
+import { AutocompleteInteraction, BitFieldResolvable, ButtonInteraction, ChatInputCommandInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuCommandInteraction, GatewayIntentsString, Interaction, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, PermissionsString, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { BaseApplicationCommand, BaseCommand, ButtonComponentInteraction, Command, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 export * from './customid';
@@ -77,7 +77,7 @@ export interface ComponentInteractionData {
 export interface EventData {
   intents?: BitFieldResolvable<GatewayIntentsString, number>
   listener?: ListenerString
-  name: `${Events}`
+  name: keyof ClientEvents
   partials?: Partials[]
   permissions?: BitFieldResolvable<PermissionsString, bigint>
 }
