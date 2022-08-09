@@ -115,7 +115,7 @@ export default class extends SlashCommand {
       embeds: [
         new EmbedBuilder()
           .setColor('Random')
-          .setDescription(codeBlock(`${result}`.padStart(30, ' '))),
+          .setDescription(codeBlock(`${result}`.padStart(30))),
       ],
       ephemeral: true,
     });

@@ -152,7 +152,7 @@ export default class extends ButtonComponentInteraction {
   }
 
   displayBlock(text: string) {
-    return codeBlock(text.padStart(30, ' '));
+    return codeBlock(text.padStart(30));
   }
 
   scapeMd(text = '') {
