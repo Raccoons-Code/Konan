@@ -36,6 +36,7 @@ export default class Help extends ButtonComponentInteraction {
       new EmbedBuilder()
         .setColor('Random')
         .setFields(this.convertCommandsToEmbedFields(slashCommands, p))
+        .setFooter({ text: `Total: ${slashCommands.length}` })
         .setTitle(this.t('konanSupport', { locale })),
     ];
 
