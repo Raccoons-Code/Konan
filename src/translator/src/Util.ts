@@ -12,14 +12,17 @@ export default class Util {
     }
   }
 
-  static getAvailableLocales(resources: Resources) {
-    return Object.keys(resources).reduce((acc, locale) =>
-      ({ ...acc, [locale]: true }),
+  static getAvailableLocales(resources: Resources, locales?: Record<string, string>) {
+    return Object.keys(locales ?? resources).reduce((acc, locale) =>
+      ({ ...acc, [locale]: resources[locale] ? true : false }),
       <Record<string, boolean>>{});
   }
 
-  static getTranslationsStats(resources: Resources, fallbackLocale: string) {
+  static getTranslationsStats(resources: Resources, fallbackLocale: string, locales?: Record<string, string>) {
     const fallbackLocaleLength = Object.keys(resources[fallbackLocale]).length;
+
+    if (locales)
+      resources = { ...Object.fromEntries(Object.keys(locales).map(locale => [locale, resources[locale] ?? {}])) };
 
     const stats = Object.keys(resources).reduce((acc, locale) =>
       ({ ...acc, [locale]: this.percentage(Object.keys(resources[locale]).length, fallbackLocaleLength) }),

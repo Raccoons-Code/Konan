@@ -5,11 +5,15 @@ export interface InterpolationData {
 
 export interface Options {
   [x: string]: any
+  availableLocales?: Record<string, boolean>
   capitalize?: boolean | null
   count?: number
   interpolation?: InterpolationData
   locale?: string
+  Locales?: EnumLike<Record<string, string>, string>
+  LocalesEnum?: Record<string, string>
   resources?: Resources
+  stats?: Record<string, number>
   translation?: TranslationData
 }
 
@@ -20,3 +24,5 @@ export interface TranslationData {
   keySeparator?: string
   noScape?: boolean
 }
+
+type EnumLike<E, V> = Record<keyof E, V>

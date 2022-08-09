@@ -10,8 +10,6 @@ class Idjsn {
   postProcessor!: PostProcessor;
   translator!: Translator;
   options: Options;
-  availableLocales!: Record<string, boolean>;
-  stats!: Record<string, number>;
 
   constructor(options: Options = defaults) {
     this.options = { ...defaults, ...options };
@@ -20,11 +18,21 @@ class Idjsn {
   }
 
   init(options: Options) {
-    this.options = { ...defaults, ...options };
+    this.options = options = { ...defaults, ...options };
 
-    this.availableLocales = Util.getAvailableLocales(this.options.resources!);
+    if (options.Locales) {
+      const Locales = Object.entries(options.Locales).sort((a, b) => a[0] < b[0] ? -1 : 1)
+        .map(([key, value]) => /^[a-z]{2}(-[A-Z]{2})?$/.test(key) ? [key, value] : [value, key]);
 
-    this.stats = Util.getTranslationsStats(this.options.resources!, this.options.translation!.fallbackLocale!);
+      this.options.Locales = Object.fromEntries(Locales);
+
+      this.options.LocalesEnum = Object.fromEntries(Locales.concat(Locales.map(([key, value]) => [value, key])));
+    }
+
+    this.options.availableLocales = Util.getAvailableLocales(this.options.resources!, this.options.Locales);
+
+    this.options.stats =
+      Util.getTranslationsStats(options.resources!, options.translation!.fallbackLocale!, options.Locales);
 
     this.interpolator = new Interpolator(this.options);
 
