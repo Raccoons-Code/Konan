@@ -55,7 +55,7 @@ export default class Help extends Command {
         .setOptions([
           { label: '🏠 Home', value: 'home', default: true }, // :home:
           { label: '🗃️ Commands', value: 'commands' }, // :card_box:
-        /* { label: `${['🌎', '🌏', '🌍'][this.Util.mathRandom(2, 0)]} Languages`, value: 'localization' }, */
+          { label: `${['🌎', '🌏', '🌍'][this.Util.mathRandom(2, 0)]} Languages`, value: 'localization' },
         ]),
     ];
 
