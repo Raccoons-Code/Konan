@@ -17,6 +17,7 @@ import isJSON from './isJSON';
 import isSameDate from './isSameDate';
 import JSONparse from './JSONparse';
 import keyGen from './keyGen';
+import { formatLocale, Locales } from './Locales';
 import mathRandom from './mathRandom';
 import randomizeArray from './randomizeArray';
 import regexp from './regexp';
@@ -24,6 +25,7 @@ import removeDuplicatesInArray from './removeDuplicatesInArray';
 import removeFromArray from './removeFromArray';
 import splitArrayInGroups from './splitArrayInGroups';
 import splitLimits from './splitLimits';
+import toSnakeCase, { snakeCase } from './toSnakeCase';
 import waitAsync from './waitAsync';
 import waitSync from './waitSync';
 
@@ -38,6 +40,7 @@ export default abstract class Util {
   static Emoji = Emoji;
   static filterObjectByKeys = filterObjectByKeys;
   static findDuplicatesInArray = findDuplicatesInArray;
+  static formatLocale = formatLocale;
   static getRandomFromArray = getRandomFromArray;
   static hasDuplicatesInArray = hasDuplicatesInArray;
   static isClass = isClass;
@@ -45,14 +48,17 @@ export default abstract class Util {
   static isJSON = isJSON;
   static isSameDate = isSameDate;
   static keyGen = keyGen;
+  static Locales = Locales;
   static mathRandom = mathRandom;
   static JSONparse = JSONparse;
   static regexp = regexp;
   static randomizeArray = randomizeArray;
   static removeDuplicatesInArray = removeDuplicatesInArray;
   static removeFromArray = removeFromArray;
+  static snakeCase = snakeCase;
   static splitArrayInGroups = splitArrayInGroups;
   static splitLimits = splitLimits;
+  static toSnakeCase = toSnakeCase;
   static waitAsync = waitAsync;
   static waitSync = waitSync;
 
