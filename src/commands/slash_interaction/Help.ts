@@ -78,7 +78,7 @@ export default class Help extends SlashCommand {
         .setOptions([
           { label: '🏠 Home', value: 'home', default: true }, // :home:
           { label: '🗃️ Commands', value: 'commands' }, // :card_box:
-        /* { label: `${['🌎', '🌏', '🌍'][this.Util.mathRandom(2, 0)]} Languages`, value: 'localization' }, */
+          { label: `${['🌎', '🌏', '🌍'][this.Util.mathRandom(2, 0)]} Languages`, value: 'localization' },
         ]),
     ];
 
@@ -125,7 +125,7 @@ export default class Help extends SlashCommand {
       const { slash_interaction } = commandHandler.commands;
 
       const slashCommands = slash_interaction.filter((c: any) =>
-        c.data.defaultPermission !== false && (
+        !c.props?.ownerOnly && (
           pattern.test(c.data.name) ||
           pattern.test(c.data.description)
         )).toJSON();

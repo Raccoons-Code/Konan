@@ -1,10 +1,10 @@
-import { ActionRowBuilder, APIEmbedField, ButtonBuilder, ButtonStyle, EmbedBuilder, RouteBases, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
+import { ActionRowBuilder, APIEmbedField, ButtonBuilder, ButtonStyle, codeBlock, EmbedBuilder, RouteBases, SelectMenuBuilder, SelectMenuInteraction } from 'discord.js';
 import { env } from 'node:process';
 import commandHandler from '..';
 import { SelectMenuComponentInteraction, SlashCommand } from '../../structures';
+import Translator from '../../translator';
 import Util from '../../util';
 
-const { DONATE_LINK, GUILD_INVITE } = env;
 /* const resetProps = { attachments: [], components: [], content: null, embeds: [], files: [] }; */
 
 export default class Help extends SelectMenuComponentInteraction {
@@ -53,19 +53,19 @@ export default class Help extends SelectMenuComponentInteraction {
         .setURL(client.invite),
     ];
 
-    if (GUILD_INVITE)
+    if (env.GUILD_INVITE)
       buttons.push(new ButtonBuilder()
         .setEmoji('🪤') // :mouse_trap:
         .setLabel(this.t('supportServer', { locale }))
         .setStyle(ButtonStyle.Link)
-        .setURL(`${RouteBases.invite}/${GUILD_INVITE}`));
+        .setURL(`${RouteBases.invite}/${env.GUILD_INVITE}`));
 
-    if (DONATE_LINK)
+    if (env.DONATE_LINK)
       buttons.push(new ButtonBuilder()
         .setEmoji('💸') // :money_with_wings:
         .setLabel(this.t('donate', { locale }))
         .setStyle(ButtonStyle.Link)
-        .setURL(`${DONATE_LINK}`));
+        .setURL(env.DONATE_LINK));
 
     const menus = [this.setSelectMenu(0)];
 
@@ -78,7 +78,7 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   async commands(interaction: SelectMenuInteraction) {
-    const { locale, message } = interaction;
+    const { locale } = interaction;
 
     const { slash_interaction } = commandHandler.commands;
 
@@ -92,29 +92,32 @@ export default class Help extends SelectMenuComponentInteraction {
         .setTitle(this.t('konanSupport', { locale })),
     ];
 
-    message.components = [
+    const components: ActionRowBuilder<ButtonBuilder | SelectMenuBuilder>[] = [
       new ActionRowBuilder<SelectMenuBuilder>().setComponents([this.setSelectCategory('general')]),
       new ActionRowBuilder<SelectMenuBuilder>().setComponents([this.setSelectMenu(1)]),
-    ] as any;
+    ];
 
     if (slashCommands.length > this.limit)
-      message.components.unshift(new ActionRowBuilder<ButtonBuilder>()
+      components.unshift(new ActionRowBuilder<ButtonBuilder>()
         .setComponents(this.setPageButtons({
           category: 'general',
           page: 0,
           total: Math.floor(slashCommands.length / this.limit),
-        })) as any);
+        })));
 
-    return interaction.update({ components: message.components, embeds });
+    return interaction.update({ components, embeds });
   }
 
   async localization(interaction: SelectMenuInteraction<'cached'>) {
     const { locale } = interaction;
 
+    const description = Object.entries(Translator.options.stats!).reduce((acc, [key, value]) =>
+      `${acc}\n${`${this.Util.formatLocale(key).padStart(15)} = ${value}%`.padEnd(15)}`, '');
+
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
-        .setImage('https://badges.awesome-crowdin.com/translation-15144556-499220.png')
+        .setDescription(codeBlock('css', description))
         .setTitle(this.t('konanSupport', { locale })),
     ];
 
@@ -126,11 +129,11 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   async setCommandCategory(interaction: SelectMenuInteraction<'cached'>) {
-    const { locale, message, values } = interaction;
+    const { locale, values } = interaction;
 
     const commands = commandHandler.commandsByCategory[values[0]] || commandHandler.commands.slash_interaction;
 
-    const slashCommands = commands.filter((c: any) => c.data.defaultPermission !== false).toJSON();
+    const slashCommands = commands.filter((c: any) => !c.props?.ownerOnly).toJSON();
 
     const embeds = [
       new EmbedBuilder()
@@ -140,36 +143,36 @@ export default class Help extends SelectMenuComponentInteraction {
         .setTitle(this.t('konanSupport', { locale })),
     ];
 
-    message.components = [
+    const components: ActionRowBuilder<ButtonBuilder | SelectMenuBuilder>[] = [
       new ActionRowBuilder<SelectMenuBuilder>().setComponents(this.setSelectCategory(values[0])),
       new ActionRowBuilder<SelectMenuBuilder>().setComponents(this.setSelectMenu(1)),
-    ] as any;
+    ];
 
     if (slashCommands.length > this.limit)
-      message.components.unshift(new ActionRowBuilder<ButtonBuilder>()
+      components.unshift(new ActionRowBuilder<ButtonBuilder>()
         .setComponents(this.setPageButtons({
           category: values[0],
           page: 0,
           total: Math.floor(slashCommands.length / this.limit),
-        })) as any);
+        })));
 
-    return interaction.update({ components: message.components, embeds });
+    return interaction.update({ components, embeds });
   }
 
   setPageButtons({ category, page, total }: { category: string, page: number, total: number }) {
     return [
       new ButtonBuilder()
-        .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page - 1 }))
+        .setCustomId(JSON.stringify({ c: 'help', cbc: category, sc: 'commands', p: page - 1 }))
         .setDisabled(page < 1)
         .setLabel('<')
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
-        .setCustomId(JSON.stringify({ c: '' }))
+        .setCustomId('{}')
         .setDisabled(true)
         .setStyle(ButtonStyle.Secondary)
         .setLabel(`${page + 1}/${total + 1}`),
       new ButtonBuilder()
-        .setCustomId(JSON.stringify({ c: this.data.name, cbc: category, sc: 'commands', p: page + 1 }))
+        .setCustomId(JSON.stringify({ c: 'help', cbc: category, sc: 'commands', p: page + 1 }))
         .setDisabled(page >= total)
         .setLabel('>')
         .setStyle(ButtonStyle.Secondary),
@@ -208,20 +211,20 @@ export default class Help extends SelectMenuComponentInteraction {
   }
 
   setSelectMenu(i = 0) {
-    // const earth = ['🌍', '🌎', '🌏'][this.Util.mathRandom(2, 0)]; :earth_africa: :earth_americas: :earth_asia:
+    const earth = ['🌍', '🌎', '🌏'][this.Util.mathRandom(2, 0)]; // :earth_africa: :earth_americas: :earth_asia:
 
     return new SelectMenuBuilder()
-      .setCustomId(JSON.stringify({ c: this.data.name }))
+      .setCustomId(JSON.stringify({ c: 'help' }))
       .setOptions([
         { label: '🏠 Home', value: 'home', default: i === 0 }, // :home:
         { label: '🗃️ Commands', value: 'commands', default: i === 1 }, // :card_box:
-        /* { label: `${earth} Languages`, value: 'localization', default: i === 2 }, */
+        { label: `${earth} Languages`, value: 'localization', default: i === 2 },
       ]);
   }
 
   setSelectCategory(i: string | number = 0) {
     return new SelectMenuBuilder()
-      .setCustomId(JSON.stringify({ c: this.data.name, sc: 'setCommandCategory', i }))
+      .setCustomId(JSON.stringify({ c: 'help', sc: 'setCommandCategory', i }))
       .setOptions([
         { label: '📝 General', value: 'general', default: i === 'general' }, // :pencil2:
         { label: '🤣 Fun', value: 'Fun', default: i === 'Fun' }, // :rofl:
