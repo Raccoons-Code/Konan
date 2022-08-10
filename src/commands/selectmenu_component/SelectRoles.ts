@@ -30,9 +30,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
     }
 
     for (let i = 0; i < values.length; i++) {
-      const value = values[i];
-
-      const { id, roleId } = <SelectRolesOptionValue>JSON.parse(value);
+      const { id, roleId } = <SelectRolesOptionValue>JSON.parse(values[i]);
 
       if (roles.add.includes(id ?? roleId)) continue;
 
