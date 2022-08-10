@@ -103,6 +103,6 @@ model WordleInstance {
 }
 
 type WordleGameData {
-  word String
+  word  String
   board Json
 }
