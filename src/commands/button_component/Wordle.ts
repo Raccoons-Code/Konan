@@ -21,7 +21,7 @@ export default class extends ButtonComponentInteraction {
   }
 
   async try(interaction: ButtonInteraction) {
-    const wordleInstance = await this.prisma.wordleInstance.findFirst({
+    const oldInstance = await this.prisma.wordleInstance.findFirst({
       where: {
         messageId: interaction.message.id,
         players: {
@@ -30,7 +30,7 @@ export default class extends ButtonComponentInteraction {
       },
     });
 
-    if (!wordleInstance || wordleInstance?.quitters.includes(interaction.user.id))
+    if (!oldInstance || oldInstance?.quitters.includes(interaction.user.id))
       return interaction.deferUpdate();
 
     return interaction.showModal(
@@ -43,12 +43,51 @@ export default class extends ButtonComponentInteraction {
               new TextInputBuilder()
                 .setCustomId('try')
                 .setLabel('Try')
-                .setMinLength(wordleInstance.data.word.length)
-                .setMaxLength(wordleInstance.data.word.length)
+                .setMinLength(oldInstance.data.word.length)
+                .setMaxLength(oldInstance.data.word.length)
                 .setStyle(TextInputStyle.Short),
             ]),
         ]),
     );
+  }
+
+  async giveupOldInstance(interaction: ButtonInteraction) {
+    const oldInstance = await this.prisma.wordleInstance.findFirst({
+      where: {
+        userId: interaction.user.id,
+        endedAt: {
+          isSet: false,
+        },
+      },
+    });
+
+    if (!oldInstance)
+      return interaction.deferUpdate();
+
+    const playersId = this.Util.removeFromArray(oldInstance.players, interaction.user.id);
+
+    await this.prisma.wordleInstance.update({
+      where: {
+        messageId: oldInstance.messageId,
+      },
+      data: {
+        endedAt: playersId.length ? undefined : new Date(),
+        userId: playersId[0],
+        players: {
+          set: playersId,
+        },
+        quitters: {
+          push: interaction.user.id,
+        },
+      },
+    });
+
+    if (!playersId.length) this.#giveupByMessageId(interaction, oldInstance);
+
+    return interaction.update({
+      content: 'Wordle game canceled.',
+      components: [],
+    });
   }
 
   async giveup(interaction: ButtonInteraction) {
@@ -96,7 +135,7 @@ export default class extends ButtonComponentInteraction {
   }
 
   async debug(interaction: ButtonInteraction) {
-    const wordleInstances = await this.prisma.wordleInstance.findMany({
+    const oldInstances = await this.prisma.wordleInstance.findMany({
       where: {
         endedAt: {
           isSet: false,
@@ -109,8 +148,8 @@ export default class extends ButtonComponentInteraction {
 
     const promises = [];
 
-    for (let i = 0; i < wordleInstances.length; i++) {
-      const wordleInstance = wordleInstances[i];
+    for (let i = 0; i < oldInstances.length; i++) {
+      const wordleInstance = oldInstances[i];
 
       const playersId = this.Util.removeFromArray(wordleInstance.players, interaction.user.id);
 

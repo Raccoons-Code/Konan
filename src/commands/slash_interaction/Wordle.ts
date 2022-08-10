@@ -22,39 +22,88 @@ export default class extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction) {
     const { channel, guild, locale, options, user } = interaction;
 
+    let playersId = options.getString('add_players')?.match(/\d{17,}/g) ?? [];
+
+    if (playersId.length) {
+      if (!guild)
+        return interaction.reply({
+          content: 'You need to be in a guild to use this option.',
+          ephemeral: true,
+        });
+
+      playersId = await guild.members.fetch({ user: playersId }).then(ms => ms.map(m => m.id));
+
+      if (!playersId.length)
+        return interaction.reply({
+          content: 'No valid users were found.',
+          ephemeral: true,
+        });
+    }
+
     const oldInstance = await this.prisma.wordleInstance.findFirst({
       where: {
-        players: {
-          has: user.id,
-        },
+        userId: user.id,
         endedAt: {
           isSet: false,
         },
       },
     });
 
-    if (oldInstance)
-      return interaction.reply({
+    if (oldInstance) {
+      await interaction.deferReply({ ephemeral: true });
+
+      if (playersId.length) {
+        playersId = [...new Set(playersId.concat(oldInstance.players))];
+
+        await this.prisma.wordleInstance.update({
+          where: {
+            messageId: oldInstance.messageId,
+          },
+          data: {
+            players: {
+              set: playersId,
+            },
+          },
+        });
+
+        return interaction.editReply({
+          components: [
+            new ActionRowBuilder<ButtonBuilder>()
+              .setComponents([
+                new ButtonBuilder()
+                  .setEmoji('🔍')
+                  .setLabel('Join to the game')
+                  .setStyle(ButtonStyle.Link)
+                  .setURL(messageLink(oldInstance.channelId, oldInstance.messageId)),
+              ]),
+          ],
+          embeds: [
+            new EmbedBuilder()
+              .setColor('Random')
+              .setTitle(`${playersId.length} added to your game.`),
+          ],
+        });
+      }
+
+      return interaction.editReply({
         components: [
           new ActionRowBuilder<ButtonBuilder>()
             .setComponents([
               new ButtonBuilder()
                 .setEmoji('🔍')
-                .setLabel('Join')
+                .setLabel('Join to the game')
                 .setStyle(ButtonStyle.Link)
-                .setURL(messageLink(oldInstance.channelId!, oldInstance.messageId)),
+                .setURL(messageLink(oldInstance.channelId, oldInstance.messageId)),
               new ButtonBuilder()
-                .setCustomId(JSON.stringify({ c: 'wordle', sc: 'debug' }))
-                .setEmoji('🐛')
-                .setLabel('Delete old game instances')
+                .setCustomId(JSON.stringify({ c: 'wordle', sc: 'giveupOldInstance' }))
+                .setEmoji('🚮')
+                .setLabel('Delete your old game instance')
                 .setStyle(ButtonStyle.Danger),
             ]),
         ],
         content: 'You already have an active Wordle game.',
-        ephemeral: true,
       });
-
-    const playersId = options.getString('add_players')?.match(/\d{17,}/g) ?? [];
+    }
 
     const message = await interaction.deferReply({ fetchReply: true });
 
@@ -70,9 +119,10 @@ export default class extends SlashCommand {
 
     await this.prisma.wordleInstance.create({
       data: {
-        channelId: channel?.id,
+        channelId: `${channel?.id}`,
         guildId: guild?.id,
         messageId: message.id,
+        userId: user.id,
         data: {
           word: word.toLowerCase(),
           board: gameBoard,

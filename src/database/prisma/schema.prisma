@@ -93,9 +93,10 @@ model WordleInstance {
   ObjectId  String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime       @default(now()) @db.Timestamp
   endedAt   DateTime?      @db.Timestamp
-  channelId String?
+  channelId String
   guildId   String?
   messageId String         @unique
+  userId    String
   data      WordleGameData
   players   String[]
   quitters  String[]

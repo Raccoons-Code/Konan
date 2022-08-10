@@ -56,14 +56,22 @@ export default class extends ModalSubmit {
       },
     });
 
+    const embeds = [
+      new EmbedBuilder()
+        .setColor(win ? 'Green' : lose ? 'Red' : 'Blue')
+        .setDescription(Wordle.transformToString(Wordle.transformToEmojis(board)))
+        .setTitle(win ? `${user.username} won!` : lose ? `${user.username} lost!` : 'Wordle'),
+    ];
+
+    if (lose)
+      embeds[0]
+        .setFields([
+          { name: 'The word was:', value: inlineCode(wordleInstance.data.word) },
+        ]);
+
     message?.edit({
       components: (win || lose) ? [] : message.components,
-      embeds: [
-        new EmbedBuilder()
-          .setColor(win ? 'Green' : lose ? 'Red' : 'Blue')
-          .setDescription(Wordle.transformToString(Wordle.transformToEmojis(board)))
-          .setTitle(win ? `${user.username} won!` : lose ? `${user.username} lost!` : 'Wordle'),
-      ],
+      embeds,
     });
   }
 }
