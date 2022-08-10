@@ -15,4 +15,5 @@ const selectMenuOption = new SelectMenuOptionBuilder();
 
 {
   assert.throws(() => selectMenuOption.setDescription(''), 'SelectMenuOptionBuilder empty description');
+  assert.throws(() => selectMenuOption.setDescription(null!), 'SelectMenuOptionBuilder empty description');
 }

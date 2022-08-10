@@ -8,6 +8,6 @@ import assert from 'node:assert';
 const selectMenu = new SelectMenuBuilder();
 
 {
-  assert.ok(selectMenu.setCustomId(''), 'SelectMenuBuilder empty customId');
+  assert.throws(() => selectMenu.setCustomId(''), 'SelectMenuBuilder empty customId');
 }
 
