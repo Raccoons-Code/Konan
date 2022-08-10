@@ -4,12 +4,12 @@
   "description": "",
   "main": "src",
   "scripts": {
-    "start:ts": "ts-node --transpileOnly .",
-    "test": "ts-node --transpileOnly ./src/test",
-    "test:ts": "tsc",
-    "deploy_commands": "ts-node --transpileOnly ./src/deploy-commands",
-    "to_markdown": "ts-node --transpileOnly ./src/tomd",
-    "start": "ts-node --transpileOnly .",
+    "start:ts": "ts-node .",
+    "test": "ts-node ./src/test",
+    "test:ts": "tsc --noEmit",
+    "deploy_commands": "ts-node ./src/deploy-commands",
+    "to_markdown": "ts-node ./src/tomd",
+    "start": "ts-node .",
     "dbpush": "prisma db push",
     "postinstall": "prisma generate"
   },
