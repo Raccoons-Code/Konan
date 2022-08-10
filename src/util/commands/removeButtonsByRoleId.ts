@@ -1,10 +1,10 @@
-import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIButtonComponent, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent } from 'discord.js';
+import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIButtonComponent, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent, Snowflake } from 'discord.js';
 import type { ButtonRolesCustomId } from '../../@types';
 import { JSONparse } from './JSONparse';
 
 export function removeButtonsByRoleId(
   components: ActionRow<MessageActionRowComponent>[] = [],
-  roles: string | string[],
+  roles: Snowflake | Snowflake[],
 ): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<ButtonBuilder>)[] {
   if (!Array.isArray(roles)) return removeButtonsByRoleId(components, [roles]);
 

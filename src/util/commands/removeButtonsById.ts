@@ -2,8 +2,10 @@ import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIButtonComponent,
 
 export function removeButtonsById(
   components: ActionRow<MessageActionRowComponent>[] = [],
-  customId: string,
-) {
+  customId: string | string[],
+): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<ButtonBuilder>)[] {
+  if (!Array.isArray(customId)) return removeButtonsById(components, [customId]);
+
   return components.map(row => {
     const rowJson = <APIActionRowComponent<APIButtonComponent>>row.toJSON();
 
@@ -14,7 +16,7 @@ export function removeButtonsById(
         const newElement = new ButtonBuilder(element);
 
         if (element.style === ButtonStyle.Link) return acc.concat(newElement);
-        if (element.custom_id === customId) return acc;
+        if (customId.includes(element.custom_id)) return acc;
 
         return acc.concat(newElement);
       }, <ButtonBuilder[]>[]));
