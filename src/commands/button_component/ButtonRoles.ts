@@ -44,7 +44,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
 
     const newCustomId = {
       c,
-      count: count + (memberHasRole ? count < Number.MAX_SAFE_INTEGER ? 1 : 0 : count > 0 ? -1 : 0),
+      count: count + (memberHasRole ? count ? -1 : 0 : count < Number.MAX_SAFE_INTEGER ? 1 : 0),
       id: id ?? roleId,
     };
 
@@ -79,12 +79,11 @@ export default class ButtonRoles extends ButtonComponentInteraction {
 
     const embeds = [
       new EmbedBuilder()
-        .setColor(memberHasRole ? Colors.Green : Colors.Red),
+        .setColor(memberHasRole ? Colors.Red : Colors.Green)
+        .setFields(memberHasRole ?
+          { name: 'Removed', value: `${role}` } :
+          { name: 'Added', value: `${role}` }),
     ];
-
-    embeds[0].addFields(memberHasRole ?
-      { name: 'Added', value: `${role}` } :
-      { name: 'Removed', value: `${role}` });
 
     return interaction.followUp({ embeds, ephemeral: true });
   }
