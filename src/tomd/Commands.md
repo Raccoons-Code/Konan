@@ -2,9 +2,9 @@
 
 # Commands
 
-Last modified: August 4, 2022
+Last modified: August 9, 2022
 
-## Application Commands (/) - 25
+## Application Commands (/) - 26
 
 **Optional**: [`foo`]  
 **Required**: <`foo`>  
@@ -21,7 +21,7 @@ Last modified: August 4, 2022
 
 ---
 
-### Game - 3
+### Game - 4
 
 #### guess <`number`>
 
@@ -52,6 +52,12 @@ Last modified: August 4, 2022
 
 > Play a game of Tic Tac Toe with your friends! - Powered by Discord TicTacToe.
 - [`opponent`]: Choose an opponent.
+
+#### wordle [`word_size`] [`add_players`]
+
+> The game of wordle.
+- [`word_size`]: The size of the word to be drawn. default: 4
+- [`add_players`]: Add players to the game. Format: `id` `@user`
 
 ---
 
