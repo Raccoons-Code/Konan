@@ -92,7 +92,7 @@ export default class extends SlashCommand {
             new ButtonBuilder()
               .setCustomId(JSON.stringify({ c: 'wordle', sc: 'giveup' }))
               .setEmoji('🏳️')
-              .setStyle(ButtonStyle.Primary),
+              .setStyle(ButtonStyle.Danger),
           ]),
       ],
       embeds: [
