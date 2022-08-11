@@ -3,7 +3,13 @@ const defaults: Options = {
   suffix: '',
 };
 
-export = <T = string>(array: T[], strlen: number, options: Options) => {
+function limitArrayByStringLength<T = string>(
+  array: T[],
+  strlen: number,
+  options?: Options & { convertToString: true }
+): string
+function limitArrayByStringLength<T = string>(array: T[], strlen: number, options?: Options): T[]
+function limitArrayByStringLength<T = string>(array: T[], strlen: number, options?: Options) {
   options = { ...defaults, ...options };
 
   const result = [];
@@ -21,6 +27,9 @@ export = <T = string>(array: T[], strlen: number, options: Options) => {
 
   return result;
 }
+
+export default limitArrayByStringLength;
+export { limitArrayByStringLength };
 
 interface Options {
   convertToString?: boolean;
