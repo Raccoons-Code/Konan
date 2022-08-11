@@ -1,7 +1,7 @@
 import { Collection, Message, PartialMessage, Snowflake, TextBasedChannel } from 'discord.js';
 import { Event } from '../structures';
 
-export default class MessageDeleteBulk extends Event {
+export default class MessageDeleteBulk extends Event<'messageDeleteBulk'> {
   constructor() {
     super({
       name: 'messageDeleteBulk',

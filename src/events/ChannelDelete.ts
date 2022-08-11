@@ -1,7 +1,7 @@
 import { NonThreadGuildBasedChannel, Partials } from 'discord.js';
 import { Event } from '../structures';
 
-export default class ChannelDelete extends Event {
+export default class ChannelDelete extends Event<'channelDelete'> {
   constructor() {
     super({
       name: 'channelDelete',

@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { Event } from '../structures';
 
-export default class MessageDelete extends Event {
+export default class MessageDelete extends Event<'messageDelete'> {
   constructor() {
     super({
       name: 'messageDelete',

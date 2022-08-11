@@ -9,7 +9,7 @@ const deployCommands = new Deploy();
 const { Listening, Playing, Streaming, Watching } = ActivityType;
 const { ApplicationsCommands, Bot } = OAuth2Scopes;
 
-export default class Ready extends Event {
+export default class Ready extends Event<'ready'> {
   constructor() {
     super({
       name: 'ready',

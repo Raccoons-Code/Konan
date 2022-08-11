@@ -2,7 +2,7 @@ import { Guild } from 'discord.js';
 import { logger } from '../client';
 import { Event } from '../structures';
 
-export default class GuildDelete extends Event {
+export default class GuildDelete extends Event<'guildDelete'> {
   constructor() {
     super({
       intents: ['Guilds'],
