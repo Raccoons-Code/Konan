@@ -35,8 +35,8 @@ export default class Ban extends ButtonComponentInteraction {
       .then(collection => collection.toJSON().map(user =>
         (user.bannable && user.isBannableBy(member)) ?
           guild.bans.create(user.id, { deleteMessageDays, reason })
-            .catch(() => failed.push(`${userMention(user.id)}`) && undefined) :
-          failed.push(`${userMention(user.id)}`) && undefined));
+            .catch(() => failed.push(userMention(user.id)) && undefined) :
+          failed.push(userMention(user.id)) && undefined));
 
     const bannedUsers = await Promise.resolve(banUsers.then(promises => Promise.all(promises)));
 
