@@ -17,6 +17,7 @@ import isJSON from './isJSON';
 import isSameDate from './isSameDate';
 import JSONparse from './JSONparse';
 import keyGen from './keyGen';
+import limitArrayByStringLength from './limitArrayByStringLength';
 import { formatLocale, Locales } from './Locales';
 import mathRandom from './mathRandom';
 import randomizeArray from './randomizeArray';
@@ -48,6 +49,7 @@ export default abstract class Util {
   static isJSON = isJSON;
   static isSameDate = isSameDate;
   static keyGen = keyGen;
+  static limitArrayByStringLength = limitArrayByStringLength;
   static Locales = Locales;
   static mathRandom = mathRandom;
   static JSONparse = JSONparse;
