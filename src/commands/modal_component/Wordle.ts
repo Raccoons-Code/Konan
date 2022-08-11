@@ -24,6 +24,8 @@ export default class extends ModalSubmit {
         ephemeral: true,
       });
 
+    interaction.deferUpdate();
+
     const wordleInstance = await this.prisma.wordleInstance.findFirst({
       where: {
         endedAt: {
@@ -32,9 +34,6 @@ export default class extends ModalSubmit {
         messageId: message?.id,
       },
     });
-
-    await interaction.deferReply();
-    interaction.deleteReply();
 
     if (!wordleInstance) return;
 
