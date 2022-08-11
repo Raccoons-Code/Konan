@@ -134,9 +134,9 @@
     fastq "^1.6.0"
 
 "@prisma/client@^4.0.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-4.2.0.tgz#7d5c8e5b94b71969427dc839944e6e796edd091b"
-  integrity sha512-Q/X8fi1UBufCrkdLk188sC/roiGxEm1V3qU4uEP5SyleO5n2A+FyC62S7+4I0hu57CU3c7Ls3YjqPiZyTHVGOw==
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-4.2.1.tgz#b384587f6066070381ea4c90228a14697a0c271b"
+  integrity sha512-PZBkY60+k5oix+e6IUfl3ub8TbRLNsPLdfWrdy2eh80WcHTaT+/UfvXf/B7gXedH7FRtbPFHZXk1hZenJiJZFQ==
   dependencies:
     "@prisma/engines-version" "4.2.0-33.2920a97877e12e055c1333079b8d19cee7f33826"
 
