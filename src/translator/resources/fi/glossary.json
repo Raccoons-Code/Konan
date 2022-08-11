@@ -1,0 +1,19 @@
+{
+  "automatic": "automaattinen",
+  "category": "kategoria",
+  "channels": "kanavat",
+  "checkers": "chekkerit",
+  "chess": "shakki",
+  "donate": "lahjoita",
+  "false": "epätosi",
+  "fishing": "kalastus",
+  "full": "täynnä",
+  "members": "jäsenet",
+  "mentionable": "mainittava",
+  "owner": "omistaja",
+  "permissions": "käyttöoikeudet",
+  "restoring": "palautetaan",
+  "topic": "aihe",
+  "true": "tosi",
+  "type": "tyyppi"
+}
