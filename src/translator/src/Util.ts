@@ -13,20 +13,22 @@ export default class Util {
   }
 
   static getAvailableLocales(resources: Resources, locales?: Record<string, string>) {
-    return Object.keys(locales ?? resources).reduce((acc, locale) =>
-      ({ ...acc, [locale]: resources[locale] ? true : false }),
-      <Record<string, boolean>>{});
+    return Object.fromEntries(Object.keys(locales ?? resources)
+      .map(locale => [locale, resources[locale] ? true : false]));
   }
 
   static getTranslationsStats(resources: Resources, fallbackLocale: string, locales?: Record<string, string>) {
     const fallbackLocaleLength = Object.keys(resources[fallbackLocale]).length;
 
     if (locales)
-      resources = { ...Object.fromEntries(Object.keys(locales).map(locale => [locale, resources[locale] ?? {}])) };
+      resources = Object.fromEntries(Object.keys(locales).map(locale => [locale, resources[locale] ?? {}]));
 
-    const stats = Object.keys(resources).reduce((acc, locale) =>
-      ({ ...acc, [locale]: this.percentage(Object.keys(resources[locale]).length, fallbackLocaleLength) }),
-      <Record<string, number>>{});
+    const stats = Object.fromEntries(Object.entries(resources).map(([locale, translations]) =>
+      [locale, this.percentage(Object.keys(translations).length, fallbackLocaleLength)]));
+
+    const statsValues = Object.values(stats);
+
+    stats.Total = Number((statsValues.reduce((acc, val) => acc + val, 0) / statsValues.length).toFixed(2));
 
     return stats;
   }
