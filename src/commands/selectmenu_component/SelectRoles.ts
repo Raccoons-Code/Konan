@@ -39,8 +39,12 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
       role ? roles.remove.push(role.id) : roles.add.push(id ?? roleId);
     }
 
-    if (roles.remove.length)
+    if (roles.remove.length) {
       await member.roles.remove(roles.remove).catch(console.log);
+
+      if (roles.add.length)
+        await this.Util.waitAsync(100);
+    }
 
     if (roles.add.length)
       await member.roles.add(roles.add).catch(console.log);
