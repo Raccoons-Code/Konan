@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, GuildTextBasedChannel, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { setTimeout as waitAsync } from 'node:timers/promises';
 import { SlashCommand } from '../../structures';
 
@@ -38,7 +38,7 @@ export default class Clear extends SlashCommand {
 
     const { client, member, options } = interaction;
 
-    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+    const channel = <GuildTextBasedChannel>options.getChannel('channel') ?? interaction.channel;
 
     const userPerms = channel.permissionsFor(member).missing(this.props!.userPermissions!);
 
@@ -67,7 +67,7 @@ export default class Clear extends SlashCommand {
     }
   }
 
-  async bulkDelete(channel: TextChannel, amount = 0, count = 0) {
+  async bulkDelete(channel: GuildTextBasedChannel, amount = 0, count = 0) {
     for (let i = 0; i < amount;) {
       const limit = amount - count > 100 ? 100 : amount - count;
 

@@ -1,4 +1,4 @@
-import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, Role, SelectMenuBuilder, SelectMenuOptionBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, InteractionType, PermissionFlagsBits, Role, SelectMenuBuilder, SelectMenuOptionBuilder, SlashCommandBuilder } from 'discord.js';
 import type { SelectRolesOptionValue } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -428,7 +428,7 @@ export default class SelectRoles extends SlashCommand {
     const { locale, options } = interaction;
 
     const role = options.getRole('role', true);
-    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+    const channel = <GuildTextBasedChannel>options.getChannel('channel') ?? interaction.channel;
     const option_description = options.getString('option_description')?.slice(0, 100);
     const option_default = Boolean(options.getBoolean('option_default'));
     const option_emoji = options.getString('option_emoji') ?? {};
@@ -479,7 +479,7 @@ export default class SelectRoles extends SlashCommand {
   async edit(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = channel.messages.cache.get(message_id);
@@ -593,7 +593,7 @@ export default class SelectRoles extends SlashCommand {
   async add(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);
@@ -684,7 +684,7 @@ export default class SelectRoles extends SlashCommand {
   async remove(interaction: ChatInputCommandInteraction): Promise<any> {
     const { locale, options } = interaction;
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);
@@ -750,7 +750,7 @@ export default class SelectRoles extends SlashCommand {
 
     const components = this.Util.createSelectMenuByRoles({ roles, defaultRole, menuPlaceholder });
 
-    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+    const channel = <GuildTextBasedChannel>options.getChannel('channel') ?? interaction.channel;
 
     const [, title, description] = options.getString('text')?.match(this.regexp.embed) ?? [];
 
@@ -777,7 +777,7 @@ export default class SelectRoles extends SlashCommand {
     if (!rolesId)
       return interaction.editReply('No IDs were found in the roles input.');
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);
@@ -813,7 +813,7 @@ export default class SelectRoles extends SlashCommand {
     if (!rolesId)
       return interaction.editReply('No IDs were found in the roles input.');
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);

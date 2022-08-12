@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, InteractionType, RouteBases, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, InteractionType, RouteBases, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 const { ApplicationCommandAutocomplete } = InteractionType;
@@ -102,7 +102,7 @@ export default class Embed extends SlashCommand {
   async send(interaction: ChatInputCommandInteraction<'cached'>) {
     const { client, member, options } = interaction;
 
-    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+    const channel = <GuildTextBasedChannel>options.getChannel('channel') ?? interaction.channel;
     const content = options.getString('content')?.slice(0, 4096);
     const [, title, description] = options.getString('embed')?.match(this.regexp.embed) ?? [];
     const attachment = options.getAttachment('attachment');
@@ -134,7 +134,7 @@ export default class Embed extends SlashCommand {
   async edit(interaction: ChatInputCommandInteraction<'cached'>) {
     const { locale, member, options } = interaction;
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);

@@ -1,4 +1,4 @@
-import { ActionRowBuilder, APIActionRowComponent, APIButtonComponent, APIButtonComponentWithCustomId, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, InteractionType, PermissionFlagsBits, Role, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ActionRowBuilder, APIActionRowComponent, APIButtonComponent, APIButtonComponentWithCustomId, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, InteractionType, PermissionFlagsBits, Role, SlashCommandBuilder } from 'discord.js';
 import type { ButtonRolesCustomId } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -290,7 +290,7 @@ export default class ButtonRoles extends SlashCommand {
     const button_disabled = Boolean(options.getBoolean('button_disabled'));
     const button_name = (options.getString('button_name') ?? role.name).slice(0, 63);
     const button_style = options.getInteger('button_style') ?? ButtonStyle.Primary;
-    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+    const channel = <GuildTextBasedChannel>options.getChannel('channel') ?? interaction.channel;
     const [, title, description] = options.getString('text')?.match(this.regexp.embed) ?? [];
 
     const components = [
@@ -328,7 +328,7 @@ export default class ButtonRoles extends SlashCommand {
   async edit(interaction: ChatInputCommandInteraction<'cached'>): Promise<any> {
     const { locale, options } = interaction;
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);
@@ -404,7 +404,7 @@ export default class ButtonRoles extends SlashCommand {
   async add(interaction: ChatInputCommandInteraction<'cached'>): Promise<any> {
     const { locale, options } = interaction;
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);
@@ -452,7 +452,7 @@ export default class ButtonRoles extends SlashCommand {
   async remove(interaction: ChatInputCommandInteraction<'cached'>): Promise<any> {
     const { locale, options } = interaction;
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);
@@ -605,7 +605,7 @@ export default class ButtonRoles extends SlashCommand {
 
     const components = this.Util.createButtonsByRoles({ roles });
 
-    const channel = <TextChannel>options.getChannel('channel') ?? interaction.channel;
+    const channel = <GuildTextBasedChannel>options.getChannel('channel') ?? interaction.channel;
 
     const [, title, description] = options.getString('text')?.match(this.regexp.embed) ?? [];
 
@@ -631,7 +631,7 @@ export default class ButtonRoles extends SlashCommand {
     const rolesId = options.getString('roles', true).match(/\d{17,}/g);
     if (!rolesId) return interaction.editReply('No IDs were found in the roles input.');
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);
@@ -659,7 +659,7 @@ export default class ButtonRoles extends SlashCommand {
     const rolesId = options.getString('roles', true).match(/\d{17,}/g);
     if (!rolesId) return interaction.editReply('No IDs were found in the roles input.');
 
-    const channel = <TextChannel>options.getChannel('channel', true);
+    const channel = <GuildTextBasedChannel>options.getChannel('channel', true);
     const message_id = <string>options.getString('message_id', true).match(this.regexp.messageURL)?.[1];
 
     const message = await channel.messages.safeFetch(message_id);
