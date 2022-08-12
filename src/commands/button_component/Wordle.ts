@@ -189,7 +189,7 @@ export default class extends ButtonComponentInteraction {
     if (!message) return;
 
     try {
-      message.edit({
+      await message.edit({
         embeds: [
           new EmbedBuilder()
             .setColor('DarkRed')
