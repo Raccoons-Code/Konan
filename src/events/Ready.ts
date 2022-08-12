@@ -1,4 +1,4 @@
-import { ActivityType, Client, Guild, OAuth2Scopes } from 'discord.js';
+import { ActivitiesOptions, ActivityType, Client, Guild, OAuth2Scopes } from 'discord.js';
 import { env } from 'node:process';
 import { setTimeout as waitAsync } from 'node:timers/promises';
 import Deploy from '../client/Deploy';
@@ -28,7 +28,8 @@ export default class Ready extends Event<'ready'> {
       permissions: BigInt(545460321791),
     });
 
-    await client.stats.fetch();
+    client.stats.fetch();
+
     this.setPresence(client);
     client.topggAutoposter();
     this.logCommandsErrors(client);
@@ -68,18 +69,22 @@ export default class Ready extends Event<'ready'> {
   }
 
   async setPresence(client: Client) {
-    client.user?.setPresence({
-      activities: [
-        { name: `${client.stats.members || 'Fetching'} members`, type: Watching },
-        { name: 'Cat Vibing Meme', type: Streaming, url: ytURL('NUYvbT6vTPs') },
-        { name: `${client.stats.guilds || 'Fetching'} servers`, type: Playing },
-        { name: 'Wide Putin Walking', type: Streaming, url: ytURL('SLU3oG_ePhM') },
-        { name: `${client.stats.channels || 'Fetching'} channels`, type: Listening },
-        { name: 'Noisestorm - Crab Rave', type: Streaming, url: ytURL('LDU_Txk06tM') },
-        { name: 'National Anthem of USSR', type: Streaming, url: ytURL('U06jlgpMtQs') },
-        { name: 'Rick Astley - Never Gonna Give You Up', type: Streaming, url: ytURL('dQw4w9WgXcQ') },
-      ],
-    });
+    const activities: ActivitiesOptions[] = [
+      { name: 'Cat Vibing Meme', type: Streaming, url: ytURL('NUYvbT6vTPs') },
+      { name: 'Wide Putin Walking', type: Streaming, url: ytURL('SLU3oG_ePhM') },
+      { name: 'Noisestorm - Crab Rave', type: Streaming, url: ytURL('LDU_Txk06tM') },
+      { name: 'National Anthem of USSR', type: Streaming, url: ytURL('U06jlgpMtQs') },
+      { name: 'Rick Astley - Never Gonna Give You Up', type: Streaming, url: ytURL('dQw4w9WgXcQ') },
+    ];
+
+    if (client.stats.guilds)
+      activities.push(
+        { name: `${client.stats.members} members`, type: Watching },
+        { name: `${client.stats.guilds} servers`, type: Playing },
+        { name: `${client.stats.channels} channels`, type: Listening },
+      );
+
+    client.user?.setPresence({ activities });
 
     await waitAsync(10000 * this.Util.mathRandom(6, 1));
 

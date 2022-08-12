@@ -27,7 +27,7 @@ export default class Info extends ButtonComponentInteraction {
 
     const embeds = [new EmbedBuilder().setColor('Random')];
 
-    this[sc]?.(interaction, embeds);
+    return this[sc]?.(interaction, embeds);
   }
 
   async app(interaction: ButtonInteraction, embeds: EmbedBuilder[]) {
@@ -44,32 +44,41 @@ export default class Info extends ButtonComponentInteraction {
     const { heapUsed } = memoryUsage();
 
     const engine = stripIndents(`
-        Node : ${versions.node}
-      `);
+      Node : ${versions.node}
+    `);
 
     const library = stripIndents(`
-        Discord.js : ${(npm_package_dependencies_discord_js ?? djsVersion).match(/(?:\D*)([\d\D]+)/)?.[1]}
-      `);
+      Discord.js : ${(npm_package_dependencies_discord_js ?? djsVersion).match(/(?:\D*)([\d\D]+)/)?.[1]}
+    `);
 
     const machine = stripIndents(`
-        CPU : ${CPUs[0].model} (${CPUs.length} cores)
-        OS  : ${OS}
-        RAM : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
-      `);
+      CPU : ${CPUs[0].model} (${CPUs.length} cores)
+      OS  : ${OS}
+      RAM : ${new this.Util.Bytes(heapUsed)} / ${new this.Util.Bytes(totalmem())}
+    `);
 
-    const stats = stripIndents(`
-        Servers  : ${client.stats.guilds}
-        Channels : ${client.stats.channels}
-        Members  : ${client.stats.members}
-        Ping     : ${ws.ping} ms
-        Version  : ${npm_package_version}
-      `);
+    const stats: [string, string | number][] = [
+      ['Shard', `${(client.stats.shardIds.at(-1) ?? 0) + 1}/${client.stats.shards}`],
+      ['Ping', `${ws.ping}ms`],
+    ];
+
+    if (npm_package_version)
+      stats.push(['Version', npm_package_version]);
+
+    await client.stats.fetch();
+
+    if (client.stats.guilds)
+      stats.unshift(
+        ['Servers', client.stats.guilds],
+        ['Channels', client.stats.channels],
+        ['Users', client.stats.members],
+      );
 
     embeds[0].setAuthor({ name: username!, iconURL: avatarURL })
       .setFields([
         { name: 'Library', value: codeBlock('properties', library), inline },
         { name: 'Engine', value: codeBlock('properties', engine), inline },
-        { name: 'Stats', value: codeBlock('properties', stats) },
+        { name: 'Stats', value: codeBlock('properties', this.Util.arrayToTable(stats)) },
         { name: 'Machine', value: codeBlock('properties', machine) },
         { name: 'Uptime', value: `${time(readyAt!)} ${time(readyAt!, 'R')}` },
       ]);

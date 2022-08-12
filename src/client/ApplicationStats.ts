@@ -20,27 +20,27 @@ export default class ApplicationStats {
   }
 
   get #members() {
-    return this.client.shard?.broadcastEval(client =>
-      client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)) as Promise<number[]> | undefined;
+    return this.client.shard?.broadcastEval<number>(client =>
+      client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0));
   }
 
   get shards() {
     return this.client.shard?.count ?? 0;
   }
 
-  async fetch(options?: FetchStatsOptions): Promise<Stats | undefined> {
-    if (!options) return this.#fetch_stats();
+  get shardIds() {
+    return this.client.shard?.ids ?? [];
+  }
+
+  async fetch(options?: FetchStatsOptions): Promise<Stats> {
+    if (!options) return this.#fetch_stats().catch(() => this);
 
     try {
-      this[`#fetch_${options.filter ?? 'stats'}`]();
+      await this[`#fetch_${options.filter ?? 'stats'}`]();
     } catch {
-      if (options.loop) {
-        await waitAsync(10000);
-      } else {
-        await waitAsync(1000);
+      await waitAsync(10000);
 
-        return this.fetch(options);
-      }
+      return this.fetch(options);
     }
 
     if (options.loop) {
