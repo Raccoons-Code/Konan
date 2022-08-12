@@ -1,3 +1,4 @@
+import arrayToTable from './arrayToTable';
 import BitField from './BitField';
 import Bytes from './Byte';
 import capitalize from './capitalize';
@@ -20,6 +21,7 @@ import keyGen from './keyGen';
 import limitArrayByStringLength from './limitArrayByStringLength';
 import { formatLocale, Locales } from './Locales';
 import mathRandom from './mathRandom';
+import objectToTable from './objectToTable';
 import randomizeArray from './randomizeArray';
 import regexp from './regexp';
 import removeDuplicatesInArray from './removeDuplicatesInArray';
@@ -31,6 +33,7 @@ import waitAsync from './waitAsync';
 import waitSync from './waitSync';
 
 export default abstract class Util {
+  static arrayToTable = arrayToTable;
   static BitField = BitField;
   static Bytes = Bytes;
   static capitalize = capitalize;
@@ -48,11 +51,12 @@ export default abstract class Util {
   static isDuplicate = isDuplicate;
   static isJSON = isJSON;
   static isSameDate = isSameDate;
+  static JSONparse = JSONparse;
   static keyGen = keyGen;
   static limitArrayByStringLength = limitArrayByStringLength;
   static Locales = Locales;
   static mathRandom = mathRandom;
-  static JSONparse = JSONparse;
+  static objectToTable = objectToTable;
   static regexp = regexp;
   static randomizeArray = randomizeArray;
   static removeDuplicatesInArray = removeDuplicatesInArray;
