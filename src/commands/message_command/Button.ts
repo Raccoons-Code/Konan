@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, Message, TextChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, Message } from 'discord.js';
 import { Command } from '../../structures';
 
 export default class Button extends Command {
@@ -38,9 +38,11 @@ export default class Button extends Command {
 
     const username = member?.displayName ?? author.username;
 
-    const webhook = await (<TextChannel>channel).fetchWebhooks()
+    if (!('fetchWebhooks' in channel)) return;
+
+    const webhook = await channel.fetchWebhooks()
       .then(w => w.find(v => v.name === client.user?.id)) ??
-      await (<TextChannel>channel).createWebhook({
+      await channel.createWebhook({
         name: `${client.user?.id}`,
       });
 

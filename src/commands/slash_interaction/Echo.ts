@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Echo extends SlashCommand {
@@ -28,7 +28,10 @@ export default class Echo extends SlashCommand {
 
     const username = member?.displayName ?? user.username;
 
-    if (!channel?.permissionsFor(client.user!)?.has(this.props!.appPermissions!)) {
+    if (
+      !channel?.permissionsFor(client.user!)?.has(this.props!.appPermissions!) ||
+      !('fetchWebhooks' in channel)
+    ) {
       const [, title, description] = content.match(this.regexp.embed) ?? [];
 
       return interaction.reply({
@@ -43,9 +46,9 @@ export default class Echo extends SlashCommand {
       });
     }
 
-    const webhook = await (<TextChannel>channel).fetchWebhooks()
+    const webhook = await channel.fetchWebhooks()
       .then(w => w.find(v => v.name === client.user?.id)) ??
-      await (<TextChannel>channel).createWebhook({
+      await channel.createWebhook({
         name: `${client.user?.id}`,
       });
 

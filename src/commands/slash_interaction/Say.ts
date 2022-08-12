@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, TextChannel } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import * as googleTTS from 'google-tts-api';
 import { SlashCommand } from '../../structures';
 
@@ -33,12 +33,12 @@ export default class Say extends SlashCommand {
 
     const username = member?.displayName ?? user.username;
 
-    if (!channel?.permissionsFor(client.user!)?.has(this.props!.appPermissions!))
+    if (!channel?.permissionsFor(client.user!)?.has(this.props!.appPermissions!) || !('fetchWebhooks' in channel))
       return interaction.reply({ content: `${user} says:`, files: [{ attachment: url, name: 'say.mp3' }] });
 
-    const webhook = await (<TextChannel>channel).fetchWebhooks()
+    const webhook = await channel.fetchWebhooks()
       .then(w => w.find(v => v.name === client.user?.id)) ??
-      await (<TextChannel>channel).createWebhook({
+      await channel.createWebhook({
         name: `${client.user?.id}`,
       });
 
