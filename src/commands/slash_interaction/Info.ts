@@ -115,7 +115,7 @@ export default class Info extends SlashCommand {
       stats.unshift(
         ['Servers', client.stats.guilds],
         ['Channels', client.stats.channels],
-        ['Users', client.stats.members],
+        ['Members', client.stats.members],
       );
 
     embeds[0]

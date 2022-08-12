@@ -71,7 +71,7 @@ export default class Info extends ButtonComponentInteraction {
       stats.unshift(
         ['Servers', client.stats.guilds],
         ['Channels', client.stats.channels],
-        ['Users', client.stats.members],
+        ['Members', client.stats.members],
       );
 
     embeds[0].setAuthor({ name: username!, iconURL: avatarURL })
