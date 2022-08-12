@@ -1,4 +1,4 @@
-import { APIApplicationCommandOptionChoice, ApplicationCommandOptionAllowedChannelTypes, AutocompleteInteraction, ButtonStyle, ChannelType, CommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionAllowedChannelTypes, AutocompleteInteraction, ButtonStyle, ChannelType, CommandInteraction, GuildTextChannelType, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandBuilder, SlashCommandSubcommandGroupBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
 import type { SlashCommandProps } from '../@types';
 import BaseApplicationCommand from './BaseApplicationCommand';
 
@@ -32,7 +32,7 @@ export default abstract class SlashCommand extends BaseApplicationCommand {
     name_localizations: this.getLocalizations(style.name),
   }));
 
-  GuildTextChannelTypes: ApplicationCommandOptionAllowedChannelTypes[] =
+  GuildTextChannelTypes: Extract<ApplicationCommandOptionAllowedChannelTypes, GuildTextChannelType>[] =
     [GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText];
 
   get randomButtonStyle() {
