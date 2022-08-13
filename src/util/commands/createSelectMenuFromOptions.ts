@@ -5,13 +5,13 @@ export function createSelectMenuFromOptions(
   options: (APISelectMenuOption | SelectMenuComponentOptionData | SelectMenuOptionBuilder)[],
   customId: CustomId,
 ) {
-  let index = 2;
+  let index = 1;
 
   return splitArrayInGroups(options, 25).map(group =>
     new ActionRowBuilder<SelectMenuBuilder>()
       .setComponents(new SelectMenuBuilder()
         .setCustomId(JSON.stringify({
-          d: index++ && Math.floor(Date.now() / index),
+          d: index++ && Math.floor(Date.now() + index),
           ...customId,
         }))
         .setOptions(group)

@@ -3,14 +3,14 @@ import type { ManageSelectRolesOptions } from '../../@types';
 import splitArrayInGroups from '../splitArrayInGroups';
 
 export function createSelectMenuByRoles(options: ManageSelectRolesOptions) {
-  let index = 2;
+  let index = 1;
 
   return splitArrayInGroups(options.roles, 25).map(group => new ActionRowBuilder<SelectMenuBuilder>()
     .setComponents(new SelectMenuBuilder()
       .setCustomId(JSON.stringify({
         c: 'selectroles',
         count: 0,
-        d: index++ && Math.floor(Date.now() / index),
+        d: index++ && Math.floor(Date.now() + index),
       }))
       .setMaxValues(group.length)
       .setOptions(group.map(role => new SelectMenuOptionBuilder()
