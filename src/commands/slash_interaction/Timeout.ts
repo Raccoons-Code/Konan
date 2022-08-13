@@ -64,12 +64,10 @@ export default class Timeout extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
-    const { locale } = interaction;
-
     if (!interaction.inCachedGuild())
       return this.replyOnlyOnServer(interaction);
 
-    const { appPermissions, member, memberPermissions, options } = interaction;
+    const { appPermissions, locale, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 

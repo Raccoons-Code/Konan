@@ -3,12 +3,6 @@ import { Collection } from 'discord.js';
 import ApplicationStats from '../../client/ApplicationStats';
 
 declare module 'discord.js' {
-  interface BaseInteraction {
-    isAutocomplete(): this is AutocompleteInteraction
-    isMessageComponent(): this is MessageComponentInteraction
-    isModalSubmit(): this is ModalSubmitInteraction
-  }
-
   interface Client {
     commands: Record<string, Collection<string, any>>
     discordTogether: DiscordTogether<Record<string, string>>

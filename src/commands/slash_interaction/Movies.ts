@@ -1,10 +1,9 @@
-import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import ms from 'ms';
 import TMDBApi, { APISearchMoviesResults, SortType, SortTypes, Util as TMDBUtil } from '../../modules/TMDBApi';
 import { SlashCommand } from '../../structures';
 
 const { Primary, Secondary } = ButtonStyle;
-const { ApplicationCommandAutocomplete } = InteractionType;
 const inline = true;
 
 export default class Movies extends SlashCommand {
@@ -49,7 +48,7 @@ export default class Movies extends SlashCommand {
 
     const subcommand = options.getSubcommand();
 
-    if (interaction.type === ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this[`${subcommand}Autocomplete`]?.(interaction);
 
     await interaction.deferReply({ ephemeral: true, fetchReply: true });

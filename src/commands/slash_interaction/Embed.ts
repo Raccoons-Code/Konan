@@ -1,7 +1,5 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, InteractionType, RouteBases, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, RouteBases, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
-
-const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Embed extends SlashCommand {
   [x: string]: any;
@@ -91,7 +89,7 @@ export default class Embed extends SlashCommand {
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
-    if (interaction.type === ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });

@@ -1,8 +1,6 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChannelType, ChatInputCommandInteraction, InteractionType, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChannelType, ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { watchTogether } from '../../modules/WatchTogether';
 import { SlashCommand } from '../../structures';
-
-const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class WatchTogether extends SlashCommand {
   constructor() {
@@ -29,15 +27,13 @@ export default class WatchTogether extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
-    const { locale } = interaction;
-
     if (!interaction.inCachedGuild())
       return this.replyOnlyOnServer(interaction);
 
-    if (interaction.type === ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
-    const { client, member, options } = interaction;
+    const { client, locale, member, options } = interaction;
 
     const channel = options.getChannel('channel') ?? member.voice.channel;
 

@@ -31,12 +31,10 @@ export default class Clear extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction): Promise<any> {
-    const { locale } = interaction;
-
     if (!interaction.inCachedGuild())
       return this.replyOnlyOnServer(interaction);
 
-    const { client, member, options } = interaction;
+    const { client, locale, member, options } = interaction;
 
     const channel = <GuildTextBasedChannel>options.getChannel('channel') ?? interaction.channel;
 

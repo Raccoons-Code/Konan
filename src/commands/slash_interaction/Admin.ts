@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, InteractionType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Admin extends SlashCommand {
@@ -36,11 +36,13 @@ export default class Admin extends SlashCommand {
 
     if (!await this.Util.getAppOwners.isOwner(client, user.id)) return;
 
-    if (interaction.type === InteractionType.ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
   }
 
   async executeAutocomplete(interaction: AutocompleteInteraction) {
+    if (interaction.responded) return;
+
     const { options } = interaction;
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();

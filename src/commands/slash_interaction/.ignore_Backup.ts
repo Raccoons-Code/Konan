@@ -1,8 +1,6 @@
 import Backup from 'discord-backup';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, Guild, InteractionType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, Guild, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
-
-const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class extends SlashCommand {
   [x: string]: any;
@@ -91,7 +89,7 @@ export default class extends SlashCommand {
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
-    if (interaction.type === ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true, fetchReply: true });

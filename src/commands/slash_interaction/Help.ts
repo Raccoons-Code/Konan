@@ -1,9 +1,7 @@
-import { ActionRowBuilder, ApplicationCommandNonOptionsData, ApplicationCommandOptionChoiceData, ApplicationCommandSubCommand, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, InteractionType, RouteBases, SelectMenuBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandNonOptionsData, ApplicationCommandOptionChoiceData, ApplicationCommandSubCommand, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, RouteBases, SelectMenuBuilder, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
 import commandHandler from '../../commands';
 import { SlashCommand } from '../../structures';
-
-const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Help extends SlashCommand {
   constructor() {
@@ -23,7 +21,7 @@ export default class Help extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
-    if (interaction.type === ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });

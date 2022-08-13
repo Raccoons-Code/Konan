@@ -11,7 +11,7 @@ export default abstract class BaseApplicationCommand extends BaseCommand {
   abstract execute(...args: any): Promise<any>;
 
   replyOnlyOnServer(interaction: AnyInteraction) {
-    if (interaction.type === InteractionType.ApplicationCommandAutocomplete) return interaction.respond([]);
+    if (interaction.isAutocomplete()) return interaction.respond([]);
 
     const embeds = [
       this.Util.EmbedHelper({
@@ -36,7 +36,7 @@ export default abstract class BaseApplicationCommand extends BaseCommand {
   ) {
     if (!Array.isArray(permission)) permission = [permission];
 
-    if (interaction.type === InteractionType.ApplicationCommandAutocomplete) return interaction.respond([]);
+    if (interaction.isAutocomplete()) return interaction.respond([]);
 
     const embeds = [
       this.Util.EmbedHelper({

@@ -1,8 +1,6 @@
-import { ActionRowBuilder, APIActionRowComponent, APIButtonComponent, APIButtonComponentWithCustomId, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, InteractionType, PermissionFlagsBits, Role, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, APIActionRowComponent, APIButtonComponent, APIButtonComponentWithCustomId, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, Role, SlashCommandBuilder } from 'discord.js';
 import type { ButtonRolesCustomId } from '../../@types';
 import { SlashCommand } from '../../structures';
-
-const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class ButtonRoles extends SlashCommand {
   [x: string]: any;
@@ -274,7 +272,7 @@ export default class ButtonRoles extends SlashCommand {
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
-    if (interaction.type === ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });

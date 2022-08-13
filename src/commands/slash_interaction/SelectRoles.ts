@@ -1,8 +1,6 @@
-import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, InteractionType, PermissionFlagsBits, Role, SelectMenuBuilder, SelectMenuOptionBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, Role, SelectMenuBuilder, SelectMenuOptionBuilder, SlashCommandBuilder } from 'discord.js';
 import type { SelectRolesOptionValue } from '../../@types';
 import { SlashCommand } from '../../structures';
-
-const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class SelectRoles extends SlashCommand {
   [x: string]: any;
@@ -416,7 +414,7 @@ export default class SelectRoles extends SlashCommand {
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 
-    if (interaction.type === ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });

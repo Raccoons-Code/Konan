@@ -1,7 +1,5 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, InteractionType, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
-
-const { ApplicationCommandAutocomplete } = InteractionType;
 
 export default class Unban extends SlashCommand {
   constructor() {
@@ -31,12 +29,10 @@ export default class Unban extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
-    const { locale } = interaction;
-
     if (!interaction.inCachedGuild())
       return this.replyOnlyOnServer(interaction);
 
-    const { appPermissions, guild, member, memberPermissions, options } = interaction;
+    const { appPermissions, guild, locale, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 
@@ -48,7 +44,7 @@ export default class Unban extends SlashCommand {
     if (appPerms?.length)
       return this.replyMissingPermission(interaction, appPerms, 'missingPermission');
 
-    if (interaction.type === ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });

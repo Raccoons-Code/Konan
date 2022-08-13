@@ -30,12 +30,10 @@ export default class Kick extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
-    const { locale } = interaction;
-
     if (!interaction.inCachedGuild())
       return this.replyOnlyOnServer(interaction);
 
-    const { appPermissions, guild, member, memberPermissions, options } = interaction;
+    const { appPermissions, guild, locale, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
 

@@ -57,8 +57,8 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
             .setURL(`${RouteBases.invite}/${env.GUILD_INVITE}`)));
 
       try {
-        if (interaction.type !== InteractionType.ApplicationCommandAutocomplete) {
-          if (interaction.type === InteractionType.MessageComponent) {
+        if (!interaction.isAutocomplete()) {
+          if (interaction.isMessageComponent()) {
             await interaction.followUp({ components, embeds, ephemeral: true });
           } else if (interaction.replied) {
             await interaction.editReply({ components, embeds });

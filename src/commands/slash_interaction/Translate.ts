@@ -1,8 +1,6 @@
 import translate, { languages } from '@vitalets/google-translate-api';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, codeBlock, EmbedBuilder, InteractionType, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, codeBlock, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
-
-const { ApplicationCommandAutocomplete } = InteractionType;
 
 const Choices = <[string, string][]>Object.keys(languages)
   .filter(l => !/(isSupported|getCode)/.test(l))
@@ -42,7 +40,7 @@ export default class Translate extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<any> {
-    if (interaction.type === ApplicationCommandAutocomplete)
+    if (interaction.isAutocomplete())
       return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
