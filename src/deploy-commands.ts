@@ -57,13 +57,7 @@ const rest = new REST().setToken(DISCORD_TOKEN);
 
         const guild_commands_data = guildCommands.filter(guildCommand =>
           !data_private.some(command => command.name === guildCommand.name))
-          .reduce((acc, command) => [...acc, {
-            name: command.name,
-            defaultPermission: command.defaultPermission,
-            description: command.description,
-            options: command.options,
-            type: command.type,
-          }], <any[]>[]);
+          .reduce((acc, command) => acc.concat({ ...command }), <any[]>[]);
 
         guild_commands_data.push(...data_private);
 

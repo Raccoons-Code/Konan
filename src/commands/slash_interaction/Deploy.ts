@@ -86,15 +86,9 @@ export default class Deploy extends SlashCommand {
         if (type === 'global') {
           const guild_commands = await guild.commands.fetch();
 
-          const guild_commands_data = guild_commands.filter(guild_command =>
-            !data_private.some(command => command.name === guild_command.name))
-            .toJSON().reduce((acc, command) => [...acc, {
-              name: command.name,
-              defaultPermission: command.defaultPermission,
-              description: command.description,
-              options: command.options,
-              type: command.type,
-            }], <any[]>[]);
+          const guild_commands_data = guild_commands.toJSON().filter(guildCommand =>
+            !data_private.some(command => command.name === guildCommand.name))
+            .reduce((acc, command) => acc.concat({ ...command }), <any[]>[]);
 
           guild_commands_data.push(...data_private);
 
