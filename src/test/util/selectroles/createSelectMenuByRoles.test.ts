@@ -56,15 +56,13 @@ import Util from '../util';
     { id: 50, name: '🍮' },
   ];
 
-  const now = Date.now();
-
   const expected = [
     new ActionRowBuilder<SelectMenuBuilder>()
       .setComponents(new SelectMenuBuilder()
         .setCustomId(JSON.stringify({
           c: 'selectroles',
           count: 0,
-          d: now,
+          d: true,
         }))
         .setMaxValues(25)
         .setOptions(roles.slice(0, 25).map(role => new SelectMenuOptionBuilder()
@@ -80,7 +78,7 @@ import Util from '../util';
         .setCustomId(JSON.stringify({
           c: 'selectroles',
           count: 0,
-          d: now,
+          d: true,
         }))
         .setMaxValues(25)
         .setOptions(roles.slice(25, 50).map(role => new SelectMenuOptionBuilder()
@@ -97,12 +95,12 @@ import Util from '../util';
     roles,
     defaultRole: roles[2],
     menuPlaceholder: '',
-  }).map(row => new ActionRowBuilder<SelectMenuBuilder>()
+  }).map((row, i, array) => new ActionRowBuilder<SelectMenuBuilder>()
     .setComponents((<APIActionRowComponent<APISelectMenuComponent>>row.toJSON()).components.map(element =>
       new SelectMenuBuilder(element)
         .setCustomId(JSON.stringify({
           ...JSON.parse(element.custom_id),
-          d: now,
+          d: i ? row.components[0].data.custom_id !== array[i - 1].components[0].data.custom_id : true,
         })))));
 
   assert.deepEqual(actual, expected);
