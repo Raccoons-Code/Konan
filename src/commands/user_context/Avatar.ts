@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonStyle, ContextMenuCommandBuilder, EmbedBuilder, UserContextMenuCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, AttachmentBuilder, ButtonBuilder, ButtonStyle, ContextMenuCommandBuilder, EmbedBuilder, UserContextMenuCommandInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class Avatar extends UserContextMenu {
@@ -12,24 +12,42 @@ export default class Avatar extends UserContextMenu {
   async execute(interaction: UserContextMenuCommandInteraction<'cached'>) {
     const { targetMember, targetUser } = interaction;
 
-    const target = targetMember ?? targetUser;
+    const components = [
+      new ActionRowBuilder<ButtonBuilder>()
+        .setComponents([
+          new ButtonBuilder()
+            .setEmoji('🖼')
+            .setLabel('Link')
+            .setStyle(ButtonStyle.Link)
+            .setURL(targetUser.displayAvatarURL({ size: 4096 })),
+        ]),
+    ];
+
+    if (targetMember?.avatar && targetMember.avatar !== targetUser.avatar)
+      components[0].addComponents(
+        new ButtonBuilder()
+          .setCustomId(JSON.stringify({
+            c: 'avatar',
+            id: targetUser.id,
+            next: 'member',
+          }))
+          .setLabel('Member avatar')
+          .setStyle(ButtonStyle.Secondary),
+      );
+
+    const avatar = targetUser.displayAvatarURL().split('/').pop();
 
     return interaction.reply({
-      components: [
-        new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
-            new ButtonBuilder()
-              .setEmoji('🖼')
-              .setLabel('Link')
-              .setStyle(ButtonStyle.Link)
-              .setURL(target.displayAvatarURL({ size: 4096 })),
-          ]),
-      ],
+      components,
       embeds: [
         new EmbedBuilder()
-          .setColor('Random')
+          .setColor(targetUser.accentColor ?? 'Random')
           .setDescription(`${targetUser}`)
-          .setImage(target.displayAvatarURL({ size: 512 })),
+          .setImage(`attachment://${avatar}`),
+      ],
+      ephemeral: true,
+      files: [
+        new AttachmentBuilder(targetUser.displayAvatarURL({ size: 512 }), { name: avatar }),
       ],
     });
   }

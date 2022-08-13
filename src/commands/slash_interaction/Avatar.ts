@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, User } from 'discord.js';
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Avatar extends SlashCommand {
@@ -17,26 +17,48 @@ export default class Avatar extends SlashCommand {
         .setDescriptionLocalizations(this.getLocalizations('avatarUserDescription')));
   }
 
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction<'cached'>) {
     const { options } = interaction;
 
-    const user = <GuildMember | User>options.getMember('user') ?? interaction.member ?? interaction.user;
+    const member = options.getMember('user') ?? interaction.member;
+    const user = options.getUser('user') ?? interaction.user;
+
+    const components = [
+      new ActionRowBuilder<ButtonBuilder>()
+        .setComponents([
+          new ButtonBuilder()
+            .setEmoji('🖼')
+            .setLabel('Link')
+            .setStyle(ButtonStyle.Link)
+            .setURL(user.displayAvatarURL({ size: 4096 })),
+        ]),
+    ];
+
+    if (member?.avatar && member.avatar !== user.avatar)
+      components[0].addComponents(
+        new ButtonBuilder()
+          .setCustomId(JSON.stringify({
+            c: 'avatar',
+            id: user.id,
+            next: 'member',
+          }))
+          .setLabel('Member avatar')
+          .setStyle(ButtonStyle.Secondary),
+      );
+
+    const avatar = user.displayAvatarURL().split('/').pop();
 
     return interaction.reply({
-      components: [
-        new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
-            new ButtonBuilder()
-              .setLabel('Link')
-              .setStyle(ButtonStyle.Link)
-              .setURL(user.displayAvatarURL({ size: 4096 })),
-          ]),
-      ],
+      components,
       embeds: [
         new EmbedBuilder()
-          .setColor('Random')
+          .setColor(user.accentColor ?? 'Random')
           .setDescription(`${user}`)
-          .setImage(user.displayAvatarURL({ size: 512 })),
+          .setImage(`attachment://${avatar}`),
+      ],
+      ephemeral: true,
+      files: [
+        new AttachmentBuilder(user.displayAvatarURL({ size: 512 }), { name: avatar }),
       ],
     });
   }
