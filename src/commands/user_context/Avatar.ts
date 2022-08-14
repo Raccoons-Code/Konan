@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandType, AttachmentBuilder, ButtonBuilder, ButtonStyle, ContextMenuCommandBuilder, EmbedBuilder, UserContextMenuCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, AttachmentBuilder, ButtonBuilder, ButtonStyle, ContextMenuCommandBuilder, EmbedBuilder, GuildMember, User, UserContextMenuCommandInteraction } from 'discord.js';
 import { UserContextMenu } from '../../structures';
 
 export default class Avatar extends UserContextMenu {
@@ -12,6 +12,8 @@ export default class Avatar extends UserContextMenu {
   async execute(interaction: UserContextMenuCommandInteraction<'cached'>) {
     const { targetMember, targetUser } = interaction;
 
+    const target = <GuildMember | User>targetMember ?? targetUser;
+
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
         .setComponents([
@@ -19,7 +21,7 @@ export default class Avatar extends UserContextMenu {
             .setEmoji('🖼')
             .setLabel('Link')
             .setStyle(ButtonStyle.Link)
-            .setURL(targetUser.displayAvatarURL({ size: 4096 })),
+            .setURL(target.displayAvatarURL({ size: 4096 })),
         ]),
     ];
 
@@ -29,25 +31,25 @@ export default class Avatar extends UserContextMenu {
           .setCustomId(JSON.stringify({
             c: 'avatar',
             id: targetUser.id,
-            next: 'member',
+            next: 'user',
           }))
-          .setLabel('Member avatar')
+          .setLabel('User avatar')
           .setStyle(ButtonStyle.Secondary),
       );
 
-    const avatar = targetUser.displayAvatarURL().split('/').pop();
+    const avatar = target.displayAvatarURL().split('/').pop();
 
     return interaction.reply({
       components,
       embeds: [
         new EmbedBuilder()
-          .setColor(targetUser.accentColor ?? 'Random')
-          .setDescription(`${targetUser}`)
+          .setColor(targetMember.displayColor ?? targetUser.accentColor ?? 'Random')
+          .setDescription(`${target}`)
           .setImage(`attachment://${avatar}`),
       ],
       ephemeral: true,
       files: [
-        new AttachmentBuilder(targetUser.displayAvatarURL({ size: 512 }), { name: avatar }),
+        new AttachmentBuilder(target.displayAvatarURL({ size: 512 }), { name: avatar }),
       ],
     });
   }

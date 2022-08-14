@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, User } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Avatar extends SlashCommand {
@@ -22,6 +22,7 @@ export default class Avatar extends SlashCommand {
 
     const member = options.getMember('user') ?? interaction.member;
     const user = options.getUser('user') ?? interaction.user;
+    const target = <GuildMember | User>member ?? user;
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
@@ -30,7 +31,7 @@ export default class Avatar extends SlashCommand {
             .setEmoji('🖼')
             .setLabel('Link')
             .setStyle(ButtonStyle.Link)
-            .setURL(user.displayAvatarURL({ size: 4096 })),
+            .setURL(target.displayAvatarURL({ size: 4096 })),
         ]),
     ];
 
@@ -40,9 +41,9 @@ export default class Avatar extends SlashCommand {
           .setCustomId(JSON.stringify({
             c: 'avatar',
             id: user.id,
-            next: 'member',
+            next: 'user',
           }))
-          .setLabel('Member avatar')
+          .setLabel('User avatar')
           .setStyle(ButtonStyle.Secondary),
       );
 
@@ -52,13 +53,13 @@ export default class Avatar extends SlashCommand {
       components,
       embeds: [
         new EmbedBuilder()
-          .setColor(user.accentColor ?? 'Random')
+          .setColor(member.displayColor ?? user.accentColor ?? 'Random')
           .setDescription(`${user}`)
           .setImage(`attachment://${avatar}`),
       ],
       ephemeral: true,
       files: [
-        new AttachmentBuilder(user.displayAvatarURL({ size: 512 }), { name: avatar }),
+        new AttachmentBuilder(target.displayAvatarURL({ size: 512 }), { name: avatar }),
       ],
     });
   }
