@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, messageLink, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, inlineCode, messageLink, SlashCommandBuilder, userMention } from 'discord.js';
 import { dictionaries } from '../../modules/Dictionaries';
 import { Wordle } from '../../modules/Wordle';
 import { SlashCommand } from '../../structures';
@@ -40,6 +40,8 @@ export default class extends SlashCommand {
         });
     }
 
+    const players = [...new Set([user.id].concat(playersId))].map(id => userMention(id));
+
     const oldInstance = await this.prisma.wordleInstance.findFirst({
       where: {
         userId: user.id,
@@ -53,7 +55,10 @@ export default class extends SlashCommand {
       await interaction.deferReply({ ephemeral: true });
 
       if (playersId.length) {
-        playersId = [...new Set(playersId.concat(oldInstance.players))];
+        playersId = playersId.filter(id => !oldInstance.players.includes(id));
+
+        if (!playersId.length)
+          return interaction.editReply('No new players were added.');
 
         await this.prisma.wordleInstance.update({
           where: {
@@ -61,10 +66,28 @@ export default class extends SlashCommand {
           },
           data: {
             players: {
-              set: playersId,
+              set: oldInstance.players.concat(playersId),
             },
           },
         });
+
+        const message = await channel?.messages.safeFetch(oldInstance.messageId);
+        if (message)
+          try {
+            await message.edit({
+              embeds: [
+                new EmbedBuilder(message.embeds[0].toJSON())
+                  .setFields(playersId.length ? [
+                    {
+                      name: `Players [${playersId.concat(user.id).length}]`,
+                      value: `${players.splice(0, 10).join('\n')}\n${players.length ?
+                        `...and ${inlineCode(`${players.length}`)} more` :
+                        ''}`,
+                    },
+                  ] : []),
+              ],
+            });
+          } catch { null; }
 
         return interaction.editReply({
           components: [
@@ -127,7 +150,7 @@ export default class extends SlashCommand {
           word: word.toLowerCase(),
           board: gameBoard,
         },
-        players: playersId.concat([user.id]),
+        players: [...new Set([user.id].concat(playersId))],
       },
     });
 
@@ -148,8 +171,16 @@ export default class extends SlashCommand {
       embeds: [
         new EmbedBuilder()
           .setColor('Random')
-          .setDescription(`${Wordle.transformToString(Wordle.transformToEmojis(gameBoard))}`)
-          .setTitle('Wordle'),
+          .setDescription(Wordle.transformToString(Wordle.transformToEmojis(gameBoard)))
+          .setTitle('Wordle')
+          .setFields(players.length > 1 ? [
+            {
+              name: `Players [${players.length}]`,
+              value: `${players.splice(0, 10).join('\n')}\n${players.length ?
+                `...and ${players.length} more` :
+                ''}`,
+            },
+          ] : []),
       ],
     });
   }

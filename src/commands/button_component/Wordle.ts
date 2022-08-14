@@ -110,6 +110,7 @@ export default class extends ButtonComponentInteraction {
         messageId: interaction.message.id,
       },
       data: {
+        userId: interaction.user.id === wordleInstance.userId ? playersId[0] : wordleInstance.userId,
         players: {
           set: playersId,
         },
@@ -156,6 +157,7 @@ export default class extends ButtonComponentInteraction {
       promises.push(this.prisma.wordleInstance.update({
         data: {
           endedAt: playersId.length ? undefined : new Date(),
+          userId: interaction.user.id === wordleInstance.userId ? playersId[0] : wordleInstance.userId,
           players: {
             set: playersId,
           },
@@ -167,7 +169,10 @@ export default class extends ButtonComponentInteraction {
           messageId: wordleInstance.messageId,
         },
       })
-        .then(data => (!playersId.length && this.#giveupByMessageId(interaction, data)) && data || data)
+        .then(data => {
+          this.#giveupByMessageId(interaction, data);
+          return data;
+        })
         .catch(() => null));
     }
 
@@ -188,17 +193,31 @@ export default class extends ButtonComponentInteraction {
     const message = await channel.messages.safeFetch(data.messageId);
     if (!message) return;
 
+    const embedJson = message.embeds[0].toJSON();
+
+    const embeds = [
+      new EmbedBuilder(embedJson)
+        .setColor(data.endedAt ? 'DarkRed' : embedJson.color ?? 'Random')
+        .setDescription(data.endedAt ? null : `${embedJson.description}`)
+        .setFields([
+          data.players.length > 1 ? [
+            {
+              name: `Players [${data.players.length}]`,
+              value: `${data.players.splice(0, 10).join('\n')}\n${data.players.length ?
+                `...and ${inlineCode(`${data.players.length}`)} more` :
+                ''}`,
+            },
+          ] : [],
+          data.endedAt ? [
+            { name: 'The word was:', value: inlineCode(data.data.word) },
+          ] : [],
+        ].flat()),
+    ];
+
     try {
       await message.edit({
-        embeds: [
-          new EmbedBuilder()
-            .setColor('DarkRed')
-            .setTitle('Wordle game canceled by WO.')
-            .setFields([
-              { name: 'The word was:', value: inlineCode(data.data.word) },
-            ]),
-        ],
-        components: [],
+        components: data.endedAt ? [] : message.components,
+        embeds,
       });
     } catch { null; }
   }

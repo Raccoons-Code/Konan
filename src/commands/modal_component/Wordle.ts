@@ -1,4 +1,4 @@
-import { EmbedBuilder, inlineCode, ModalSubmitInteraction } from 'discord.js';
+import { EmbedBuilder, inlineCode, ModalSubmitInteraction, userMention } from 'discord.js';
 import { dictionaries } from '../../modules/Dictionaries';
 import { Wordle } from '../../modules/Wordle';
 import { ModalSubmit } from '../../structures';
@@ -55,18 +55,27 @@ export default class extends ModalSubmit {
       },
     });
 
+    const players = wordleInstance.players.map(player => userMention(player));
+
     const embeds = [
       new EmbedBuilder()
         .setColor(win ? 'Green' : lose ? 'Red' : 'Blue')
         .setDescription(Wordle.transformToString(Wordle.transformToEmojis(board)))
-        .setTitle(win ? `${user.username} won!` : lose ? `${user.username} lost!` : 'Wordle'),
-    ];
-
-    if (lose)
-      embeds[0]
+        .setTitle(win ? `${user.username} won!` : lose ? `${user.username} lost!` : 'Wordle')
         .setFields([
-          { name: 'The word was:', value: inlineCode(wordleInstance.data.word) },
-        ]);
+          players.length > 1 ? [
+            {
+              name: `Players [${players.length}]`,
+              value: `${players.splice(0, 10).join('\n')}\n${players.length ?
+                `...and ${inlineCode(`${players.length}`)} more` :
+                ''}`,
+            },
+          ] : [],
+          lose ? [
+            { name: 'The word was:', value: inlineCode(wordleInstance.data.word) },
+          ] : [],
+        ].flat()),
+    ];
 
     message?.edit({
       components: (win || lose) ? [] : message.components,
