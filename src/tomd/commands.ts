@@ -1,24 +1,22 @@
-import { APIApplicationCommandOption, ApplicationCommandAutocompleteOption, ApplicationCommandChannelOptionData, ApplicationCommandChoicesData, ApplicationCommandNonOptionsData, ApplicationCommandNumericOptionData, ApplicationCommandSubCommandData } from 'discord.js';
+import { ApplicationCommandNonOptionsData, ApplicationCommandOptionData, ApplicationCommandSubCommandData, ApplicationCommandSubGroupData, PermissionsBitField, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { writeFileSync } from 'node:fs';
 import CommandHandler from '../commands';
 import { SlashCommand } from '../structures';
+import { t } from '../translator';
 
 function convertOptionsToString(
   dataOptions: (
-    APIApplicationCommandOption |
-    ApplicationCommandSubCommandData |
-    ApplicationCommandNonOptionsData |
-    ApplicationCommandChoicesData |
-    ApplicationCommandChannelOptionData |
-    ApplicationCommandAutocompleteOption |
-    ApplicationCommandNumericOptionData
+    | ApplicationCommandSubGroupData
+    | ApplicationCommandSubCommandData
+    | ApplicationCommandOptionData
+    | ApplicationCommandNonOptionsData
   )[],
   text = '',
   index = '',
 ) {
   for (let i = 0; i < dataOptions.length; i++) {
-    const { required } = <APIApplicationCommandOption>dataOptions[i];
-    const { autocomplete, description, name, options } = <ApplicationCommandSubCommandData>dataOptions[i];
+    const { name, options, description, autocomplete } = <ApplicationCommandSubGroupData>dataOptions[i];
+    const { required } = <ApplicationCommandNonOptionsData>dataOptions[i];
 
     text = [
       text,
@@ -41,20 +39,16 @@ function convertOptionsToString(
 
 function convertOptionsToCommandString(
   dataOptions: (
-    APIApplicationCommandOption |
-    ApplicationCommandSubCommandData |
-    ApplicationCommandNonOptionsData |
-    ApplicationCommandChoicesData |
-    ApplicationCommandChannelOptionData |
-    ApplicationCommandAutocompleteOption |
-    ApplicationCommandNumericOptionData
+    | ApplicationCommandSubGroupData
+    | ApplicationCommandSubCommandData
+    | ApplicationCommandOptionData
+    | ApplicationCommandNonOptionsData
   )[],
   text = '',
   index = '',
 ) {
   for (let i = 0; i < dataOptions.length; i++) {
-    const { required } = <APIApplicationCommandOption>dataOptions[i];
-    const { name } = <ApplicationCommandSubCommandData>dataOptions[i];
+    const { name, required } = <ApplicationCommandNonOptionsData>dataOptions[i];
 
     text = [
       text,
@@ -75,11 +69,15 @@ function convertCommandsToString(commands: SlashCommand[], text = ['']) {
     const { data } = commands[i];
 
     const command_data = data.toJSON();
+    const { default_member_permissions } = <RESTPostAPIApplicationCommandsJSONBody>command_data;
 
     text = [
       ...text,
-      `\n#### ${data.name}${convertOptionsToCommandString(<any>command_data.options)}\n\n`,
-      `> ${data.description}\n`,
+      `\n#### ${data.name}${convertOptionsToCommandString(<any>command_data.options)}\n`,
+      `${default_member_permissions ?
+        `\n- Required permissions: ${new PermissionsBitField(BigInt(default_member_permissions))
+          .toArray().map(p => t(p, { locale: 'en' })).join(' & ')}\n` : ''}`,
+      `\n> ${data.description}\n`,
       `${convertOptionsToString(<any>command_data.options)}`,
     ];
   }
