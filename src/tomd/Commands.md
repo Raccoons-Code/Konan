@@ -2,7 +2,7 @@
 
 # Commands
 
-Last modified: August 9, 2022
+Last modified: August 14, 2022
 
 ## Application Commands (/) - 26
 
@@ -103,6 +103,8 @@ Last modified: August 9, 2022
 
 #### ban {`single`  | `chunk`}
 
+- Required permissions: Ban Members
+
 > Bans a user from the server.
 
 - {`single`}: Bans a user.
@@ -116,6 +118,8 @@ Last modified: August 9, 2022
   - [`reason`]: The reason for the ban.
 
 #### buttonroles {`create`  | `edit`  | `add`  | `remove`  | `bulk`}
+
+- Required permissions: Manage Roles
 
 > Manage button roles.
 
@@ -182,17 +186,23 @@ Last modified: August 9, 2022
 
 #### clear <`amount`> [`channel`]
 
+- Required permissions: Manage Messages
+
 > Deletes up to 1000 channel messages at once.
 - <`amount`>: The amount of messages to delete.
 - [`channel`]: Select a channel to clear.
 
 #### kick <`user`> [`reason`]
 
+- Required permissions: Kick Members
+
 > Kicks a user from the server.
 - <`user`>: The user to kick.
 - [`reason`]: The reason to kick.
 
 #### selectroles {`create`  | `edit`  | `add`  | `remove`  | `bulk`}
+
+- Required permissions: Manage Roles
 
 > Manage roles with a select menu.
 
@@ -291,12 +301,16 @@ Last modified: August 9, 2022
 
 #### timeout <`user`> <`time`> [`reason`]
 
+- Required permissions: Timeout Members
+
 > Temporarily mute a user.
 - <`user`>: The user to mute.
 - <`time`>: The time to mute the user for.
 - [`reason`]: The reason to mute the user.
 
 #### unban <`user`> [`reason`]
+
+- Required permissions: Ban Members
 
 > Revoke a user's ban.
 - <`user`>: User ID - `Autocomplete`
