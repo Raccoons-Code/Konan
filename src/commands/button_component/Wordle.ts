@@ -54,7 +54,7 @@ export default class extends ButtonComponentInteraction {
   }
 
   async giveupOldInstance(interaction: ButtonInteraction) {
-    const oldInstance = await this.prisma.wordleInstance.findFirst({
+    let oldInstance = await this.prisma.wordleInstance.findFirst({
       where: {
         userId: interaction.user.id,
         endedAt: {
@@ -68,7 +68,7 @@ export default class extends ButtonComponentInteraction {
 
     const playersId = this.Util.removeFromArray(oldInstance.players, interaction.user.id);
 
-    await this.prisma.wordleInstance.update({
+    oldInstance = await this.prisma.wordleInstance.update({
       where: {
         messageId: oldInstance.messageId,
       },
