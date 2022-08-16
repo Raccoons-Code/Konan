@@ -46,7 +46,7 @@ export default class extends ButtonComponentInteraction {
                 .setLabel('Try')
                 .setMinLength(oldInstance.data.word.length)
                 .setMaxLength(oldInstance.data.word.length)
-                .setPlaceholder(Wordle.getUpperLetters(<string[][]>oldInstance.data.board).join(''))
+                .setPlaceholder(Wordle.getUpperLetters(<string[][]>oldInstance.data.board).join(' '))
                 .setStyle(TextInputStyle.Short),
             ]),
         ]),
