@@ -69,6 +69,21 @@ export const Wordle = new class Wordle {
     };
   }
 
+  getUpperLetters(board: string[][]) {
+    const upperLetters = <string[]>[];
+
+    for (let i = 0; i < board.length; i++) {
+      if (board[i][0] === 'raw') continue;
+
+      for (let j = 0; j < board[i].length; j++) {
+        upperLetters[j] = board[i][j] === board[i][j].toUpperCase() ?
+          board[i][j] : upperLetters[j] ?? '_';
+      }
+    }
+
+    return upperLetters;
+  }
+
   #mapInvalidChars(str: string) {
     return str.replace(/[ãâáàä]/gi, 'a')
       .replace(/[êéèë]/gi, 'e')

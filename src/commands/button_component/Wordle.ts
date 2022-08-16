@@ -1,5 +1,6 @@
 import { WordleInstance } from '@prisma/client';
 import { ActionRowBuilder, ButtonInteraction, EmbedBuilder, inlineCode, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { Wordle } from '../../modules/Wordle';
 import { ButtonComponentInteraction } from '../../structures';
 
 export default class extends ButtonComponentInteraction {
@@ -45,6 +46,7 @@ export default class extends ButtonComponentInteraction {
                 .setLabel('Try')
                 .setMinLength(oldInstance.data.word.length)
                 .setMaxLength(oldInstance.data.word.length)
+                .setPlaceholder(Wordle.getUpperLetters(<string[][]>oldInstance.data.board).join(''))
                 .setStyle(TextInputStyle.Short),
             ]),
         ]),
