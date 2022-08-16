@@ -10,9 +10,15 @@ export default class MessageDelete extends Event<'messageDelete'> {
 
   async execute(message: Message) {
     Promise.all([
-      this.prisma.wordleInstance.deleteMany({
+      this.prisma.wordleInstance.updateMany({
         where: {
           messageId: message.id,
+          endedAt: {
+            isSet: false,
+          },
+        },
+        data: {
+          endedAt: new Date(),
         },
       }),
     ]);

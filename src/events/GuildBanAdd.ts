@@ -1,23 +1,18 @@
-import { Guild } from 'discord.js';
-import { logger } from '../client';
+import { GuildBan } from 'discord.js';
 import { Event } from '../structures';
 
-export default class GuildDelete extends Event<'guildDelete'> {
+export default class extends Event<'guildBanAdd'> {
   constructor() {
     super({
-      intents: ['Guilds'],
-      name: 'guildDelete',
+      name: 'guildBanAdd',
     });
   }
 
-  async execute(guild: Guild) {
-    logger.oldGuild(guild);
-    guild.client.stats.fetch();
-
+  async execute(ban: GuildBan) {
     Promise.all([
       this.prisma.wordleInstance.updateMany({
         where: {
-          guildId: guild.id,
+          userId: ban.user.id,
           endedAt: {
             isSet: false,
           },

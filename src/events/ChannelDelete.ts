@@ -13,9 +13,15 @@ export default class ChannelDelete extends Event<'channelDelete'> {
     channel.client.stats.fetch({ filter: 'channels' });
 
     Promise.all([
-      this.prisma.wordleInstance.deleteMany({
+      this.prisma.wordleInstance.updateMany({
         where: {
           channelId: channel.id,
+          endedAt: {
+            isSet: false,
+          },
+        },
+        data: {
+          endedAt: new Date(),
         },
       }),
     ]);
