@@ -18,7 +18,6 @@ const guilds = DISCORD_TEST_GUILD_ID?.split(',') ?? [];
 
 const data = [];
 const dataPrivate: any[] = [];
-const commands: SlashCommand[] = [];
 const { applicationCommandTypes } = commandHandler;
 
 const rest = new REST().setToken(DISCORD_TOKEN);
@@ -26,8 +25,8 @@ const rest = new REST().setToken(DISCORD_TOKEN);
 (async () => {
   const applicationCommands = await commandHandler.loadCommands(applicationCommandTypes);
 
-  Object.values(applicationCommands).forEach(_commands =>
-    commands.push(...<SlashCommand[]>_commands.toJSON()));
+  const commands = Object.values(applicationCommands).reduce((acc, _commands) =>
+    acc.concat(_commands.toJSON()), <SlashCommand[]>[]).flat();
 
   for (let i = 0; i < commands.length; i++) {
     const command = commands[i];

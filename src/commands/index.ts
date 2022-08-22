@@ -39,6 +39,7 @@ class CommandHandler {
 
   async loadCommands(
     commandTypes: Record<string, string[]> | string[] = this.commandTypes,
+    no_reload?: boolean,
     commands: Record<string, Collection<string, any>> = {},
   ) {
     const dirs = Object.values(commandTypes).flat();
@@ -81,6 +82,8 @@ class CommandHandler {
         command.data.aliases?.forEach((alias: string) => commands[dir].set(alias, command));
       }
     }
+
+    if (no_reload) return commands;
 
     client.commands = this.commands = commands;
 

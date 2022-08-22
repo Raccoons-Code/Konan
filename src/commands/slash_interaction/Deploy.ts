@@ -52,10 +52,10 @@ export default class Deploy extends SlashCommand {
     const data: any[] = [];
     const dataPrivate: any[] = [];
 
-    const applicationCommands = await commandHandler.loadCommands(applicationCommandTypes);
+    const applicationCommands = await commandHandler.loadCommands(applicationCommandTypes, true);
 
-    const commands = Object.values(applicationCommands).map(_commands =>
-      <SlashCommand[]>_commands.toJSON()).flat();
+    const commands = Object.values(applicationCommands).reduce((acc, _commands) =>
+      acc.concat(_commands.toJSON()), <SlashCommand[]>[]).flat();
 
     for (let i = 0; i < commands.length; i++) {
       const command = commands[i];
