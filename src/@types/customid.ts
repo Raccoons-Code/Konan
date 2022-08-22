@@ -34,6 +34,17 @@ export interface JkpCustomId extends BaseComponentCustomId {
 
 export type InfoCustomId = BaseComponentCustomId
 
+export interface MemoryGameCustomId extends BaseComponentCustomId {
+  /** date */
+  d: string
+  /** emoji */
+  e: string
+  /** mode */
+  m: string
+  /** value */
+  v: number
+}
+
 export interface MoviesCustomId extends BaseComponentCustomId {
   /** date */
   d: number
