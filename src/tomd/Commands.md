@@ -2,9 +2,9 @@
 
 # Commands
 
-Last modified: August 14, 2022
+Last modified: August 22, 2022
 
-## Application Commands (/) - 26
+## Application Commands (/) - 27
 
 **Optional**: [`foo`]  
 **Required**: <`foo`>  
@@ -21,7 +21,7 @@ Last modified: August 14, 2022
 
 ---
 
-### Game - 4
+### Game - 5
 
 #### guess <`number`>
 
@@ -47,6 +47,13 @@ Last modified: August 14, 2022
 
   - {`multiplayer`}: Human vs human.
     - <`opponent`>: Choose your opponent.
+
+#### memory [`mode`] [`opponent`] [`emojis`]
+
+> Memory Game
+- [`mode`]: Choose the game mode.
+- [`opponent`]: Choose the opponent.
+- [`emojis`]: Choose the game emojis. - `Autocomplete`
 
 #### tictactoe [`opponent`]
 
