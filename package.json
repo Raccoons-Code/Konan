@@ -62,9 +62,6 @@
   "engines": {
     "node": ">=18"
   },
-  "prisma": {
-    "schema": "./src/database/prisma/schema.prisma"
-  },
   "yarn-upgrade-all": {
     "ignore": []
   }
