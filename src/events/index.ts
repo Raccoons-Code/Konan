@@ -5,6 +5,8 @@ import { client } from '../client';
 import { Event } from '../structures';
 import Util from '../util';
 
+const fileExt = __filename.split('.').pop();
+
 class EventHandler {
   errors: Error[] = [];
   #events: Event[] = [];
@@ -28,7 +30,7 @@ class EventHandler {
   }
 
   #getEventFiles() {
-    return new GlobSync(posix.join(__dirname.replace(/\\/g, '/'), '*.@(j|t)s'), {
+    return new GlobSync(posix.join(__dirname.replace(/\\/g, '/'), `*.${fileExt}`), {
       ignore: ['**/index.@(j|t)s'],
     }).found;
   }

@@ -6,6 +6,8 @@ import { client } from '../client';
 import { SlashCommand } from '../structures';
 import Util from '../util';
 
+const fileExt = __filename.split('.').pop();
+
 class CommandHandler {
   applicationCommandTypes: string[];
   commands!: Record<string, Collection<string, any>>;
@@ -49,7 +51,7 @@ class CommandHandler {
 
       commands[dir] = new Collection();
 
-      const { found } = new GlobSync(posix.join(__dirname.replace(/\\/g, '/'), dir, '*.@(j|t)s'), {
+      const { found } = new GlobSync(posix.join(__dirname.replace(/\\/g, '/'), dir, `*.${fileExt}`), {
         ignore: ['**/.ignore_*'],
       });
 

@@ -1,13 +1,12 @@
 import { ShardingManager } from 'discord.js';
 import 'dotenv/config';
-import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { env, execArgv } from 'node:process';
 import { ShardingClient } from 'statcord.js';
 
-const fileName = readdirSync(__dirname).find(f => /bot\.(j|t)s/.test(f));
+const fileExt = __filename.split('.').pop();
 
-const manager = new ShardingManager(join(__dirname, fileName!), { execArgv });
+const manager = new ShardingManager(join(__dirname, `bot.${fileExt}`), { execArgv });
 
 export { manager };
 
