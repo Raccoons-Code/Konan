@@ -14,14 +14,11 @@ export default class Deploy {
 
   async online(client: Client = this.client) {
     const dataPrivate: any[] = [];
-    const commands: SlashCommand[] = [];
     const { applicationCommandTypes } = commandHandler;
     const applicationCommands = await commandHandler.loadCommands(applicationCommandTypes);
 
-    const guilds = env.DISCORD_TEST_GUILD_ID?.split(',') ?? [];
-
-    Object.values(applicationCommands).forEach(_commands =>
-      commands.push(...<SlashCommand[]>_commands.toJSON()));
+    const commands = Object.values(applicationCommands).reduce((acc, _commands) =>
+      acc.concat(_commands.toJSON()), <SlashCommand[]>[]).flat();
 
     for (let i = 0; i < commands.length; i++) {
       const command = commands[i];
@@ -31,6 +28,8 @@ export default class Deploy {
       if (command.props?.ownerOnly)
         dataPrivate.push(commandData);
     }
+
+    const guilds = env.DISCORD_TEST_GUILD_ID?.split(',') ?? [];
 
     try {
       for (let i = 0; i < guilds.length; i++) {
