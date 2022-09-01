@@ -3,14 +3,16 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { posix } from 'node:path';
 import { Resources } from '../src';
 
+const localesPath = 'public/locales';
+
 const translations: Resources = {};
 
-const langs = readdirSync(`${__dirname}`).filter(f => statSync(`${__dirname}/${f}`).isDirectory());
+const langs = readdirSync(`${localesPath}`).filter(f => statSync(`${localesPath}/${f}`).isDirectory());
 
 for (let i = 0; i < langs.length; i++) {
   const lang = langs[i];
 
-  const { found } = new GlobSync(posix.join(__dirname.replace(/\\/g, '/'), lang, '*.json'));
+  const { found } = new GlobSync(posix.join(localesPath, lang, '*.json'));
 
   if (!translations[lang])
     translations[lang] = {};
