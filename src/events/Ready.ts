@@ -1,11 +1,9 @@
 import { ActivitiesOptions, ActivityType, Client, Guild, OAuth2Scopes } from 'discord.js';
 import { env } from 'node:process';
 import { setTimeout as waitAsync } from 'node:timers/promises';
-import Deploy from '../client/Deploy';
 import commandHandler from '../commands';
 import { Event } from '../structures';
 
-const deployCommands = new Deploy();
 const { Listening, Playing, Streaming, Watching } = ActivityType;
 const { ApplicationsCommands, Bot } = OAuth2Scopes;
 
@@ -33,9 +31,6 @@ export default class Ready extends Event<'ready'> {
     this.setPresence(client);
     client.topggAutoposter();
     this.logCommandsErrors(client);
-
-    if (env.NODE_ENV === 'production')
-      deployCommands.online(client);
   }
 
   async logCommandsErrors(client: Client) {
