@@ -2,7 +2,7 @@ import { APIApplicationCommandOptionChoice, ApplicationCommandOptionAllowedChann
 import type { SlashCommandProps } from '../@types';
 import BaseApplicationCommand from './BaseApplicationCommand';
 
-const { GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText } = ChannelType;
+const { GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText, GuildVoice } = ChannelType;
 
 export default abstract class SlashCommand extends BaseApplicationCommand {
   data!:
@@ -33,18 +33,24 @@ export default abstract class SlashCommand extends BaseApplicationCommand {
   }));
 
   GuildTextChannelTypes: Extract<ApplicationCommandOptionAllowedChannelTypes, GuildTextChannelType>[] =
-    [GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText];
+    [GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildText, GuildVoice];
 
   get randomButtonStyle() {
     return this.buttonStyles[Math.floor(Math.random() * this.buttonStyles.length)];
   }
 
-  getChoicesFromEnum<T = any>(enumType: T, withLocalizations = true) {
+  getChoicesFromEnum<
+    V extends number | string = number | string,
+    T extends Record<any, any> = Record<number | string, number | string>
+  >(
+    enumType: T,
+    withLocalizations = true,
+  ) {
     const entries = Object.entries(enumType);
 
     return entries.slice(Math.floor(entries.length / 2), entries.length).map(([key, value]) => ({
       name: this.t(key, { locale: 'en' }),
-      value,
+      value: value as V,
       name_localizations: withLocalizations ? this.getLocalizations(key) : {},
     }));
   }

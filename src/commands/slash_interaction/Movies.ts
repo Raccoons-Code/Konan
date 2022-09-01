@@ -30,7 +30,7 @@ export default class Movies extends SlashCommand {
           .setMaxValue(1000))
         .addNumberOption(option => option.setName('sort')
           .setDescription('The sort order of the list.')
-          .setChoices(...this.getChoicesFromEnum(SortType))))
+          .setChoices(...this.getChoicesFromEnum<number>(SortType))))
       .addSubcommand(subcommand => subcommand.setName('search')
         .setDescription('Search the movies.')
         .setNameLocalizations(this.getLocalizations('moviesSearchName'))
