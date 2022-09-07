@@ -22,7 +22,7 @@ export interface BitField<S extends string, N extends bigint | number> {
 /**
  * Data structure that makes it easy to interact with a bitfield.
  */
-export class BitField<S extends string, N extends bigint | number> {
+export class BitField<S extends string, N extends bigint | number = number> {
   static DefaultBit: bigint | number = 0;
 
   /**
@@ -150,7 +150,7 @@ export class BitField<S extends string, N extends bigint | number> {
     if (typeof bit === 'string') {
       if (typeof this.Flags[bit] !== 'undefined') return this.Flags[bit];
 
-      if (!isNaN(bit)) return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
+      if (!isNaN(Number(bit))) return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
     }
 
     throw new RangeError('Invalid BitField');

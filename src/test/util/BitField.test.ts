@@ -1,7 +1,34 @@
+import { GatewayIntentsString } from 'discord.js';
 import assert from 'node:assert';
 import Util from './util';
 
 const { BitField } = Util;
+
+const GatewayIntentBits = {
+  Guilds: 1,
+  GuildMembers: 2,
+  GuildBans: 4,
+  GuildEmojisAndStickers: 8,
+  GuildIntegrations: 16,
+  GuildWebhooks: 32,
+  GuildInvites: 64,
+  GuildVoiceStates: 128,
+  GuildPresences: 256,
+  GuildMessages: 512,
+  GuildMessageReactions: 1024,
+  GuildMessageTyping: 2048,
+  DirectMessages: 4096,
+  DirectMessageReactions: 8192,
+  DirectMessageTyping: 16384,
+  MessageContent: 32768,
+  GuildScheduledEvents: 65536,
+};
+
+class IntentsBitField extends BitField<GatewayIntentsString> {
+  static Flags = GatewayIntentBits;
+}
+
+new IntentsBitField(65536 + 32768);
 
 const PermissionFlags = {
   CreateInstantInvite: 1n << 0n,
@@ -48,9 +75,10 @@ const PermissionFlags = {
 };
 
 class PermissionsBitField extends BitField<keyof typeof PermissionFlags, bigint> {
-  static All = Object.values(PermissionFlags).reduce((all, p) => all | p, 0n);
+  static DefaultBit = BigInt(0);
   static Default = BigInt(104324673);
   static Flags = PermissionFlags;
+  static All = Object.values(PermissionFlags).reduce((all, p) => all | p, 0n);
 }
 
 assert.deepStrictEqual(PermissionsBitField.All, BigInt(2199023255551));
