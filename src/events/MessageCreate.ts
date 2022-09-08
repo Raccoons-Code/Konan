@@ -15,9 +15,8 @@ export default class MessageCreate extends Event<'messageCreate'> {
 
     if (author.bot) return;
 
-    const { commands, user } = client;
-    const me = guild?.members.me?.roles.botRole ?? user;
-    const pattern = RegExp(`^\\s*<@!?&?(?:${user?.id}|${me?.id})>([\\w\\W]*)$`);
+    const me = guild?.members.me?.roles.botRole ?? client.user;
+    const pattern = RegExp(`^\\s*<@!?&?(?:${client.user?.id}|${me?.id})>([\\w\\W]*)$`);
     const matched = content.match(pattern);
 
     if (!matched) return;
@@ -30,7 +29,7 @@ export default class MessageCreate extends Event<'messageCreate'> {
 
     const commandName = message.commandName = matchedComponentLink[3] || message.args.shift() || 'help';
 
-    const command = <Command>commands.message_command?.get(commandName);
+    const command = <Command>client.commands.message_command?.get(commandName);
 
     if (!command) return;
 
