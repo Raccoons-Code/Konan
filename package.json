@@ -52,7 +52,7 @@
     "@types/eslint": "^8.4.6",
     "@types/glob": "^8.0.0",
     "@types/ms": "^0.7.31",
-    "@types/node": "^18.7.15",
+    "@types/node": "^18.7.16",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
     "eslint": "^8.23.0",
