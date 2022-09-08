@@ -4,8 +4,9 @@
   "description": "",
   "main": "src",
   "scripts": {
+    "start:js": "node dist",
     "start:ts": "ts-node src",
-    "test": "ts-node ./src/test",
+    "test": "ts-node __test__",
     "test:ts": "tsc --noEmit",
     "deploy_commands": "ts-node ./src/deploy-commands",
     "to_markdown": "ts-node ./src/tomd",

@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import Util from './../util';
+import Util from '../util';
 
 class A_1 { }
 class B extends A_1 { }

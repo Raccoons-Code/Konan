@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, InteractionReplyOptions, Message, MessagePayload, WebhookEditMessageOptions } from 'discord.js';
 import assert from 'node:assert';
-import Ping from '../../../commands/slash_interaction/Ping';
+import Ping from '../../../src/commands/slash_interaction/Ping';
 
 const command = new Ping();
 
