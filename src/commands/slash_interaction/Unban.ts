@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Unban extends SlashCommand {
@@ -28,10 +28,7 @@ export default class Unban extends SlashCommand {
         .setMaxLength(512));
   }
 
-  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
-    if (!interaction.inCachedGuild())
-      return this.replyOnlyOnServer(interaction);
-
+  async execute(interaction: ChatInputCommandInteraction<'cached'>) {
     const { appPermissions, guild, locale, member, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
@@ -43,9 +40,6 @@ export default class Unban extends SlashCommand {
 
     if (appPerms?.length)
       return this.replyMissingPermission(interaction, appPerms, 'missingPermission');
-
-    if (interaction.isAutocomplete())
-      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -65,42 +59,5 @@ export default class Unban extends SlashCommand {
     } catch {
       return interaction.editReply(this.t('unbanError', { locale }));
     }
-  }
-
-  async executeAutocomplete(
-    interaction: AutocompleteInteraction<'cached'>,
-    res: ApplicationCommandOptionChoiceData[] = [],
-  ) {
-    if (interaction.responded) return;
-
-    const { guild, options } = interaction;
-
-    const user = options.getString('user', true);
-    const pattern = RegExp(user, 'i');
-
-    const bansCollection = await guild.bans.fetch();
-
-    const bansArray = bansCollection.filter(ban =>
-      pattern.test(ban.user.tag) ||
-      pattern.test(ban.user.id) ||
-      pattern.test(ban.reason!)).toJSON();
-
-    for (let i = 0; i < bansArray.length; i++) {
-      const ban = bansArray[i];
-
-      const name = [
-        ban.user.tag, ' | ', ban.user.id,
-        ban.reason ? ` | Reason: ${ban.reason}` : '',
-      ].join('').slice(0, 100);
-
-      res.push({
-        name,
-        value: `${ban.user.id}`,
-      });
-
-      if (res.length === 25) break;
-    }
-
-    return interaction.respond(res);
   }
 }

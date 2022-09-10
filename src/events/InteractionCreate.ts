@@ -78,10 +78,6 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
       ApplicationCommandType[interaction.commandType]]?.(<any>interaction);
   }
 
-  ApplicationCommandAutocomplete(interaction: AutocompleteInteraction) {
-    return this['ChatInput']?.(interaction);
-  }
-
   MessageComponent(interaction: MessageComponentInteraction) {
     return this[<Exclude<keyof typeof ComponentType, 'ActionRow' | 'TextInput'>>
       ComponentType[interaction.componentType]]?.(<any>interaction);
@@ -91,6 +87,10 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
     const { c, command } = this.Util.JSONparse(interaction.customId) ?? {};
 
     return commandHandler.commands.modal_component?.get(c ?? command);
+  }
+
+  ApplicationCommandAutocomplete(interaction: AutocompleteInteraction): SlashCommand | undefined {
+    return commandHandler.commands.slash_autocomplete?.get(interaction.commandName);
   }
 
   Button(interaction: ButtonInteraction): ButtonComponentInteraction | undefined {

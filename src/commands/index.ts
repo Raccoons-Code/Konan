@@ -19,7 +19,7 @@ class CommandHandler {
   constructor() {
     this.commandTypes = this.getCommandTypes();
     this.applicationCommandTypes = Object.values(this.commandTypes).flat()
-      .filter(f => !/(_(command|component))/i.test(f));
+      .filter(f => !/(_(autocomplete|command|component))/i.test(f));
   }
 
   getCommandTypes(commandTypes: Record<string, string[]> = {}) {

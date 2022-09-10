@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, RouteBases, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, RouteBases, SlashCommandBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Embed extends SlashCommand {
@@ -13,6 +13,7 @@ export default class Embed extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('embed')
       .setDescription('Send a embed message.')
+      .setDMPermission(false)
       .setNameLocalizations(this.getLocalizations('embedName'))
       .setDescriptionLocalizations(this.getLocalizations('embedDescription'))
       .addSubcommand(subcommand => subcommand.setName('send')
@@ -71,10 +72,7 @@ export default class Embed extends SlashCommand {
             .setDescriptionLocalizations(this.getLocalizations('embedEditEmbedContentDescription')))));
   }
 
-  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
-    if (!interaction.inCachedGuild())
-      return this.replyOnlyOnServer(interaction);
-
+  async execute(interaction: ChatInputCommandInteraction<'cached'>) {
     const { channel, client, memberPermissions, options } = interaction;
 
     const userPerms = memberPermissions.missing(this.props!.userPermissions!);
@@ -88,9 +86,6 @@ export default class Embed extends SlashCommand {
       return this.replyMissingPermission(interaction, appPerms, 'missingChannelPermission');
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
-
-    if (interaction.isAutocomplete())
-      return this.executeAutocomplete(interaction);
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -179,66 +174,5 @@ export default class Embed extends SlashCommand {
         return interaction.editReply(this.Util.Emoji.Danger);
       }
     }
-  }
-
-  async executeAutocomplete(interaction: AutocompleteInteraction) {
-    if (interaction.responded) return;
-
-    const { options } = interaction;
-
-    const subcommand = options.getSubcommand();
-
-    const response = await this[`${subcommand}Autocomplete`]?.(interaction);
-
-    return interaction.respond(response);
-  }
-
-  async editAutocomplete(
-    interaction: AutocompleteInteraction<'cached'>,
-    res: ApplicationCommandOptionChoiceData[] = [],
-  ) {
-    if (interaction.responded) return;
-
-    const { client, guild, options } = interaction;
-
-    const channelId = options.get('channel')?.value;
-    if (!channelId) return res;
-
-    const channel = await guild.channels.fetch(`${channelId}`);
-    if (!channel?.isTextBased()) return res;
-
-    const focused = options.getFocused(true);
-    const pattern = RegExp(`${focused.value}`, 'i');
-
-    if (focused.name === 'message_id') {
-      const messages = await channel.messages.fetch({ limit: 100 })
-        .then(ms => ms.toJSON().filter(m =>
-          m.author.id === client.user?.id &&
-          m.embeds.length &&
-          pattern.test(`${m.id}`)));
-
-      for (let i = 0; i < messages.length; i++) {
-        const { embeds, id } = messages[i];
-
-        const { title, description } = embeds[0];
-
-        const name = [
-          id,
-          title ? ` | ${title}` : '',
-          description ? ` | ${description}` : '',
-        ].join('').slice(0, 100);
-
-        res.push({
-          name,
-          value: `${id}`,
-        });
-
-        if (res.length === 25) break;
-      }
-
-      return res;
-    }
-
-    return res;
   }
 }
