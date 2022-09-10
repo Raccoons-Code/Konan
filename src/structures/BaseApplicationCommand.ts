@@ -1,4 +1,4 @@
-import { InteractionType, PermissionsString } from 'discord.js';
+import { PermissionsString } from 'discord.js';
 import { MissingPermissionResponse } from '../@enum';
 import type { AnyInteraction } from '../@types';
 import BaseCommand from './BaseCommand';
@@ -20,7 +20,7 @@ export default abstract class BaseApplicationCommand extends BaseCommand {
     ];
 
     if (interaction.deferred || interaction.replied) {
-      if (interaction.type === InteractionType.MessageComponent)
+      if (interaction.isMessageComponent())
         return interaction.followUp({ embeds, ephemeral: true });
 
       return interaction.editReply({ embeds });
@@ -48,7 +48,7 @@ export default abstract class BaseApplicationCommand extends BaseCommand {
     ];
 
     if (interaction.deferred || interaction.replied) {
-      if (interaction.type === InteractionType.MessageComponent)
+      if (interaction.isMessageComponent())
         return interaction.followUp({ embeds, ephemeral: true });
 
       return interaction.editReply({ embeds });
