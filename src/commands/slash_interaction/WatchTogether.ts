@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChannelType, ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChannelType, ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { watchTogether } from '../../modules/WatchTogether';
 import { SlashCommand } from '../../structures';
 
@@ -11,6 +11,7 @@ export default class WatchTogether extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('party')
       .setDescription('Create an activity party together - Powered by Discord Together.')
+      .setDMPermission(false)
       .setNameLocalizations(this.getLocalizations('partyName'))
       .setDescriptionLocalizations(this.getLocalizations('partyDescription'))
       .addStringOption(option => option.setName('activity')
@@ -26,13 +27,7 @@ export default class WatchTogether extends SlashCommand {
         .addChannelTypes(ChannelType.GuildVoice));
   }
 
-  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction) {
-    if (!interaction.inCachedGuild())
-      return this.replyOnlyOnServer(interaction);
-
-    if (interaction.isAutocomplete())
-      return this.executeAutocomplete(interaction);
-
+  async execute(interaction: ChatInputCommandInteraction<'cached'>) {
     const { client, locale, member, options } = interaction;
 
     const channel = options.getChannel('channel') ?? member.voice.channel;
@@ -65,41 +60,5 @@ export default class WatchTogether extends SlashCommand {
         ephemeral: true,
       });
     }
-  }
-
-  async executeAutocomplete(interaction: AutocompleteInteraction) {
-    if (interaction.responded) return;
-
-    const { locale, options } = interaction;
-
-    const activity = options.getString('activity', true);
-    const pattern = RegExp(activity, 'i');
-
-    const applications = watchTogether.applications.filter(app =>
-      pattern.test(`${app}`) ||
-      pattern.test(this.t(`${app}`, { locale })));
-
-    const res = this.setChoices(applications, { locale });
-
-    return interaction.respond(res);
-  }
-
-  setChoices(applications: any[], options: { locale: string }, res: ApplicationCommandOptionChoiceData[] = []) {
-    const { locale } = options;
-
-    applications = applications.filter(app => !/(awkword|doodlecrew|lettertile|puttparty|dev$)/i.test(app));
-
-    for (let i = 0; i < applications.length; i++) {
-      const application = applications[i];
-
-      res.push({
-        name: `${this.t(application, { locale })}`,
-        value: `${application}`,
-      });
-
-      if (res.length === 25) break;
-    }
-
-    return res;
   }
 }

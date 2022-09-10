@@ -30,10 +30,7 @@ export default class Clear extends SlashCommand {
         .addChannelTypes(...this.GuildTextChannelTypes));
   }
 
-  async execute(interaction: ChatInputCommandInteraction): Promise<any> {
-    if (!interaction.inCachedGuild())
-      return this.replyOnlyOnServer(interaction);
-
+  async execute(interaction: ChatInputCommandInteraction<'cached'>): Promise<any> {
     const { client, locale, member, options } = interaction;
 
     const channel = <GuildTextBasedChannel>options.getChannel('channel') ?? interaction.channel;

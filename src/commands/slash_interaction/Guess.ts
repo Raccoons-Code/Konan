@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { QuickDB } from 'quick.db';
 import type { GuessGameData } from '../../@types';
 import { SlashCommand } from '../../structures';
@@ -25,10 +25,7 @@ export default class Guess extends SlashCommand {
         .setRequired(true));
   }
 
-  async execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<any> {
-    if (interaction.isAutocomplete())
-      return this.executeAutocomplete(interaction);
-
+  async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     await interaction.deferReply({ ephemeral: true });
 
     const { guildId, locale, options, user: author } = interaction;
@@ -111,30 +108,5 @@ export default class Guess extends SlashCommand {
     await quickDb.set(`${guildId}.${author.id}.guess.user`, user);
 
     return interaction.editReply({ embeds });
-  }
-
-  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
-    if (interaction.responded) return;
-
-    const { guildId, options, user } = interaction;
-
-    const value = options.getFocused();
-    const pattern = RegExp(`${value}`);
-
-    const guess = await quickDb.get<GuessGameData>(`${guildId}.${user.id}.guess`);
-
-    for (let i = 1; i < 101; i++) {
-      if (guess?.user?.includes(i)) continue;
-
-      if (pattern.test(`${i}`))
-        res.push({
-          name: `${i}`,
-          value: i,
-        });
-
-      if (res.length === 25) break;
-    }
-
-    return interaction.respond(res);
   }
 }

@@ -10,6 +10,7 @@ export default class Echo extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('echo')
       .setDescription('Echo your message.')
+      .setDMPermission(false)
       .setNameLocalizations(this.getLocalizations('echoName'))
       .setDescriptionLocalizations(this.getLocalizations('echoDescription'))
       .addStringOption(option => option.setName('message')
