@@ -1,6 +1,7 @@
 FROM node:18
 
-WORKDIR /app
+RUN mkdir /usr/app && chown -R node:node /usr/app
+WORKDIR /usr/app
 
 COPY . .
 RUN yarn
