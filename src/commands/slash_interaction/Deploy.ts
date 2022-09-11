@@ -99,6 +99,8 @@ export default class Deploy extends SlashCommand {
         await guild.commands.set([...data, ...dataPrivate]);
       }
 
+      client.application?.commands.fetch();
+
       console.log('Successfully reloaded application (/) commands.');
 
       return interaction.editReply(`${this.t(['reloadedAppCommands', 'type'], { locale })} ${type}`);

@@ -1,14 +1,39 @@
 import { PermissionsString } from 'discord.js';
 import { MissingPermissionResponse } from '../@enum';
 import type { AnyInteraction } from '../@types';
+import { client } from '../client';
 import BaseCommand from './BaseCommand';
 
 export default abstract class BaseApplicationCommand extends BaseCommand {
+  data!: any;
+
   constructor() {
     super();
   }
 
   abstract execute(...args: any): Promise<any>;
+
+  get id() {
+    return `${client.application?.commands.cache.find(c => c.name === this.data.name)?.id}`;
+  }
+
+  get command_mention() {
+    return `</${this.data.name}:${this.id}>`;
+  }
+
+  getCommandMention(subGroup?: string, subCommand?: string) {
+    if (subCommand)
+      return `</${this.data.name} ${subGroup} ${subCommand}:${this.id}`;
+
+    if (subGroup)
+      return `</${this.data.name} ${subGroup}:${this.id}`;
+
+    return `</${this.data.name}:${this.id}`;
+  }
+
+  toString() {
+    return this.command_mention;
+  }
 
   replyOnlyOnServer(interaction: AnyInteraction) {
     if (interaction.isAutocomplete()) return interaction.respond([]);

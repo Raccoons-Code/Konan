@@ -20,7 +20,7 @@ export default class Help extends ButtonComponentInteraction {
 
     const { sc } = JSON.parse(customId);
 
-    this[sc]?.(interaction);
+    return this[sc]?.(interaction);
   }
 
   async commands(interaction: ButtonInteraction<'cached'>) {
@@ -62,11 +62,11 @@ export default class Help extends ButtonComponentInteraction {
     fields: APIEmbedField[] = [],
   ): APIEmbedField[] {
     for (let i = (page * this.limit); i < commands.length; i++) {
-      const { data } = commands[i];
+      const command = commands[i];
 
       fields.push({
-        name: `${data.name}`,
-        value: `${data.description}`.slice(0, 1024),
+        name: `${command.data.name}`,
+        value: `${command} - ${command.data.description}`.slice(0, 1024),
         inline: false,
       });
 

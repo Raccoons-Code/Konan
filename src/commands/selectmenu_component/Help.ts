@@ -23,7 +23,7 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const { sc } = JSON.parse(customId);
 
-    this[sc || values[0]]?.(interaction);
+    return this[sc ?? values[0]]?.(interaction);
   }
 
   async home(interaction: SelectMenuInteraction<'cached'>) {
@@ -185,11 +185,11 @@ export default class Help extends SelectMenuComponentInteraction {
     fields: APIEmbedField[] = [],
   ): APIEmbedField[] {
     for (let i = (page * this.limit); i < commands.length; i++) {
-      const { data } = commands[i];
+      const command = commands[i];
 
       fields.push({
-        name: `${data.name}`,
-        value: `${data.description}`,
+        name: `${command.data.name}`,
+        value: `${command} - ${command.data.description}`.slice(0, 1024),
         inline: false,
       });
 
