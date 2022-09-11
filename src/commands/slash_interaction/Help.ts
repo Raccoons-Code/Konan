@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandNonOptionsData, ApplicationCommandSubCommand, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, RouteBases, SelectMenuBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, APIEmbedField, ApplicationCommandNonOptionsData, ApplicationCommandSubCommand, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, RouteBases, SelectMenuBuilder, SlashCommandBuilder } from 'discord.js';
 import { env } from 'node:process';
 import commandHandler from '../../commands';
 import { SlashCommand } from '../../structures';
@@ -98,30 +98,46 @@ export default class Help extends SlashCommand {
     const embeds = [
       new EmbedBuilder()
         .setColor('Random')
-        .setTitle(`${command.data.name} - ${command.data.description}`)
-        .setDescription(this.convertOptionsToString(command.data.options)),
+        .setTitle(`${command.data.description}`)
+        .setDescription(`${command}`)
+        .setFields(this.convertOptionsToFields(command, command.data.options)),
     ];
 
     return interaction.editReply({ embeds });
   }
 
-  convertOptionsToString(dataOptions: any[], text = '', index = '') {
+  convertOptionsToFields(command: any, dataOptions: any[]) {
+    const fields: APIEmbedField[] = [];
+
     for (let i = 0; i < dataOptions.length; i++) {
-      const { required } = <ApplicationCommandNonOptionsData>dataOptions[i];
-      const { autocomplete, description, name, options } = <ApplicationCommandSubCommand>dataOptions[i];
+      const { description, name, options } = <ApplicationCommandSubCommand>dataOptions[i];
+
+      fields.push({
+        name: `${description}`,
+        value: options ? this.convertOptionsToString(command, options, name) : `> \`${name}\``,
+      });
+    }
+
+    return fields;
+  }
+
+  convertOptionsToString(command: any, dataOptions: any[], subgroup?: string, text = '', index = '') {
+    if (!dataOptions?.length) return `${command.getCommandMention(subgroup)}`;
+
+    for (let i = 0; i < dataOptions.length; i++) {
+      const { required, type } = <ApplicationCommandNonOptionsData>dataOptions[i];
+      const { autocomplete, /* description, */ name, options } = <ApplicationCommandSubCommand>dataOptions[i];
 
       text = [
-        text, '\n ', index,
-        `\`${name}\` - \`${description}\``,
+        (index || options) ? text : command.getCommandMention(subgroup), '\n ',
+        type ? `> \`${name}\`` : `${command.getCommandMention(subgroup || name, subgroup ? name : null)}`,
+        /* ` - \`${description}\``, */
         autocomplete ? ' | `Autocomplete`' : '',
         required ? ' | `Required`' : '',
       ].join('').trim();
 
       if (options)
-        text = this.convertOptionsToString(options, text, index + '- ');
-
-      if (index === '' || options && index === '- ')
-        text = `${text}\n`;
+        text = this.convertOptionsToString(command, options, index ? '' : name, text, index + '- ');
     }
 
     return text;
