@@ -23,12 +23,12 @@ export default abstract class BaseApplicationCommand extends BaseCommand {
 
   getCommandMention(subGroup?: string, subCommand?: string) {
     if (subCommand)
-      return `</${this.data.name} ${subGroup} ${subCommand}:${this.id}`;
+      return `</${this.data.name} ${subGroup} ${subCommand}:${this.id}>`;
 
     if (subGroup)
-      return `</${this.data.name} ${subGroup}:${this.id}`;
+      return `</${this.data.name} ${subGroup}:${this.id}>`;
 
-    return `</${this.data.name}:${this.id}`;
+    return `</${this.data.name}:${this.id}>`;
   }
 
   toString() {
