@@ -139,6 +139,9 @@ export default class Info extends SlashCommand {
   }
 
   async channel(interaction: ChatInputCommandInteraction, embeds: EmbedBuilder[]): Promise<any> {
+    if (!interaction.inCachedGuild())
+      return this.replyOnlyOnServer(interaction);
+
     const { locale, options } = interaction;
 
     const channel = options.getChannel('channel') ?? interaction.channel;
@@ -216,6 +219,9 @@ export default class Info extends SlashCommand {
   }
 
   async role(interaction: ChatInputCommandInteraction, embeds: EmbedBuilder[]): Promise<any> {
+    if (!interaction.inCachedGuild())
+      return this.replyOnlyOnServer(interaction);
+
     const { locale, options } = interaction;
 
     const role = <Role>options.getRole('role', true);
@@ -241,12 +247,10 @@ export default class Info extends SlashCommand {
   }
 
   async server(interaction: ChatInputCommandInteraction, embeds: EmbedBuilder[]): Promise<any> {
-    const { locale } = interaction;
-
     if (!interaction.inCachedGuild())
       return this.replyOnlyOnServer(interaction);
 
-    const { guild } = interaction;
+    const { guild, locale } = interaction;
 
     const MPSText = Object.entries(guild.members.allMembersPresenceStatus)
       .map(([status, count]) => `${this.Util.Emoji[status] ?? status} ${inlineCode(`${count}`)}`).join('\n');

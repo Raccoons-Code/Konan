@@ -11,6 +11,7 @@ export default class Say extends SlashCommand {
 
     this.data = new SlashCommandBuilder().setName('say')
       .setDescription('Say something in TTS. - Powered by Google TTS.')
+      .setDMPermission(false)
       .setNameLocalizations(this.getLocalizations('sayName'))
       .setDescriptionLocalizations(this.getLocalizations('sayDescription'))
       .addStringOption(option => option.setName('message')

@@ -53,7 +53,7 @@ export default class Avatar extends SlashCommand {
       components,
       embeds: [
         new EmbedBuilder()
-          .setColor(member.displayColor ?? user.accentColor ?? 'Random')
+          .setColor(member?.displayColor ?? user.accentColor ?? 'Random')
           .setDescription(`${user}`)
           .setImage(`attachment://${avatar}`),
       ],
