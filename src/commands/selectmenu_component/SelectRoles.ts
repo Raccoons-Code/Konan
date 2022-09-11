@@ -50,7 +50,7 @@ export default class SelectRoles extends SelectMenuComponentInteraction {
       await member.roles.add(roles.add).catch(console.log);
 
     await this.setComponents(interaction, roles);
-    this.sendResponse(interaction, roles);
+    return this.sendResponse(interaction, roles);
   }
 
   async setComponents(interaction: SelectMenuInteraction<'cached'>, roles: RolesManager) {

@@ -16,7 +16,7 @@ export default class extends ButtonComponentInteraction {
 
     const { id, next } = JSON.parse(customId);
 
-    this[next]?.(interaction, id);
+    return this[next]?.(interaction, id);
   }
 
   async member(interaction: ButtonInteraction<'cached'>, id: string) {

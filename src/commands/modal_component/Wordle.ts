@@ -77,7 +77,7 @@ export default class extends ModalSubmit {
         ].flat()),
     ];
 
-    message?.edit({
+    return message?.edit({
       components: (win || lose) ? [] : message.components,
       embeds,
     });

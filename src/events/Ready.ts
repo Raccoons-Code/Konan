@@ -20,6 +20,7 @@ export default class Ready extends Event<'ready'> {
     console.log(`Ready! ${client.user?.tag} is on ${client.guilds.cache.size} servers.`);
 
     client.application?.fetch();
+    client.application?.commands.fetch();
 
     client.invite = client.generateInvite({
       scopes: [ApplicationsCommands, Bot],
