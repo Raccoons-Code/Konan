@@ -44,7 +44,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
 
     await quickDb.set(`${message.id}.${user.id}`, v);
 
-    await interaction.deferUpdate();
+    return interaction.deferUpdate();
   }
 
   async mathPoint(

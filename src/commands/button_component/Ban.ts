@@ -17,7 +17,7 @@ export default class Ban extends ButtonComponentInteraction {
 
     const { sc } = <BanCustomId>JSON.parse(customId);
 
-    this[sc]?.(interaction);
+    return this[sc]?.(interaction);
   }
 
   async chunk(interaction: ButtonInteraction<'cached'>) {

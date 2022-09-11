@@ -31,7 +31,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
       }
 
       await this.setComponents(interaction, memberHasRole);
-      this.sendResponse(interaction, id ?? roleId, memberHasRole);
+      return this.sendResponse(interaction, id ?? roleId, memberHasRole);
     } catch {
       await interaction.deferUpdate();
     }

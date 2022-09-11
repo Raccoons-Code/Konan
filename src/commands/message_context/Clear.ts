@@ -13,10 +13,7 @@ export default class extends MessageContextMenu {
       .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages);
   }
 
-  async execute(interaction: MessageContextMenuCommandInteraction) {
-    if (!interaction.inCachedGuild())
-      return this.replyOnlyOnServer(interaction);
-
+  async execute(interaction: MessageContextMenuCommandInteraction<'cached'>) {
     const { channel, client, locale, member, targetMessage } = interaction;
 
     if (!channel?.isTextBased()) return;
