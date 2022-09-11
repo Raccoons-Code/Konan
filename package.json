@@ -4,14 +4,14 @@
   "description": "",
   "main": "src",
   "scripts": {
-    "start:js": "node dist",
-    "start:ts": "ts-node src",
+    "start": "npm run start:ts",
     "test": "ts-node __test__",
     "test:ts": "tsc --noEmit",
     "deploy_commands": "ts-node ./src/deploy-commands",
     "to_markdown": "ts-node ./src/tomd",
-    "start": "npm run start:ts",
     "dbpush": "prisma db push",
+    "start:js": "node dist",
+    "start:ts": "ts-node src",
     "postinstall": "prisma generate"
   },
   "repository": {
