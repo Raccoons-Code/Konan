@@ -1,4 +1,6 @@
-import emojis from './emojis.json';
+import { readFileSync } from 'node:fs';
+
+const emojis = JSON.parse(readFileSync('public/emojis/wordle.json', 'utf8'));
 
 export const Wordle = new class Wordle {
   create(wordSize: number, gameSize = 6) {

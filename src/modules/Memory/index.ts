@@ -1,7 +1,9 @@
 import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIButtonComponentWithCustomId, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent } from 'discord.js';
 import { MemoryGameCustomId } from '../../@types';
-import { MemoryGameCreateOptions } from './@types';
-import Emojis from './emojis.json';
+import { MemoryGameEmojisType, MemoryGameCreateOptions } from './@types';
+import { readFileSync } from 'node:fs';
+
+const Emojis = <MemoryGameEmojisType>JSON.parse(readFileSync('public/emojis/memory.json', 'utf8'));
 
 export const Memory = new class Memory {
   getGameMode(mode: number) {
@@ -11,7 +13,7 @@ export const Memory = new class Memory {
   gameMode = ['solo', 'limited', 'coop', 'competitive'];
 
   getEmojis(string = 'number') {
-    return Emojis[<'number'>string] ?? Emojis.number;
+    return Emojis[string] ?? Emojis.number;
   }
 
   get Emojis() {
@@ -19,7 +21,7 @@ export const Memory = new class Memory {
   }
 
   create(options: MemoryGameCreateOptions) {
-    if (!options.emojis) options.emojis = this.getEmojis('number');
+    if (!options.emojis) options.emojis = this.getEmojis('number') as string[];
     if (options.emojis.length > 12) throw new Error('Unable to create a Memory Game with more than 24 buttons.');
 
     const customOptions: Record<string, string | number> = {};
