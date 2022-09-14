@@ -30,7 +30,7 @@ export default class extends SlashCommand {
 
     const { channel, options, user } = interaction;
 
-    const emojis = Memory.getEmojis(options.getString('emojis')!);
+    const emojis = <string[]>Memory.getEmojis(options.getString('emojis')!);
 
     if (emojis && (emojis.length < 5 || emojis.length > 12))
       return interaction.reply({
