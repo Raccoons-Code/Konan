@@ -5,6 +5,7 @@
   "main": "src",
   "scripts": {
     "start": "npm run start:ts",
+    "build": "tsc",
     "test": "ts-node __test__",
     "test:ts": "tsc --noEmit",
     "deploy_commands": "ts-node ./src/deploy-commands",

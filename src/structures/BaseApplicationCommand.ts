@@ -5,7 +5,7 @@ import { client } from '../client';
 import BaseCommand from './BaseCommand';
 
 export default abstract class BaseApplicationCommand extends BaseCommand {
-  data!: any;
+  abstract data: any;
 
   constructor() {
     super();

@@ -9,7 +9,7 @@ export default abstract class Util {
     const array: string[] = [];
 
     for (let i = 0; i < data.length; i++) {
-      const str = this.mapInvalidChars(data[i].split('/')[0]);
+      const str = this.mapInvalidChars(data[i].split('/')[0].toLowerCase());
 
       if (regex.test(str))
         array.push(str);
