@@ -5,13 +5,15 @@ export class RecursivelyReadDirSync {
   found: string[] = [];
 
   constructor(public path: string, public options: FileSystemOptions = {}) {
+    this.path = path = path.replace(/\\/g, '/').replace(/\/$/, '');
+
     if (!existsSync(path) || !statSync(path).isDirectory()) {
       if (!this.options.pattern)
         this.options.pattern = options.pattern = [];
 
       this.options.pattern.push(this.#formatRegExp(path));
 
-      this.path = path = path.replace(/(\\|\/)?[^\\/]+$/, '');
+      this.path = path = path.replace(/\/?[^/]+$/, '');
     }
 
     this.#recursivelyReadDirSync(this.path);
@@ -38,7 +40,8 @@ export class RecursivelyReadDirSync {
     }
 
     return pattern
-      .replace(/(\\|\/)/g, '/')
+      .replace(/\\/g, '/')
+      .replace(/\/$/, '')
       .replace(/\./g, '\\.')
       .replace(/\*+/g, (str) => str.length > 1 ? '.*' : '[^\\/]*') +
       '(/.*)?$';
