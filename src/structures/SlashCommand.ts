@@ -46,12 +46,12 @@ export default abstract class SlashCommand extends BaseApplicationCommand {
     enumType: T,
     withLocalizations = true,
   ) {
-    const entries = Object.entries(enumType);
-
-    return entries.slice(Math.floor(entries.length / 2), entries.length).map(([key, value]) => ({
-      name: this.t(key, { locale: 'en' }),
-      value: value as V,
-      name_localizations: withLocalizations ? this.getLocalizations(key) : {},
-    }));
+    return Object.entries(enumType)
+      .filter(e => isNaN(<any>e[0]))
+      .map(([key, value]) => ({
+        name: this.t(key, { locale: 'en' }),
+        value: value as V,
+        name_localizations: withLocalizations ? this.getLocalizations(key) : {},
+      }));
   }
 }
