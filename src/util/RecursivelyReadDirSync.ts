@@ -1,48 +1,106 @@
-import { PathLike, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 
-export default class RecursivelyReadDirSync {
+export class RecursivelyReadDirSync {
   cache: string[] = [];
   found: string[] = [];
 
-  constructor(public path: PathLike, public options: FileSystemOptions) {
-    this.#recursivelyReadDirSync(path);
+  constructor(public path: string, public options: FileSystemOptions = {}) {
+    if (!existsSync(path) || !statSync(path).isDirectory()) {
+      if (!this.options.pattern)
+        this.options.pattern = options.pattern = [];
+
+      this.options.pattern.push(this.#formatRegExp(path));
+
+      this.path = path = path.replace(/(\\|\/)?[^\\/]+$/, '');
+    }
+
+    this.#recursivelyReadDirSync(this.path);
 
     this.found = this.cache;
 
-    if (options.pattern) this.#resolvePattern(options.pattern);
-    if (options.ignore) this.#resolveIgnore(options.ignore);
+    if (this.options.ignoreFile) this.#resolveIgnoreFile(this.options.ignoreFile);
+    if (this.options.pattern) this.#resolvePattern(this.options.pattern);
+    if (this.options.ignore) {
+      this.options.ignore = this.#formatRegExp(this.options.ignore);
+
+      this.#resolveIgnore(this.options.ignore);
+    }
   }
 
-  #resolveIgnore(ignore: RegExp | string): void {
-    if (typeof ignore === 'string')
-      return this.#resolveIgnore(RegExp(ignore, 'i'));
+  #formatRegExp<T extends string>(pattern: T): T
+  #formatRegExp<T extends string>(pattern: T[]): T[]
+  #formatRegExp<T extends string>(pattern: T | T[]) {
+    if (Array.isArray(pattern)) {
+      for (let i = 0; i < pattern.length; i++)
+        pattern[i] = this.#formatRegExp(pattern[i]);
 
-    this.found = this.found.filter(file => !ignore.test(file));
+      return pattern;
+    }
+
+    return pattern
+      .replace(/(\\|\/)/g, '/')
+      .replace(/\./g, '\\.')
+      .replace(/\*+/g, (str) => str.length > 1 ? '.*' : '[^\\/]*') +
+      '(/.*)?$';
   }
 
-  #resolvePattern(pattern: RegExp | string): void {
-    if (typeof pattern === 'string')
-      return this.#resolvePattern(RegExp(pattern, 'i'));
+  #resolveIgnore(ignore: string | string[]): void {
+    if (Array.isArray(ignore)) {
+      for (let i = 0; i < ignore.length; i++)
+        this.#resolveIgnore(ignore[i]);
 
-    this.found = this.found.filter(file => pattern.test(file));
+      return;
+    }
+
+    this.found = this.found.filter(file => !RegExp(ignore).test(file));
   }
 
-  #recursivelyReadDirSync(path: PathLike) {
-    const dirent = readdirSync(path, { withFileTypes: true });
+  #resolveIgnoreFile(ignoreFile: string | string[]): void {
+    if (Array.isArray(ignoreFile)) {
+      for (let i = 0; i < ignoreFile.length; i++)
+        this.#resolveIgnoreFile(ignoreFile[i]);
 
-    for (let i = 0; i < dirent.length; i++) {
-      const element = dirent[i];
+      return;
+    }
 
-      if (element.isDirectory()) {
-        this.#recursivelyReadDirSync(`${path}/${element.name}`);
+    if (existsSync(ignoreFile))
+      this.options.ignore = [
+        ...(this.options.ignore ?? []),
+        ...readFileSync(ignoreFile, 'utf8')
+          .replace(/#[^\r?\n]+/g, '')
+          .split(/\r?\n/)
+          .filter(a => a),
+      ];
+  }
+
+  #resolvePattern(pattern: string | string[]): void {
+    if (Array.isArray(pattern)) {
+      for (let i = 0; i < pattern.length; i++)
+        this.#resolvePattern(pattern[i]);
+
+      return;
+    }
+
+    this.found = this.found.filter(file => RegExp(pattern).test(file));
+  }
+
+  #recursivelyReadDirSync(path: string) {
+    const files = readdirSync(path, { withFileTypes: true });
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      if (file.isDirectory()) {
+        this.#recursivelyReadDirSync(`${path}/${file.name}`);
       } else {
-        this.cache.push(`${path}/${element.name}`);
+        this.cache.push(`${path}/${file.name}`);
       }
     }
   }
 }
 
 export interface FileSystemOptions {
-  ignore?: RegExp | string;
-  pattern?: RegExp | string;
+  ignore?: string[];
+  ignoreFile?: string | string[];
+  pattern?: string[];
 }
