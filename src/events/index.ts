@@ -1,6 +1,5 @@
 import { BitFieldResolvable, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
-import { GlobSync } from 'glob';
-import { posix } from 'node:path';
+import { join } from 'node:path';
 import { client } from '../client';
 import { Event } from '../structures';
 import Util from '../util';
@@ -30,8 +29,8 @@ class EventHandler {
   }
 
   #getEventFiles() {
-    return new GlobSync(posix.join(__dirname.replace(/\\/g, '/'), `*.${fileExt}`), {
-      ignore: ['**/index.@(j|t)s'],
+    return new Util.RecursivelyReadDirSync(join(__dirname, `*.${fileExt}`), {
+      ignore: ['**/index.(j|t)s'],
     }).found;
   }
 

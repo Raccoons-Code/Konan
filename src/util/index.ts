@@ -23,6 +23,7 @@ import { formatLocale, Locales } from './Locales';
 import mathRandom from './mathRandom';
 import objectToTable from './objectToTable';
 import randomizeArray from './randomizeArray';
+import { RecursivelyReadDirSync } from './RecursivelyReadDirSync';
 import regexp from './regexp';
 import removeDuplicatesInArray from './removeDuplicatesInArray';
 import removeFromArray from './removeFromArray';
@@ -59,6 +60,7 @@ export default abstract class Util {
   static objectToTable = objectToTable;
   static regexp = regexp;
   static randomizeArray = randomizeArray;
+  static RecursivelyReadDirSync = RecursivelyReadDirSync;
   static removeDuplicatesInArray = removeDuplicatesInArray;
   static removeFromArray = removeFromArray;
   static snakeCase = snakeCase;

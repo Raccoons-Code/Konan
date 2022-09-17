@@ -1,7 +1,6 @@
 import { Collection } from 'discord.js';
-import { GlobSync } from 'glob';
 import { readdirSync, statSync } from 'node:fs';
-import { join, posix } from 'node:path';
+import { join } from 'node:path';
 import { client } from '../client';
 import { SlashCommand } from '../structures';
 import Util from '../util';
@@ -51,7 +50,7 @@ class CommandHandler {
 
       commands[dir] = new Collection();
 
-      const { found } = new GlobSync(posix.join(__dirname.replace(/\\/g, '/'), dir, `*.${fileExt}`), {
+      const { found } = new Util.RecursivelyReadDirSync(join(__dirname, dir, `*.${fileExt}`), {
         ignore: ['**/.ignore_*'],
       });
 

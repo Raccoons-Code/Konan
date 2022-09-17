@@ -1,7 +1,7 @@
-import { GlobSync } from 'glob';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { posix } from 'node:path';
-import { Resources } from '../src';
+import { join } from 'node:path';
+import { RecursivelyReadDirSync } from '../../util/RecursivelyReadDirSync';
+import type { Resources } from '../src';
 
 const localesPath = 'public/locales';
 
@@ -12,7 +12,7 @@ const langs = readdirSync(`${localesPath}`).filter(f => statSync(`${localesPath}
 for (let i = 0; i < langs.length; i++) {
   const lang = langs[i];
 
-  const { found } = new GlobSync(posix.join(localesPath, lang, '*.json'));
+  const { found } = new RecursivelyReadDirSync(join(localesPath, lang, '*.json'));
 
   if (!translations[lang])
     translations[lang] = {};
