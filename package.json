@@ -4,7 +4,7 @@
   "description": "",
   "main": "src",
   "scripts": {
-    "start": "npm run start:ts",
+    "start": "npm run start:js",
     "build": "tsc",
     "test": "ts-node __test__",
     "test:ts": "tsc --noEmit",
