@@ -1,4 +1,4 @@
-import { Collection } from 'discord.js';
+import { Collection, PermissionsBitField, PermissionsString } from 'discord.js';
 import { readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { client } from '../client';
@@ -14,6 +14,8 @@ class CommandHandler {
   commandsSize: Record<string, number> = {};
   commandTypes: Record<string, string[]>;
   errors: Error[] = [];
+  permissions: PermissionsString[] = [];
+  permsBitfield = 0n;
 
   constructor() {
     this.commandTypes = this.getCommandTypes();
@@ -75,14 +77,21 @@ class CommandHandler {
 
         if (!(command.data && command.execute)) continue;
 
-        if (command.props?.category)
-          this.#setCommandByCategory(command);
+        if (command.props) {
+          if (command.props.category)
+            this.#setCommandByCategory(command);
+          if (command.props.appPermissions)
+            this.permissions.push(command.props.appPermissions);
+        }
 
         commands[dir].set(command.data.name, command);
 
         command.data.aliases?.forEach((alias: string) => commands[dir].set(alias, command));
       }
     }
+
+    this.permissions = [...new Set(this.permissions)];
+    this.permsBitfield = new PermissionsBitField(this.permissions).bitfield;
 
     if (no_reload) return commands;
 
