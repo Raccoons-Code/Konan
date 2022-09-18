@@ -24,14 +24,14 @@ export default class Ready extends Event<'ready'> {
 
     client.invite = client.generateInvite({
       scopes: [ApplicationsCommands, Bot],
-      permissions: BigInt(545460321791),
+      permissions: commandHandler.permsBitfield,
     });
 
     client.stats.fetch();
 
-    this.setPresence(client);
     client.topggAutoposter();
     this.logCommandsErrors(client);
+    this.setPresenceInterval(client);
   }
 
   async logCommandsErrors(client: Client) {
@@ -75,16 +75,18 @@ export default class Ready extends Event<'ready'> {
 
     if (client.stats.guilds)
       activities.push(
-        { name: `${client.stats.members} members`, type: Watching },
+        { name: `${client.stats.members} members`, type: Listening },
         { name: `${client.stats.guilds} servers`, type: Playing },
-        { name: `${client.stats.channels} channels`, type: Listening },
+        { name: `${client.stats.channels} channels`, type: Watching },
       );
 
     client.user?.setPresence({ activities });
+  }
 
-    await waitAsync(10000 * this.Util.mathRandom(6, 1));
-
+  async setPresenceInterval(client: Client) {
     this.setPresence(client);
+    await waitAsync(10000 * this.Util.mathRandom(6, 1));
+    this.setPresenceInterval(client);
   }
 }
 
