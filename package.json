@@ -5,6 +5,7 @@
   "main": "src",
   "scripts": {
     "start": "npm run start:js",
+    "start:ts": "ts-node src",
     "build": "tsc",
     "test": "ts-node __test__",
     "test:ts": "tsc --noEmit",
@@ -12,7 +13,6 @@
     "to_markdown": "ts-node ./src/tomd",
     "dbpush": "prisma db push",
     "start:js": "node dist",
-    "start:ts": "ts-node src",
     "postinstall": "prisma generate"
   },
   "repository": {
