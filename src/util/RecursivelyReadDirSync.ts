@@ -8,8 +8,13 @@ export function normalize(str: string) {
 export class RecursivelyReadDirSync {
   cache: string[] = [];
   found: string[] = [];
+  private debug: Console['log'] = () => null;
 
   constructor(public path: string, public options: FileSystemOptions = {}) {
+    if (options.debug) this.debug = console.log;
+
+    this.debug('path: ', path);
+
     this.path = path = normalize(path).replace(/\/$/, '');
 
     if (options.absolute)
@@ -35,6 +40,8 @@ export class RecursivelyReadDirSync {
 
       this.#resolveIgnore(this.options.ignore);
     }
+
+    this.debug(this);
   }
 
   #formatRegExp<T extends string>(pattern: T): T
@@ -50,7 +57,7 @@ export class RecursivelyReadDirSync {
     return normalize(pattern)
       .replace(/\/$/, '')
       .replace(/\./g, '\\.')
-      .replace(/\*+/g, (str) => str.length > 1 ? '.*' : '[^\\/]*') +
+      .replace(/\*+/g, (str) => str.length > 1 ? '.*' : '[^/]*') +
       '(/.*)?$';
   }
 
@@ -111,6 +118,7 @@ export class RecursivelyReadDirSync {
 
 export interface FileSystemOptions {
   absolute?: boolean;
+  debug?: boolean;
   ignore?: string[];
   ignoreFile?: string | string[];
   pattern?: string[];
