@@ -1,5 +1,4 @@
-import { ApplicationCommandType, ContextMenuCommandBuilder, GuildTextBasedChannel, Message, MessageContextMenuCommandInteraction, PermissionFlagsBits } from 'discord.js';
-import { setTimeout as waitAsync } from 'node:timers/promises';
+import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonStyle, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { MessageContextMenu } from '../../structures';
 
 export default class extends MessageContextMenu {
@@ -29,35 +28,43 @@ export default class extends MessageContextMenu {
       return this.replyMissingPermission(interaction, appPerms, 'missingChannelPermission');
 
     await interaction.deferReply({ ephemeral: true });
+
+    let messages;
     try {
-      const size = await this.bulkDelete(channel, targetMessage);
+      messages = await channel.messages.fetch({ after: targetMessage.id, limit: 100 });
+    } catch { null; }
 
-      return interaction.editReply(this.t(size ? 'messageDeleted' : 'noDeletedMessages', {
-        count: size,
-        locale,
-        size,
-      }));
-    } catch {
-      return interaction.editReply(this.t('messageDeleteError', { locale }));
-    }
-  }
+    if (!messages)
+      return interaction.editReply({
+        embeds: [
+          this.Util.EmbedHelper({
+            title: this.t('noMessagesFound', { locale }),
+          }, 'Error'),
+        ],
+      });
 
-  async bulkDelete(channel: GuildTextBasedChannel, targetMessage: Message, count = 0): Promise<number> {
-    const messages = await channel.messages.fetch({ after: targetMessage.id, limit: 100 });
+    const size = messages.size + 1;
 
-    await waitAsync(1000);
-    const deletedMessages = await channel.bulkDelete(messages, true);
-
-    if (deletedMessages.size < 100)
-      try {
-        await targetMessage.delete();
-
-        return count + deletedMessages.size + 1;
-      } catch {
-        return count + deletedMessages.size;
-      }
-
-    await waitAsync(1000);
-    return await this.bulkDelete(channel, targetMessage, count + deletedMessages.size);
+    return interaction.editReply({
+      embeds: [
+        this.Util.EmbedHelper({}, 'Error')
+          .setTitle(this.t('messageDeleteConfirm', {
+            locale,
+            count: size,
+          })),
+      ],
+      components: [
+        new ActionRowBuilder<ButtonBuilder>()
+          .setComponents([
+            new ButtonBuilder()
+              .setCustomId(JSON.stringify({
+                c: 'clear',
+                msgId: targetMessage.id,
+              }))
+              .setEmoji('🚮')
+              .setStyle(ButtonStyle.Danger),
+          ]),
+      ],
+    });
   }
 }
