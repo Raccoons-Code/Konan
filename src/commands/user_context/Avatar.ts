@@ -43,7 +43,7 @@ export default class Avatar extends UserContextMenu {
       components,
       embeds: [
         new EmbedBuilder()
-          .setColor(targetMember.displayColor ?? targetUser.accentColor ?? 'Random')
+          .setColor(targetMember?.displayColor ?? targetUser.accentColor ?? 'Random')
           .setDescription(`${target}`)
           .setImage(`attachment://${avatar}`),
       ],
