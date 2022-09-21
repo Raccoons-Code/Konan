@@ -1,4 +1,4 @@
-import { Client, codeBlock, EmbedBuilder, MessageFlags, WebhookClient } from 'discord.js';
+import { Client, codeBlock, EmbedBuilder, WebhookClient } from 'discord.js';
 import { env } from 'node:process';
 
 const codeBlockLength = codeBlock('ts').length;
@@ -36,7 +36,6 @@ export default class CommonError {
         avatarURL: data.client?.user?.displayAvatarURL(),
         embeds,
         username: data.client?.user?.username,
-        flags: MessageFlags.Urgent,
       });
     } catch {
       console.error(data.error);
