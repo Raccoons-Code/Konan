@@ -1,8 +1,8 @@
 import DJS, { ClientOptions } from 'discord.js';
 import { env } from 'node:process';
 import AutoPoster from 'topgg-autoposter';
+import { logger } from '.';
 import commandHandler from '../commands';
-import { commonError } from '../errors';
 import eventHandler from '../events';
 import ApplicationStats from './ApplicationStats';
 
@@ -38,7 +38,7 @@ export default class Client extends DJS.Client {
   }
 
   async sendError(error: Error) {
-    commonError.send({ error, client: this });
+    logger.commonError({ error, client: this });
   }
 
   async topggAutoposter(token = env.TOPGG_TOKEN) {

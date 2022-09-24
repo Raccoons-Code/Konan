@@ -2,8 +2,8 @@ import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, Butt
 import { env } from 'node:process';
 import { ShardingClient } from 'statcord.js';
 import type { AnyInteraction } from '../@types';
+import { logger } from '../client';
 import commandHandler from '../commands';
-import { interactionError } from '../errors';
 import { ButtonComponentInteraction, Event, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
 
 const codeBlockLength = codeBlock('properties', '').length;
@@ -28,7 +28,7 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
     try {
       await command.execute(<any>interaction);
     } catch (error: any) {
-      interactionError.send({
+      logger.interactionError({
         client: client,
         commandName: command.data.name,
         commandType: (<CommandInteraction>interaction).commandType,
@@ -69,8 +69,18 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
       } catch { null; }
     }
 
-    if (env.NODE_ENV === 'production' && !await this.Util.getAppOwners.isOwner(client, user.id))
+    if (env.NODE_ENV === 'production' && !await this.Util.getAppOwners.isOwner(client, user.id)) {
       ShardingClient.postCommand(command.data.name, user.id, client);
+
+      logger.OSStats({
+        client: client,
+        commandName: command.data.name,
+        commandType: (<CommandInteraction>interaction).commandType,
+        componentType: (<MessageComponentInteraction>interaction).componentType,
+        options: (<any>interaction).options,
+        type: type,
+      });
+    }
   }
 
   ApplicationCommand(interaction: CommandInteraction) {
