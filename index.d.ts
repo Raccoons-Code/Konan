@@ -16,6 +16,7 @@ declare namespace NodeJS {
     OWNER_ID?: string
     PAYPAL_DONATE_LINK?: string
     STATCORD_KEY?: string
+    STATS_WEBHOOK?: string
     TMDB_APIKEY?: string
     TOPGG_TOKEN?: string
   }
