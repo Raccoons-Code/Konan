@@ -184,6 +184,9 @@ class WebhookLogger {
             { name: 'ID', value: codeBlock(guild.id), inline },
             { name: 'Joined at', value: `${time(guild.joinedAt)}${time(guild.joinedAt, 'R')}`, inline },
             { name: 'Server created at', value: `${time(guild.createdAt)}${time(guild.createdAt, 'R')}`, inline },
+            { name: 'Member count', value: `${guild.memberCount}`, inline },
+            { name: 'Channel count', value: `${guild.channels.cache.size}`, inline },
+            { name: 'Emoji count', value: `${guild.emojis.cache.size}`, inline },
           )
           .setImage(guild.bannerURL({ size: 512 }))
           .setThumbnail(guild.discoverySplashURL({ size: 512 }))
