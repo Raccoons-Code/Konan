@@ -23,6 +23,6 @@ export default class extends SlashCommand {
 
     const game = new TicTacToe({ language: locale.toLowerCase() });
 
-    game.handleInteraction(interaction);
+    game.handleInteraction(<any>interaction);
   }
 }
