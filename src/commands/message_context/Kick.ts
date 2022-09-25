@@ -9,7 +9,7 @@ export default class Kick extends MessageContextMenu {
       .setNameLocalizations(this.getLocalizations('kickName'))
       .setType(ApplicationCommandType.Message)
       .setDMPermission(false)
-      .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers);
+      .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers);
   }
 
   async execute(interaction: MessageContextMenuCommandInteraction<'cached'>) {
