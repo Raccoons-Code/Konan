@@ -1,4 +1,4 @@
-import { NonThreadGuildBasedChannel, Partials } from 'discord.js';
+import { Channel, Partials } from 'discord.js';
 import { Event } from '../structures';
 
 export default class ChannelCreate extends Event<'channelCreate'> {
@@ -10,12 +10,18 @@ export default class ChannelCreate extends Event<'channelCreate'> {
     });
   }
 
-  async execute(channel: NonThreadGuildBasedChannel) {
-    const { client } = channel;
+  async execute(channel: Channel) {
+    channel.client.stats.fetch({ filter: 'channels' });
 
-    client.stats.fetch({ filter: 'channels' });
+    this.sendFirst(channel);
+  }
 
-    if (!(channel.isTextBased() && channel.permissionsFor(client.user!)?.has(this.data.permissions!))) return;
+  async sendFirst(channel: Channel) {
+    if (
+      !channel.isTextBased() ||
+      !channel.isDMBased() &&
+      !channel.permissionsFor(channel.client.user!)?.has(this.data.permissions!)
+    ) return;
 
     channel.send('First!').catch(() => null);
   }
