@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Throw extends SlashCommand {
@@ -7,8 +7,12 @@ export default class Throw extends SlashCommand {
       ownerOnly: true,
     });
 
-    this.data = new SlashCommandBuilder().setName('throw')
-      .setDescription('Throw new error (Restricted for bot\'owners).')
+    this.data.setName('throw')
+      .setDescription('Throw new error (Restricted for bot\'owners).');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
       .setNameLocalizations(this.getLocalizations('throwName'))

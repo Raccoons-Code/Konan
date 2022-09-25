@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Unban extends SlashCommand {
@@ -9,8 +9,12 @@ export default class Unban extends SlashCommand {
       userPermissions: ['BanMembers'],
     });
 
-    this.data = new SlashCommandBuilder().setName('unban')
-      .setDescription('Revoke a user\'s ban.')
+    this.data.setName('unban')
+      .setDescription('Revoke a user\'s ban.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
       .setNameLocalizations(this.getLocalizations('unbanName'))

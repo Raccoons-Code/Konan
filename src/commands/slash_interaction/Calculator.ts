@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, codeBlock, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, codeBlock, EmbedBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class extends SlashCommand {
@@ -7,8 +7,12 @@ export default class extends SlashCommand {
       category: 'Utility',
     });
 
-    this.data = new SlashCommandBuilder().setName('calculator')
+    this.data.setName('calculator')
       .setDescription('Opens a calculator');
+  }
+
+  build() {
+    return this.data;
   }
 
   async execute(interaction: ChatInputCommandInteraction) {

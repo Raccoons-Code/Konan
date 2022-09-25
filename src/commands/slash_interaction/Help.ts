@@ -1,4 +1,4 @@
-import { ActionRowBuilder, APIEmbedField, ApplicationCommandNonOptionsData, ApplicationCommandSubCommand, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, RouteBases, SelectMenuBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, APIEmbedField, ApplicationCommandNonOptionsData, ApplicationCommandSubCommand, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, RouteBases, SelectMenuBuilder } from 'discord.js';
 import { env } from 'node:process';
 import commandHandler from '../../commands';
 import { SlashCommand } from '../../structures';
@@ -9,8 +9,12 @@ export default class Help extends SlashCommand {
       category: 'General',
     });
 
-    this.data = new SlashCommandBuilder().setName('help')
-      .setDescription('Show the help message.')
+    this.data.setName('help')
+      .setDescription('Show the help message.');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('helpName'))
       .setDescriptionLocalizations(this.getLocalizations('helpDescription'))
       .addStringOption(option => option.setName('command')

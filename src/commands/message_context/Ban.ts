@@ -1,13 +1,17 @@
-import { ActionRowBuilder, ApplicationCommandType, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, ModalBuilder, PermissionFlagsBits, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, MessageContextMenuCommandInteraction, ModalBuilder, PermissionFlagsBits, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { MessageContextMenu } from '../../structures';
 
 export default class Ban extends MessageContextMenu {
   constructor() {
     super();
 
-    this.data = new ContextMenuCommandBuilder().setName('Ban')
-      .setNameLocalizations(this.getLocalizations('banName'))
+    this.data.setName('Ban');
+  }
+
+  build() {
+    return this.data
       .setType(ApplicationCommandType.Message)
+      .setNameLocalizations(this.getLocalizations('banName'))
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers);
   }

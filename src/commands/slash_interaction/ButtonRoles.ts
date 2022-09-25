@@ -1,4 +1,4 @@
-import { ActionRowBuilder, APIActionRowComponent, APIButtonComponentWithCustomId, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, Role, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, APIActionRowComponent, APIButtonComponentWithCustomId, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, Role } from 'discord.js';
 import type { ButtonRolesCustomId } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -13,8 +13,12 @@ export default class ButtonRoles extends SlashCommand {
       userPermissions: ['ManageRoles'],
     });
 
-    this.data = new SlashCommandBuilder().setName('buttonroles')
-      .setDescription('Manage button roles.')
+    this.data.setName('buttonroles')
+      .setDescription('Manage button roles.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
       .setNameLocalizations(this.getLocalizations('buttonrolesName'))

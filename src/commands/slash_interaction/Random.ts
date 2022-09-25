@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APIApplicationCommandOptionChoice, ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { APIApplicationCommandOptionChoice, ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommand } from '../../structures';
 import Util from '../../util';
 
@@ -45,8 +45,12 @@ export default class Random extends SlashCommand {
       appPermissions: ['AttachFiles'],
     });
 
-    this.data = new SlashCommandBuilder().setName('random')
-      .setDescription('Replies with random images.')
+    this.data.setName('random')
+      .setDescription('Replies with random images.');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('randomName'))
       .setDescriptionLocalizations(this.getLocalizations('randomDescription'))
       .addStringOption(option => option.setName('type')

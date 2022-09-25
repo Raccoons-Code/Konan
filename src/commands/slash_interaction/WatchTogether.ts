@@ -1,4 +1,4 @@
-import { ChannelType, ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChannelType, ChatInputCommandInteraction } from 'discord.js';
 import { watchTogether } from '../../modules/WatchTogether';
 import { SlashCommand } from '../../structures';
 
@@ -9,8 +9,12 @@ export default class WatchTogether extends SlashCommand {
       appPermissions: ['CreateInstantInvite'],
     });
 
-    this.data = new SlashCommandBuilder().setName('party')
-      .setDescription('Create an activity party together - Powered by Discord Together.')
+    this.data.setName('party')
+      .setDescription('Create an activity party together - Powered by Discord Together.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setNameLocalizations(this.getLocalizations('partyName'))
       .setDescriptionLocalizations(this.getLocalizations('partyDescription'))

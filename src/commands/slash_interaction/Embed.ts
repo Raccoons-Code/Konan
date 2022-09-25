@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, RouteBases, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, RouteBases } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Embed extends SlashCommand {
@@ -11,8 +11,12 @@ export default class Embed extends SlashCommand {
       userPermissions: ['ManageMessages'],
     });
 
-    this.data = new SlashCommandBuilder().setName('embed')
-      .setDescription('Send a embed message.')
+    this.data.setName('embed')
+      .setDescription('Send a embed message.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setNameLocalizations(this.getLocalizations('embedName'))
       .setDescriptionLocalizations(this.getLocalizations('embedDescription'))

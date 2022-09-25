@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import JKP from '../../modules/JKP';
 import { SlashCommand } from '../../structures';
 
@@ -11,8 +11,12 @@ export default class Jankenpon extends SlashCommand {
       category: 'Game',
     });
 
-    this.data = new SlashCommandBuilder().setName('jankenpon')
-      .setDescription('Play a game of Jankenpon with your friends')
+    this.data.setName('jankenpon')
+      .setDescription('Play a game of Jankenpon with your friends');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('jankenponName'))
       .setDescriptionLocalizations(this.getLocalizations('jankenponDescription'))
       .addSubcommandGroup(subcommandgroup => subcommandgroup.setName('game')

@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Kick extends SlashCommand {
@@ -9,8 +9,12 @@ export default class Kick extends SlashCommand {
       userPermissions: ['KickMembers'],
     });
 
-    this.data = new SlashCommandBuilder().setName('kick')
-      .setDescription('Kicks a user from the server.')
+    this.data.setName('kick')
+      .setDescription('Kicks a user from the server.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
       .setNameLocalizations(this.getLocalizations('kickName'))

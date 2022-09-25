@@ -1,5 +1,5 @@
 import translate, { languages } from '@vitalets/google-translate-api';
-import { ApplicationCommandType, codeBlock, ContextMenuCommandBuilder, EmbedBuilder, MessageContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, codeBlock, EmbedBuilder, MessageContextMenuCommandInteraction } from 'discord.js';
 import { MessageContextMenu } from '../../structures';
 
 const langs = Object.keys(languages)
@@ -9,9 +9,13 @@ export default class Translate extends MessageContextMenu {
   constructor() {
     super();
 
-    this.data = new ContextMenuCommandBuilder().setName('Translate')
-      .setNameLocalizations(this.getLocalizations('translateName'))
-      .setType(ApplicationCommandType.Message);
+    this.data.setName('Translate');
+  }
+
+  build() {
+    return this.data
+      .setType(ApplicationCommandType.Message)
+      .setNameLocalizations(this.getLocalizations('translateName'));
   }
 
   async execute(interaction: MessageContextMenuCommandInteraction): Promise<any> {

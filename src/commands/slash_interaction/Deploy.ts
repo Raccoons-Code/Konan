@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { env } from 'node:process';
 import commandHandler from '..';
 import { SlashCommand } from '../../structures';
@@ -11,8 +11,12 @@ export default class Deploy extends SlashCommand {
       ownerOnly: true,
     });
 
-    this.data = new SlashCommandBuilder().setName('deploy')
-      .setDescription('Deploy commands (Restricted for bot\'owners).')
+    this.data.setName('deploy')
+      .setDescription('Deploy commands (Restricted for bot\'owners).');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
       .setNameLocalizations(this.getLocalizations('deployName'))

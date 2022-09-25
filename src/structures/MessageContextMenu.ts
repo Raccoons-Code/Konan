@@ -2,10 +2,14 @@ import { ContextMenuCommandBuilder, MessageContextMenuCommandInteraction } from 
 import BaseApplicationCommand from './BaseApplicationCommand';
 
 export default abstract class MessageContextMenu extends BaseApplicationCommand {
-  data!: ContextMenuCommandBuilder;
+  data = new ContextMenuCommandBuilder();
 
   constructor() {
     super();
+  }
+
+  build() {
+    return this.data;
   }
 
   abstract execute(interaction: MessageContextMenuCommandInteraction): Promise<any>;

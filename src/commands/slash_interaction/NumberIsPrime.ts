@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, codeBlock, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, codeBlock, EmbedBuilder } from 'discord.js';
 import type { PrimeResolveOptions } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -8,8 +8,12 @@ export default class NumberIsPrime extends SlashCommand {
       category: 'Utility',
     });
 
-    this.data = new SlashCommandBuilder().setName('number_is_prime')
-      .setDescription('Verify if number is prime.')
+    this.data.setName('number_is_prime')
+      .setDescription('Verify if number is prime.');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('numberIsPrimeName'))
       .setDescriptionLocalizations(this.getLocalizations('numberIsPrimeDescription'))
       .addIntegerOption(option => option.setName('number')

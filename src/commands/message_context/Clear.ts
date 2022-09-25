@@ -1,13 +1,17 @@
-import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonStyle, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, PermissionFlagsBits } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonStyle, MessageContextMenuCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { MessageContextMenu } from '../../structures';
 
 export default class extends MessageContextMenu {
   constructor() {
     super();
 
-    this.data = new ContextMenuCommandBuilder().setName('Clear up to here')
-      .setNameLocalizations(this.getLocalizations('clearUpToHereName'))
+    this.data.setName('Clear up to here');
+  }
+
+  build() {
+    return this.data
       .setType(ApplicationCommandType.Message)
+      .setNameLocalizations(this.getLocalizations('clearUpToHereName'))
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages);
   }

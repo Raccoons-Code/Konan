@@ -1,5 +1,5 @@
 import translate, { languages } from '@vitalets/google-translate-api';
-import { ChatInputCommandInteraction, codeBlock, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, codeBlock, EmbedBuilder } from 'discord.js';
 import { cache } from '../../modules/Cache';
 import { SlashCommand } from '../../structures';
 
@@ -11,8 +11,12 @@ export default class Translate extends SlashCommand {
       category: 'Utility',
     });
 
-    this.data = new SlashCommandBuilder().setName('translate')
-      .setDescription('Translate text from one language to another. - Powered by Google Translate Api.')
+    this.data.setName('translate')
+      .setDescription('Translate text from one language to another. - Powered by Google Translate Api.');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('translateName'))
       .setDescriptionLocalizations(this.getLocalizations('translateDescription'))
       .addStringOption(option => option.setName('from')

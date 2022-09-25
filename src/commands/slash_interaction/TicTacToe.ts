@@ -1,5 +1,5 @@
 import TicTacToe from 'discord-tictactoe';
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class extends SlashCommand {
@@ -8,8 +8,12 @@ export default class extends SlashCommand {
       category: 'Game',
     });
 
-    this.data = new SlashCommandBuilder().setName('tictactoe')
-      .setDescription('Play a game of Tic Tac Toe with your friends! - Powered by Discord TicTacToe.')
+    this.data.setName('tictactoe')
+      .setDescription('Play a game of Tic Tac Toe with your friends! - Powered by Discord TicTacToe.');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('tictactoeName'))
       .setDescriptionLocalizations(this.getLocalizations('tictactoeDescription'))
       .addUserOption(option => option.setName('opponent')

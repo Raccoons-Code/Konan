@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { QuickDB } from 'quick.db';
 import type { GuessGameData } from '../../@types';
 import { SlashCommand } from '../../structures';
@@ -11,8 +11,12 @@ export default class Guess extends SlashCommand {
       category: 'Game',
     });
 
-    this.data = new SlashCommandBuilder().setName('guess')
-      .setDescription('You have 10 chances to guess the number from 1 to 100 that the bot set.')
+    this.data.setName('guess')
+      .setDescription('You have 10 chances to guess the number from 1 to 100 that the bot set.');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('guessName'))
       .setDescriptionLocalizations(this.getLocalizations('guessDescription'))
       .addIntegerOption(option => option.setName('number')

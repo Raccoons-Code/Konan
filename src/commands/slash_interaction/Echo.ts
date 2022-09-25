@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Echo extends SlashCommand {
@@ -8,8 +8,12 @@ export default class Echo extends SlashCommand {
       appPermissions: ['ManageWebhooks'],
     });
 
-    this.data = new SlashCommandBuilder().setName('echo')
-      .setDescription('Echo your message.')
+    this.data.setName('echo')
+      .setDescription('Echo your message.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setNameLocalizations(this.getLocalizations('echoName'))
       .setDescriptionLocalizations(this.getLocalizations('echoDescription'))

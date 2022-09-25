@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { journals } from '../../modules/News';
 import { SlashCommand } from '../../structures';
 
@@ -11,8 +11,12 @@ export default class News extends SlashCommand {
       category: 'Fun',
     });
 
-    this.data = new SlashCommandBuilder().setName('news')
-      .setDescription('Show news from a journal. Use `/news [category | language] <journal> <new>`')
+    this.data.setName('news')
+      .setDescription('Show news from a journal. Use `/news [category | language] <journal> <new>`');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('newsName'))
       .setDescriptionLocalizations(this.getLocalizations('newsDescription'))
       .addStringOption(option => option.setName('category')

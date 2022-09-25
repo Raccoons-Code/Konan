@@ -77,7 +77,10 @@ class CommandHandler {
 
         if (!(command.data && command.execute)) continue;
 
-        if (command.props) {
+        if (typeof command.build === 'function')
+          command.build();
+
+        if ('props' in command) {
           if (command.props.category)
             this.#setCommandByCategory(command);
           if (command.props.appPermissions)

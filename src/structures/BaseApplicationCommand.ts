@@ -13,6 +13,10 @@ export default abstract class BaseApplicationCommand extends BaseCommand {
     super();
   }
 
+  build() {
+    return this.data;
+  }
+
   abstract execute(...args: any): Promise<any>;
 
   get id() {

@@ -1,5 +1,5 @@
 import { stripIndents } from 'common-tags';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CategoryChannel, Channel, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, GuildMember, inlineCode, Role, SlashCommandBuilder, StageChannel, TextChannel, ThreadChannel, time, userMention, version as djsVersion, VoiceChannel } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CategoryChannel, Channel, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, GuildMember, inlineCode, Role, StageChannel, TextChannel, ThreadChannel, time, userMention, version as djsVersion, VoiceChannel } from 'discord.js';
 import ms from 'ms';
 import { cpus, totalmem, version } from 'node:os';
 import { env, memoryUsage, versions } from 'node:process';
@@ -19,8 +19,12 @@ export default class Info extends SlashCommand {
       category: 'Utility',
     });
 
-    this.data = new SlashCommandBuilder().setName('info')
-      .setDescription('Show the info message.')
+    this.data.setName('info')
+      .setDescription('Show the info message.');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('infoName'))
       .setDescriptionLocalizations(this.getLocalizations('infoDescription'))
       .addSubcommand(subCommand => subCommand.setName('app')

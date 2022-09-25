@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
 import * as googleTTS from 'google-tts-api';
 import { SlashCommand } from '../../structures';
 
@@ -9,8 +9,12 @@ export default class Say extends SlashCommand {
       appPermissions: ['ManageWebhooks'],
     });
 
-    this.data = new SlashCommandBuilder().setName('say')
-      .setDescription('Say something in TTS. - Powered by Google TTS.')
+    this.data.setName('say')
+      .setDescription('Say something in TTS. - Powered by Google TTS.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setNameLocalizations(this.getLocalizations('sayName'))
       .setDescriptionLocalizations(this.getLocalizations('sayDescription'))

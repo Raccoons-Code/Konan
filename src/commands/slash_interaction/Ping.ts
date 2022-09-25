@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Ping extends SlashCommand {
@@ -7,8 +7,12 @@ export default class Ping extends SlashCommand {
       category: 'Utility',
     });
 
-    this.data = new SlashCommandBuilder().setName('ping')
-      .setDescription('Replies with Pong!')
+    this.data.setName('ping')
+      .setDescription('Replies with Pong!');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('pingName'));
   }
 

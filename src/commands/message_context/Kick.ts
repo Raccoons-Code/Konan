@@ -1,13 +1,17 @@
-import { ActionRowBuilder, ApplicationCommandType, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction, ModalBuilder, PermissionFlagsBits, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, MessageContextMenuCommandInteraction, ModalBuilder, PermissionFlagsBits, TextInputBuilder, TextInputStyle } from 'discord.js';
 import { MessageContextMenu } from '../../structures';
 
 export default class Kick extends MessageContextMenu {
   constructor() {
     super();
 
-    this.data = new ContextMenuCommandBuilder().setName('Kick')
-      .setNameLocalizations(this.getLocalizations('kickName'))
+    this.data.setName('Kick');
+  }
+
+  build() {
+    return this.data
       .setType(ApplicationCommandType.Message)
+      .setNameLocalizations(this.getLocalizations('kickName'))
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers);
   }

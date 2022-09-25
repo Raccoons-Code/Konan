@@ -1,4 +1,4 @@
-import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, Role, SelectMenuBuilder, SelectMenuOptionBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, APIActionRowComponent, APISelectMenuComponent, ChatInputCommandInteraction, ComponentType, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, Role, SelectMenuBuilder, SelectMenuOptionBuilder } from 'discord.js';
 import type { SelectRolesOptionValue } from '../../@types';
 import { SlashCommand } from '../../structures';
 
@@ -13,8 +13,12 @@ export default class SelectRoles extends SlashCommand {
       userPermissions: ['ManageRoles'],
     });
 
-    this.data = new SlashCommandBuilder().setName('selectroles')
-      .setDescription('Manage roles with a select menu.')
+    this.data.setName('selectroles')
+      .setDescription('Manage roles with a select menu.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
       .setNameLocalizations(this.getLocalizations('selectrolesName'))

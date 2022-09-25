@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, time } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits, time } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Timeout extends SlashCommand {
@@ -9,8 +9,12 @@ export default class Timeout extends SlashCommand {
       userPermissions: ['ModerateMembers'],
     });
 
-    this.data = new SlashCommandBuilder().setName('timeout')
-      .setDescription('Temporarily mute a user.')
+    this.data.setName('timeout')
+      .setDescription('Temporarily mute a user.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
       .setNameLocalizations(this.getLocalizations('timeoutName'))

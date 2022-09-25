@@ -71,7 +71,7 @@ export interface CommandData {
 
 export interface ApplicationInteractionData {
   name: string
-  description: string
+  description?: string
   appPermissions?: BitFieldResolvable<PermissionsString, bigint>
   userPermissions?: BitFieldResolvable<PermissionsString, bigint>
 }

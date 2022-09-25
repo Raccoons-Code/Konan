@@ -26,7 +26,7 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
     if (!command) return;
 
     try {
-      await command.execute(<any>interaction);
+      await new command.constructor().execute(<any>interaction);
     } catch (error: any) {
       logger.interactionError({
         client: client,

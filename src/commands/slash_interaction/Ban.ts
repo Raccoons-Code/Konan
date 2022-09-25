@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Ban extends SlashCommand {
@@ -11,8 +11,12 @@ export default class Ban extends SlashCommand {
       userPermissions: ['BanMembers'],
     });
 
-    this.data = new SlashCommandBuilder().setName('ban')
-      .setDescription('Bans a user from the server.')
+    this.data.setName('ban')
+      .setDescription('Bans a user from the server.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
       .setNameLocalizations(this.getLocalizations('banName'))

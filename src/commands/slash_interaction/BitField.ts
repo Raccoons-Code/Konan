@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, GatewayIntentBits, GatewayIntentsString, GuildMember, inlineCode, IntentsBitField, PermissionFlagsBits, PermissionsBitField, PermissionsString, Role, SelectMenuOptionBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, GatewayIntentBits, GatewayIntentsString, GuildMember, inlineCode, IntentsBitField, PermissionFlagsBits, PermissionsBitField, PermissionsString, Role, SelectMenuOptionBuilder } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 const permissionsString = <PermissionsString[]>Object.keys(PermissionFlagsBits);
@@ -13,8 +13,12 @@ export default class BitField extends SlashCommand {
       category: 'Utility',
     });
 
-    this.data = new SlashCommandBuilder().setName('bitfield')
-      .setDescription('Bitfield of the specified rules.')
+    this.data.setName('bitfield')
+      .setDescription('Bitfield of the specified rules.');
+  }
+
+  build() {
+    return this.data
       .addSubcommand(subcommand => subcommand.setName('permissions')
         .setDescription('Bitfield of the permissions.')
         .addRoleOption(option => option.setName('role')

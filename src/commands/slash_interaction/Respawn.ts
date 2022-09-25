@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Respawn extends SlashCommand {
@@ -7,8 +7,12 @@ export default class Respawn extends SlashCommand {
       ownerOnly: true,
     });
 
-    this.data = new SlashCommandBuilder().setName('respawn')
-      .setDescription('Respawn application (Restricted for bot\'owners).')
+    this.data.setName('respawn')
+      .setDescription('Respawn application (Restricted for bot\'owners).');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
       .setNameLocalizations(this.getLocalizations('respawnName'))

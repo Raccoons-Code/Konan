@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
 import ms from 'ms';
 import TMDBApi, { APISearchMoviesResults, SortType, SortTypes, Util as TMDBUtil } from '../../modules/TMDBApi';
 import { SlashCommand } from '../../structures';
@@ -14,8 +14,12 @@ export default class Movies extends SlashCommand {
       category: 'Fun',
     });
 
-    this.data = new SlashCommandBuilder().setName('movies')
-      .setDescription('Search, list and see details of movies.')
+    this.data.setName('movies')
+      .setDescription('Search, list and see details of movies.');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('moviesName'))
       .setDescriptionLocalizations(this.getLocalizations('moviesDescription'))
       .addSubcommand(subcommand => subcommand.setName('list')

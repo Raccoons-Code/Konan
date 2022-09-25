@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, GuildTextBasedChannel, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, GuildTextBasedChannel, PermissionFlagsBits } from 'discord.js';
 import { setTimeout as waitAsync } from 'node:timers/promises';
 import { SlashCommand } from '../../structures';
 
@@ -10,8 +10,12 @@ export default class Clear extends SlashCommand {
       userPermissions: ['ManageMessages'],
     });
 
-    this.data = new SlashCommandBuilder().setName('clear')
-      .setDescription('Deletes up to 1000 channel messages at once.')
+    this.data.setName('clear')
+      .setDescription('Deletes up to 1000 channel messages at once.');
+  }
+
+  build() {
+    return this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
       .setNameLocalizations(this.getLocalizations('clearName'))

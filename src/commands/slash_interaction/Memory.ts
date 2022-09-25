@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, time } from 'discord.js';
+import { ChatInputCommandInteraction, time } from 'discord.js';
 import { Memory } from '../../modules/Memory';
 import { MemoryGameMode } from '../../modules/Memory/@types';
 import { SlashCommand } from '../../structures';
@@ -11,8 +11,12 @@ export default class extends SlashCommand {
       category: 'Game',
     });
 
-    this.data = new SlashCommandBuilder().setName('memory')
-      .setDescription('Memory Game')
+    this.data.setName('memory')
+      .setDescription('Memory Game');
+  }
+
+  build() {
+    return this.data
       .addIntegerOption(option => option.setName('mode')
         .setDescription('Choose the game mode.')
         .setChoices(

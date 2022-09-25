@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, inlineCode, messageLink, SlashCommandBuilder, userMention } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, inlineCode, messageLink, userMention } from 'discord.js';
 import { dictionaries } from '../../modules/Dictionaries';
 import { Wordle } from '../../modules/Wordle';
 import { SlashCommand } from '../../structures';
@@ -9,8 +9,12 @@ export default class extends SlashCommand {
       category: 'Game',
     });
 
-    this.data = new SlashCommandBuilder().setName('wordle')
-      .setDescription('The game of wordle.')
+    this.data.setName('wordle')
+      .setDescription('The game of wordle.');
+  }
+
+  build() {
+    return this.data
       .addIntegerOption(option => option.setName('word_size')
         .setDescription('The size of the word to be drawn. default: 4')
         .setMaxValue(10)

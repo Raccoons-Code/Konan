@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, User } from 'discord.js';
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildMember, User } from 'discord.js';
 import { SlashCommand } from '../../structures';
 
 export default class Avatar extends SlashCommand {
@@ -7,8 +7,12 @@ export default class Avatar extends SlashCommand {
       category: 'Utility',
     });
 
-    this.data = new SlashCommandBuilder().setName('avatar')
-      .setDescription('Replies with the user\'s profile picture.')
+    this.data.setName('avatar')
+      .setDescription('Replies with the user\'s profile picture.');
+  }
+
+  build() {
+    return this.data
       .setNameLocalizations(this.getLocalizations('avatarName'))
       .setDescriptionLocalizations(this.getLocalizations('avatarDescription'))
       .addUserOption(option => option.setName('user')
