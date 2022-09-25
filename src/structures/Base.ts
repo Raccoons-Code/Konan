@@ -3,7 +3,11 @@ import { t } from '../translator';
 import Util from '../util';
 import Utils from './Utils';
 
-export default abstract class Base extends Utils {
+interface Base extends Utils {
+  constructor: new (...args: any[]) => this
+}
+
+abstract class Base extends Utils {
   getLocalizations!: typeof Util.getLocalizations;
   regexp!: typeof Util.regexp;
   t!: typeof t;
@@ -24,3 +28,5 @@ export default abstract class Base extends Utils {
 
   abstract execute(...args: any[]): Promise<any>;
 }
+
+export default Base;

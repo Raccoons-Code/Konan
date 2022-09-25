@@ -103,7 +103,7 @@ class EventHandler {
 
       client[event.data.listener!]?.(event.data.name, async (...args: any) => {
         try {
-          await event.execute(...args);
+          await new event.constructor().execute(...args);
         } catch (error: any) {
           client.sendError(error);
         }
