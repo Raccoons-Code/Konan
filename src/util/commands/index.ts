@@ -9,7 +9,6 @@ export * from './createButtonsByRoles';
 export * from './createSelectMenuByRoles';
 export * from './createSelectMenuFromOptions';
 export * from './filterRolesId';
-export * from './getAppOwners';
 export * from './getDefaultOptionFromSelectMenu';
 export * from './getLocalizations';
 export * from './removeButtonsById';

@@ -42,7 +42,7 @@ export default class Deploy extends SlashCommand {
 
     const guilds = env.DISCORD_TEST_GUILD_ID?.split(',') ?? [];
 
-    if (!await this.Util.getAppOwners.isOwner(client, user.id)) return;
+    if (!await client.owners.isOwner(user.id)) return;
 
     await interaction.deferReply({ ephemeral: true });
 

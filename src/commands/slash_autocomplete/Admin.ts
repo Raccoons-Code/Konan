@@ -16,7 +16,7 @@ export default class Admin extends SlashAutocomplete {
 
     const { client, options, user } = interaction;
 
-    if (!await this.Util.getAppOwners.isOwner(client, user.id)) return;
+    if (!await client.owners.isOwner(user.id)) return;
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 

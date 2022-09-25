@@ -23,7 +23,7 @@ export default class Throw extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction) {
     const { client, options, user } = interaction;
 
-    if (!await this.Util.getAppOwners.isOwner(client, user.id)) return;
+    if (!await client.owners.isOwner(user.id)) return;
 
     const error = options.getString('error', true);
 

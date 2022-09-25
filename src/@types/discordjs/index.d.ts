@@ -1,5 +1,6 @@
 import { DiscordTogether } from 'discord-together';
 import { Collection } from 'discord.js';
+import ApplicationOwners from '../../client/ApplicationOwners';
 import ApplicationStats from '../../client/ApplicationStats';
 
 declare module 'discord.js' {
@@ -8,6 +9,7 @@ declare module 'discord.js' {
     discordTogether: DiscordTogether<Record<string, string>>
     invite: string
     stats: ApplicationStats
+    owners: ApplicationOwners
 
     sendError(reason: Error): Promise<void>
     topggAutoposter(token?: string | undefined): Promise<void>

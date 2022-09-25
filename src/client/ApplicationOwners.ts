@@ -1,14 +1,16 @@
 import { Client, Team } from 'discord.js';
 import { env } from 'node:process';
 
-export const getAppOwners = new class GetAppOwners {
-  async getOwnersId(client: Client) {
+export default class ApplicationOwners {
+  constructor(private client: Client) { }
+
+  async getOwnersId() {
     const ownersId = [];
 
     if (env.OWNER_ID)
       ownersId.push(...env.OWNER_ID.split(','));
 
-    const app = await client.application?.fetch();
+    const app = await this.client.application?.fetch();
 
     if (!app?.owner) return ownersId;
 
@@ -20,9 +22,7 @@ export const getAppOwners = new class GetAppOwners {
     return ownersId;
   }
 
-  async isOwner(client: Client, userId: string) {
-    return this.getOwnersId(client).then(o => o.includes(userId));
+  async isOwner(userId: string) {
+    return this.getOwnersId().then(o => o.includes(userId));
   }
-};
-
-export default getAppOwners;
+}

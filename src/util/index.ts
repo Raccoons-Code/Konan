@@ -2,7 +2,7 @@ import arrayToTable from './arrayToTable';
 import BitField from './BitField';
 import Bytes from './Byte';
 import capitalize from './capitalize';
-import { addButtonsByRoles, addButtonsToRows, addOptionsToSelectMenuInRow, addSelectMenuByRoles, calculateBitFieldFromSelectMenus, ComponentLink, componentsHasRoles, createButtonsByRoles, createSelectMenuByRoles, createSelectMenuFromOptions, filterRolesId, getAppOwners, getDefaultOptionFromSelectMenu, getLocalizations, removeButtonsById, removeButtonsByRoleId, removeOptionsByRolesFromSelectMenu, removeOptionsFromSelectMenu, reorganizeButtons, reorganizeOptionsByDefaultInSelectMenu, setBitFieldValuesOnSelectMenus, setDefaultRole } from './commands';
+import { addButtonsByRoles, addButtonsToRows, addOptionsToSelectMenuInRow, addSelectMenuByRoles, calculateBitFieldFromSelectMenus, ComponentLink, componentsHasRoles, createButtonsByRoles, createSelectMenuByRoles, createSelectMenuFromOptions, filterRolesId, getDefaultOptionFromSelectMenu, getLocalizations, removeButtonsById, removeButtonsByRoleId, removeOptionsByRolesFromSelectMenu, removeOptionsFromSelectMenu, reorganizeButtons, reorganizeOptionsByDefaultInSelectMenu, setBitFieldValuesOnSelectMenus, setDefaultRole } from './commands';
 import composition from './composition';
 import Constants from './Constants';
 import djsLimits from './djsLimits';
@@ -82,7 +82,6 @@ export default abstract class Util {
   static createSelectMenuFromOptions = createSelectMenuFromOptions;
   static createSelectMenuByRoles = createSelectMenuByRoles;
   static filterRolesId = filterRolesId;
-  static getAppOwners = getAppOwners;
   static getDefaultOptionFromSelectMenu = getDefaultOptionFromSelectMenu;
   static getLocalizations = getLocalizations;
   static removeButtonsById = removeButtonsById;
