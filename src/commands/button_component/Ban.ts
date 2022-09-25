@@ -27,14 +27,14 @@ export default class Ban extends ButtonComponentInteraction {
 
     const reason = `${member.displayName}: ${message.embeds[0].fields?.[0].value}`.slice(0, 512);
 
-    const deleteMessageDays = parseInt(`${message.embeds[0].fields?.[1].value}`);
+    const deleteMessageSeconds = parseInt(`${message.embeds[0].fields?.[1].value}`);
 
     const failed: string[] = [];
 
     const banUsers = guild.members.fetch({ user: usersId })
       .then(collection => collection.toJSON().map(user =>
         (user.bannable && user.isBannableBy(member)) ?
-          guild.bans.create(user.id, { deleteMessageDays, reason })
+          guild.bans.create(user.id, { deleteMessageSeconds, reason })
             .catch(() => failed.push(userMention(user.id)) && undefined) :
           failed.push(userMention(user.id)) && undefined));
 

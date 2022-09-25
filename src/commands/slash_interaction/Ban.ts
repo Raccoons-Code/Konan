@@ -31,12 +31,24 @@ export default class Ban extends SlashCommand {
           .setNameLocalizations(this.getLocalizations('banSingleDeleteMessagesName'))
           .setDescriptionLocalizations(this.getLocalizations('banSingleDeleteMessagesDescription'))
           .setChoices({
+            name: 'Last 1 hours',
+            value: 60 * 60,
+            name_localizations: this.getLocalizations('lastNHours', { n: 1 }),
+          }, {
+            name: 'Last 6 hours',
+            value: 60 * 60 * 6,
+            name_localizations: this.getLocalizations('lastNHours', { n: 6 }),
+          }, {
             name: 'Last 24 hours',
-            value: 1,
+            value: 60 * 60 * 24,
             name_localizations: this.getLocalizations('lastNHours', { n: 24 }),
           }, {
+            name: 'Last 3 days',
+            value: 60 * 60 * 24 * 3,
+            name_localizations: this.getLocalizations('lastNDays', { n: 3 }),
+          }, {
             name: 'Last 7 days',
-            value: 7,
+            value: 60 * 60 * 24 * 7,
             name_localizations: this.getLocalizations('lastNDays', { n: 7 }),
           }))
         .addStringOption(option => option.setName('reason')
@@ -58,12 +70,24 @@ export default class Ban extends SlashCommand {
           .setNameLocalizations(this.getLocalizations('banChunkDeleteMessagesName'))
           .setDescriptionLocalizations(this.getLocalizations('banChunkDeleteMessagesDescription'))
           .setChoices({
+            name: 'Last 1 hours',
+            value: 60 * 60,
+            name_localizations: this.getLocalizations('lastNHours', { n: 1 }),
+          }, {
+            name: 'Last 6 hours',
+            value: 60 * 60 * 6,
+            name_localizations: this.getLocalizations('lastNHours', { n: 6 }),
+          }, {
             name: 'Last 24 hours',
-            value: 1,
+            value: 60 * 60 * 24,
             name_localizations: this.getLocalizations('lastNHours', { n: 24 }),
           }, {
+            name: 'Last 3 days',
+            value: 60 * 60 * 24 * 3,
+            name_localizations: this.getLocalizations('lastNDays', { n: 3 }),
+          }, {
             name: 'Last 7 days',
-            value: 7,
+            value: 60 * 60 * 24 * 7,
             name_localizations: this.getLocalizations('lastNDays', { n: 7 }),
           }))
         .addStringOption(option => option.setName('reason')
@@ -101,12 +125,12 @@ export default class Ban extends SlashCommand {
     if (!(user?.bannable && user.isBannableBy(member)))
       return interaction.editReply(this.t('banHierarchyError', { locale }));
 
-    const deleteMessageDays = options.getInteger('delete_messages') ?? 0;
+    const deleteMessageSeconds = options.getInteger('delete_messages') ?? 0;
 
     const reason = `${member.displayName}: ${options.getString('reason') || '-'}`.slice(0, 512);
 
     try {
-      await guild.bans.create(user, { deleteMessageDays, reason });
+      await guild.bans.create(user, { deleteMessageSeconds, reason });
 
       return interaction.editReply(this.t('userBanned', { locale }));
     } catch {
@@ -128,7 +152,7 @@ export default class Ban extends SlashCommand {
     if (!usersArray.length)
       return interaction.editReply('No users were found in the users input.');
 
-    const days = options.getInteger('delete_messages') ?? 0;
+    const seconds = options.getInteger('delete_messages') ?? 0;
 
     const reason = options.getString('reason') || '-';
 
@@ -140,7 +164,11 @@ export default class Ban extends SlashCommand {
           value: reason,
         }, {
           name: 'Delete messages',
-          value: days ? `${days} day${days === 1 ? '' : 's'}` : '-',
+          value: seconds ? [
+            seconds, ' ',
+            seconds > (60 * 60 * 24) ? 'day' : 'hour',
+            seconds === (60 * 60) || seconds === (60 * 60 * 24) ? '' : 's',
+          ].join('') : '-',
         }])
         .setTitle(`Chunk of users to ban [${usersArray.length}]`),
     ];

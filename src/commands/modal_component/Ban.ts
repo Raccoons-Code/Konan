@@ -22,14 +22,14 @@ export default class Ban extends ModalSubmit {
         ephemeral: true,
       });
 
-    const days = parseInt(fields.getTextInputValue('days'));
+    const hours = parseInt(fields.getTextInputValue('hours'));
 
-    const deleteMessageDays = Math.max(0, Math.min(7, days));
+    const deleteMessageSeconds = Math.max(0, Math.min(60 * 60 * 24 * 7, hours * 60 * 60));
 
     const reason = `${member.displayName}: ${fields.getTextInputValue('reason') || '-'}`.slice(0, 512);
 
     try {
-      await guild.bans.create(userId, { deleteMessageDays, reason });
+      await guild.bans.create(userId, { deleteMessageSeconds, reason });
 
       return interaction.reply({
         content: this.t('userBanned', { locale }),

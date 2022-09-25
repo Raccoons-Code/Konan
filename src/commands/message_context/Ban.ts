@@ -33,10 +33,10 @@ export default class Ban extends MessageContextMenu {
           new ActionRowBuilder<TextInputBuilder>()
             .setComponents([
               new TextInputBuilder()
-                .setCustomId('days')
-                .setLabel('Days of message deletion')
-                .setMaxLength(1)
-                .setPlaceholder('Max of 7 days')
+                .setCustomId('hours')
+                .setLabel('Hours of message deletion')
+                .setMaxLength(3)
+                .setPlaceholder('Max of 7 days (168 hours)')
                 .setStyle(TextInputStyle.Short),
             ]),
         ]),
