@@ -6,7 +6,7 @@ export default abstract class Event<K extends keyof ClientEvents = keyof ClientE
   constructor(public data: EventData & { name: K }) {
     super();
 
-    data.listener = <ListenerString>data.listener?.match(/(on(ce)?)/)?.[1] || 'on';
+    this.data.listener = <ListenerString>data.listener?.match(/(on(ce)?)/)?.[1] || 'on';
   }
 
   abstract execute(...args: ClientEvents[K]): Promise<any>;
