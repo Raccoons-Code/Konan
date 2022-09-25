@@ -1,19 +1,17 @@
-import { APIActionRowComponent, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ComponentType, SlashCommandBuilder } from 'discord.js';
-import { SlashCommand } from '../../structures';
+import { APIActionRowComponent, APISelectMenuComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ComponentType } from 'discord.js';
+import { SlashAutocomplete } from '../../structures';
 
-export default class SelectRoles extends SlashCommand {
+export default class SelectRoles extends SlashAutocomplete {
   [x: string]: any;
   CommandNameRegExp = /"c":"selectroles"/;
 
   constructor() {
     super({
-      category: 'Moderation',
+      name: 'selectroles',
+      description: 'Manage roles with a select menu.',
       appPermissions: ['EmbedLinks', 'ManageRoles', 'SendMessages'],
       userPermissions: ['ManageRoles'],
     });
-
-    this.data = new SlashCommandBuilder().setName('selectroles')
-      .setDescription('Manage roles with a select menu.');
   }
 
   async execute(interaction: AutocompleteInteraction<'cached'>) {

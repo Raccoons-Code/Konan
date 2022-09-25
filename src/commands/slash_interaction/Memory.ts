@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, ChatInputCommandInteraction, SlashCommandBuilder, time } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, time } from 'discord.js';
 import { Memory } from '../../modules/Memory';
 import { MemoryGameMode } from '../../modules/Memory/@types';
 import { SlashCommand } from '../../structures';
@@ -26,8 +26,6 @@ export default class extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    if (interaction.isAutocomplete()) return this.executeAutocomplete(interaction);
-
     const { channel, options, user } = interaction;
 
     const emojis = <string[]>Memory.getEmojis(options.getString('emojis')!);
@@ -79,27 +77,5 @@ export default class extends SlashCommand {
         [false, false, true, true][mode] ? `Player: ${[user, opponent][Math.floor(Math.random() * 2)]}` : '',
       ].join('\n'),
     });
-  }
-
-  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
-    if (interaction.responded) return;
-
-    const focused = interaction.options.getFocused(true);
-    const pattern = RegExp(focused.value, 'i');
-
-    if (focused.name === 'emojis') {
-      const emojis = Object.entries(Memory.Emojis).filter(a => pattern.test(a[0]));
-
-      for (let i = 0; i < emojis.length; i++) {
-        const emoji = emojis[i];
-
-        res.push({
-          name: emoji[0],
-          value: emoji[0],
-        });
-      }
-    }
-
-    return interaction.respond(res);
   }
 }

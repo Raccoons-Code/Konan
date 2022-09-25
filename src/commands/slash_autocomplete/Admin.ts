@@ -1,16 +1,14 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
-import { SlashCommand } from '../../structures';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
+import { SlashAutocomplete } from '../../structures';
 
-export default class Admin extends SlashCommand {
+export default class Admin extends SlashAutocomplete {
   [x: string]: any;
 
   constructor() {
     super({
-      ownerOnly: true,
+      name: 'admin',
+      description: 'Admin commands (Restricted for bot\'owners).',
     });
-
-    this.data = new SlashCommandBuilder().setName('admin')
-      .setDescription('Admin commands (Restricted for bot\'owners).');
   }
 
   async execute(interaction: AutocompleteInteraction) {

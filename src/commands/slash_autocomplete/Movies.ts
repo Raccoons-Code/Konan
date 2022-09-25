@@ -1,17 +1,15 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import TMDBApi from '../../modules/TMDBApi';
-import { SlashCommand } from '../../structures';
+import { SlashAutocomplete } from '../../structures';
 
-export default class Movies extends SlashCommand {
+export default class Movies extends SlashAutocomplete {
   [x: string]: any;
 
   constructor() {
     super({
-      category: 'Fun',
+      name: 'movies',
+      description: 'Search, list and see details of movies.',
     });
-
-    this.data = new SlashCommandBuilder().setName('movies')
-      .setDescription('Search, list and see details of movies.');
   }
 
   async execute(interaction: AutocompleteInteraction) {

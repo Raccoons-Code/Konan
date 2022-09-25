@@ -1,22 +1,16 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import commandHandler from '../../commands';
-import { SlashCommand } from '../../structures';
+import { SlashAutocomplete } from '../../structures';
 
-export default class Help extends SlashCommand {
+export default class Help extends SlashAutocomplete {
   constructor() {
     super({
-      category: 'General',
+      name: 'help',
+      description: 'Show the help message.',
     });
-
-    this.data = new SlashCommandBuilder().setName('help')
-      .setDescription('Show the help message.');
   }
 
-  async execute(interaction: AutocompleteInteraction) {
-    return this.executeAutocomplete(interaction);
-  }
-
-  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
+  async execute(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { options } = interaction;

@@ -1,6 +1,6 @@
 export interface MemoryGameCreateOptions {
   emojis?: string[];
-  mode?: MemoryGameMode | keyof typeof MemoryGameMode
+  mode?: MemoryGameMode
   time?: Date | number | string;
 }
 

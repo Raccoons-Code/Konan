@@ -1,26 +1,17 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
-import { SlashCommand } from '../../structures';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
+import { SlashAutocomplete } from '../../structures';
 
-export default class Unban extends SlashCommand {
+export default class Unban extends SlashAutocomplete {
   constructor() {
     super({
-      category: 'Moderation',
+      name: 'unban',
+      description: 'Revoke a user\'s ban.',
       appPermissions: ['BanMembers'],
       userPermissions: ['BanMembers'],
     });
-
-    this.data = new SlashCommandBuilder().setName('unban')
-      .setDescription('Revoke a user\'s ban.');
   }
 
-  async execute(interaction: AutocompleteInteraction<'cached'>) {
-    return this.executeAutocomplete(interaction);
-  }
-
-  async executeAutocomplete(
-    interaction: AutocompleteInteraction<'cached'>,
-    res: ApplicationCommandOptionChoiceData[] = [],
-  ) {
+  async execute(interaction: AutocompleteInteraction<'cached'>, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { guild, options } = interaction;

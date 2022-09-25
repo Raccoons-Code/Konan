@@ -1,21 +1,19 @@
 import translate, { languages } from '@vitalets/google-translate-api';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
-import { SlashCommand } from '../../structures';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
+import { SlashAutocomplete } from '../../structures';
 
 const Choices = <[string, string][]>Object.keys(languages)
   .filter(l => !/(isSupported|getCode)/.test(l))
   .map((l) => [languages[<'auto'>l], l]);
 
-export default class Translate extends SlashCommand {
+export default class Translate extends SlashAutocomplete {
   [x: string]: any;
 
   constructor() {
     super({
-      category: 'Utility',
+      name: 'translate',
+      description: 'Translate text from one language to another. - Powered by Google Translate Api.',
     });
-
-    this.data = new SlashCommandBuilder().setName('translate')
-      .setDescription('Translate text from one language to another. - Powered by Google Translate Api.');
   }
 
   async execute(interaction: AutocompleteInteraction): Promise<any> {

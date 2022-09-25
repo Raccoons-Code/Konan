@@ -1,18 +1,16 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
-import { SlashCommand } from '../../structures';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
+import { SlashAutocomplete } from '../../structures';
 
-export default class Embed extends SlashCommand {
+export default class Embed extends SlashAutocomplete {
   [x: string]: any;
 
   constructor() {
     super({
-      category: 'Utility',
+      name: 'embed',
+      description: 'Send a embed message.',
       appPermissions: ['SendMessages', 'AttachFiles'],
       userPermissions: ['ManageMessages'],
     });
-
-    this.data = new SlashCommandBuilder().setName('embed')
-      .setDescription('Send a embed message.');
   }
 
   async execute(interaction: AutocompleteInteraction<'cached'>) {

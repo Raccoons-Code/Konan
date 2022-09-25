@@ -1,18 +1,16 @@
 import axios from 'axios';
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import { journals, languages } from '../../modules/News';
-import { SlashCommand } from '../../structures';
+import { SlashAutocomplete } from '../../structures';
 
-export default class News extends SlashCommand {
+export default class News extends SlashAutocomplete {
   [x: string]: any;
 
   constructor() {
     super({
-      category: 'Fun',
+      name: 'news',
+      description: 'Show news from a journal. Use `/news [category | language] <journal> <new>`',
     });
-
-    this.data = new SlashCommandBuilder().setName('news')
-      .setDescription('Show news from a journal. Use `/news [category | language] <journal> <new>`');
   }
 
   async execute(interaction: AutocompleteInteraction): Promise<any> {

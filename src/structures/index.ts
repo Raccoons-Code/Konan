@@ -7,6 +7,7 @@ import Event from './Event';
 import MessageContextMenu from './MessageContextMenu';
 import ModalSubmit from './ModalSubmit';
 import SelectMenuComponentInteraction from './SelectMenuComponentInteraction';
+import SlashAutocomplete from './SlashAutocomplete';
 import SlashCommand from './SlashCommand';
 import UserContextMenu from './UserContextMenu';
 
@@ -20,6 +21,7 @@ export * from './Event';
 export * from './MessageContextMenu';
 export * from './ModalSubmit';
 export * from './SelectMenuComponentInteraction';
+export * from './SlashAutocomplete';
 export * from './SlashCommand';
 export * from './UserContextMenu';
 export {
@@ -32,6 +34,7 @@ export {
   MessageContextMenu,
   ModalSubmit,
   SelectMenuComponentInteraction,
+  SlashAutocomplete,
   SlashCommand,
   UserContextMenu,
 };

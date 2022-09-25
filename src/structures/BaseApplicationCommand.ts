@@ -1,8 +1,10 @@
-import { PermissionsString } from 'discord.js';
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionAllowedChannelTypes, ButtonStyle, ChannelType, GuildTextChannelType, PermissionsString } from 'discord.js';
 import { MissingPermissionResponse } from '../@enum';
 import type { AnyInteraction } from '../@types';
 import { client } from '../client';
 import BaseCommand from './BaseCommand';
+
+const { AnnouncementThread, GuildAnnouncement, GuildText, GuildVoice, PrivateThread, PublicThread } = ChannelType;
 
 export default abstract class BaseApplicationCommand extends BaseCommand {
   abstract data: any;
@@ -80,5 +82,41 @@ export default abstract class BaseApplicationCommand extends BaseCommand {
     }
 
     return interaction.reply({ embeds, ephemeral: true });
+  }
+
+  buttonStyles: { name: keyof typeof ButtonStyle, value: ButtonStyle }[] = [
+    { name: 'Primary', value: ButtonStyle.Primary },
+    { name: 'Secondary', value: ButtonStyle.Secondary },
+    { name: 'Success', value: ButtonStyle.Success },
+    { name: 'Danger', value: ButtonStyle.Danger },
+  ];
+
+  ButtonStylesChoices: APIApplicationCommandOptionChoice<number>[] = this.buttonStyles.map(style => ({
+    name: style.name,
+    value: style.value,
+    name_localizations: this.getLocalizations(style.name),
+  }));
+
+  GuildTextChannelTypes: Extract<ApplicationCommandOptionAllowedChannelTypes, GuildTextChannelType>[] =
+    [AnnouncementThread, GuildAnnouncement, GuildText, GuildVoice, PrivateThread, PublicThread];
+
+  get randomButtonStyle() {
+    return this.buttonStyles[Math.floor(Math.random() * this.buttonStyles.length)];
+  }
+
+  getChoicesFromEnum<
+    V extends number | string = number | string,
+    T extends Record<any, any> = Record<number | string, number | string>
+  >(
+    enumType: T,
+    withLocalizations = true,
+  ) {
+    return Object.entries(enumType)
+      .filter(e => isNaN(<any>e[0]))
+      .map(([key, value]) => ({
+        name: this.t(key, { locale: 'en' }),
+        value: value as V,
+        name_localizations: withLocalizations ? this.getLocalizations(key) : {},
+      }));
   }
 }

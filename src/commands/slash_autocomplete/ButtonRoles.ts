@@ -1,20 +1,18 @@
-import { APIActionRowComponent, APIButtonComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonStyle, ComponentType, SlashCommandBuilder } from 'discord.js';
+import { APIActionRowComponent, APIButtonComponent, ApplicationCommandOptionChoiceData, AutocompleteInteraction, ButtonStyle, ComponentType } from 'discord.js';
 import type { ButtonRolesCustomId } from '../../@types';
-import { SlashCommand } from '../../structures';
+import { SlashAutocomplete } from '../../structures';
 
-export default class ButtonRoles extends SlashCommand {
+export default class ButtonRoles extends SlashAutocomplete {
   [x: string]: any;
   CommandNameRegExp = /"c":"buttonroles"/;
 
   constructor() {
     super({
-      category: 'Moderation',
+      name: 'buttonroles',
+      description: 'Manage button roles.',
       appPermissions: ['EmbedLinks', 'ManageRoles', 'SendMessages'],
       userPermissions: ['ManageRoles'],
     });
-
-    this.data = new SlashCommandBuilder().setName('buttonroles')
-      .setDescription('Manage button roles.');
   }
 
   async execute(interaction: AutocompleteInteraction<'cached'>): Promise<any> {

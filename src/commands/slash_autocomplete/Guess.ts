@@ -1,25 +1,19 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import { QuickDB } from 'quick.db';
 import type { GuessGameData } from '../../@types';
-import { SlashCommand } from '../../structures';
+import { SlashAutocomplete } from '../../structures';
 
 const quickDb = new QuickDB();
 
-export default class Guess extends SlashCommand {
+export default class Guess extends SlashAutocomplete {
   constructor() {
     super({
-      category: 'Game',
+      name: 'guess',
+      description: 'You have 10 chances to guess the number from 1 to 100 that the bot set.',
     });
-
-    this.data = new SlashCommandBuilder().setName('guess')
-      .setDescription('You have 10 chances to guess the number from 1 to 100 that the bot set.');
   }
 
-  async execute(interaction: AutocompleteInteraction) {
-    return this.executeAutocomplete(interaction);
-  }
-
-  async executeAutocomplete(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
+  async execute(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
     if (interaction.responded) return;
 
     const { guildId, options, user } = interaction;

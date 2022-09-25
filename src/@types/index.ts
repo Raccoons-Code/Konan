@@ -1,5 +1,5 @@
 import { AutocompleteInteraction, BitFieldResolvable, ButtonInteraction, ChatInputCommandInteraction, ClientEvents, Collection, CommandInteraction, ContextMenuCommandInteraction, GatewayIntentsString, Interaction, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, PermissionsString, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
-import { BaseApplicationCommand, BaseCommand, ButtonComponentInteraction, Command, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashCommand, UserContextMenu } from '../structures';
+import { BaseApplicationCommand, BaseCommand, ButtonComponentInteraction, Command, MessageContextMenu, ModalSubmit, SelectMenuComponentInteraction, SlashAutocomplete, SlashCommand, UserContextMenu } from '../structures';
 
 export * from './customid';
 export * from './quickdb';
@@ -10,6 +10,7 @@ export type AnyApplicationCommand = BaseApplicationCommand & (
   | MessageContextMenu
   | ModalSubmit
   | SelectMenuComponentInteraction
+  | SlashAutocomplete
   | SlashCommand
   | UserContextMenu
 )
@@ -68,10 +69,11 @@ export interface CommandData {
   userPermissions?: BitFieldResolvable<PermissionsString, bigint>
 }
 
-export interface ComponentInteractionData {
+export interface ApplicationInteractionData {
   name: string
   description: string
   appPermissions?: BitFieldResolvable<PermissionsString, bigint>
+  userPermissions?: BitFieldResolvable<PermissionsString, bigint>
 }
 
 export interface EventData {

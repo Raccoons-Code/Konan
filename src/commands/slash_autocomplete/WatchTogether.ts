@@ -1,16 +1,14 @@
-import { ApplicationCommandOptionChoiceData, AutocompleteInteraction, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import { watchTogether } from '../../modules/WatchTogether';
-import { SlashCommand } from '../../structures';
+import { SlashAutocomplete } from '../../structures';
 
-export default class WatchTogether extends SlashCommand {
+export default class WatchTogether extends SlashAutocomplete {
   constructor() {
     super({
-      category: 'Utility',
+      name: 'party',
+      description: 'Create an activity party together - Powered by Discord Together.',
       appPermissions: ['CreateInstantInvite'],
     });
-
-    this.data = new SlashCommandBuilder().setName('party')
-      .setDescription('Create an activity party together - Powered by Discord Together.');
   }
 
   async execute(interaction: AutocompleteInteraction<'cached'>) {
