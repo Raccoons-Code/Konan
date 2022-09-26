@@ -27,19 +27,27 @@ export default class extends ButtonComponentInteraction {
 
     const { msgId } = JSON.parse(customId);
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.update({ components: [] });
     try {
       const targetMessage = await channel.messages.fetch(msgId);
 
       const size = await this.bulkDelete(channel, targetMessage);
 
-      return interaction.editReply(this.t(size ? 'messageDeleted' : 'noDeletedMessages', {
-        count: size,
-        locale,
-        size,
-      }));
+      return interaction.editReply({
+        content: this.t(size ? 'messageDeleted' : 'noDeletedMessages', {
+          count: size,
+          locale,
+          size,
+        }),
+        embeds: [],
+      });
     } catch {
-      return interaction.editReply(this.t('messageDeleteError', { locale }));
+      return interaction.editReply({
+        content: this.t('messageDeleteError', {
+          locale,
+        }),
+        embeds: [],
+      });
     }
   }
 

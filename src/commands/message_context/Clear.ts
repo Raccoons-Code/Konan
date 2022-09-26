@@ -53,8 +53,9 @@ export default class extends MessageContextMenu {
       embeds: [
         this.Util.EmbedHelper({}, 'Error')
           .setTitle(this.t('messageDeleteConfirm', {
-            locale,
             count: size,
+            locale,
+            size,
           })),
       ],
       components: [
