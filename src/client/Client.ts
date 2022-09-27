@@ -20,6 +20,14 @@ export default class Client extends DJS.Client {
       intents: eventHandler.intents,
       failIfNotExists: false,
       partials: eventHandler.partials,
+      shards: 'auto',
+      sweepers: {
+        messages:
+        {
+          interval: 3600,
+          lifetime: 14400,
+        },
+      },
     });
   }
 
