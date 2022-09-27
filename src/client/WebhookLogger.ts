@@ -117,27 +117,31 @@ class WebhookLogger {
     ].filter(a => a);
 
     const stats = stripIndents(`
-      RAM     : ${new Util.Bytes(heapUsed)} / ${new Util.Bytes(totalmem())}
+      RAM : ${new Util.Bytes(heapUsed)} / ${new Util.Bytes(totalmem())}
     `);
 
-    this.#STATS_WEBHOOK.send({
-      avatarURL: data.client?.user?.displayAvatarURL(),
-      embeds: [
-        new EmbedBuilder()
-          .setFields([
-            { name: 'Stats', value: codeBlock('properties', stats) }, {
-              name: 'Command',
-              value: codeBlock('properties', `${commandName.join(' > ')}`),
-              inline: true,
-            }, {
-              name: 'Type',
-              value: codeBlock('properties', `${interactionType.join(' > ')}`),
-              inline: true,
-            },
-          ]),
-      ],
-      username: data.client?.user?.username,
-    });
+    try {
+      await this.#STATS_WEBHOOK.send({
+        avatarURL: data.client?.user?.displayAvatarURL(),
+        embeds: [
+          new EmbedBuilder()
+            .setFields([
+              { name: 'Stats', value: codeBlock('properties', stats) }, {
+                name: 'Command',
+                value: codeBlock('properties', `${commandName.join(' > ')}`),
+                inline: true,
+              }, {
+                name: 'Type',
+                value: codeBlock('properties', `${interactionType.join(' > ')}`),
+                inline: true,
+              },
+            ]),
+        ],
+        username: data.client?.user?.username,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async newGuild(guild: Guild) {
@@ -146,55 +150,63 @@ class WebhookLogger {
     const invites = await guild.invites.fetch();
     const invite = invites.find(i => !i.temporary);
 
-    await this.#LOGGER_WEBHOOK.send({
-      avatarURL: guild.client.user?.displayAvatarURL(),
-      embeds: [
-        new EmbedBuilder()
-          .setAuthor({ name: guild.name, url: invite?.url, iconURL: guild.iconURL() ?? undefined })
-          .setColor('Green')
-          .setDescription(guild.description)
-          .setFields(
-            { name: 'ID', value: codeBlock(guild.id), inline },
-            { name: 'Owner', value: userMention(guild.ownerId), inline },
-            { name: 'Preferred locale', value: inlineCode(guild.preferredLocale), inline },
-            { name: 'Member count', value: `${guild.memberCount}`, inline },
-            { name: 'Channel count', value: `${guild.channels.cache.size}`, inline },
-            { name: 'Emoji count', value: `${guild.emojis.cache.size}`, inline },
-            { name: 'Server created at', value: `${time(guild.createdAt)}${time(guild.createdAt, 'R')}`, inline },
-          )
-          .setImage(guild.bannerURL({ size: 512 }))
-          .setThumbnail(guild.discoverySplashURL({ size: 512 }))
-          .setTimestamp(guild.joinedAt)
-          .setTitle('YEAH! I joined a new server!'),
-      ],
-      username: guild.client.user?.username,
-    });
+    try {
+      await this.#LOGGER_WEBHOOK.send({
+        avatarURL: guild.client.user?.displayAvatarURL(),
+        embeds: [
+          new EmbedBuilder()
+            .setAuthor({ name: guild.name, url: invite?.url, iconURL: guild.iconURL() ?? undefined })
+            .setColor('Green')
+            .setDescription(guild.description)
+            .setFields(
+              { name: 'ID', value: codeBlock(guild.id), inline },
+              { name: 'Owner', value: userMention(guild.ownerId), inline },
+              { name: 'Preferred locale', value: inlineCode(guild.preferredLocale), inline },
+              { name: 'Member count', value: `${guild.memberCount}`, inline },
+              { name: 'Channel count', value: `${guild.channels.cache.size}`, inline },
+              { name: 'Emoji count', value: `${guild.emojis.cache.size}`, inline },
+              { name: 'Server created at', value: `${time(guild.createdAt)}${time(guild.createdAt, 'R')}`, inline },
+            )
+            .setImage(guild.bannerURL({ size: 512 }))
+            .setThumbnail(guild.discoverySplashURL({ size: 512 }))
+            .setTimestamp(guild.joinedAt)
+            .setTitle('YEAH! I joined a new server!'),
+        ],
+        username: guild.client.user?.username,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async oldGuild(guild: Guild) {
     if (!this.#LOGGER_WEBHOOK) return;
 
-    await this.#LOGGER_WEBHOOK.send({
-      avatarURL: guild.client.user?.displayAvatarURL(),
-      embeds: [
-        new EmbedBuilder()
-          .setAuthor({ name: guild.name, iconURL: guild.iconURL() ?? undefined })
-          .setColor('DarkRed')
-          .setFields(
-            { name: 'ID', value: codeBlock(guild.id), inline },
-            { name: 'Joined at', value: `${time(guild.joinedAt)}${time(guild.joinedAt, 'R')}`, inline },
-            { name: 'Server created at', value: `${time(guild.createdAt)}${time(guild.createdAt, 'R')}`, inline },
-            { name: 'Member count', value: `${guild.memberCount}`, inline },
-            { name: 'Channel count', value: `${guild.channels.cache.size}`, inline },
-            { name: 'Emoji count', value: `${guild.emojis.cache.size}`, inline },
-          )
-          .setImage(guild.bannerURL({ size: 512 }))
-          .setThumbnail(guild.discoverySplashURL({ size: 512 }))
-          .setTimestamp(Date.now())
-          .setTitle('Oh! no! I left a server.'),
-      ],
-      username: guild.client.user?.username,
-    });
+    try {
+      await this.#LOGGER_WEBHOOK.send({
+        avatarURL: guild.client.user?.displayAvatarURL(),
+        embeds: [
+          new EmbedBuilder()
+            .setAuthor({ name: guild.name, iconURL: guild.iconURL() ?? undefined })
+            .setColor('DarkRed')
+            .setFields(
+              { name: 'ID', value: codeBlock(guild.id), inline },
+              { name: 'Joined at', value: `${time(guild.joinedAt)}${time(guild.joinedAt, 'R')}`, inline },
+              { name: 'Server created at', value: `${time(guild.createdAt)}${time(guild.createdAt, 'R')}`, inline },
+              { name: 'Member count', value: `${guild.memberCount}`, inline },
+              { name: 'Channel count', value: `${guild.channels.cache.size}`, inline },
+              { name: 'Emoji count', value: `${guild.emojis.cache.size}`, inline },
+            )
+            .setImage(guild.bannerURL({ size: 512 }))
+            .setThumbnail(guild.discoverySplashURL({ size: 512 }))
+            .setTimestamp(Date.now())
+            .setTitle('Oh! no! I left a server.'),
+        ],
+        username: guild.client.user?.username,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
