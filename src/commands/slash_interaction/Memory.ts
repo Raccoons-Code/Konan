@@ -3,7 +3,7 @@ import { Memory } from '../../modules/Memory';
 import { MemoryGameMode } from '../../modules/Memory/@types';
 import { SlashCommand } from '../../structures';
 
-const { solo, limited, coop, comp } = MemoryGameMode;
+const { limited, coop, comp } = MemoryGameMode;
 
 export default class extends SlashCommand {
   constructor() {
@@ -50,7 +50,7 @@ export default class extends SlashCommand {
         ephemeral: true,
       });
 
-    const timeToEnd = Memory.timeToEnd;
+    const timeToEnd = [coop].includes(mode) ? Memory.timeToEnd : null;
 
     const { components } = Memory.create({ emojis, mode, time: timeToEnd });
 
@@ -59,7 +59,7 @@ export default class extends SlashCommand {
       fetchReply: true,
     });
 
-    if ([solo].includes(mode))
+    if ([limited].includes(mode))
       setTimeout(async () => {
         const message = await channel?.messages.safeFetch(oldMessage.id);
 
@@ -69,13 +69,13 @@ export default class extends SlashCommand {
           components: Memory.endGame(message.components),
           content: 'Game over!',
         });
-      }, timeToEnd.getTime() - Date.now());
+      }, timeToEnd?.getTime() ?? 0 - Date.now());
 
     return interaction.editReply({
       content: [
         'Memory Game!',
         `Game mode: ${Memory.getGameMode(mode)}${mode === limited ?
-          ` | time: ${time(timeToEnd, 'R')}` :
+          ` | time: ${time(timeToEnd!, 'R')}` :
           ''}`,
         `Players: ${opponent ? `${user} ${['', '', '&', '`0` vs `0`'][mode]} ${opponent}` : user}`,
         [false, false, true, true][mode] ? `Player: ${[user, opponent][Math.floor(Math.random() * 2)]}` : '',

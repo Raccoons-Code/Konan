@@ -1,7 +1,7 @@
 export interface MemoryGameCreateOptions {
   emojis?: string[];
   mode?: MemoryGameMode
-  time?: Date | number | string;
+  time?: Date | number | string | null;
 }
 
 export interface MemoryGameEmojisType {
