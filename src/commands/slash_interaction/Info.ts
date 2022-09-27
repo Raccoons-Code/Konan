@@ -120,6 +120,8 @@ export default class Info extends SlashCommand {
         ['Servers', client.stats.guilds],
         ['Channels', client.stats.channels],
         ['Members', client.stats.members],
+        ['Messages', client.stats.messages],
+        ['Users', client.stats.users],
       );
 
     embeds[0]
