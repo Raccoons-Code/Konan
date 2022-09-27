@@ -8,6 +8,8 @@ export default class ApplicationStats {
   channels = 0;
   guilds = 0;
   members = 0;
+  messages = 0;
+  users = 0;
 
   constructor(private client: Client) { }
 
@@ -22,6 +24,18 @@ export default class ApplicationStats {
   get #members() {
     return this.client.shard?.broadcastEval<number>(client =>
       client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0));
+  }
+
+  get #messages() {
+    return this.client.shard?.broadcastEval<number>(client =>
+      client.channels.cache.reduce((acc, channel) =>
+        'messages' in channel ?
+          acc + channel.messages.cache.size :
+          acc, 0));
+  }
+
+  get #users() {
+    return this.client.shard?.fetchClientValues('users.cache.size') as Promise<number[]> | undefined;
   }
 
   get shards() {
@@ -76,15 +90,39 @@ export default class ApplicationStats {
     });
   }
 
+  async #fetch_messages() {
+    return Promise.all([
+      this.#messages,
+    ]).then(([messages]) => {
+      this.messages = messages?.reduce((acc, messageCount) => acc + messageCount, 0) ?? this.messages;
+
+      return this;
+    });
+  }
+
+  async #fetch_users() {
+    return Promise.all([
+      this.#users,
+    ]).then(([users]) => {
+      this.users = users?.reduce((acc, userCount) => acc + userCount, 0) ?? this.users;
+
+      return this;
+    });
+  }
+
   async #fetch_stats() {
     return Promise.all([
       this.#guilds,
       this.#channels,
       this.#members,
-    ]).then(([guilds, channels, members]) => {
+      this.#messages,
+      this.#users,
+    ]).then(([guilds, channels, members, messages, users]) => {
       this.guilds = guilds?.reduce((acc, guildCount) => acc + guildCount, 0) ?? this.guilds;
       this.channels = channels?.reduce((acc, channelCount) => acc + channelCount, 0) ?? this.channels;
       this.members = members?.reduce((acc, memberCount) => acc + memberCount, 0) ?? this.members;
+      this.messages = messages?.reduce((acc, messageCount) => acc + messageCount, 0) ?? this.messages;
+      this.users = users?.reduce((acc, userCount) => acc + userCount, 0) ?? this.users;
 
       return this;
     });
