@@ -88,7 +88,7 @@ export type ListenerString = 'on' | 'once'
 
 export interface FetchStatsOptions {
   loop?: boolean
-  filter?: 'channels' | 'guilds' | 'members'
+  filter?: StatsFilter | StatsFilter[]
 }
 
 export interface PrimeResolveOptions {
@@ -117,6 +117,23 @@ export interface SlashCommandProps {
 
 export interface Stats {
   channels: number
+  emojis: number
   guilds: number
   members: number
+  messages: number
+  shardIds: number[]
+  shards: number
+  threads: number
+  users: number
+  voiceAdapters: number
 }
+
+export type StatsFilter =
+  | 'channels'
+  | 'emojis'
+  | 'guilds'
+  | 'members'
+  | 'messages'
+  | 'threads'
+  | 'users'
+  | 'voice_adapters'

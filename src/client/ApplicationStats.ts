@@ -6,36 +6,89 @@ export default class ApplicationStats {
   [x: string]: any;
 
   channels = 0;
+  emojis = 0;
   guilds = 0;
   members = 0;
   messages = 0;
+  threads = 0;
   users = 0;
+  voiceAdapters = 0;
 
   constructor(private client: Client) { }
 
   get #channels() {
-    return this.client.shard?.fetchClientValues('channels.cache.size') as Promise<number[]> | undefined;
+    if (this.client.shard)
+      return this.client.shard.fetchClientValues('channels.cache.size') as Promise<number[]>;
+
+    return Promise.all([this.client.channels.cache.size]);
+  }
+
+  get #emojis() {
+    if (this.client.shard)
+      return this.client.shard.fetchClientValues('emojis.cache.size') as Promise<number[]>;
+
+    return Promise.all([this.client.emojis.cache.size]);
   }
 
   get #guilds() {
-    return this.client.shard?.fetchClientValues('guilds.cache.size') as Promise<number[]> | undefined;
+    if (this.client.shard)
+      return this.client.shard.fetchClientValues('guilds.cache.size') as Promise<number[]>;
+
+    return Promise.all([this.client.guilds.cache.size]);
   }
 
   get #members() {
-    return this.client.shard?.broadcastEval<number>(client =>
-      client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0));
+    if (this.client.shard)
+      return this.client.shard.broadcastEval<number>(client =>
+        client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0));
+
+    return Promise.all([this.client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)]);
   }
 
   get #messages() {
-    return this.client.shard?.broadcastEval<number>(client =>
-      client.channels.cache.reduce((acc, channel) =>
+    if (this.client.shard)
+      return this.client.shard.broadcastEval<number>(client =>
+        client.channels.cache.reduce((acc, channel) =>
+          'messages' in channel ?
+            acc + channel.messages.cache.size :
+            acc, 0));
+
+    return Promise.all([
+      this.client.channels.cache.reduce((acc, channel) =>
         'messages' in channel ?
           acc + channel.messages.cache.size :
-          acc, 0));
+          acc, 0),
+    ]);
+  }
+
+  get #threads() {
+    if (this.client.shard)
+      return this.client.shard.broadcastEval<number>(client =>
+        client.channels.cache.reduce((acc, channel) =>
+          'threads' in channel ?
+            acc + channel.threads.cache.size :
+            acc, 0));
+
+    return Promise.all([
+      this.client.channels.cache.reduce((acc, channel) =>
+        'threads' in channel ?
+          acc + channel.threads.cache.size :
+          acc, 0),
+    ]);
   }
 
   get #users() {
-    return this.client.shard?.fetchClientValues('users.cache.size') as Promise<number[]> | undefined;
+    if (this.client.shard)
+      return this.client.shard.fetchClientValues('users.cache.size') as Promise<number[]>;
+
+    return Promise.all([this.client.users.cache.size]);
+  }
+
+  get #voice_adapters() {
+    if (this.client.shard)
+      return this.client.shard.fetchClientValues('voice.adapters.size') as Promise<number[]>;
+
+    return Promise.all([this.client.voice.adapters.size]);
   }
 
   get shards() {
@@ -49,10 +102,24 @@ export default class ApplicationStats {
   async fetch(options?: FetchStatsOptions): Promise<Stats> {
     if (!options) return this.#fetch_stats().catch(() => this);
 
+    if (Array.isArray(options.filter)) {
+      const promises = [];
+
+      for (let i = 0; i < options.filter.length; i++) {
+        const filter = options.filter[i];
+
+        promises.push(this.fetch({ filter }));
+      }
+
+      await Promise.all(promises);
+
+      return this;
+    }
+
     try {
       await this[`#fetch_${options.filter ?? 'stats'}`]();
     } catch {
-      await waitAsync(10000);
+      await waitAsync(1000);
 
       return this.fetch(options);
     }
@@ -67,44 +134,64 @@ export default class ApplicationStats {
   }
 
   async #fetch_channels() {
-    return Promise.all([
-      this.#channels,
-    ]).then(([channels]) => {
-      this.channels = channels?.reduce((acc, channelCount) => acc + channelCount, 0) ?? this.channels;
+    return this.#channels.then(channels => {
+      this.channels = channels.reduce((acc, channelCount) => acc + channelCount, 0);
+
+      return this;
+    });
+  }
+
+  async #fetch_emojis() {
+    return this.#emojis.then(emojis => {
+      this.emojis = emojis.reduce((acc, emojiCount) => acc + emojiCount, 0);
 
       return this;
     });
   }
 
   async #fetch_guilds() {
-    return this.#fetch_stats();
+    return this.#guilds.then(guilds => {
+      this.guilds = guilds.reduce((acc, guildCount) => acc + guildCount, 0);
+
+      return this;
+    });
   }
 
   async #fetch_members() {
-    return Promise.all([
-      this.#members,
-    ]).then(([members]) => {
-      this.members = members?.reduce((acc, memberCount) => acc + memberCount, 0) ?? this.members;
+    return this.#members.then(members => {
+      this.members = members.reduce((acc, memberCount) => acc + memberCount, 0);
 
       return this;
     });
   }
 
   async #fetch_messages() {
-    return Promise.all([
-      this.#messages,
-    ]).then(([messages]) => {
-      this.messages = messages?.reduce((acc, messageCount) => acc + messageCount, 0) ?? this.messages;
+    return this.#messages.then(messages => {
+      this.messages = messages.reduce((acc, messageCount) => acc + messageCount, 0);
+
+      return this;
+    });
+  }
+
+  async #fetch_threads() {
+    return this.#threads.then(threads => {
+      this.threads = threads.reduce((acc, threadCount) => acc + threadCount, 0);
 
       return this;
     });
   }
 
   async #fetch_users() {
-    return Promise.all([
-      this.#users,
-    ]).then(([users]) => {
-      this.users = users?.reduce((acc, userCount) => acc + userCount, 0) ?? this.users;
+    return this.#users.then(users => {
+      this.users = users.reduce((acc, userCount) => acc + userCount, 0);
+
+      return this;
+    });
+  }
+
+  async #fetch_voice_adapters() {
+    return this.#voice_adapters.then(voiceAdapters => {
+      this.voiceAdapters = voiceAdapters.reduce((acc, voiceAdapterCount) => acc + voiceAdapterCount, 0);
 
       return this;
     });
@@ -112,19 +199,15 @@ export default class ApplicationStats {
 
   async #fetch_stats() {
     return Promise.all([
-      this.#guilds,
-      this.#channels,
-      this.#members,
-      this.#messages,
-      this.#users,
-    ]).then(([guilds, channels, members, messages, users]) => {
-      this.guilds = guilds?.reduce((acc, guildCount) => acc + guildCount, 0) ?? this.guilds;
-      this.channels = channels?.reduce((acc, channelCount) => acc + channelCount, 0) ?? this.channels;
-      this.members = members?.reduce((acc, memberCount) => acc + memberCount, 0) ?? this.members;
-      this.messages = messages?.reduce((acc, messageCount) => acc + messageCount, 0) ?? this.messages;
-      this.users = users?.reduce((acc, userCount) => acc + userCount, 0) ?? this.users;
-
-      return this;
-    });
+      this.#fetch_channels(),
+      this.#fetch_emojis(),
+      this.#fetch_guilds(),
+      this.#fetch_members(),
+      this.#fetch_messages(),
+      this.#fetch_threads(),
+      this.#fetch_users(),
+      this.#fetch_voice_adapters(),
+    ])
+      .then(() => this);
   }
 }
