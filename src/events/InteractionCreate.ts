@@ -12,7 +12,7 @@ const descriptionLength = 4096 - codeBlockLength;
 export default class InteractionCreate extends Event<'interactionCreate'> {
   constructor() {
     super({
-      intents: ['Guilds', 'GuildBans', 'GuildIntegrations', 'GuildInvites', 'GuildVoiceStates', 'GuildWebhooks'],
+      intents: ['Guilds', 'GuildBans', 'GuildIntegrations', 'GuildInvites', 'GuildWebhooks'],
       name: 'interactionCreate',
       partials: [Partials.ThreadMember],
     });
@@ -21,7 +21,8 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
   async execute(interaction: AnyInteraction) {
     const { client, locale, type, user } = interaction;
 
-    const command = this[<Exclude<keyof typeof InteractionType, 'Ping'>>InteractionType[type]]?.(<any>interaction);
+    const command = this[<Extract<keyof typeof InteractionType, keyof InteractionCreate>>
+      InteractionType[type]]?.(<any>interaction);
 
     if (!command) return;
 
@@ -32,13 +33,13 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
         return console.error(error);
 
       logger.interactionError({
-        client: client,
+        client,
         commandName: command.data.name,
         commandType: (<CommandInteraction>interaction).commandType,
         componentType: (<MessageComponentInteraction>interaction).componentType,
-        error: error,
+        error,
         options: (<any>interaction).options,
-        type: type,
+        type,
       });
 
       const embeds = [
@@ -74,25 +75,16 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
 
     if (env.NODE_ENV === 'production' && !await client.owners.isOwner(user.id)) {
       ShardingClient.postCommand(command.data.name, user.id, client);
-
-      logger.OSStats({
-        client: client,
-        commandName: command.data.name,
-        commandType: (<CommandInteraction>interaction).commandType,
-        componentType: (<MessageComponentInteraction>interaction).componentType,
-        options: (<any>interaction).options,
-        type: type,
-      });
     }
   }
 
   ApplicationCommand(interaction: CommandInteraction) {
-    return this[<keyof typeof ApplicationCommandType>
+    return this[<Extract<keyof typeof ApplicationCommandType, keyof InteractionCreate>>
       ApplicationCommandType[interaction.commandType]]?.(<any>interaction);
   }
 
   MessageComponent(interaction: MessageComponentInteraction) {
-    return this[<Exclude<keyof typeof ComponentType, 'ActionRow' | 'TextInput'>>
+    return this[<Extract<keyof typeof ComponentType, keyof InteractionCreate>>
       ComponentType[interaction.componentType]]?.(<any>interaction);
   }
 

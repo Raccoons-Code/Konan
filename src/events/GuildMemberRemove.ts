@@ -11,7 +11,7 @@ export default class GuildMemberRemove extends Event<'guildMemberRemove'> {
   }
 
   async execute(member: GuildMember) {
-    member.client.stats.fetch({ filter: 'members' });
+    member.client.stats.fetch({ filter: 'guilds' });
 
     Promise.all([
       this.prisma.wordleInstance.updateMany({

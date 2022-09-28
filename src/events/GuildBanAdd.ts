@@ -1,7 +1,7 @@
 import { GuildBan } from 'discord.js';
 import { Event } from '../structures';
 
-export default class extends Event<'guildBanAdd'> {
+export default class GuildBanAdd extends Event<'guildBanAdd'> {
   constructor() {
     super({
       name: 'guildBanAdd',
@@ -9,6 +9,8 @@ export default class extends Event<'guildBanAdd'> {
   }
 
   async execute(ban: GuildBan) {
+    ban.client.stats.fetch({ filter: 'guilds' });
+
     Promise.all([
       this.prisma.wordleInstance.updateMany({
         where: {

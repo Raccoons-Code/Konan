@@ -9,6 +9,8 @@ export default class MessageDelete extends Event<'messageDelete'> {
   }
 
   async execute(message: Message) {
+    message.client.stats.fetch({ filter: 'channels' });
+
     Promise.all([
       this.prisma.wordleInstance.updateMany({
         where: {

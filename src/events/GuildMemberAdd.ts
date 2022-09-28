@@ -11,6 +11,6 @@ export default class GuildMemberAdd extends Event<'guildMemberAdd'> {
   }
 
   async execute(member: GuildMember) {
-    member.client.stats.fetch({ filter: 'members' });
+    member.client.stats.fetch({ filter: 'guilds' });
   }
 }
