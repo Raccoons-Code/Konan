@@ -104,7 +104,7 @@ export interface RolesManager {
 export interface SelectRolesOptionValue {
   count: number
   id: string
-  /** @deprecated Use id instead! d22m07y2022 */
+  /** @deprecated Use id instead! d22mnumber7y2number22 */
   roleId?: string
 }
 
@@ -116,6 +116,7 @@ export interface SlashCommandProps {
 }
 
 export interface Stats {
+  bans: number
   channels: number
   emojis: number
   guilds: number
@@ -132,8 +133,25 @@ export type StatsFilter =
   | 'channels'
   | 'emojis'
   | 'guilds'
-  | 'members'
-  | 'messages'
-  | 'threads'
   | 'users'
   | 'voice_adapters'
+
+export interface GuildStats {
+  bans: number
+  emojis: number
+  invites: number
+  members: number
+  partnered: number
+  roles: number
+  scheduledEvents: number
+  stageInstances: number
+  stickers: number
+  voiceStates: number
+  guilds: number
+}
+
+export interface ChannelStats {
+  channels: number
+  messages: number
+  threads: number
+}
