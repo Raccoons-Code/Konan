@@ -72,7 +72,9 @@ export default class Info extends ButtonComponentInteraction {
         ['Servers', client.stats.guilds],
         ['Channels', client.stats.channels],
         ['Members', client.stats.members],
+        ['Emojis', client.stats.emojis],
         ['Messages', client.stats.messages],
+        ['Threads', client.stats.threads],
         ['Users', client.stats.users],
       );
 
