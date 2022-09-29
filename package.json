@@ -1,6 +1,6 @@
 {
   "name": "konan",
-  "version": "0.26.2",
+  "version": "0.26.3",
   "description": "A multi-purpose bot totally original and open-source.",
   "main": "src",
   "scripts": {
