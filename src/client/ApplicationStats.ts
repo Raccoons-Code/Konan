@@ -1,53 +1,23 @@
 import { Client } from 'discord.js';
 import { setTimeout as waitAsync } from 'node:timers/promises';
-import type { ChannelStats, FetchStatsOptions, GuildStats, Stats } from '../@types';
+import type { FetchStatsOptions, Stats } from '../@types';
 
 export default class ApplicationStats {
   [x: string]: any;
 
-  bans = 0;
   channels = 0;
   emojis = 0;
-  invites = 0;
   guilds = 0;
-  members = 0;
-  messages = 0;
-  partnered = 0;
-  roles = 0;
-  scheduledEvents = 0;
-  stageInstances = 0;
-  stickers = 0;
-  threads = 0;
   users = 0;
   voiceAdapters = 0;
-  voiceStates = 0;
 
   constructor(private client: Client) { }
 
   get #channels() {
     if (this.client.shard)
-      return this.client.shard.broadcastEval(client =>
-        client.channels.cache.reduce<ChannelStats>((acc, channel) => ({
-          messages: acc.messages + ('messages' in channel ? channel.messages.cache.size : 0),
-          threads: acc.threads + ('threads' in channel ? channel.threads.cache.size : 0),
-          channels: acc.channels + 1,
-        }), {
-          channels: 0,
-          messages: 0,
-          threads: 0,
-        }));
+      return this.client.shard.fetchClientValues('channels.cache.size') as Promise<number[]>;
 
-    return Promise.all([
-      this.client.channels.cache.reduce<ChannelStats>((acc, channel) => ({
-        messages: acc.messages + ('messages' in channel ? channel.messages.cache.size : 0),
-        threads: acc.threads + ('threads' in channel ? channel.threads.cache.size : 0),
-        channels: acc.channels + 1,
-      }), {
-        channels: 0,
-        messages: 0,
-        threads: 0,
-      }),
-    ]);
+    return Promise.all([this.client.channels.cache.size]);
   }
 
   get #emojis() {
@@ -59,60 +29,9 @@ export default class ApplicationStats {
 
   get #guilds() {
     if (this.client.shard)
-      return this.client.shard.broadcastEval(client =>
-        client.guilds.cache.reduce<GuildStats>((acc, guild) => ({
-          bans: acc.bans + guild.bans.cache.size,
-          emojis: acc.emojis + guild.emojis.cache.size,
-          guilds: acc.guilds + 1,
-          invites: acc.invites + guild.invites.cache.size,
-          members: acc.members + guild.memberCount,
-          partnered: acc.partnered + (guild.partnered ? 1 : 0),
-          roles: acc.roles + guild.roles.cache.size,
-          scheduledEvents: acc.scheduledEvents + guild.scheduledEvents.cache.size,
-          stageInstances: acc.stageInstances + guild.stageInstances.cache.size,
-          stickers: acc.stickers + guild.stickers.cache.size,
-          voiceStates: acc.voiceStates + guild.voiceStates.cache.size,
-        }), {
-          bans: 0,
-          emojis: 0,
-          guilds: 0,
-          invites: 0,
-          members: 0,
-          partnered: 0,
-          roles: 0,
-          scheduledEvents: 0,
-          stageInstances: 0,
-          stickers: 0,
-          voiceStates: 0,
-        }));
+      return this.client.shard.fetchClientValues('guilds.cache.size') as Promise<number[]>;
 
-    return Promise.all([
-      this.client.guilds.cache.reduce<GuildStats>((acc, guild) => ({
-        bans: acc.bans + guild.bans.cache.size,
-        emojis: acc.emojis + guild.emojis.cache.size,
-        guilds: acc.guilds + 1,
-        invites: acc.invites + guild.invites.cache.size,
-        members: acc.members + guild.memberCount,
-        partnered: acc.partnered + (guild.partnered ? 1 : 0),
-        roles: acc.roles + guild.roles.cache.size,
-        scheduledEvents: acc.scheduledEvents + guild.scheduledEvents.cache.size,
-        stageInstances: acc.stageInstances + guild.stageInstances.cache.size,
-        stickers: acc.stickers + guild.stickers.cache.size,
-        voiceStates: acc.voiceStates + guild.voiceStates.cache.size,
-      }), {
-        bans: 0,
-        emojis: 0,
-        guilds: 0,
-        invites: 0,
-        members: 0,
-        partnered: 0,
-        roles: 0,
-        scheduledEvents: 0,
-        stageInstances: 0,
-        stickers: 0,
-        voiceStates: 0,
-      }),
-    ]);
+    return Promise.all([this.client.guilds.cache.size]);
   }
 
   get #users() {
@@ -137,19 +56,16 @@ export default class ApplicationStats {
     return this.client.shard?.ids ?? [];
   }
 
+  promises = <Promise<Stats>[]>[];
+
   async fetch(options?: FetchStatsOptions): Promise<Stats> {
     if (!options) return this.#fetch_stats().catch(() => this);
 
     if (Array.isArray(options.filter)) {
-      const promises = [];
+      for (let i = 0; i < options.filter.length; i++)
+        this.promises.push(this.fetch({ filter: options.filter[i] }));
 
-      for (let i = 0; i < options.filter.length; i++) {
-        const filter = options.filter[i];
-
-        promises.push(this.fetch({ filter }));
-      }
-
-      await Promise.all(promises);
+      await Promise.all(this.promises.splice(0, this.promises.length));
 
       return this;
     }
@@ -173,7 +89,7 @@ export default class ApplicationStats {
 
   async #fetch_channels() {
     return this.#channels.then(channels => {
-      Object.assign(this, this.#sumObj(channels));
+      this.channels = channels.reduce((acc, channelCount) => acc + channelCount, 0);
 
       return this;
     });
@@ -189,7 +105,7 @@ export default class ApplicationStats {
 
   async #fetch_guilds() {
     return this.#guilds.then(guilds => {
-      Object.assign(this, this.#sumObj(guilds));
+      this.guilds = guilds.reduce((acc, guildCount) => acc + guildCount, 0);
 
       return this;
     });
@@ -220,23 +136,5 @@ export default class ApplicationStats {
       this.#fetch_voice_adapters(),
     ])
       .then(() => this);
-  }
-
-  #sumObj<T extends Record<string, number>>(obj: T | T[]): T {
-    if (!Array.isArray(obj)) return this.#sumObj([obj]);
-
-    const result = <any>{};
-
-    for (let i = 0; i < obj.length; i++) {
-      const keys = Object.keys(obj[i]);
-
-      for (let j = 0; j < keys.length; j++) {
-        const key = keys[j];
-
-        result[key] = (result[key] ?? 0) + obj[i][key];
-      }
-    }
-
-    return result;
   }
 }

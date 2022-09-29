@@ -13,7 +13,7 @@ export default class MessageCreate extends Event<'messageCreate'> {
   async execute(message: Message) {
     const { author, channel, client, content, guild } = message;
 
-    client.stats.fetch({ filter: 'channels' });
+    client.stats.fetch({ filter: ['channels', 'emojis'] });
 
     if (author.bot) return;
 

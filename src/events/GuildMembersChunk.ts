@@ -14,6 +14,6 @@ export default class GuildMembersChunk extends Event<'guildMembersChunk'> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     data: { count: number; index: number; nonce: string | undefined; },
   ) {
-    guild.client.stats.fetch({ filter: 'guilds' });
+    guild.client.stats.fetch({ filter: 'users' });
   }
 }

@@ -10,8 +10,6 @@ export default class GuildBanAdd extends Event<'guildBanAdd'> {
   }
 
   async execute(ban: GuildBan) {
-    ban.client.stats.fetch({ filter: 'guilds' });
-
     Promise.all([
       this.prisma.wordleInstance.updateMany({
         where: {

@@ -116,17 +116,13 @@ export interface SlashCommandProps {
 }
 
 export interface Stats {
-  bans: number
   channels: number
   emojis: number
   guilds: number
-  members: number
-  messages: number
   shardIds: number[]
   shards: number
-  threads: number
   users: number
-  voiceAdapters: number
+  voiceAdapters: number;
 }
 
 export type StatsFilter =

@@ -71,15 +71,8 @@ export default class Info extends ButtonComponentInteraction {
       stats.unshift(
         ['Servers', client.stats.guilds],
         ['Channels', client.stats.channels],
-        ['Members', client.stats.members],
-        ['Messages', client.stats.messages],
-        ['Emojis', client.stats.emojis],
-        ['Invites', client.stats.invites],
-        ['Events', client.stats.scheduledEvents],
-        ['Threads', client.stats.threads],
-        ['Roles', client.stats.roles],
-        ['Bans', client.stats.bans],
         ['Users', client.stats.users],
+        ['Emojis', client.stats.emojis],
       );
 
     embeds[0].setAuthor({ name: username!, iconURL: avatarURL })
