@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-
 /**
  * @internal
  */
-export type BitFieldConstructor<S extends string, N extends bigint | number> = typeof BitField & {
+export type BitFieldConstructor<S extends string, N extends bigint | number> = typeof BitField<S, N> & {
   DefaultBit: N
   Flags: EnumLike<S, N>
   resolve(bit: BitFieldResolvable<S, N>): N
@@ -22,14 +21,14 @@ export interface BitField<S extends string, N extends bigint | number> {
 /**
  * Data structure that makes it easy to interact with a bitfield.
  */
-export class BitField<S extends string, N extends bigint | number = number> {
-  static DefaultBit: bigint | number = 0;
+export class BitField<S, N> {
+  static DefaultBit = 0;
 
   /**
    * Numeric bitfield flags.
    * <info>Defined in extension classes</info>
    */
-  static Flags: EnumLike<unknown, bigint | number> = {};
+  static Flags: EnumLike<any, any> = {};
 
   constructor(bits: BitFieldResolvable<S, N> = BitField.DefaultBit) {
     this.bitField = this.constructor.resolve(bits);
@@ -54,7 +53,7 @@ export class BitField<S extends string, N extends bigint | number = number> {
    * Checks whether the bitfield has a bit, or any of multiple bits.
    * @param bits Bit(s) to check for
    */
-  any(...bits: BitFieldResolvable<S, N>[]): BitField<S, N> {
+  any(...bits: BitFieldResolvable<S, N>[]): boolean {
     return (this.bitField & this.constructor.resolve(bits)) !== this.constructor.DefaultBit;
   }
 
@@ -119,7 +118,7 @@ export class BitField<S extends string, N extends bigint | number = number> {
    * Gets an {@link Array} of bitfield names based on the bits available.
    */
   toArray() {
-    return Object.keys(this.constructor.Flags).filter((bit) => this.has(bit)) as S[];
+    return Object.keys(this.constructor.Flags).filter(bit => this.has(bit)) as S[];
   }
 
   toJSON() {
@@ -168,6 +167,7 @@ export default BitField;
  */
 export type BitFieldResolvable<S extends string, N extends bigint | number> =
   | `${bigint}`
+  | number
   | N
   | S
   | BitField<S, N>
