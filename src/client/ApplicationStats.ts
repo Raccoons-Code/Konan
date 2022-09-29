@@ -228,13 +228,12 @@ export default class ApplicationStats {
     const result = <any>{};
 
     for (let i = 0; i < obj.length; i++) {
-      const element = obj[i];
-      const keys = Object.keys(element);
+      const keys = Object.keys(obj[i]);
 
       for (let j = 0; j < keys.length; j++) {
         const key = keys[j];
 
-        result[key] = (result[key] ?? 0) + element[key];
+        result[key] = (result[key] ?? 0) + obj[i][key];
       }
     }
 
