@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, codeBlock, Colors, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, codeBlock, Colors, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { env } from 'node:process';
 import { ShardingClient } from 'statcord.js';
 import type { AnyInteraction } from '../@types';
@@ -12,9 +12,8 @@ const descriptionLength = 4096 - codeBlockLength;
 export default class InteractionCreate extends Event<'interactionCreate'> {
   constructor() {
     super({
-      intents: ['Guilds', 'GuildBans', 'GuildIntegrations', 'GuildInvites', 'GuildWebhooks'],
+      intents: ['Guilds', 'GuildIntegrations', 'GuildWebhooks'],
       name: 'interactionCreate',
-      partials: [Partials.ThreadMember],
     });
   }
 

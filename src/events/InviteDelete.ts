@@ -4,6 +4,7 @@ import { Event } from '../structures';
 export default class InviteDelete extends Event<'inviteDelete'> {
   constructor() {
     super({
+      intents: 'GuildInvites',
       name: 'inviteDelete',
     });
   }

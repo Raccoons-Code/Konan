@@ -1,10 +1,11 @@
-import { AnyThreadChannel } from 'discord.js';
+import { AnyThreadChannel, Partials } from 'discord.js';
 import { Event } from '../structures';
 
 export default class ThreadCreate extends Event<'threadCreate'> {
   constructor() {
     super({
       name: 'threadCreate',
+      partials: [Partials.ThreadMember],
     });
   }
 

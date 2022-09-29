@@ -4,7 +4,7 @@ import { Command, Event } from '../structures';
 export default class MessageCreate extends Event<'messageCreate'> {
   constructor() {
     super({
-      intents: ['Guilds', 'GuildMessages', 'DirectMessages'],
+      intents: ['GuildMessages', 'DirectMessages'],
       name: 'messageCreate',
       partials: [Partials.Message],
     });

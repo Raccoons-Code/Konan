@@ -4,6 +4,7 @@ import { Event } from '../structures';
 export default class EmojiCreate extends Event<'emojiCreate'> {
   constructor() {
     super({
+      intents: 'GuildEmojisAndStickers',
       name: 'emojiCreate',
     });
   }

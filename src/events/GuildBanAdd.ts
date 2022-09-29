@@ -4,6 +4,7 @@ import { Event } from '../structures';
 export default class GuildBanAdd extends Event<'guildBanAdd'> {
   constructor() {
     super({
+      intents: 'GuildBans',
       name: 'guildBanAdd',
     });
   }
