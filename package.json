@@ -4,7 +4,7 @@
   "description": "A multi-purpose bot totally original and open-source.",
   "main": "src",
   "scripts": {
-    "start": "npm run start:js",
+    "start": "npm run start:js || npm run start:r",
     "start:ts": "ts-node src",
     "build": "tsc",
     "test": "ts-node __test__",
@@ -13,6 +13,7 @@
     "to_markdown": "ts-node ./src/tomd",
     "dbpush": "prisma db push",
     "start:js": "node dist",
+    "start:r": "npm run start:js || npm run start",
     "postinstall": "prisma generate"
   },
   "repository": {
