@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, codeBlock, Colors, CommandInteraction, ComponentType, EmbedBuilder, InteractionType, MessageComponentInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RouteBases, SelectMenuInteraction, UserContextMenuCommandInteraction } from 'discord.js';
 import { env } from 'node:process';
-import { ShardingClient } from 'statcord.js';
+/* import { ShardingClient } from 'statcord.js'; */
 import type { AnyInteraction } from '../@types';
 import { logger } from '../client';
 import commandHandler from '../commands';
@@ -18,7 +18,7 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
   }
 
   async execute(interaction: AnyInteraction) {
-    const { client, locale, type, user } = interaction;
+    const { client, locale, type/* , user */ } = interaction;
 
     const command = this[<Extract<keyof typeof InteractionType, keyof InteractionCreate>>
       InteractionType[type]]?.(<any>interaction);
@@ -72,9 +72,10 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
       } catch { null; }
     }
 
-    if (env.NODE_ENV === 'production' && !await client.owners.isOwner(user.id)) {
-      ShardingClient.postCommand(command.data.name, user.id, client);
-    }
+    /* if (env.NODE_ENV === 'production' && !await client.owners.isOwner(user.id)) {
+      if (env.STATCORD_KEY)
+        ShardingClient.postCommand(command.data.name, user.id, client);
+    } */
   }
 
   ApplicationCommand(interaction: CommandInteraction) {
