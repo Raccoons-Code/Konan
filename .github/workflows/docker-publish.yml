@@ -38,6 +38,6 @@ jobs:
         with:
           context: .
           builder: ${{ steps.buildx.outputs.name }}
-          platforms: linux/arm64/v8
+          platforms: linux/arm64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/konan:latest
