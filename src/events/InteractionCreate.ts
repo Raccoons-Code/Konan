@@ -26,7 +26,7 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
     if (!command) return;
 
     try {
-      await new command.constructor().execute(<any>interaction);
+      await command.execute(<any>interaction);
     } catch (error: any) {
       if ([40060].includes(error.code))
         return console.error(error);
