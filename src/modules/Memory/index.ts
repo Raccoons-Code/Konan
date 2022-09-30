@@ -1,9 +1,10 @@
 import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIButtonComponentWithCustomId, ButtonBuilder, ButtonStyle, ComponentType, MessageActionRowComponent } from 'discord.js';
 import { readFileSync } from 'node:fs';
 import { MemoryGameCustomId } from '../../@types';
-import { MemoryGameCreateOptions, MemoryGameEmojisType } from './@types';
+import { MemoryGameCreateOptions, MemoryGameEmojisType, MemoryGameMode } from './@types';
 
 const Emojis = <MemoryGameEmojisType>JSON.parse(readFileSync('public/emojis/memory.json', 'utf8'));
+const { limited } = MemoryGameMode;
 
 export const Memory = new class Memory {
   getGameMode(mode: number) {
@@ -107,7 +108,7 @@ export const Memory = new class Memory {
 
   checkGameOver(customId: string) {
     const id = JSON.parse(customId);
-    return [1].includes(id.m) && id.d < Date.now();
+    return [limited].includes(id.m) && id.d < Date.now();
   }
 
   endGame(components: (ActionRowBuilder<ButtonBuilder> | ActionRow<MessageActionRowComponent>)[]) {
