@@ -18,12 +18,12 @@ export default class Embed extends SlashAutocomplete {
 
     const { channel, client, memberPermissions, options } = interaction;
 
-    const userPerms = memberPermissions.missing(this.props!.userPermissions!);
+    const userPerms = memberPermissions.missing(this.data.userPermissions!);
 
     if (userPerms.length)
       return this.replyMissingPermission(interaction, userPerms, 'missingUserPermission');
 
-    const appPerms = channel?.permissionsFor(client.user!)?.missing(this.props!.appPermissions!);
+    const appPerms = channel?.permissionsFor(client.user!)?.missing(this.data.appPermissions!);
 
     if (appPerms?.length)
       return this.replyMissingPermission(interaction, appPerms, 'missingChannelPermission');

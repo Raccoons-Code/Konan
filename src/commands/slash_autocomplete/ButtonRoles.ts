@@ -20,7 +20,7 @@ export default class ButtonRoles extends SlashAutocomplete {
 
     const { memberPermissions, options } = interaction;
 
-    const userPerms = memberPermissions.missing(this.props!.userPermissions!);
+    const userPerms = memberPermissions.missing(this.data.userPermissions!);
 
     if (userPerms.length)
       return this.replyMissingPermission(interaction, userPerms, 'missingUserPermission');

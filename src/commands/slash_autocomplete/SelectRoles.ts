@@ -15,7 +15,7 @@ export default class SelectRoles extends SlashAutocomplete {
   }
 
   async execute(interaction: AutocompleteInteraction<'cached'>) {
-    const userPerms = interaction.memberPermissions.missing(this.props!.userPermissions!);
+    const userPerms = interaction.memberPermissions.missing(this.data.userPermissions!);
 
     if (userPerms.length)
       return this.replyMissingPermission(interaction, userPerms, 'missingUserPermission');
