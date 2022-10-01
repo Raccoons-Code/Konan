@@ -6,8 +6,8 @@ export function getDefaultOptionFromSelectMenu(
   let optionDefault: APISelectMenuOption | undefined;
 
   components.some(row =>
-    row.toJSON().components.some(element =>
-      element.type === ComponentType.SelectMenu && element.options.some(option =>
+    row.components.some(element =>
+      element.data.type === ComponentType.SelectMenu && element.data.options?.some(option =>
         option.default && (optionDefault = option))));
 
   return optionDefault;
