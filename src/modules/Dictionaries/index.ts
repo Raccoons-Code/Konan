@@ -8,7 +8,7 @@ const quickDb = new QuickDB({ table: 'dic' });
 export default class Dictionaries {
   cache: Record<string, string[]> = {};
 
-  async fetch(locale: string, wordSize?: number) {
+  async fetch(locale: string, wordSize?: WordSizes) {
     const words = await this.#searchOnCache(locale);
     if (words) return Util.limitWordsSize(words, wordSize);
 
@@ -43,3 +43,12 @@ export default class Dictionaries {
 }
 
 export const dictionaries = new Dictionaries();
+
+export type WordSizes =
+  | number
+  | `${min},`
+  | `${min},${max}`
+  | `,${max}`
+
+type min = number
+type max = number
