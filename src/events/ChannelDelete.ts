@@ -1,4 +1,5 @@
 import { NonThreadGuildBasedChannel } from 'discord.js';
+import { appStats } from '../client';
 import { Event } from '../structures';
 
 export default class ChannelDelete extends Event<'channelDelete'> {
@@ -9,7 +10,7 @@ export default class ChannelDelete extends Event<'channelDelete'> {
   }
 
   async execute(channel: NonThreadGuildBasedChannel) {
-    channel.client.stats.fetch({ filter: 'channels' });
+    appStats.fetch({ filter: 'channels' });
 
     Promise.all([
       this.prisma.wordleInstance.updateMany({

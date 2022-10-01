@@ -1,4 +1,5 @@
 import { GuildEmoji } from 'discord.js';
+import { appStats } from '../client';
 import { Event } from '../structures';
 
 export default class EmojiDelete extends Event<'emojiDelete'> {
@@ -8,7 +9,8 @@ export default class EmojiDelete extends Event<'emojiDelete'> {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async execute(emoji: GuildEmoji) {
-    emoji.client.stats.fetch({ filter: 'emojis' });
+    appStats.fetch({ filter: 'emojis' });
   }
 }

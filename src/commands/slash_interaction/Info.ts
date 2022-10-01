@@ -3,6 +3,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CategoryChannel, Channel,
 import ms from 'ms';
 import { cpus, totalmem, version } from 'node:os';
 import { env, memoryUsage, versions } from 'node:process';
+import { appStats } from '../../client';
 import { SlashCommand } from '../../structures';
 
 const CPUs = cpus();
@@ -106,21 +107,21 @@ export default class Info extends SlashCommand {
     `);
 
     const stats: [string, string | number][] = [
-      ['Shard', `${(client.stats.shardIds.at(-1) ?? 0) + 1}/${client.stats.shards}`],
+      ['Shard', `${(appStats.shardIds.at(-1) ?? 0) + 1}/${appStats.shards}`],
       ['Ping', `${ws.ping}ms`],
     ];
 
     if (npm_package_version)
       stats.push(['Version', npm_package_version]);
 
-    client.stats.fetch();
+    appStats.fetch();
 
-    if (client.stats.guilds)
+    if (appStats.guilds)
       stats.unshift(
-        ['Servers', client.stats.guilds],
-        ['Channels', client.stats.channels],
-        ['Users', client.stats.users],
-        ['Emojis', client.stats.emojis],
+        ['Servers', appStats.guilds],
+        ['Channels', appStats.channels],
+        ['Users', appStats.users],
+        ['Emojis', appStats.emojis],
       );
 
     embeds[0]

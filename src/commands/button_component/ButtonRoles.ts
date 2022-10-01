@@ -72,9 +72,7 @@ export default class ButtonRoles extends ButtonComponentInteraction {
   }
 
   async sendResponse(interaction: ButtonInteraction<'cached'>, id: string, memberHasRole: boolean) {
-    const { guild } = interaction;
-
-    const role = guild.roles.resolve(id);
+    const role = interaction.guild.roles.resolve(id);
     if (!role) return;
 
     const embeds = [

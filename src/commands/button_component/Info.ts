@@ -3,6 +3,7 @@ import { ButtonInteraction, codeBlock, EmbedBuilder, time, version as djsVersion
 import { cpus, totalmem, version } from 'node:os';
 import { env, memoryUsage, versions } from 'node:process';
 import type { InfoCustomId } from '../../@types';
+import { appStats } from '../../client';
 import { ButtonComponentInteraction } from '../../structures';
 
 const CPUs = cpus();
@@ -58,21 +59,21 @@ export default class Info extends ButtonComponentInteraction {
     `);
 
     const stats: [string, string | number][] = [
-      ['Shard', `${(client.stats.shardIds.at(-1) ?? 0) + 1}/${client.stats.shards}`],
+      ['Shard', `${(appStats.shardIds.at(-1) ?? 0) + 1}/${appStats.shards}`],
       ['Ping', `${ws.ping}ms`],
     ];
 
     if (npm_package_version)
       stats.push(['Version', npm_package_version]);
 
-    await client.stats.fetch();
+    await appStats.fetch();
 
-    if (client.stats.guilds)
+    if (appStats.guilds)
       stats.unshift(
-        ['Servers', client.stats.guilds],
-        ['Channels', client.stats.channels],
-        ['Users', client.stats.users],
-        ['Emojis', client.stats.emojis],
+        ['Servers', appStats.guilds],
+        ['Channels', appStats.channels],
+        ['Users', appStats.users],
+        ['Emojis', appStats.emojis],
       );
 
     embeds[0].setAuthor({ name: username!, iconURL: avatarURL })

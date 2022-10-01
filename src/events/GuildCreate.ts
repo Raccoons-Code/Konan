@@ -1,5 +1,5 @@
 import { Guild } from 'discord.js';
-import { logger } from '../client';
+import { appStats, logger } from '../client';
 import { Event } from '../structures';
 
 export default class GuildCreate extends Event<'guildCreate'> {
@@ -12,6 +12,6 @@ export default class GuildCreate extends Event<'guildCreate'> {
 
   async execute(guild: Guild) {
     logger.newGuild(guild);
-    guild.client.stats.fetch();
+    appStats.fetch();
   }
 }

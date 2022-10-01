@@ -1,4 +1,5 @@
 import { ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
+import { appOwners } from '../../client';
 import { SlashCommand } from '../../structures';
 
 export default class Admin extends SlashCommand {
@@ -36,8 +37,8 @@ export default class Admin extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const { client, user } = interaction;
+    const { user } = interaction;
 
-    if (!await client.owners.isOwner(user.id)) return;
+    if (!await appOwners.isOwner(user.id)) return;
   }
 }

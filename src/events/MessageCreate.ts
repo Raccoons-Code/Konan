@@ -1,4 +1,5 @@
-import { Message, Partials } from 'discord.js';
+import { Message } from 'discord.js';
+import commandHandler from '../commands';
 import { Command, Event } from '../structures';
 
 export default class MessageCreate extends Event<'messageCreate'> {
@@ -6,7 +7,6 @@ export default class MessageCreate extends Event<'messageCreate'> {
     super({
       intents: ['GuildMessages', 'DirectMessages'],
       name: 'messageCreate',
-      partials: [Partials.Message],
     });
   }
 
@@ -29,7 +29,7 @@ export default class MessageCreate extends Event<'messageCreate'> {
 
     const commandName = message.commandName = matchedComponentLink[3] || message.args.shift() || 'help';
 
-    const command = <Command>client.commands.message_command?.get(commandName);
+    const command = <Command>commandHandler.commands.message_command?.get(commandName);
 
     if (!command) return;
 

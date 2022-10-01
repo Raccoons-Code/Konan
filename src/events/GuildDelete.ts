@@ -1,5 +1,5 @@
 import { Guild } from 'discord.js';
-import { logger } from '../client';
+import { appStats, logger } from '../client';
 import { Event } from '../structures';
 
 export default class GuildDelete extends Event<'guildDelete'> {
@@ -12,7 +12,7 @@ export default class GuildDelete extends Event<'guildDelete'> {
 
   async execute(guild: Guild) {
     logger.oldGuild(guild);
-    guild.client.stats.fetch();
+    appStats.fetch();
 
     Promise.all([
       this.prisma.wordleInstance.updateMany({

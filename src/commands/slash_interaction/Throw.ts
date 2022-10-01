@@ -1,4 +1,5 @@
 import { ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
+import { appOwners } from '../../client';
 import { SlashCommand } from '../../structures';
 
 export default class Throw extends SlashCommand {
@@ -25,9 +26,9 @@ export default class Throw extends SlashCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const { client, options, user } = interaction;
+    const { options, user } = interaction;
 
-    if (!await client.owners.isOwner(user.id)) return;
+    if (!await appOwners.isOwner(user.id)) return;
 
     const error = options.getString('error', true);
 

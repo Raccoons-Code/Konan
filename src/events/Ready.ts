@@ -1,6 +1,7 @@
 import { ActivitiesOptions, ActivityType, Client, Guild, OAuth2Scopes } from 'discord.js';
 import { env } from 'node:process';
 import { setTimeout as waitAsync } from 'node:timers/promises';
+import { appStats } from '../client';
 import commandHandler from '../commands';
 import { Event } from '../structures';
 
@@ -27,11 +28,11 @@ export default class Ready extends Event<'ready'> {
       permissions: commandHandler.permsBitfield,
     });
 
-    client.stats.fetch();
+    appStats.fetch();
 
     /* client.topggAutoposter(); */
     this.logCommandsErrors(client);
-    this.setPresenceInterval(client);
+    this.setPresence(client);
   }
 
   async logCommandsErrors(client: Client) {
@@ -73,11 +74,11 @@ export default class Ready extends Event<'ready'> {
       { name: 'Rick Astley - Never Gonna Give You Up', type: Streaming, url: ytURL('dQw4w9WgXcQ') },
     ];
 
-    if (client.stats.guilds)
+    if (appStats.guilds)
       activities.push(
-        { name: `${client.stats.members} members`, type: Listening },
-        { name: `${client.stats.guilds} servers`, type: Playing },
-        { name: `${client.stats.channels} channels`, type: Watching },
+        { name: `${appStats.members} members`, type: Listening },
+        { name: `${appStats.guilds} servers`, type: Playing },
+        { name: `${appStats.channels} channels`, type: Watching },
       );
 
     client.user?.setPresence({ activities });

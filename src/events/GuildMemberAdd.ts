@@ -1,4 +1,5 @@
-import { GuildMember, Partials } from 'discord.js';
+import { GuildMember } from 'discord.js';
+import { appStats } from '../client';
 import { Event } from '../structures';
 
 export default class GuildMemberAdd extends Event<'guildMemberAdd'> {
@@ -6,11 +7,11 @@ export default class GuildMemberAdd extends Event<'guildMemberAdd'> {
     super({
       intents: ['GuildMembers'],
       name: 'guildMemberAdd',
-      partials: [Partials.GuildMember, Partials.User],
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async execute(member: GuildMember) {
-    member.client.stats.fetch({ filter: 'users' });
+    appStats.fetch({ filter: 'users' });
   }
 }

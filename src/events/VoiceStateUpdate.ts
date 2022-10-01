@@ -1,4 +1,5 @@
 import { VoiceState } from 'discord.js';
+import { appStats } from '../client';
 import { Event } from '../structures';
 
 export default class VoiceStateUpdate extends Event<'voiceStateUpdate'> {
@@ -9,7 +10,8 @@ export default class VoiceStateUpdate extends Event<'voiceStateUpdate'> {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async execute(oldState: VoiceState, newState: VoiceState) {
-    newState.client.stats.fetch({ filter: 'voice_adapters' });
+    appStats.fetch({ filter: 'voice_adapters' });
   }
 }

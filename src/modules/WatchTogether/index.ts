@@ -6,9 +6,8 @@ class WatchTogether {
   applications!: (keyof DiscordTogether<Record<string, string>>['applications'])[];
 
   constructor() {
-    this.discordTogether = new DiscordTogether(<any>client);
+    this.discordTogether = new DiscordTogether(client);
     this.applications = Object.keys(this.discordTogether.applications);
-    client.discordTogether = this.discordTogether;
   }
 }
 

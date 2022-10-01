@@ -1,4 +1,5 @@
 import { ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
+import { appOwners } from '../../client';
 import { SlashCommand } from '../../structures';
 
 export default class Respawn extends SlashCommand {
@@ -23,7 +24,7 @@ export default class Respawn extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction) {
     const { client, user } = interaction;
 
-    if (!await client.owners.isOwner(user.id)) return;
+    if (!await appOwners.isOwner(user.id)) return;
 
     await interaction.reply({ content: 'Respawned!', ephemeral: true });
 

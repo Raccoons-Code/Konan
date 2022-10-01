@@ -1,7 +1,6 @@
 import { Collection, PermissionsBitField, PermissionsString } from 'discord.js';
 import { readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { client } from '../client';
 import { SlashCommand } from '../structures';
 import Util from '../util';
 
@@ -98,7 +97,7 @@ class CommandHandler {
 
     if (no_reload) return commands;
 
-    client.commands = this.commands = commands;
+    this.commands = commands;
 
     this.#afterLoadCommands();
 

@@ -4,15 +4,10 @@ import AutoPoster from 'topgg-autoposter';
 import { logger } from '.';
 import commandHandler from '../commands';
 import eventHandler from '../events';
-import ApplicationOwners from './ApplicationOwners';
-import ApplicationStats from './ApplicationStats';
 
 export default class Client extends DJS.Client {
   constructor(options: ClientOptions) {
     super(options);
-
-    this.stats = new ApplicationStats(this);
-    this.owners = new ApplicationOwners(this);
   }
 
   static init() {

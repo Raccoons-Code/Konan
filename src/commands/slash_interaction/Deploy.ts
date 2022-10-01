@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, PermissionFlagsBits } from 'discord.js';
 import { env } from 'node:process';
 import commandHandler from '..';
+import { appOwners } from '../../client';
 import { SlashCommand } from '../../structures';
 
 const { applicationCommandTypes } = commandHandler;
@@ -44,9 +45,7 @@ export default class Deploy extends SlashCommand {
   async execute(interaction: ChatInputCommandInteraction): Promise<any> {
     const { client, locale, options, user } = interaction;
 
-    const guilds = env.DISCORD_TEST_GUILD_ID?.split(',') ?? [];
-
-    if (!await client.owners.isOwner(user.id)) return;
+    if (!await appOwners.isOwner(user.id)) return;
 
     await interaction.deferReply({ ephemeral: true });
 
@@ -74,6 +73,8 @@ export default class Deploy extends SlashCommand {
 
       reset ?? data.push(commandData);
     }
+
+    const guilds = env.DISCORD_TEST_GUILD_ID?.split(',') ?? [];
 
     try {
       if (type === 'global')

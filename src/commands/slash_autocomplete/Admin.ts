@@ -1,4 +1,5 @@
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
+import { appOwners } from '../../client';
 import { SlashAutocomplete } from '../../structures';
 
 export default class Admin extends SlashAutocomplete {
@@ -14,9 +15,9 @@ export default class Admin extends SlashAutocomplete {
   async execute(interaction: AutocompleteInteraction) {
     if (interaction.responded) return;
 
-    const { client, options, user } = interaction;
+    const { options, user } = interaction;
 
-    if (!await client.owners.isOwner(user.id)) return;
+    if (!await appOwners.isOwner(user.id)) return;
 
     const subcommand = options.getSubcommandGroup() ?? options.getSubcommand();
 

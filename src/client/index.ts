@@ -1,7 +1,9 @@
+import ApplicationOwners from './ApplicationOwners';
+import ApplicationStats from './ApplicationStats';
 import Client from './Client';
 import WebhookLogger from './WebhookLogger';
 
-const client = Client.init();
-const logger = new WebhookLogger();
-
-export { client, logger };
+export const client = Client.init();
+export const appOwners = new ApplicationOwners(client);
+export const appStats = new ApplicationStats(client);
+export const logger = new WebhookLogger();

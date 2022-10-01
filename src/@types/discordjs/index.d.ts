@@ -1,15 +1,8 @@
-import { DiscordTogether } from 'discord-together';
-import { Collection } from 'discord.js';
-import ApplicationOwners from '../../client/ApplicationOwners';
-import ApplicationStats from '../../client/ApplicationStats';
+import 'discord.js';
 
 declare module 'discord.js' {
   interface Client {
-    commands: Record<string, Collection<string, any>>
-    discordTogether: DiscordTogether<Record<string, string>>
     invite: string
-    stats: ApplicationStats
-    owners: ApplicationOwners
 
     sendError(reason: Error): Promise<void>
     topggAutoposter(token?: string | undefined): Promise<void>

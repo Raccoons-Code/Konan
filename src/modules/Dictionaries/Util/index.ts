@@ -3,7 +3,7 @@ export default abstract class Util {
     return str.replace('-', '_');
   }
 
-  static filterInvalidChars(data: string[], wordSize?: number) {
+  static filterInvalidChars(data: string[], wordSize?: number | `${number},${number}`) {
     const regex = new RegExp(`^[a-z]${wordSize ? `{${wordSize}}` : '+'}$`, 'i');
 
     const array: string[] = [];

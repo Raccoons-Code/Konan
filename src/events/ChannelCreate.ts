@@ -1,4 +1,5 @@
-import { Channel, Partials } from 'discord.js';
+import { Channel } from 'discord.js';
+import { appStats } from '../client';
 import { Event } from '../structures';
 
 export default class ChannelCreate extends Event<'channelCreate'> {
@@ -6,12 +7,11 @@ export default class ChannelCreate extends Event<'channelCreate'> {
     super({
       name: 'channelCreate',
       permissions: ['SendMessages'],
-      partials: [Partials.Channel],
     });
   }
 
   async execute(channel: Channel) {
-    channel.client.stats.fetch({ filter: 'channels' });
+    appStats.fetch({ filter: 'channels' });
 
     this.sendFirst(channel);
   }
