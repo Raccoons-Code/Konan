@@ -11,7 +11,7 @@ export function createSelectMenuFromOptions(
     new ActionRowBuilder<SelectMenuBuilder>()
       .setComponents(new SelectMenuBuilder()
         .setCustomId(JSON.stringify({
-          d: index++ && Math.floor(Date.now() + index),
+          d: index++ && Date.now() + index,
           ...customId,
         }))
         .setOptions(group)

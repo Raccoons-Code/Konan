@@ -10,7 +10,7 @@ export function createSelectMenuByRoles(options: ManageSelectRolesOptions) {
       .setCustomId(JSON.stringify({
         c: 'selectroles',
         count: 0,
-        d: index++ && Math.floor(Date.now() + index),
+        d: index++ && Date.now() + index,
       }))
       .setMaxValues(group.length)
       .setOptions(group.map(role => new SelectMenuOptionBuilder()
