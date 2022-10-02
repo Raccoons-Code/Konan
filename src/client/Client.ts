@@ -4,6 +4,7 @@ import AutoPoster from 'topgg-autoposter';
 import { logger } from '.';
 import commandHandler from '../commands';
 import eventHandler from '../events';
+import { sweepers } from './Sweepers';
 
 export default class Client extends DJS.Client {
   constructor(options: ClientOptions) {
@@ -16,13 +17,7 @@ export default class Client extends DJS.Client {
       failIfNotExists: false,
       partials: eventHandler.partials,
       shards: 'auto',
-      sweepers: {
-        messages:
-        {
-          interval: 3600,
-          lifetime: 14400,
-        },
-      },
+      sweepers,
     });
   }
 
