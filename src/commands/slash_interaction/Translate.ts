@@ -48,7 +48,7 @@ export default class Translate extends SlashCommand {
     const to = <'auto'>options.getString('to', true);
     const text = options.getString('text', true);
 
-    const cached = cache.get(text);
+    const cached = <string>cache.get(text);
 
     const translation = await translate(cached || text, { from, to });
 
