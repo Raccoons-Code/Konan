@@ -1,52 +1,60 @@
 import { SweeperOptions } from 'discord.js';
 
 export const sweepers: SweeperOptions = {
+  applicationCommands: {
+    filter: () => null,
+    interval: Infinity,
+  },
   bans: {
-    filter: () => () => true,
-    interval: 14400,
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
   },
   emojis: {
-    filter: () => () => true,
-    interval: 14400,
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
   },
   invites: {
-    lifetime: 3600,
-    interval: 14400,
+    lifetime: 60,
+    interval: 3600,
   },
   guildMembers: {
-    filter: () => () => true,
-    interval: 14400,
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
   },
   presences: {
-    filter: () => () => true,
-    interval: 14400,
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
   },
   messages: {
-    lifetime: 3600,
-    interval: 14400,
+    lifetime: 60,
+    interval: 3600,
   },
   reactions: {
-    filter: () => () => true,
-    interval: 14400,
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
   },
   stageInstances: {
-    filter: () => () => true,
-    interval: 14400,
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
   },
   stickers: {
-    filter: () => () => true,
-    interval: 14400,
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
   },
   threadMembers: {
-    filter: () => () => true,
-    interval: 14400,
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
   },
   threads: {
-    lifetime: 3600,
-    interval: 14400,
+    lifetime: 60,
+    interval: 3600,
   },
   voiceStates: {
-    filter: () => () => true,
-    interval: 14400,
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
+  },
+  users: {
+    filter: () => (value, key, collection) => collection.size > 100,
+    interval: 3600,
   },
 };
