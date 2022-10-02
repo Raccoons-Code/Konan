@@ -5,7 +5,6 @@ import { Event } from '../structures';
 export default class GuildDelete extends Event<'guildDelete'> {
   constructor() {
     super({
-      intents: ['Guilds'],
       name: 'guildDelete',
     });
   }
