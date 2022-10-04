@@ -4,9 +4,12 @@ import { Routes } from './Routes';
 import Util from './Util';
 
 const quickDb = new QuickDB({ table: 'dic' });
+const cache: Record<string, string[]> = {};
 
 export default class Dictionaries {
-  cache: Record<string, string[]> = {};
+  get cache() {
+    return cache;
+  }
 
   async fetch(locale: string, wordSize?: WordSizes) {
     const words = await this.#searchOnCache(locale);
