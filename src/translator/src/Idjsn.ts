@@ -1,4 +1,5 @@
 import type { Options } from './@types';
+import cache from './Cache';
 import { defaults } from './Defaults';
 import Interpolator from './Interpolator';
 import PostProcessor from './PostProcessor';
@@ -11,13 +12,17 @@ class Idjsn {
   translator!: Translator;
   options: Options;
 
-  constructor(options: Options = defaults) {
+  constructor(options: Options = {}) {
     this.options = { ...defaults, ...options };
 
     Util.bindFunctions(this);
   }
 
   init(options: Options) {
+    if (!options.resources) throw Error('Missing resources.');
+    cache.setResources(options.resources);
+    delete options.resources;
+
     this.options = options = { ...defaults, ...options };
 
     if (options.Locales) {
@@ -29,16 +34,16 @@ class Idjsn {
       this.options.LocalesEnum = Object.fromEntries(Locales.concat(Locales.map(([key, value]) => [value, key])));
     }
 
-    this.options.availableLocales = Util.getAvailableLocales(this.options.resources!, this.options.Locales);
+    this.options.availableLocales = Util.getAvailableLocales(cache.resources, options.Locales);
 
     this.options.stats =
-      Util.getTranslationsStats(options.resources!, options.translation!.fallbackLocale!, options.Locales);
+      Util.getTranslationsStats(cache.resources, options.translation!.fallbackLocale!, options.Locales);
 
-    this.interpolator = new Interpolator(this.options);
+    this.interpolator = new Interpolator(options);
 
-    this.postProcessor = new PostProcessor(this.options);
+    this.postProcessor = new PostProcessor(options);
 
-    this.translator = new Translator(this.options);
+    this.translator = new Translator(options);
   }
 
   t(key: string | string[], options: Options = {}): string {

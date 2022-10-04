@@ -28,4 +28,4 @@ for (let i = 0; i < langs.length; i++) {
   }
 }
 
-export default { ...translations };
+export default translations;
