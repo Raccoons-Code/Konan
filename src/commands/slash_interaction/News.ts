@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
+import { request } from 'undici';
 import { journals } from '../../modules/News';
 import { SlashCommand } from '../../structures';
 
@@ -64,7 +64,7 @@ export default class News extends SlashCommand {
     if (!journal)
       return interaction.editReply(this.t('journal404', { locale }));
 
-    const news = await axios.get(journal.url).then(r => r.data) as any[];
+    const news = await request(journal.url).then(r => r.body.json()) as any[];
 
     const __new = news.find(_fnew => _fnew[journal.properties.title].match(_new));
 

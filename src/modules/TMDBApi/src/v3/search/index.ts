@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { request } from 'undici';
 import type { APISearchMovies, GetSearchMovies, SearchOptions } from '../@types';
 import Routes from '../Routes';
 
@@ -26,9 +26,8 @@ export default class Search {
       region,
       year } = props;
 
-    return axios.get(Routes.searchMovies(), {
-      baseURL: this.baseURL,
-      params: {
+    return request(this.baseURL + Routes.searchMovies(), {
+      query: {
         api_key: this.apiKey,
         query,
         language,
@@ -38,6 +37,6 @@ export default class Search {
         region,
         year,
       },
-    }).then(r => r.data);
+    }).then(r => r.body.json());
   }
 }

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import type { APIGenre, GenresData, GenresOptions, ParseGenresOptions, GetGenres } from '../@types';
+import { request } from 'undici';
+import type { APIGenre, GenresData, GenresOptions, GetGenres, ParseGenresOptions } from '../@types';
 import Routes from '../Routes';
 
 export default class Genres {
@@ -21,13 +21,12 @@ export default class Genres {
     if (this.movieGenres.has(language))
       return this.movieGenres.get(language)!;
 
-    const { genres } = await axios.get(Routes.genresMovieList(), {
-      baseURL: this.baseURL,
-      params: {
+    const { genres } = await request(this.baseURL + Routes.genresMovieList(), {
+      query: {
         api_key: this.apiKey,
         language,
       },
-    }).then(r => r.data);
+    }).then(r => r.body.json());
 
     return this.movieGenres.set(language, { language, genres }).get(language)!;
   }
@@ -38,13 +37,12 @@ export default class Genres {
     if (this.tvGenres.has(language))
       return this.tvGenres.get(language)!;
 
-    const { genres } = await axios.get(Routes.genresTvList(), {
-      baseURL: this.baseURL,
-      params: {
+    const { genres } = await request(this.baseURL + Routes.genresTvList(), {
+      query: {
         api_key: this.apiKey,
         language,
       },
-    }).then(r => r.data);
+    }).then(r => r.body.json());
 
     return this.tvGenres.set(language, { language, genres }).get(language)!;
   }

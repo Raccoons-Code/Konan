@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { request } from 'undici';
 import type { APIFindById, FindOptions, GetFindById } from '../@types';
 import Routes from '../Routes';
 
@@ -16,13 +16,12 @@ export default class Find {
   async findById(props: GetFindById): Promise<APIFindById> {
     const { external_id, external_source = 'imdb_id', language = this.language } = props;
 
-    return axios.get(Routes.findById(external_id), {
-      baseURL: this.baseURL,
-      params: {
+    return request(this.baseURL + Routes.findById(external_id), {
+      query: {
         api_key: this.apiKey,
         external_source,
         language,
       },
-    }).then((r) => r.data);
+    }).then(r => r.body.json());
   }
 }

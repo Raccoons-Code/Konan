@@ -34,7 +34,6 @@
     "@prisma/client": "^4.4.0",
     "@tsconfig/recommended": "^1.0.1",
     "@vitalets/google-translate-api": "^8.0.0",
-    "axios": "^0.27.2",
     "better-sqlite3": "^7.6.2",
     "common-tags": "^1.8.2",
     "discord-tictactoe": "^4.0.0",
@@ -46,7 +45,8 @@
     "quick.db": "^9.0.6",
     "statcord.js": "^3.4.3",
     "topgg-autoposter": "^2.0.1",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "undici": "^5.11.0"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.1",

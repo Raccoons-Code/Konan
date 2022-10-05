@@ -1,5 +1,5 @@
-import axios from 'axios';
-import type { DiscoverOptions, GetDiscoverMovie, APISearchMovies } from '../@types';
+import { request } from 'undici';
+import type { APISearchMovies, DiscoverOptions, GetDiscoverMovie } from '../@types';
 import Routes from '../Routes';
 
 export default class Discover {
@@ -63,9 +63,8 @@ export default class Discover {
       year,
     } = props;
 
-    return axios.get(Routes.discoverMovie(), {
-      baseURL: this.baseURL,
-      params: {
+    return request(this.baseURL + Routes.discoverMovie(), {
+      query: {
         api_key: this.apiKey,
         certification_country,
         certification,
@@ -104,6 +103,6 @@ export default class Discover {
         without_keywords,
         year,
       },
-    }).then(r => r.data);
+    }).then(r => r.body.json());
   }
 }

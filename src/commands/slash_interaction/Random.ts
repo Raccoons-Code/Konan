@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { APIApplicationCommandOptionChoice, ChatInputCommandInteraction } from 'discord.js';
+import { request } from 'undici';
 import { SlashCommand } from '../../structures';
 import Util from '../../util';
 
@@ -76,7 +76,7 @@ export default class Random extends SlashCommand {
   }
 
   async executeCat(interaction: ChatInputCommandInteraction): Promise<any> {
-    const { file } = await axios.get('https://aws.random.cat/meow').then(r => r.data);
+    const { file } = await request('https://aws.random.cat/meow').then(r => r.body.json());
 
     return interaction.editReply({ files: [file] });
   }

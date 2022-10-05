@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { QuickDB } from 'quick.db';
+import { request } from 'undici';
 import { Routes } from './Routes';
 import Util from './Util';
 
@@ -18,8 +18,9 @@ export default class Dictionaries {
     const route = Routes.get(locale)?.(locale);
     if (!route) return [];
 
-    return axios.get(route)
-      .then(({ data }) => quickDb.set<string[]>(locale.split('-')[0],
+    return request(route)
+      .then(r => r.body.json())
+      .then((data) => quickDb.set<string[]>(locale.split('-')[0],
         this.cache[locale.split('-')[0]] = Util.filterInvalidChars(data.split(/\r?\n/g))))
       .then(data => Util.limitWordsSize(data, wordSize))
       .catch(() => []);

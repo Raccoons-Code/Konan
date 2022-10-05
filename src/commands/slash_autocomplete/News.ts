@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
+import { request } from 'undici';
 import { journals, languages } from '../../modules/News';
 import { SlashAutocomplete } from '../../structures';
 
@@ -128,7 +128,7 @@ export default class News extends SlashAutocomplete {
 
     if (!journal) return res;
 
-    const news = await axios.get(journal.url).then(r => r.data) as any[];
+    const news = await request(journal.url).then(r => r.body.json()) as any[];
 
     const _news = news.filter(n => pattern.test(n[journal.properties.title]));
 

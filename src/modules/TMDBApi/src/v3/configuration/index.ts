@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { request } from 'undici';
 import type { APIConfiguration, APICountries, APIJobs, APILanguages, APIPrimaryTranslations, APITimezones, ConfigurationOptions, GetLanguageProps } from '../@types';
 import Routes from '../Routes';
 
@@ -51,44 +51,50 @@ export default class Configuration {
   }
 
   async fetchApiConfiguration(): Promise<APIConfiguration> {
-    return axios.get(Routes.configurationApi(), {
-      baseURL: this.baseURL,
-      params: { api_key: this.apiKey },
-    }).then(r => r.data);
+    return request(this.baseURL + Routes.configurationApi(), {
+      query: {
+        api_key: this.apiKey,
+      },
+    }).then(r => r.body.json());
   }
 
   async fetchCountries(): Promise<APICountries> {
-    return axios.get(Routes.configurationCountries(), {
-      baseURL: this.baseURL,
-      params: { api_key: this.apiKey },
-    }).then(r => r.data);
+    return request(this.baseURL + Routes.configurationCountries(), {
+      query: {
+        api_key: this.apiKey,
+      },
+    }).then(r => r.body.json());
   }
 
   async fetchJobs(): Promise<APIJobs> {
-    return axios.get(Routes.configurationJobs(), {
-      baseURL: this.baseURL,
-      params: { api_key: this.apiKey },
-    }).then(r => r.data);
+    return request(this.baseURL + Routes.configurationJobs(), {
+      query: {
+        api_key: this.apiKey,
+      },
+    }).then(r => r.body.json());
   }
 
   async fetchLanguages(): Promise<APILanguages> {
-    return axios.get(Routes.configurationLanguages(), {
-      baseURL: this.baseURL,
-      params: { api_key: this.apiKey },
-    }).then(r => r.data);
+    return request(this.baseURL + Routes.configurationLanguages(), {
+      query: {
+        api_key: this.apiKey,
+      },
+    }).then(r => r.body.json());
   }
 
   private async fetchPrimaryTranslations(): Promise<APIPrimaryTranslations> {
-    return axios.get(Routes.configurationPrimaryTranslations(), {
-      baseURL: this.baseURL,
-      params: { api_key: this.apiKey },
-    }).then(r => r.data);
+    return request(this.baseURL + Routes.configurationPrimaryTranslations(), {
+      query: {
+        api_key: this.apiKey,
+      },
+    }).then(r => r.body.json());
   }
 
   async fetchTimezones(): Promise<APITimezones> {
-    return axios.get(Routes.configurationTimezones(), {
-      baseURL: this.baseURL,
-      params: { api_key: this.apiKey },
-    }).then(r => r.data);
+    return request(this.baseURL + Routes.configurationTimezones(), {
+      query: {
+        api_key: this.apiKey,
+      },
+    }).then(r => r.body.json());
   }
 }
