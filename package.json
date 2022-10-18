@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/Raccoons-Code/Konan#readme",
   "dependencies": {
-    "@prisma/client": "^4.4.0",
+    "@prisma/client": "^4.5.0",
     "@tsconfig/recommended": "^1.0.1",
     "@vitalets/google-translate-api": "^8.0.0",
     "better-sqlite3": "^7.6.2",
