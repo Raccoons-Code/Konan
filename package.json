@@ -56,7 +56,7 @@
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.1",
     "eslint": "^8.25.0",
-    "prisma": "^4.4.0",
+    "prisma": "^4.5.0",
     "typescript": "^4.8.4"
   },
   "engines": {
