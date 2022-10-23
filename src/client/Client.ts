@@ -1,4 +1,4 @@
-import DJS, { ClientOptions, DiscordjsErrorCodes, IntentsBitField } from 'discord.js';
+import DJS, { ClientOptions, DiscordjsErrorCodes } from 'discord.js';
 import { env } from 'node:process';
 import AutoPoster from 'topgg-autoposter';
 import { logger } from '.';
@@ -32,9 +32,7 @@ export default class Client extends DJS.Client {
       return await super.login(token);
     } catch (error: any) {
       if (error.code === DiscordjsErrorCodes.DisallowedIntents) {
-        this.options.intents = new IntentsBitField(this.options.intents)
-          .remove('GuildMembers', 'GuildPresences', 'MessageContent')
-          .bitfield;
+        this.options.intents.remove('GuildMembers', 'GuildPresences', 'MessageContent');
 
         return super.login(token);
       }
