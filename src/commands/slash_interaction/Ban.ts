@@ -179,7 +179,7 @@ export default class Ban extends SlashCommand {
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
-        .setComponents([
+        .addComponents([
           new ButtonBuilder()
             .setCustomId(JSON.stringify({
               c: 'ban',

@@ -9,7 +9,7 @@ import { SlashCommand } from '../../structures';
 const CPUs = cpus();
 const OS = version();
 const { npm_package_dependencies_discord_js, npm_package_version } = env;
-const { GuildNews, GuildNewsThread, GuildPrivateThread, GuildPublicThread, GuildStageVoice, GuildText, GuildVoice } = ChannelType;
+const { AnnouncementThread, GuildAnnouncement, GuildStageVoice, GuildText, GuildVoice, PrivateThread, PublicThread } = ChannelType;
 const inline = true;
 
 export default class Info extends SlashCommand {
@@ -134,7 +134,7 @@ export default class Info extends SlashCommand {
         { name: 'Uptime', value: `${time(readyAt!)} ${time(readyAt!, 'R')}` },
       ]);
 
-    components[0].setComponents([
+    components[0].addComponents([
       new ButtonBuilder()
         .setCustomId(JSON.stringify({ c: 'info', sc: 'app' }))
         .setEmoji('🔄')
@@ -183,7 +183,7 @@ export default class Info extends SlashCommand {
         { name: this.t('full', { locale }), value: this.t(`${full}`, { locale }), inline },
       ]);
 
-    if ([GuildNews, GuildText].includes(type)) {
+    if ([GuildAnnouncement, GuildText].includes(type)) {
       const arrayThreads = threads.cache.toJSON();
       const textThreads = arrayThreads.join(' ').trim() || '-';
 
@@ -194,7 +194,7 @@ export default class Info extends SlashCommand {
       ]);
     }
 
-    if ([GuildNewsThread, GuildPrivateThread, GuildPublicThread].includes(type))
+    if ([AnnouncementThread, PrivateThread, PublicThread].includes(type))
       embeds[0].addFields([
         { name: this.t('slowmode', { locale }), value: ms(rateLimitPerUser * 1000), inline },
         { name: this.t('memberCount', { locale }), value: `${memberCount}`, inline },

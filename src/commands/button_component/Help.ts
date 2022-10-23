@@ -1,4 +1,4 @@
-import { ActionRowBuilder, APIEmbedField, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, EmbedBuilder } from 'discord.js';
+import { APIEmbedField, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, EmbedBuilder } from 'discord.js';
 import commandHandler from '..';
 import type { HelpButtonCustomId } from '../../@types';
 import { ButtonComponentInteraction, SlashCommand } from '../../structures';
@@ -45,12 +45,14 @@ export default class Help extends ButtonComponentInteraction {
 
       if (row.components.every(element => element.customId !== customId)) return row;
 
-      return new ActionRowBuilder<ButtonBuilder>()
-        .setComponents(this.setPageButtons({
+      return {
+        components: this.setPageButtons({
           category: cbc,
           page: p,
           total: Math.floor(slashCommands.length / this.limit),
-        }));
+        }),
+        type: ComponentType.Button,
+      };
     });
 
     return interaction.update({ components, embeds });

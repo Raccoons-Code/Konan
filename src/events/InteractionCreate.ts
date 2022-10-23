@@ -54,7 +54,7 @@ export default class InteractionCreate extends Event<'interactionCreate'> {
 
       if (env.GUILD_INVITE)
         components.push(new ActionRowBuilder<ButtonBuilder>()
-          .setComponents(new ButtonBuilder()
+          .addComponents(new ButtonBuilder()
             .setStyle(ButtonStyle.Link)
             .setLabel(this.t('supportServer', { locale }))
             .setURL(`${RouteBases.invite}/${env.GUILD_INVITE}`)));

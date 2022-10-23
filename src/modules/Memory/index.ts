@@ -39,13 +39,13 @@ export const Memory = new class Memory {
     const components = [];
 
     for (; buttons.length;)
-      components.push(new ActionRowBuilder<ButtonBuilder>().setComponents(buttons.splice(0, 5)));
+      components.push(new ActionRowBuilder<ButtonBuilder>().addComponents(buttons.splice(0, 5)));
 
     return { components };
   }
 
   #duplicate<T = any>(array: T[]) {
-    return array.reduce<T[]>((acc, cur) => acc.concat([cur, cur]), []);
+    return array.reduce<T[]>((acc, cur) => acc.concat(cur, cur), []);
   }
 
   #randomize<T = any>(array: T[]) {
@@ -118,7 +118,7 @@ export const Memory = new class Memory {
       if (rJson.components[0].type !== ComponentType.Button) return r;
 
       return new ActionRowBuilder<ButtonBuilder>()
-        .setComponents(rJson.components.map(b => {
+        .addComponents(rJson.components.map(b => {
           const button = new ButtonBuilder(b);
 
           const { e } = JSON.parse(b.custom_id);
@@ -143,7 +143,7 @@ export const Memory = new class Memory {
       if (rJson.components[0].type !== ComponentType.Button) return r;
 
       return new ActionRowBuilder<ButtonBuilder>()
-        .setComponents(rJson.components.map(b => {
+        .addComponents(rJson.components.map(b => {
           const button = new ButtonBuilder(b);
 
           if (b.custom_id !== customId)
@@ -166,7 +166,7 @@ export const Memory = new class Memory {
       if (rJson.components[0].type !== ComponentType.Button) return r;
 
       return new ActionRowBuilder<ButtonBuilder>()
-        .setComponents(rJson.components.map(b => {
+        .addComponents(rJson.components.map(b => {
           const button = new ButtonBuilder(b);
 
           if (b.style !== ButtonStyle.Primary)
@@ -190,7 +190,7 @@ export const Memory = new class Memory {
       if (rJson.components[0].type !== ComponentType.Button) return r;
 
       return new ActionRowBuilder<ButtonBuilder>()
-        .setComponents(rJson.components.map(b => {
+        .addComponents(rJson.components.map(b => {
           const button = new ButtonBuilder(b);
 
           if (b.style !== ButtonStyle.Primary && b.custom_id !== customId)

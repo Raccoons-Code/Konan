@@ -21,7 +21,7 @@ export default class extends SlashCommand {
     return interaction.reply({
       components: [
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder()
               .setCustomId(JSON.stringify({ c: 'calculator', k: 'C' }))
               .setLabel('C')
@@ -40,7 +40,7 @@ export default class extends SlashCommand {
               .setStyle(ButtonStyle.Primary),
           ]),
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder()
               .setCustomId(JSON.stringify({ c: 'calculator', k: '7' }))
               .setLabel('7')
@@ -59,7 +59,7 @@ export default class extends SlashCommand {
               .setStyle(ButtonStyle.Primary),
           ]),
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder()
               .setCustomId(JSON.stringify({ c: 'calculator', k: '4' }))
               .setLabel('4')
@@ -78,7 +78,7 @@ export default class extends SlashCommand {
               .setStyle(ButtonStyle.Primary),
           ]),
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder()
               .setCustomId(JSON.stringify({ c: 'calculator', k: '1' }))
               .setLabel('1')
@@ -97,7 +97,7 @@ export default class extends SlashCommand {
               .setStyle(ButtonStyle.Primary),
           ]),
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder()
               .setCustomId(JSON.stringify({ c: 'calculator', k: '+/-' }))
               .setLabel('+/-')

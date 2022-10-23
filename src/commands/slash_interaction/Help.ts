@@ -82,8 +82,8 @@ export default class Help extends SlashCommand {
     ];
 
     const components = [
-      new ActionRowBuilder<ButtonBuilder>().setComponents(buttons),
-      new ActionRowBuilder<SelectMenuBuilder>().setComponents(menus),
+      new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
+      new ActionRowBuilder<SelectMenuBuilder>().addComponents(menus),
     ];
 
     return interaction.editReply({ components, embeds });

@@ -9,7 +9,7 @@ export function createSelectMenuFromOptions(
 
   return splitArrayInGroups(options, 25).map(group =>
     new ActionRowBuilder<SelectMenuBuilder>()
-      .setComponents(new SelectMenuBuilder()
+      .addComponents(new SelectMenuBuilder()
         .setCustomId(JSON.stringify({
           d: index++ && Date.now() + index,
           ...customId,

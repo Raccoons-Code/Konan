@@ -13,7 +13,7 @@ export function removeOptionsByRolesFromSelectMenu(
     if (rowJson.components[0].type !== ComponentType.SelectMenu) return row;
 
     return new ActionRowBuilder<SelectMenuBuilder>()
-      .setComponents(rowJson.components.map(element => {
+      .addComponents(rowJson.components.map(element => {
         const options = element.options.filter(option => {
           const value = JSONparse(option.value);
 

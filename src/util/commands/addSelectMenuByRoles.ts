@@ -5,9 +5,7 @@ import { createSelectMenuByRoles } from './createSelectMenuByRoles';
 export function addSelectMenuByRoles(
   options: ManageSelectRolesOptions,
   components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<SelectMenuBuilder>)[] = [],
-): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<SelectMenuBuilder>)[] {
-  if (!Array.isArray(options.roles)) return addSelectMenuByRoles({ ...options, roles: [options.roles] }, components);
-
+) {
   components = components
     .filter(component => component)
     .map(component => {
@@ -17,7 +15,7 @@ export function addSelectMenuByRoles(
       if (componentJson.components[0].options.length === 25) return component;
 
       return new ActionRowBuilder<SelectMenuBuilder>()
-        .setComponents(componentJson.components.map(element => {
+        .addComponents(componentJson.components.map(element => {
           const roles = options.roles.splice(0, 25 - element.options.length);
 
           return new SelectMenuBuilder(element)

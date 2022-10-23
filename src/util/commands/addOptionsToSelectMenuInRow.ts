@@ -14,7 +14,7 @@ export function addOptionsToSelectMenuInRow(
     if (rowJson.components[0].custom_id !== menuId) return row;
 
     return new ActionRowBuilder<SelectMenuBuilder>()
-      .setComponents(rowJson.components.map(element => {
+      .addComponents(rowJson.components.map(element => {
         const newOptions = options.splice(0, 25 - element.options.length);
 
         return new SelectMenuBuilder(element)

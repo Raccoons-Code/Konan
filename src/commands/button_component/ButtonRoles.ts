@@ -1,4 +1,4 @@
-import { ActionRowBuilder, APIActionRowComponent, APIButtonComponentWithCustomId, ButtonBuilder, ButtonInteraction, Colors, ComponentType, EmbedBuilder } from 'discord.js';
+import { ButtonInteraction, ButtonStyle, Colors, ComponentType, EmbedBuilder } from 'discord.js';
 import type { ButtonRolesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
@@ -51,21 +51,23 @@ export default class ButtonRoles extends ButtonComponentInteraction {
     const [, label] = component.label?.match(this.regexp.labelWithCount) ?? [];
 
     const components = message.components.map(row => {
-      const rowJson = <APIActionRowComponent<APIButtonComponentWithCustomId>>row.toJSON();
+      if (row.components[0].type !== ComponentType.Button) return row;
+      if (row.components.every(element => element.customId !== customId)) return row;
 
-      if (rowJson.components[0].type !== ComponentType.Button) return row;
-      if (rowJson.components.every(element => element.custom_id !== customId)) return row;
+      return {
+        components: row.components.map(element => {
+          if (element.type !== ComponentType.Button) return element;
+          if (element.style === ButtonStyle.Link) return element;
+          if (element.customId !== customId) return element;
 
-      return new ActionRowBuilder<ButtonBuilder>()
-        .setComponents(rowJson.components.map(element => {
-          const button = new ButtonBuilder(element);
-
-          if (element.custom_id !== customId) return button;
-
-          return button
-            .setCustomId(JSON.stringify(newCustomId))
-            .setLabel(`${label} ${newCustomId.count}`);
-        }));
+          return {
+            ...element.data,
+            customId: JSON.stringify(newCustomId),
+            label: `${label} ${newCustomId.count}`,
+          };
+        }),
+        type: ComponentType.ActionRow,
+      };
     });
 
     return interaction.update({ components });

@@ -70,8 +70,8 @@ export default class Help extends SelectMenuComponentInteraction {
     const menus = [this.setSelectMenu(0)];
 
     const components = [
-      new ActionRowBuilder<ButtonBuilder>().setComponents(buttons),
-      new ActionRowBuilder<SelectMenuBuilder>().setComponents(menus),
+      new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
+      new ActionRowBuilder<SelectMenuBuilder>().addComponents(menus),
     ];
 
     return interaction.update({ components, embeds });
@@ -93,13 +93,13 @@ export default class Help extends SelectMenuComponentInteraction {
     ];
 
     const components: ActionRowBuilder<ButtonBuilder | SelectMenuBuilder>[] = [
-      new ActionRowBuilder<SelectMenuBuilder>().setComponents([this.setSelectCategory('general')]),
-      new ActionRowBuilder<SelectMenuBuilder>().setComponents([this.setSelectMenu(1)]),
+      new ActionRowBuilder<SelectMenuBuilder>().addComponents([this.setSelectCategory('general')]),
+      new ActionRowBuilder<SelectMenuBuilder>().addComponents([this.setSelectMenu(1)]),
     ];
 
     if (slashCommands.length > this.limit)
       components.unshift(new ActionRowBuilder<ButtonBuilder>()
-        .setComponents(this.setPageButtons({
+        .addComponents(this.setPageButtons({
           category: 'general',
           page: 0,
           total: Math.floor(slashCommands.length / this.limit),
@@ -123,7 +123,7 @@ export default class Help extends SelectMenuComponentInteraction {
 
     const menus = [this.setSelectMenu(2)];
 
-    const components = [new ActionRowBuilder<SelectMenuBuilder>().setComponents(menus)];
+    const components = [new ActionRowBuilder<SelectMenuBuilder>().addComponents(menus)];
 
     return interaction.update({ components, embeds });
   }
@@ -144,13 +144,13 @@ export default class Help extends SelectMenuComponentInteraction {
     ];
 
     const components: ActionRowBuilder<ButtonBuilder | SelectMenuBuilder>[] = [
-      new ActionRowBuilder<SelectMenuBuilder>().setComponents(this.setSelectCategory(values[0])),
-      new ActionRowBuilder<SelectMenuBuilder>().setComponents(this.setSelectMenu(1)),
+      new ActionRowBuilder<SelectMenuBuilder>().addComponents(this.setSelectCategory(values[0])),
+      new ActionRowBuilder<SelectMenuBuilder>().addComponents(this.setSelectMenu(1)),
     ];
 
     if (slashCommands.length > this.limit)
       components.unshift(new ActionRowBuilder<ButtonBuilder>()
-        .setComponents(this.setPageButtons({
+        .addComponents(this.setPageButtons({
           category: values[0],
           page: 0,
           total: Math.floor(slashCommands.length / this.limit),

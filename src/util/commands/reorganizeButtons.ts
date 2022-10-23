@@ -18,6 +18,6 @@ export function reorganizeButtons(
     if (!buttons.length) return acc;
 
     return acc.concat(new ActionRowBuilder<ButtonBuilder>()
-      .setComponents(buttons.splice(0, 5).map(button => new ButtonBuilder(button))));
+      .addComponents(buttons.splice(0, 5).map(button => new ButtonBuilder(button))));
   }, <(ActionRow<MessageActionRowComponent> | ActionRowBuilder<MessageActionRowComponentBuilder>)[]>[]);
 }

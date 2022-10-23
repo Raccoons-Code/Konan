@@ -60,8 +60,8 @@ export default class Help extends Command {
     ];
 
     const components = [
-      new ActionRowBuilder<ButtonBuilder>().setComponents(buttons),
-      new ActionRowBuilder<SelectMenuBuilder>().setComponents(menus),
+      new ActionRowBuilder<ButtonBuilder>().addComponents(buttons),
+      new ActionRowBuilder<SelectMenuBuilder>().addComponents(menus),
     ];
 
     return message.reply({ components, embeds });

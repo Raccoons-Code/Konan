@@ -28,7 +28,7 @@ export default class extends ButtonComponentInteraction {
       return interaction.update({
         components: [
           new ActionRowBuilder<ButtonBuilder>()
-            .setComponents([
+            .addComponents([
               new ButtonBuilder(message.components[0].toJSON().components[0]),
             ]),
         ],
@@ -40,7 +40,7 @@ export default class extends ButtonComponentInteraction {
     return interaction.update({
       components: [
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder()
               .setEmoji('🖼')
               .setLabel('Link')
@@ -75,7 +75,7 @@ export default class extends ButtonComponentInteraction {
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
-        .setComponents([
+        .addComponents([
           new ButtonBuilder()
             .setEmoji('🖼')
             .setLabel('Link')

@@ -4,10 +4,9 @@ import { JSONparse } from './JSONparse';
 
 export function componentsHasRoles(
   components: ActionRow<MessageActionRowComponent>[],
-  roles: APIRole | Role | (APIRole | Role)[],
+  roles: (APIRole | Role)[],
 ): boolean {
   if (!roles) return false;
-  if (!Array.isArray(roles)) return componentsHasRoles(components, [roles]);
 
   return roles.every(role => components.some(row => row.toJSON().components.some(element => {
     if (element.type === ComponentType.Button && element.style !== ButtonStyle.Link) {

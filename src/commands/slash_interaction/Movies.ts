@@ -77,7 +77,7 @@ export default class Movies extends SlashCommand {
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
-        .setComponents([
+        .addComponents([
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c: 'movies', d: 0, o: offset, p: page, s, target: 1 }))
             .setDisabled(!a).setLabel('1...').setStyle(a ? Primary : Secondary),

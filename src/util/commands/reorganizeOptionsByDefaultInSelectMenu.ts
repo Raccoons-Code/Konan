@@ -9,7 +9,7 @@ export function reorganizeOptionsByDefaultInSelectMenu(
     if (rowJson.components[0].type !== ComponentType.SelectMenu) return row;
 
     return new ActionRowBuilder<SelectMenuBuilder>()
-      .setComponents(rowJson.components.map(element => new SelectMenuBuilder(element)
+      .addComponents(rowJson.components.map(element => new SelectMenuBuilder(element)
         .setOptions(element.options.sort(a => a.default ? -1 : 1))));
   });
 }

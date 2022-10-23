@@ -23,9 +23,9 @@ export default class Ban extends MessageContextMenu {
       new ModalBuilder()
         .setCustomId(JSON.stringify({ c: 'ban', userId: targetMessage.author.id }))
         .setTitle(`Ban ${targetMessage.member?.displayName ?? targetMessage.author.username}`)
-        .setComponents([
+        .addComponents([
           new ActionRowBuilder<TextInputBuilder>()
-            .setComponents([
+            .addComponents([
               new TextInputBuilder()
                 .setCustomId('reason')
                 .setLabel('Reason')
@@ -35,7 +35,7 @@ export default class Ban extends MessageContextMenu {
                 .setValue(targetMessage.url),
             ]),
           new ActionRowBuilder<TextInputBuilder>()
-            .setComponents([
+            .addComponents([
               new TextInputBuilder()
                 .setCustomId('hours')
                 .setLabel('Hours of message deletion')

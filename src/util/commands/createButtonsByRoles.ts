@@ -4,7 +4,7 @@ import splitArrayInGroups from '../splitArrayInGroups';
 
 export function createButtonsByRoles(options: ManageButtonRolesOptions) {
   return splitArrayInGroups(options.roles, 5).map(array => new ActionRowBuilder<ButtonBuilder>()
-    .setComponents(array.map(role => new ButtonBuilder()
+    .addComponents(array.map(role => new ButtonBuilder()
       .setCustomId(JSON.stringify({
         c: 'buttonroles',
         count: 0,

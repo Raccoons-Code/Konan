@@ -23,9 +23,9 @@ export default class Kick extends MessageContextMenu {
       new ModalBuilder()
         .setCustomId(JSON.stringify({ c: 'kick', userId: targetMessage.author.id }))
         .setTitle(`Kick ${targetMessage.member?.displayName ?? targetMessage.author.username}`)
-        .setComponents([
+        .addComponents([
           new ActionRowBuilder<TextInputBuilder>()
-            .setComponents([
+            .addComponents([
               new TextInputBuilder()
                 .setCustomId('reason')
                 .setLabel('Reason')

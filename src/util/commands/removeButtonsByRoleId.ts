@@ -4,17 +4,15 @@ import { JSONparse } from './JSONparse';
 
 export function removeButtonsByRoleId(
   components: ActionRow<MessageActionRowComponent>[] = [],
-  roles: Snowflake | Snowflake[],
+  roles: Snowflake[],
 ): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<ButtonBuilder>)[] {
-  if (!Array.isArray(roles)) return removeButtonsByRoleId(components, [roles]);
-
   return components.map(row => {
     const rowJson = <APIActionRowComponent<APIButtonComponent>>row.toJSON();
 
     if (rowJson.components[0].type !== ComponentType.Button) return row;
 
     return new ActionRowBuilder<ButtonBuilder>()
-      .setComponents(rowJson.components.reduce((acc, element) => {
+      .addComponents(rowJson.components.reduce((acc, element) => {
         const newElement = new ButtonBuilder(element);
 
         if (element.style === ButtonStyle.Link) return acc.concat(newElement);

@@ -13,7 +13,7 @@ export function removeOptionsFromSelectMenu(
     if (rowJson.components[0].custom_id !== menuId) return row;
 
     return new ActionRowBuilder<SelectMenuBuilder>()
-      .setComponents(rowJson.components.map(element => {
+      .addComponents(rowJson.components.map(element => {
         const options = element.options.filter(option => optionId.includes(option.value));
 
         return new SelectMenuBuilder(element)

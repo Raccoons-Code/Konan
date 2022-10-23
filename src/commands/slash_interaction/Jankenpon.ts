@@ -145,7 +145,7 @@ export default class Jankenpon extends SlashCommand {
 
       const components = [
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 1 }))
               .setEmoji('✊').setLabel('Rock').setStyle(this.randomButtonStyle.value),
             new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 2 }))
@@ -197,7 +197,7 @@ export default class Jankenpon extends SlashCommand {
 
       const components = [
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 1 }))
               .setEmoji('✊').setLabel('Rock').setStyle(this.randomButtonStyle.value),
             new ButtonBuilder().setCustomId(JSON.stringify({ c: 'jkp', p: [user.id, player2?.id], v: 2 }))

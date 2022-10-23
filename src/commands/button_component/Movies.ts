@@ -38,7 +38,7 @@ export default class Movies extends ButtonComponentInteraction {
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
-        .setComponents([
+        .addComponents([
           new ButtonBuilder()
             .setCustomId(JSON.stringify({ c, d: 0, o: offset, p: page, s, target: 1 }))
             .setDisabled(!a).setLabel('1...').setStyle(a ? Primary : Secondary),

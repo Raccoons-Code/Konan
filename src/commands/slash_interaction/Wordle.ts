@@ -96,7 +96,7 @@ export default class extends SlashCommand {
         return interaction.editReply({
           components: [
             new ActionRowBuilder<ButtonBuilder>()
-              .setComponents([
+              .addComponents([
                 new ButtonBuilder()
                   .setEmoji('🔍')
                   .setLabel('Join to the game')
@@ -115,7 +115,7 @@ export default class extends SlashCommand {
       return interaction.editReply({
         components: [
           new ActionRowBuilder<ButtonBuilder>()
-            .setComponents([
+            .addComponents([
               new ButtonBuilder()
                 .setEmoji('🔍')
                 .setLabel('Join to the game')
@@ -161,7 +161,7 @@ export default class extends SlashCommand {
     return interaction.editReply({
       components: [
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder()
               .setCustomId(JSON.stringify({ c: 'wordle', sc: 'try' }))
               .setEmoji('📝')

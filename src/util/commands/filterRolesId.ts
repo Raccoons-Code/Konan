@@ -2,8 +2,7 @@ import { ActionRow, ButtonStyle, ComponentType, MessageActionRowComponent } from
 import type { ButtonRolesCustomId, SelectRolesOptionValue } from '../../@types';
 import { JSONparse } from './JSONparse';
 
-export function filterRolesId(components: ActionRow<MessageActionRowComponent>[], rolesId: string | string[]) {
-  if (!Array.isArray(rolesId)) rolesId = [rolesId];
+export function filterRolesId(components: ActionRow<MessageActionRowComponent>[], rolesId: string[]) {
 
   for (let i = 0; i < components.length; i++) {
     const componentJson = components[i].toJSON();

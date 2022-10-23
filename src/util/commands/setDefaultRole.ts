@@ -13,7 +13,7 @@ export function setDefaultRole(
     if (rowJson.components[0].type !== ComponentType.SelectMenu) return row;
 
     return new ActionRowBuilder<SelectMenuBuilder>()
-      .setComponents(rowJson.components.map(element => {
+      .addComponents(rowJson.components.map(element => {
         const selectMenu = new SelectMenuBuilder(element);
 
         return selectMenu.setOptions(element.options.map(option => {

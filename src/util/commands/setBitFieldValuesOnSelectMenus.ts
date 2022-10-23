@@ -16,7 +16,7 @@ export function setBitFieldValuesOnSelectMenus(
     if (componentJson.components[0].type !== ComponentType.SelectMenu) return component;
 
     return new ActionRowBuilder<SelectMenuBuilder>()
-      .setComponents(componentJson.components.map(element => {
+      .addComponents(componentJson.components.map(element => {
         const newSelectMenu = new SelectMenuBuilder(element);
 
         if (element.custom_id !== customId) return newSelectMenu;

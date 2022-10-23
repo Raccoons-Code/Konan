@@ -30,7 +30,7 @@ export default class Avatar extends SlashCommand {
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
-        .setComponents([
+        .addComponents([
           new ButtonBuilder()
             .setEmoji('🖼')
             .setLabel('Link')

@@ -18,7 +18,7 @@ export function addButtonsToRows(
 
   for (let i = 0; i < 5 - components.length; i++) {
     components.push(new ActionRowBuilder<ButtonBuilder>()
-      .setComponents(elements.splice(0, 5)));
+      .addComponents(elements.splice(0, 5)));
 
     if (!elements.length) break;
   }

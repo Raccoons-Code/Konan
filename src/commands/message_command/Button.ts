@@ -52,7 +52,7 @@ export default class Button extends Command {
   getButtons(buttons: ButtonBuilder[], rows: ActionRowBuilder<ButtonBuilder>[] = []) {
     for (let i = 0; i < buttons.length; i += 5) {
       rows.push(new ActionRowBuilder<ButtonBuilder>()
-        .setComponents(buttons.slice(i, i + 5)));
+        .addComponents(buttons.slice(i, i + 5)));
     }
 
     return rows;

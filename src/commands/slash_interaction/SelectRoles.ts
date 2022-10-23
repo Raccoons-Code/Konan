@@ -435,7 +435,7 @@ export default class SelectRoles extends SlashCommand {
 
     const components = [
       new ActionRowBuilder<SelectMenuBuilder>()
-        .setComponents(new SelectMenuBuilder()
+        .addComponents(new SelectMenuBuilder()
           .setCustomId(JSON.stringify({
             c: this.data.name,
             count: 0,
@@ -515,7 +515,7 @@ export default class SelectRoles extends SlashCommand {
         if (rowJson.components[0].type !== ComponentType.SelectMenu) return row;
 
         return new ActionRowBuilder<SelectMenuBuilder>()
-          .setComponents(rowJson.components.map(element => {
+          .addComponents(rowJson.components.map(element => {
             const newSelectMenu = new SelectMenuBuilder(element);
 
             if (element.custom_id !== menuId) return newSelectMenu;
@@ -539,7 +539,7 @@ export default class SelectRoles extends SlashCommand {
     if (subcommand === 'option') {
       const role = options.getRole('role')!;
 
-      if (this.Util.componentsHasRoles(message.components, role))
+      if (this.Util.componentsHasRoles(message.components, [role]))
         return interaction.editReply(this.t('itemAddError', { locale }));
 
       const option_description = options.getString('option_description')?.slice(0, 100);
@@ -553,7 +553,7 @@ export default class SelectRoles extends SlashCommand {
         if (rowJson.components[0].type !== ComponentType.SelectMenu) return row;
 
         return new ActionRowBuilder<SelectMenuBuilder>()
-          .setComponents(rowJson.components.map(element => {
+          .addComponents(rowJson.components.map(element => {
             return new SelectMenuBuilder(element)
               .setOptions(element.options.map(option => {
                 if (option.value !== optionId) {
@@ -598,7 +598,7 @@ export default class SelectRoles extends SlashCommand {
 
     const role = options.getRole('role', true);
 
-    if (this.Util.componentsHasRoles(message.components, role))
+    if (this.Util.componentsHasRoles(message.components, [role]))
       return interaction.editReply(this.t('itemAddError', { locale }));
 
     const option_default = options.getBoolean('option_default');
@@ -615,7 +615,7 @@ export default class SelectRoles extends SlashCommand {
       let components = [
         ...message.components,
         new ActionRowBuilder<SelectMenuBuilder>()
-          .setComponents(new SelectMenuBuilder()
+          .addComponents(new SelectMenuBuilder()
             .setCustomId(JSON.stringify({
               c: this.data.name,
               count: 0,

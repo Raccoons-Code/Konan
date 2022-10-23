@@ -60,7 +60,7 @@ export default class extends MessageContextMenu {
       ],
       components: [
         new ActionRowBuilder<ButtonBuilder>()
-          .setComponents([
+          .addComponents([
             new ButtonBuilder()
               .setCustomId(JSON.stringify({
                 c: 'clear',

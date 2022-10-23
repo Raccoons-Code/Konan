@@ -6,7 +6,7 @@ export function createSelectMenuByRoles(options: ManageSelectRolesOptions) {
   let index = 1;
 
   return splitArrayInGroups(options.roles, 25).map(group => new ActionRowBuilder<SelectMenuBuilder>()
-    .setComponents(new SelectMenuBuilder()
+    .addComponents(new SelectMenuBuilder()
       .setCustomId(JSON.stringify({
         c: 'selectroles',
         count: 0,

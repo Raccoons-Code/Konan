@@ -98,7 +98,7 @@ export default class Jankenpon extends ButtonComponentInteraction {
       if (row.components[0].type !== ComponentType.Button) return row;
 
       return new ActionRowBuilder<ButtonBuilder>(row.toJSON())
-        .setComponents(row.components.map(oldButton => {
+        .addComponents(row.components.map(oldButton => {
           const button = new ButtonBuilder(oldButton.toJSON());
 
           if (!oldButton.customId) return button;

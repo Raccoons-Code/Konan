@@ -291,7 +291,7 @@ export default class ButtonRoles extends SlashCommand {
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
-        .setComponents([
+        .addComponents([
           new ButtonBuilder()
             .setCustomId(JSON.stringify({
               c: this.data.name,
@@ -371,7 +371,7 @@ export default class ButtonRoles extends SlashCommand {
         if (rowJson.components.every(element => element.custom_id !== buttonId)) return row;
 
         return new ActionRowBuilder<ButtonBuilder>()
-          .setComponents(rowJson.components.map(button => {
+          .addComponents(rowJson.components.map(button => {
             const newButton = new ButtonBuilder(button);
 
             if (button.custom_id !== buttonId) return newButton;
@@ -460,7 +460,7 @@ export default class ButtonRoles extends SlashCommand {
     if (subcommand === 'button') {
       const buttonId = options.getString('button', true);
 
-      const components = this.Util.reorganizeButtons(this.Util.removeButtonsById(message.components, buttonId));
+      const components = this.Util.reorganizeButtons(this.Util.removeButtonsById(message.components, [buttonId]));
 
       try {
         await message.edit({ components });

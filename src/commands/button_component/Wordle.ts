@@ -38,9 +38,9 @@ export default class extends ButtonComponentInteraction {
       new ModalBuilder()
         .setCustomId(JSON.stringify({ c: 'wordle', msgId: interaction.message.id }))
         .setTitle('Wordle')
-        .setComponents([
+        .addComponents([
           new ActionRowBuilder<TextInputBuilder>()
-            .setComponents([
+            .addComponents([
               new TextInputBuilder()
                 .setCustomId('try')
                 .setLabel('Try')

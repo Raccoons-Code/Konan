@@ -20,7 +20,7 @@ export default class Avatar extends UserContextMenu {
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
-        .setComponents([
+        .addComponents([
           new ButtonBuilder()
             .setEmoji('🖼')
             .setLabel('Link')

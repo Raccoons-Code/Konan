@@ -5,9 +5,7 @@ import { createButtonsByRoles } from './createButtonsByRoles';
 export function addButtonsByRoles(
   options: ManageButtonRolesOptions,
   components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<ButtonBuilder>)[] = [],
-): (ActionRow<MessageActionRowComponent> | ActionRowBuilder<ButtonBuilder>)[] {
-  if (!Array.isArray(options.roles)) return addButtonsByRoles({ ...options, roles: [options.roles] }, components);
-
+) {
   components = components
     .filter(component => component)
     .map(component => {
