@@ -1,5 +1,6 @@
 import { ApplicationCommandNonOptionsData, ApplicationCommandOptionData, ApplicationCommandSubCommandData, ApplicationCommandSubGroupData, PermissionsBitField, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { writeFileSync } from 'node:fs';
+import '../client';
 import CommandHandler from '../commands';
 import { SlashCommand } from '../structures';
 import { t } from '../translator';
