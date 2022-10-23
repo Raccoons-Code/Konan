@@ -1,4 +1,4 @@
-import { APIEmbed, ButtonInteraction, codeBlock, EmbedBuilder } from 'discord.js';
+import { APIEmbed, ButtonInteraction, codeBlock, Colors } from 'discord.js';
 import { ButtonComponentInteraction } from '../../structures';
 
 export default class extends ButtonComponentInteraction {
@@ -21,12 +21,14 @@ export default class extends ButtonComponentInteraction {
     if (embedJson.description!.length > 254)
       embedJson.description = this.displayBlock(`${Infinity}`);
 
-    const embeds = [
-      new EmbedBuilder(embedJson)
-        .setColor('Random'),
-    ];
+    embedJson.color = this.randomFromObject(Colors);
 
-    return interaction.update({ embeds });
+    return interaction.update({ embeds: [embedJson] });
+  }
+
+  randomFromObject(obj: Record<string, any>) {
+    const values = Object.values(obj);
+    return values[Math.random() * values.length];
   }
 
   calculate(oldNumber: bigint | number | string, k: string, newNumber: bigint | number | string) {
