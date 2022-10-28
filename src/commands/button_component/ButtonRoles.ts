@@ -1,4 +1,4 @@
-import { ButtonInteraction, ButtonStyle, Colors, ComponentType, EmbedBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Colors, ComponentType, EmbedBuilder } from 'discord.js';
 import type { ButtonRolesCustomId } from '../../@types';
 import { ButtonComponentInteraction } from '../../structures';
 
@@ -54,20 +54,18 @@ export default class ButtonRoles extends ButtonComponentInteraction {
       if (row.components[0].type !== ComponentType.Button) return row;
       if (row.components.every(element => element.customId !== customId)) return row;
 
-      return {
-        components: row.components.map(element => {
-          if (element.type !== ComponentType.Button) return element;
-          if (element.style === ButtonStyle.Link) return element;
-          if (element.customId !== customId) return element;
+      return new ActionRowBuilder<ButtonBuilder>()
+        .addComponents(row.components.map(element => {
+          const button = new ButtonBuilder(element.data);
 
-          return {
-            ...element.data,
-            customId: JSON.stringify(newCustomId),
-            label: `${label} ${newCustomId.count}`,
-          };
-        }),
-        type: ComponentType.ActionRow,
-      };
+          if (element.type !== ComponentType.Button) return button;
+          if (element.style === ButtonStyle.Link) return button;
+          if (element.customId !== customId) return button;
+
+          return button
+            .setCustomId(JSON.stringify(newCustomId))
+            .setLabel(`${label} ${newCustomId.count}`);
+        }));
     });
 
     return interaction.update({ components });
