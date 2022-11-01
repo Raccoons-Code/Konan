@@ -30,7 +30,7 @@ export default class Ready extends Event<'ready'> {
 
     appStats.fetch();
 
-    /* client.topggAutoposter(); */
+    client.topggAutoposter();
     this.logCommandsErrors(client);
     this.setPresence(client);
   }

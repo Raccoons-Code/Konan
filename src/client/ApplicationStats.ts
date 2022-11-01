@@ -56,16 +56,16 @@ export default class ApplicationStats {
     return this.client.shard?.ids ?? [];
   }
 
-  promises = <Promise<Stats>[]>[];
-
   async fetch(options?: FetchStatsOptions): Promise<Stats> {
     if (!options) return this.#fetch_stats().catch(() => this);
 
     if (Array.isArray(options.filter)) {
-      for (let i = 0; i < options.filter.length; i++)
-        this.promises.push(this.fetch({ filter: options.filter[i] }));
+      const promises = [];
 
-      await Promise.all(this.promises.splice(0, this.promises.length));
+      for (let i = 0; i < options.filter.length; i++)
+        promises.push(this.fetch({ filter: options.filter[i] }));
+
+      await Promise.all(promises);
 
       return this;
     }
