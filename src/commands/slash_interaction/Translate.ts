@@ -1,7 +1,8 @@
-import translate, { languages } from '@vitalets/google-translate-api';
+import { translate } from '@vitalets/google-translate-api';
 import { ChatInputCommandInteraction, codeBlock, EmbedBuilder } from 'discord.js';
 import { cache } from '../../modules/Cache';
 import { SlashCommand } from '../../structures';
+import { googleTranslateApiLanguages } from '../../util/Constants';
 
 export default class Translate extends SlashCommand {
   [x: string]: any;
@@ -58,10 +59,9 @@ export default class Translate extends SlashCommand {
           .setColor('Random')
           .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
           .setTitle([
-            'Translation from',
-            languages[<'auto'>translation.from.language.iso],
+            'Translation',
             'to',
-            languages[to],
+            googleTranslateApiLanguages[to],
           ].join(' ')),
       ],
     });

@@ -1,8 +1,9 @@
-import translate, { languages } from '@vitalets/google-translate-api';
+import { translate } from '@vitalets/google-translate-api';
 import { ApplicationCommandType, codeBlock, EmbedBuilder, MessageContextMenuCommandInteraction } from 'discord.js';
 import { MessageContextMenu } from '../../structures';
+import { googleTranslateApiLanguages } from '../../util/Constants';
 
-const langs = Object.keys(languages)
+const langs = Object.keys(googleTranslateApiLanguages)
   .filter(l => !/(isSupported|getCode)/.test(l));
 
 export default class Translate extends MessageContextMenu {
@@ -33,8 +34,8 @@ export default class Translate extends MessageContextMenu {
           .setColor('Random')
           .setDescription(`${codeBlock(translation.text.slice(0, 4089))}`)
           .setTitle([
-            'Translation from', languages[<'auto'>translation.from.language.iso],
-            'to', languages[<'auto'>to],
+            'Translation',
+            'to', googleTranslateApiLanguages[<'auto'>to],
           ].join(' ')),
       ],
     });

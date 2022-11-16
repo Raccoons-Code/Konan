@@ -1,10 +1,11 @@
-import translate, { languages } from '@vitalets/google-translate-api';
+import { translate } from '@vitalets/google-translate-api';
 import { ApplicationCommandOptionChoiceData, AutocompleteInteraction } from 'discord.js';
 import { SlashAutocomplete } from '../../structures';
+import { googleTranslateApiLanguages } from '../../util/Constants';
 
-const Choices = <[string, string][]>Object.keys(languages)
+const Choices = <[string, string][]>Object.keys(googleTranslateApiLanguages)
   .filter(l => !/(isSupported|getCode)/.test(l))
-  .map((l) => [languages[<'auto'>l], l]);
+  .map((l) => [googleTranslateApiLanguages[<'auto'>l], l]);
 
 export default class Translate extends SlashAutocomplete {
   [x: string]: any;
@@ -95,7 +96,7 @@ export default class Translate extends SlashAutocomplete {
 
     const name = [
       translation.text,
-      ' (', translation.from.language.iso.toUpperCase(), ' -> ', to.toUpperCase(), ')',
+      ' (-> ', to.toUpperCase(), ')',
     ].join('').slice(0, 100);
 
     res.push({
