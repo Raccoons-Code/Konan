@@ -13,7 +13,7 @@ datasource db {
 model CurrencyShop {
   ObjectId String @id @default(auto()) @map("_id") @db.ObjectId
   itemId   String @unique
-  Item     Item   @relation(fields: [itemId], references: [ObjectId], onDelete: Cascade, onUpdate: Cascade)
+  Item     Item   @relation(fields: [itemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   cost     Float
 }
 
