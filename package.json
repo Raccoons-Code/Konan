@@ -33,7 +33,7 @@
   "dependencies": {
     "@prisma/client": "^4.9.0",
     "@tsconfig/recommended": "^1.0.2",
-    "@vitalets/google-translate-api": "^9.0.0",
+    "@vitalets/google-translate-api": "^9.1.0",
     "better-sqlite3": "^7.6.2",
     "common-tags": "^1.8.2",
     "discord-tictactoe": "^4.0.0",
