@@ -363,10 +363,10 @@
     "@typescript-eslint/types" "5.48.2"
     eslint-visitor-keys "^3.3.0"
 
-"@vitalets/google-translate-api@^9.0.0":
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/@vitalets/google-translate-api/-/google-translate-api-9.0.0.tgz#e136012b60178d661efc38f4607e4c5f97e277d4"
-  integrity sha512-RtnhYQk9Wb1+2jOcaOcZS8e1VPYA5hRlTjNLuAwQn9bP4j1kZwjzvEJHld4M5NBoWwfY9Cv1tP3KtUMHIzCsNw==
+"@vitalets/google-translate-api@^9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@vitalets/google-translate-api/-/google-translate-api-9.1.0.tgz#5a754d379553cc3b7ad741635c2349a6ae60c806"
+  integrity sha512-iA36eHfypNaYOHUjVoYcQ9Ro98WXHdBDgKNlWqn4MN4PA/R7bgccH4KlLWwuem5FjCSlRev27ZTUtyp/axgOVQ==
   dependencies:
     "@types/http-errors" "^1.8.2"
     http-errors "^2.0.0"
