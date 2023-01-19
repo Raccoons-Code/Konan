@@ -571,10 +571,10 @@ discord-api-types@^0.37.20:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.20.tgz#f23894e3e6b894abb5431ff6c4aa52471360377c"
   integrity sha512-uAO+55E11rMkYR36/paE1vKN8c2bZa1mgrIaiQIBgIZRKZTDIGOZB+8I5eMRPFJcGxrg16riUu+0aTu2JQEPew==
 
-discord-tictactoe@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/discord-tictactoe/-/discord-tictactoe-4.0.0.tgz#28703dc345ec13a0979c4d6953f44fc28bcc5879"
-  integrity sha512-13BaBq/rIj71bb2du/IwGdlJwYlk8jAPpJHaOWQB4SqpFMJPeCFbjfdFo8f9rZfKrihTSraqmV2ZFecc2pHHQQ==
+discord-tictactoe@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/discord-tictactoe/-/discord-tictactoe-4.1.0.tgz#172e29d8920ee7cd083623206a0513e7a4f1342e"
+  integrity sha512-fQiz2q9o7HfUpf3tavixgHtdu4CR07UfvBXoJRL7o4oVjSZXyuVcE1+Z13bVB4xYe/mfC3JAKTIpkQ3SGk6pHw==
   dependencies:
     discord.js "^14.3.0"
 
