@@ -46,7 +46,7 @@
     "statcord.js": "^3.4.3",
     "topgg-autoposter": "^2.0.1",
     "ts-node": "^10.9.1",
-    "undici": "^5.16.0"
+    "undici": "^5.18.0"
   },
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
