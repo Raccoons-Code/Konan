@@ -52,7 +52,7 @@
     "@types/common-tags": "^1.8.1",
     "@types/eslint": "^8.21.1",
     "@types/ms": "^0.7.31",
-    "@types/node": "^18.14.2",
+    "@types/node": "^18.14.4",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
     "eslint": "^8.35.0",
