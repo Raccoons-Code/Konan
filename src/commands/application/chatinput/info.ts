@@ -147,6 +147,7 @@ export default class extends ChatInputCommand {
       embeds: [
         new EmbedBuilder()
           .setAuthor({ name: username!, iconURL })
+          .setColor("Random")
           .setFields([
             { name: "Library", value: codeBlock("c", library), inline },
             { name: "Engine", value: codeBlock("c", engine), inline },
@@ -337,6 +338,7 @@ export default class extends ChatInputCommand {
       embeds: [
         new EmbedBuilder()
           .setAuthor({ name: guild.name, iconURL: guild.iconURL() ?? undefined })
+          .setColor("Random")
           .setFields(
             { name: t("owner", { locale }), value: userMention(guild.ownerId), inline },
             { name: t("id", { locale }), value: inlineCode(guild.id), inline },
@@ -444,22 +446,23 @@ export default class extends ChatInputCommand {
           if (integration.application.description)
             embeds[0].setDescription(integration.application.description);
 
-          if (integration.application.privacyPolicyURL || integration.application.termsOfServiceURL)
+          if (integration.application.privacyPolicyURL || integration.application.termsOfServiceURL) {
             components.push(new ActionRowBuilder<ButtonBuilder>());
 
-          if (integration.application.privacyPolicyURL)
-            components[0]
-              .addComponents(new ButtonBuilder()
-                .setLabel("Privacy policy")
-                .setStyle(ButtonStyle.Link)
-                .setURL(integration.application.privacyPolicyURL));
+            if (integration.application.privacyPolicyURL)
+              components[0]
+                .addComponents(new ButtonBuilder()
+                  .setLabel("Privacy policy")
+                  .setStyle(ButtonStyle.Link)
+                  .setURL(integration.application.privacyPolicyURL));
 
-          if (integration.application.termsOfServiceURL)
-            components[0]
-              .addComponents(new ButtonBuilder()
-                .setLabel("Terms of service")
-                .setStyle(ButtonStyle.Link)
-                .setURL(integration.application.termsOfServiceURL));
+            if (integration.application.termsOfServiceURL)
+              components[0]
+                .addComponents(new ButtonBuilder()
+                  .setLabel("Terms of service")
+                  .setStyle(ButtonStyle.Link)
+                  .setURL(integration.application.termsOfServiceURL));
+          }
         }
       }
     }

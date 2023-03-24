@@ -131,7 +131,7 @@ export default class extends ChatInputAutocomplete {
             const option = element.options[k];
 
             const parsedValue = JSONparse(option.value);
-            if (!parsedValue) continue;
+            if (!(parsedValue?.id ?? parsedValue?.roleId)) continue;
 
             const role = interaction.guild.roles.cache.get(parsedValue.id ?? parsedValue.roleId);
 

@@ -9,11 +9,11 @@ export default class extends ButtonCommand {
   }
 
   async execute(interaction: ButtonInteraction) {
-    const { k } = JSON.parse(interaction.customId);
+    const parsedId = JSON.parse(interaction.customId);
 
     const [embed] = interaction.message.embeds;
 
-    const embedJson = this.resolvePressedKey(embed.toJSON(), k);
+    const embedJson = this.resolvePressedKey(embed.toJSON(), parsedId.k);
 
     if (embedJson.description!.length > 254)
       embedJson.description = this.displayBlock(`${Infinity}`);

@@ -26,20 +26,20 @@ export default class extends ButtonCommand {
       return 1;
     }
 
-    const { amount, target } = JSON.parse(interaction.customId);
+    const parsedId = JSON.parse(interaction.customId);
 
     await interaction.update({
       components: [],
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
-          .setTitle(`Trying to erase ${amount} messages...`),
+          .setTitle(`Trying to erase ${parsedId.amount} messages...`),
       ],
     });
 
     const clearMessages = new ClearMessages({
       channel: interaction.channel,
-      amount,
-      targetMember: target,
+      amount: parsedId.amount,
+      targetMember: parsedId.target,
     });
 
     try {

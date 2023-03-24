@@ -26,19 +26,19 @@ export default class extends ButtonCommand {
       return 1;
     }
 
-    const { msgId } = JSON.parse(interaction.customId);
+    const parsedId = JSON.parse(interaction.customId);
 
     await interaction.update({
       components: [],
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
-          .setDescription(bold(`Trying to erase messages until [message](${messageLink(interaction.channelId, msgId)})...`))
+          .setDescription(bold(`Trying to erase messages until [message](${messageLink(interaction.channelId, parsedId.msgId)})...`))
           .setTitle(null),
       ],
     });
 
     const clearMessages = new ClearMessages({
-      afterMessage: msgId,
+      afterMessage: parsedId.msgId,
       channel: interaction.channel,
     });
 

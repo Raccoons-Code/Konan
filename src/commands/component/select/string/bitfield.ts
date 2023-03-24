@@ -2,7 +2,6 @@ import { EmbedBuilder, inlineCode, IntentsBitField, PermissionsBitField, StringS
 import SelectMenuCommand from "../../../../structures/SelectMenuCommand";
 import { t } from "../../../../translator";
 import { calculateBitFieldFromSelectMenus, setBitFieldValuesOnSelectMenus } from "../../../../util/commands/components/selectmenu";
-import { JSONparse } from "../../../../util/utils";
 
 export default class extends SelectMenuCommand {
   [k: string]: any;
@@ -14,7 +13,7 @@ export default class extends SelectMenuCommand {
   }
 
   async execute(interaction: StringSelectMenuInteraction) {
-    const parsedId = JSONparse(interaction.customId);
+    const parsedId = JSON.parse(interaction.customId);
 
     await this[parsedId?.scg ?? parsedId?.sc]?.(interaction);
 
@@ -60,14 +59,14 @@ export default class extends SelectMenuCommand {
       num -= 0xffffff;
     }
 
-    const { sc, scg } = JSONparse(interaction.customId) ?? {};
+    const parsedId = JSON.parse(interaction.customId) ?? {};
 
     return {
       components,
       embeds: [
         new EmbedBuilder()
           .setColor(num > 0xffffff ? 0xffffff : num)
-          .setTitle(`Bitfield of the ${scg ?? sc}.`)
+          .setTitle(`Bitfield of the ${parsedId.scg ?? parsedId.sc}.`)
           .setDescription(holds.join("\n") || null)
           .setFields({ name: `BitField [${holds.length}]`, value: inlineCode(`${bitField.bitfield}`) }),
       ],

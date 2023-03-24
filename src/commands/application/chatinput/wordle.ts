@@ -99,6 +99,7 @@ export default class extends ChatInputCommand {
             await message.edit({
               embeds: [
                 new EmbedBuilder(message.embeds[0].toJSON())
+                  .setColor("Random")
                   .setFields(playersId.length ? [
                     {
                       name: `Players [${playersId.concat(interaction.user.id).length}]`,

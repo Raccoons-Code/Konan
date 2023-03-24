@@ -18,9 +18,9 @@ export default class extends ButtonCommand {
   }
 
   async execute(interaction: ButtonInteraction) {
-    const { sc } = <InfoCustomId>JSON.parse(interaction.customId);
+    const parsedId = <InfoCustomId>JSON.parse(interaction.customId);
 
-    await this[<"app">sc]?.(interaction);
+    await this[<"app">parsedId.sc]?.(interaction);
 
     return;
   }
@@ -88,6 +88,7 @@ export default class extends ButtonCommand {
       embeds: [
         new EmbedBuilder()
           .setAuthor({ name: username!, iconURL })
+          .setColor("Random")
           .setFields([
             { name: "Library", value: codeBlock("c", library), inline },
             { name: "Engine", value: codeBlock("c", engine), inline },

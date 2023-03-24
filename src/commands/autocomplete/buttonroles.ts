@@ -97,7 +97,7 @@ export default class extends ChatInputAutocomplete {
           if (button.style === ButtonStyle.Link) continue;
 
           const parsedId = JSONparse(button.custom_id);
-          if (!parsedId) continue;
+          if (!(parsedId?.id ?? parsedId?.roleId)) continue;
 
           const role = interaction.guild.roles.cache.get(parsedId.id ?? parsedId.roleId);
 

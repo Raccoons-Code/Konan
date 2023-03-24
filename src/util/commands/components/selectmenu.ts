@@ -12,9 +12,9 @@ export function calculateBitFieldFromSelectMenus(
 
     return acc + rowJson.components.reduce((acc2, element) => {
       return acc2 + element.options.reduce((acc3, option) => {
-        const value = JSONparse(option.value) || {};
+        const value = JSONparse(option.value);
 
-        if (value.v) return acc3 | BigInt(value.n);
+        if (value?.v) return acc3 | BigInt(value.n);
 
         return acc3;
       }, 0n);

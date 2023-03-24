@@ -125,11 +125,11 @@ export default class Memory {
         .addComponents(rJson.components.map(b => {
           const button = new ButtonBuilder(b);
 
-          const { e } = JSON.parse(b.custom_id);
+          const parsedId = JSON.parse(b.custom_id);
 
           return button
             .setDisabled(true)
-            .setEmoji(e);
+            .setEmoji(parsedId.e);
         }));
     });
   }
