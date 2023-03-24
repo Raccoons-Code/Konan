@@ -1,0 +1,56 @@
+{
+  "name": "konan",
+  "version": "0.0.0",
+  "description": "A multi-purpose bot totally original and open-source.",
+  "main": "out",
+  "scripts": {
+    "start": "node out",
+    "watch": "tsc -watch",
+    "build": "tsc",
+    "dev": "nodemon out",
+    "lint": "eslint . --fix",
+    "dbpush": "prisma db push",
+    "postinstall": "prisma generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Raccoons-Code/Konan.git"
+  },
+  "keywords": [
+    "Raccoons Code",
+    "Discord application",
+    "Discord.js"
+  ],
+  "author": "Gorniaky <hwss.s2@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Raccoons-Code/Konan/issues"
+  },
+  "homepage": "https://github.com/Raccoons-Code/Konan#readme",
+  "engines": {
+    "node": ">=16"
+  },
+  "yarn-upgrade-all": {
+    "ignore": []
+  },
+  "dependencies": {
+    "@prisma/client": "^4.11.0",
+    "better-sqlite3": "^8.2.0",
+    "common-tags": "^1.8.2",
+    "discord.js": "^14.8.0",
+    "dotenv": "^16.0.3",
+    "ms": "^2.1.3",
+    "quick.db": "^9.0.10"
+  },
+  "devDependencies": {
+    "@types/common-tags": "^1.8.1",
+    "@types/ms": "^0.7.31",
+    "@types/node": "^18.15.7",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "eslint": "^8.36.0",
+    "nodemon": "^2.0.22",
+    "prisma": "^4.11.0",
+    "typescript": "^5.0.2"
+  }
+}

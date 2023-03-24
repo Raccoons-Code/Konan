@@ -1,0 +1,21 @@
+{
+  "Category": "Category",
+  "Directory": "Directory",
+  "DM": "DM",
+  "Forum": "Forum",
+  "GuildCategory": "Guild Category",
+  "GuildDirectory": "Guild Directory",
+  "GroupDM": "Group DM",
+  "GuildForum": "Guild Forum",
+  "GuildNews": "Guild News",
+  "GuildNewsThread": "Guild News Thread",
+  "GuildPrivateThread": "Guild Private Thread",
+  "GuildPublicThread": "Guild Public Thread",
+  "GuildStageVoice": "Guild Stage Voice",
+  "GuildText": "Guild Text",
+  "GuildVoice": "Guild Voice",
+  "News": "News",
+  "Text": "Text",
+  "Thread": "Thread",
+  "Voice": "Voice"
+}

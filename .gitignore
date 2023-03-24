@@ -1,3 +1,16 @@
+# Ignored by developer
+
+# ignore average files with this pattern
+**/.ignore.*
+/test*.js
+/test*.ts
+
+# build
+out
+
+# db
+*.sqlite
+
 # Logs
 logs
 *.log

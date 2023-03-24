@@ -1,0 +1,60 @@
+{
+  "application": {
+    "command": {
+      "choices": 25,
+      "description": 100,
+      "name": 32,
+      "option": {
+        "name": 100,
+        "value": 100
+      },
+      "options": 25
+    }
+  },
+  "button": {
+    "customId": 100,
+    "label": 80
+  },
+  "component": {
+    "buttons": 5,
+    "modals": 1,
+    "selectMenus": 1
+  },
+  "embed": {
+    "author": {
+      "name": 256
+    },
+    "description": 4096,
+    "field": {
+      "name": 256,
+      "value": 1024
+    },
+    "fields": 25,
+    "footer": {
+      "text": 2048
+    },
+    "title": 256,
+    "total": 6000
+  },
+  "message": {
+    "components": 5,
+    "content": 4096,
+    "embeds": 10
+  },
+  "modal": {
+    "customId": 100,
+    "label": 45,
+    "placeholder": 100,
+    "value": 4000
+  },
+  "selectMenu": {
+    "customId": 100,
+    "option": {
+      "description": 100,
+      "label": 100,
+      "value": 100
+    },
+    "options": 25,
+    "placeholder": 150
+  }
+}
