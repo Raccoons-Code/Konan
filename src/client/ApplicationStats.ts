@@ -83,7 +83,7 @@ export default class ApplicationStats {
   }
 
   async fetch(options?: FetchStatsOptions): Promise<Stats> {
-    if (!options) return this.#fetch_stats().catch(() => this);
+    if (!options) return this.fetch_stats().catch(() => this);
 
     if (Array.isArray(options.filter)) {
       const promises = [];
@@ -141,7 +141,7 @@ export default class ApplicationStats {
     });
   }
 
-  async #fetch_stats() {
+  private async fetch_stats() {
     return Promise.all([
       this.fetch_channels(),
       this.fetch_emojis(),
