@@ -24,7 +24,9 @@ client.once("ready", async function () {
   }
 
   await Promise.all([
-    commandHandler.register(),
+    commandHandler.register({
+      reset: env.NODE_ENV === "production",
+    }),
 
     client.application?.fetch(),
     client.application?.commands.fetch(),
