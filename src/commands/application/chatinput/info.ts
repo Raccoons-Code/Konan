@@ -114,23 +114,25 @@ export default class extends ChatInputCommand {
     if (VERSION)
       stats.push(["Version", VERSION]);
 
-    if (appStats.guilds)
-      stats.unshift(
-        ["Servers", appStats.guilds !== appStats.totalGuilds ?
-          `${appStats.guilds}/${appStats.totalGuilds}` :
-          appStats.guilds],
-        ["Channels", appStats.channels !== appStats.totalChannels ?
-          `${appStats.channels}/${appStats.totalChannels}` :
-          appStats.channels],
-        ["Users", appStats.users !== appStats.totalUsers ?
-          `${appStats.users}/${appStats.totalUsers}` :
-          appStats.users],
-        ["Emojis", appStats.emojis !== appStats.totalEmojis ?
-          `${appStats.emojis}/${appStats.totalEmojis}` :
-          appStats.emojis],
-        ["Messages", appStats.messages],
-        ["Interactions", appStats.interactions],
-      );
+    await appStats.fetch({ filter: "users" });
+
+    stats.unshift(
+      ["Servers", appStats.guilds < appStats.totalGuilds ?
+        `${appStats.guilds}/${appStats.totalGuilds}` :
+        appStats.guilds],
+      ["Channels", appStats.channels < appStats.totalChannels ?
+        `${appStats.channels}/${appStats.totalChannels}` :
+        appStats.channels],
+      ["Users", appStats.users < appStats.totalUsers ?
+        `${appStats.users}/${appStats.totalUsers}` :
+        appStats.users],
+      ["Emojis", appStats.emojis < appStats.totalEmojis ?
+        `${appStats.emojis}/${appStats.totalEmojis}` :
+        appStats.emojis],
+      ["Messages", appStats.messages],
+      ["Interactions", appStats.interactions],
+    );
+
 
     await interaction.editReply({
       components: [

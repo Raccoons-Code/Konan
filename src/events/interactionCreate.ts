@@ -30,14 +30,15 @@ export const options = <EventOptions>{
 };
 
 client.on("interactionCreate", async function (interaction) {
-  appStats.interactions++;
-
   const command = InteractionTypes[interaction.type]?.(<any>interaction);
 
   if (!command) return;
 
-  if (command.options.private)
-    if (!appOwners.isOwner(interaction.user.id)) return;
+  if (!appOwners.isOwner(interaction.user.id)) {
+    if (command.options.private) return;
+
+    appStats.interactions++;
+  }
 
   try {
     await command.execute(interaction);
