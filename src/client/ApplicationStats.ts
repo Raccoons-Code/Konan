@@ -96,12 +96,12 @@ export default class ApplicationStats {
       return this;
     }
 
-    await this[`#fetch_${options.filter ?? "stats"}`]();
+    await this[`fetch_${options.filter ?? "stats"}`]();
 
     return this;
   }
 
-  async #fetch_channels() {
+  private async fetch_channels() {
     return this.#channels.then(channels => {
       this.totalChannels = channels.reduce((acc, channelCount) => acc + channelCount, 0);
 
@@ -109,7 +109,7 @@ export default class ApplicationStats {
     });
   }
 
-  async #fetch_emojis() {
+  private async fetch_emojis() {
     return this.#emojis.then(emojis => {
       this.totalEmojis = emojis.reduce((acc, emojiCount) => acc + emojiCount, 0);
 
@@ -117,7 +117,7 @@ export default class ApplicationStats {
     });
   }
 
-  async #fetch_guilds() {
+  private async fetch_guilds() {
     return this.#guilds.then(guilds => {
       this.totalGuilds = guilds.reduce((acc, guildCount) => acc + guildCount, 0);
 
@@ -125,7 +125,7 @@ export default class ApplicationStats {
     });
   }
 
-  async #fetch_users() {
+  private async fetch_users() {
     return this.#users.then(users => {
       this.totalUsers = users.reduce((acc, userCount) => acc + userCount, 0);
 
@@ -133,7 +133,7 @@ export default class ApplicationStats {
     });
   }
 
-  async #fetch_voice_adapters() {
+  private async fetch_voice_adapters() {
     return this.#voice_adapters.then(voiceAdapters => {
       this.totalVoiceAdapters = voiceAdapters.reduce((acc, voiceAdapterCount) => acc + voiceAdapterCount, 0);
 
@@ -143,11 +143,11 @@ export default class ApplicationStats {
 
   async #fetch_stats() {
     return Promise.all([
-      this.#fetch_channels(),
-      this.#fetch_emojis(),
-      this.#fetch_guilds(),
-      this.#fetch_users(),
-      this.#fetch_voice_adapters(),
+      this.fetch_channels(),
+      this.fetch_emojis(),
+      this.fetch_guilds(),
+      this.fetch_users(),
+      this.fetch_voice_adapters(),
     ])
       .then(() => this);
   }
