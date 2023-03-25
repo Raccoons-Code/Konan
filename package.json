@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/Raccoons-Code/Konan#readme",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "yarn-upgrade-all": {
     "ignore": []
