@@ -23,10 +23,6 @@ To use my [commands](../../wiki/commands) press the <kbd>/</kbd> key on your key
 
 If you're interested, [click here](https://discord.com/api/oauth2/authorize?client_id=930281485301317633&scope=applications.commands+bot&permissions=545460321791) to get to know me.
 
-## Supported languages
-
-[![Crowdin](https://badges.awesome-crowdin.com/translation-15144556-499220.png)](https://crowdin.com/project/konan)
-
 ## Information
 
 [Terms of Service & Privacy](../../wiki/Terms-of-Service-&-Privacy)
