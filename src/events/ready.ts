@@ -17,13 +17,12 @@ client.once("ready", async function () {
 
   await Promise.all([
     commandHandler.register({
-      global: env.NODE_ENV !== "production",
       reset: env.NODE_ENV === "production",
     }),
 
     env.DISCORD_LOG_CHANNEL &&
     logger.findOrCreate(env.DISCORD_LOG_CHANNEL)
-      .then(webhook => logger.LOG_WEBHOOK = webhook)
+      .then(webhook => { logger.LOG_WEBHOOK = webhook; })
       .catch(() => null),
 
     appStats.fetch(),
