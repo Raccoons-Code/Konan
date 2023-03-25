@@ -191,6 +191,8 @@ class CommandHandler {
     } catch (error) {
       console.error(error);
     }
+
+    await client.application?.commands.fetch();
   }
 }
 

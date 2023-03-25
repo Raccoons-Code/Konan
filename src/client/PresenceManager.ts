@@ -12,16 +12,10 @@ export default class PresenceManager {
     { name: "Noisestorm - Crab Rave", type: ActivityType.Streaming, url: ytURL("LDU_Txk06tM") },
     { name: "Rick Astley - Never Gonna Give You Up", type: ActivityType.Streaming, url: ytURL("dQw4w9WgXcQ") },
     { name: "Wide Putin Walking", type: ActivityType.Streaming, url: ytURL("SLU3oG_ePhM") },
+    { name: `${appStats.guilds || "Fetching"} servers`, type: ActivityType.Competing },
+    { name: `${appStats.channels || "Fetching"} channels`, type: ActivityType.Listening },
+    { name: `${appStats.users || "Fetching"} users`, type: ActivityType.Watching },
   ];
-
-  init() {
-    if (appStats.guilds)
-      this.activities.push(
-        { name: `${appStats.guilds || "Fetching"} servers`, type: ActivityType.Watching },
-        { name: `${appStats.channels || "Fetching"} channels`, type: ActivityType.Listening },
-        { name: `${appStats.users || "Fetching"} users`, type: ActivityType.Competing },
-      );
-  }
 
   setPresence() {
     client.user?.setPresence({

@@ -15,26 +15,22 @@ client.once("ready", async function () {
 
   await commandHandler.load();
 
-  if (env.DISCORD_LOG_CHANNEL) {
-    try {
-      logger.LOG_WEBHOOK = await logger.findOrCreate(env.DISCORD_LOG_CHANNEL);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   await Promise.all([
     commandHandler.register({
+      global: env.NODE_ENV !== "production",
       reset: env.NODE_ENV === "production",
     }),
 
-    client.application?.fetch(),
-    client.application?.commands.fetch(),
+    env.DISCORD_LOG_CHANNEL &&
+    logger.findOrCreate(env.DISCORD_LOG_CHANNEL)
+      .then(webhook => logger.LOG_WEBHOOK = webhook)
+      .catch(() => null),
 
     appStats.fetch(),
+
+    client.application?.fetch(),
   ]);
 
-  presence.init();
   presence.start();
 
   console.log("Ready! End!");

@@ -4,10 +4,10 @@
   "description": "A multi-purpose bot totally original and open-source.",
   "main": "out",
   "scripts": {
-    "start": "node out",
     "watch": "tsc -watch",
+    "dev": "nodemon --delay 0.3 out",
     "build": "tsc",
-    "dev": "nodemon out",
+    "start": "node out",
     "lint": "eslint . --fix",
     "dbpush": "prisma db push",
     "postinstall": "prisma generate"
