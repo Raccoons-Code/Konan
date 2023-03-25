@@ -77,14 +77,16 @@ export default class extends ChatInputCommand {
 
       if (message) {
         if (playersId.length) {
-          playersId = playersId.filter(id => !oldInstance.players.includes(id));
+          playersId = playersId.filter(id =>
+            !oldInstance.players.includes(id) ||
+            !oldInstance.quitters.includes(id));
 
           if (!playersId.length) {
             await interaction.editReply("No new players were added.");
             return 1;
           }
 
-          await prisma.wordleInstance.update({
+          promises.push(prisma.wordleInstance.update({
             where: {
               messageId: oldInstance.messageId,
             },
@@ -93,27 +95,25 @@ export default class extends ChatInputCommand {
                 set: oldInstance.players.concat(playersId),
               },
             },
-          });
+          }));
 
-          try {
-            await message.edit({
-              embeds: [
-                new EmbedBuilder(message.embeds[0].toJSON())
-                  .setColor("Random")
-                  .setFields(playersId.length ? [
-                    {
-                      name: `Players [${playersId.concat(interaction.user.id).length}]`,
-                      value: `${players.splice(0, 10).join("\n")}`
-                        + `${players.length ?
-                          `\n...and ${inlineCode(`${players.length}`)} more` :
-                          ""}`,
-                    },
-                  ] : []),
-              ],
-            });
-          } catch { }
+          promises.push(message.edit({
+            embeds: [
+              new EmbedBuilder(message.embeds[0].toJSON())
+                .setColor("Random")
+                .setFields(playersId.length ? [
+                  {
+                    name: `Players [${playersId.concat(interaction.user.id).length}]`,
+                    value: `${players.splice(0, 10).join("\n")}`
+                      + `${players.length ?
+                        `\n...and ${inlineCode(`${players.length}`)} more` :
+                        ""}`,
+                  },
+                ] : []),
+            ],
+          }).catch(() => null));
 
-          await interaction.editReply({
+          promises.push(interaction.editReply({
             components: [
               new ActionRowBuilder<ButtonBuilder>()
                 .addComponents([
@@ -129,7 +129,10 @@ export default class extends ChatInputCommand {
                 .setColor("Random")
                 .setTitle(`${playersId.length} added to your game.`),
             ],
-          });
+          }));
+
+          await Promise.all(promises);
+
           return;
         }
 
