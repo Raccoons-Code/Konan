@@ -27,10 +27,13 @@ export default class extends ChatInputCommand {
       embeds: [
         new EmbedBuilder()
           .setColor("Random")
-          .setFields([
-            { name: ":signal_strength:", value: `**\`${interaction.client.ws.ping}\`ms**`, inline: true },
-            { name: ":robot:", value: `**\`${ping}\`ms**`, inline: true },
-          ]),
+          .setFields([{
+            name: ":signal_strength: Discord API",
+            value: `**\`${interaction.client.ws.ping}\`ms**`,
+          }, {
+            name: ":robot: My ",
+            value: `**\`${ping}\`ms**`,
+          }]),
       ],
     });
 

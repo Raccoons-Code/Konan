@@ -40,8 +40,23 @@ client.on("interactionCreate", async function (interaction) {
     appStats.interactions++;
   }
 
+  let execute = true;
+
+  if (interaction.appPermissions) {
+    if (command.options.appPermissions ?? false) {
+      const appPerms = interaction.appPermissions.missing(command.options.appPermissions!);
+
+      if (appPerms.length) {
+        execute = false;
+        await command.replyMissingPermission(interaction, appPerms, "missingPermission");
+      }
+    }
+  }
+
   try {
-    await command.execute(interaction);
+    if (execute) {
+      await command.execute(interaction);
+    }
   } catch (error: any) {
     const locale = interaction.locale;
 

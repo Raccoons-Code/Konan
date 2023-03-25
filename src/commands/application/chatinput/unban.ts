@@ -37,13 +37,6 @@ export default class extends ChatInputCommand {
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
     const locale = interaction.locale;
 
-    const appPerms = interaction.appPermissions?.missing(this.options.appPermissions!);
-
-    if (appPerms?.length) {
-      await this.replyMissingPermission(interaction, appPerms, "missingPermission");
-      return 1;
-    }
-
     const id = interaction.options.getString("user", true);
 
     const ban = await interaction.guild.bans.fetch(id);

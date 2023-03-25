@@ -12,13 +12,6 @@ export default class extends ButtonCommand {
   }
 
   async execute(interaction: ButtonInteraction<"cached">) {
-    const appPerms = interaction.appPermissions?.missing(this.data.appPermissions!);
-
-    if (appPerms?.length) {
-      await this.replyMissingPermission(interaction, appPerms, "missingPermission");
-      return 1;
-    }
-
     const parsedId = <ButtonRolesCustomId>JSON.parse(interaction.customId);
 
     const memberHasRole = interaction.member.roles.cache.has(parsedId.id);

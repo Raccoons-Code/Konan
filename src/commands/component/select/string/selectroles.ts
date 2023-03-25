@@ -16,13 +16,6 @@ export default class extends SelectMenuCommand {
     interaction: StringSelectMenuInteraction<"cached">,
     roles: SelectRolesManagement = { add: [], remove: [] },
   ) {
-    const appPerms = interaction.appPermissions?.missing(this.data.appPermissions!);
-
-    if (appPerms?.length) {
-      await this.replyMissingPermission(interaction, appPerms, "missingPermission");
-      return 1;
-    }
-
     const optionDefault = getDefaultOptionFromSelect(interaction.message.components);
 
     if (optionDefault) {

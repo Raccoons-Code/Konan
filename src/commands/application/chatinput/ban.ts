@@ -66,13 +66,6 @@ export default class extends ChatInputCommand {
 
     /* const locale = interaction.locale; */
 
-    const appPerms = interaction.appPermissions?.missing(this.options.appPermissions!);
-
-    if (appPerms?.length) {
-      await this.replyMissingPermission(interaction, appPerms, "missingPermission");
-      return 1;
-    }
-
     const usersId = interaction.options.getString("users")?.match(/\d{17,}/g);
 
     if (!usersId?.length) {
