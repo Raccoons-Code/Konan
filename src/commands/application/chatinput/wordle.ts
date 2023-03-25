@@ -37,7 +37,7 @@ export default class extends ChatInputCommand {
     if (playersId?.length) {
       if (!interaction.guild) {
         await interaction.reply({
-          content: "You need to be in a guild to use this option.",
+          content: "You need to be in a server to use this option.",
           ephemeral: true,
         });
         return 1;
