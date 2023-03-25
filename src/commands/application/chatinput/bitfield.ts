@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction, EmbedBuilder, GatewayIntentBits, GuildMemb
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { createSelectMenuFromOptions } from "../../../util/commands/components/selectmenu";
-import { intentsString, permissionsString } from "../../../util/constants";
+import { INTENTS_STRING, PERMISSIONS_STRING } from "../../../util/constants";
 
 export default class extends ChatInputCommand {
   [x: string]: any;
@@ -49,7 +49,7 @@ export default class extends ChatInputCommand {
 
     if (bits) return this.intentsForBits(interaction, { bits });
 
-    const intentsOptions = intentsString
+    const intentsOptions = INTENTS_STRING
       .map((key) => new StringSelectMenuOptionBuilder()
         .setEmoji("❌")
         .setLabel(`${t(key, { locale })} #${GatewayIntentBits[key]}`)
@@ -103,7 +103,7 @@ export default class extends ChatInputCommand {
 
     if (role || member || bits) return this.permissionsForMention(interaction, { role, member, bits });
 
-    const permissionsOptions = permissionsString.map((key) =>
+    const permissionsOptions = PERMISSIONS_STRING.map((key) =>
       new StringSelectMenuOptionBuilder().setEmoji("❌")
         .setLabel(`${t(key, { locale })} #${PermissionFlagsBits[key]}`)
         .setValue(JSON.stringify({ n: `${PermissionFlagsBits[key]}`, v: 0 })));

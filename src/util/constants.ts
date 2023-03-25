@@ -68,7 +68,7 @@ export const HELP_PAGE_LIMIT = 10;
 
 export const MaxBulkDeletableMessageAge = 1_209_600_000;
 
-export const intentsString = Array.from(new Set(Object.keys(GatewayIntentBits)
+export const INTENTS_STRING = Array.from(new Set(Object.keys(GatewayIntentBits)
   .filter(i => isNaN(+i) && i !== "GuildBans"))) as GatewayIntentsString[];
 
-export const permissionsString = <PermissionsString[]>Object.keys(PermissionFlagsBits);
+export const PERMISSIONS_STRING = <PermissionsString[]>Object.keys(PermissionFlagsBits);
