@@ -314,7 +314,7 @@ export type ClearMessagesFilterResolvable = BitFieldResolvable<keyof typeof Clea
 
 interface ClearMessagesOptions {
   channel: GuildTextBasedChannel | null
-  author?: GuildMember
+  author?: GuildMember | null
   amount?: number | null
   afterMessage?: string | null
   targetMember?: string | null
