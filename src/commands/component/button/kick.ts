@@ -5,6 +5,7 @@ export default class extends ButtonCommand {
   constructor() {
     super({
       name: "kick",
+      appPermissions: ["KickMembers"],
     });
   }
 

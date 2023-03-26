@@ -24,12 +24,12 @@ export default abstract class BaseCommand extends Base {
         .setDescription(t("onlyOnServer", { locale: interaction.locale })),
     ];
 
-    if (interaction.isMessageComponent()) {
-      await interaction.followUp({ embeds, ephemeral: true });
-      return;
-    }
-
     if (interaction.deferred || interaction.replied) {
+      if (interaction.isMessageComponent()) {
+        await interaction.followUp({ embeds, ephemeral: true });
+        return;
+      }
+
       await interaction.editReply({ embeds });
       return;
     }
@@ -58,12 +58,12 @@ export default abstract class BaseCommand extends Base {
         })),
     ];
 
-    if (interaction.isMessageComponent()) {
-      await interaction.followUp({ embeds, ephemeral: true });
-      return;
-    }
-
     if (interaction.deferred || interaction.replied) {
+      if (interaction.isMessageComponent()) {
+        await interaction.followUp({ embeds, ephemeral: true });
+        return;
+      }
+
       await interaction.editReply({ embeds });
       return;
     }
