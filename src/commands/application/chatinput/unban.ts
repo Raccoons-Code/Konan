@@ -35,6 +35,8 @@ export default class extends ChatInputCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
+    await interaction.deferReply({ ephemeral: true });
+
     const locale = interaction.locale;
 
     const id = interaction.options.getString("user", true);
