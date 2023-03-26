@@ -1,6 +1,6 @@
 import { BotStats } from "@top-gg/sdk";
 import { calculateShardId } from "discord.js";
-import client from "../../client";
+import client, { logger } from "../../client";
 import api from "./api";
 
 export default class TopggAutoposter {
@@ -33,7 +33,7 @@ export default class TopggAutoposter {
   async post() {
     if (api) {
       await api.postStats(this.getStats())
-        .catch(() => null);
+        .catch(error => logger.commonError(error));
     }
   }
 

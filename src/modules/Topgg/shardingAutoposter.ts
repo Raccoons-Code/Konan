@@ -1,4 +1,5 @@
 import { BotStats } from "@top-gg/sdk";
+import { logger } from "../../client";
 import sharding from "../../sharding";
 import api from "./api";
 
@@ -30,7 +31,7 @@ export default class TopggShardingAutoposter {
   async post() {
     if (api) {
       await api.postStats(await this.getStats())
-        .catch(() => null);
+        .catch(error => logger.commonError(error));
     }
   }
 
