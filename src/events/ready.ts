@@ -1,6 +1,7 @@
 import { env } from "node:process";
 import client, { appStats, logger, presence } from "../client";
 import commandHandler from "../handlers/CommandHandler";
+import TopggAutoposter from "../modules/Topgg/autoposter";
 
 client.once("ready", async function () {
   console.log("Ready!");
@@ -31,6 +32,8 @@ client.once("ready", async function () {
   ]);
 
   presence.start();
+
+  new TopggAutoposter();
 
   console.log("Ready! End!");
 });
