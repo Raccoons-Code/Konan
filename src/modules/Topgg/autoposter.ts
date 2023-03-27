@@ -5,7 +5,7 @@ import api from "./api";
 
 export default class TopggAutoposter {
   postInterval = 1000 * 60 * 60;
-  interval?: NodeJS.Timer;
+  private interval?: NodeJS.Timer;
 
   constructor() {
     this.start();
