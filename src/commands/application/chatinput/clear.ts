@@ -35,8 +35,8 @@ export default class extends ChatInputCommand {
         .setNameLocalizations(getLocalizations("clearChannelOptionName"))
         .setDescriptionLocalizations(getLocalizations("clearChannelOptionDescription"))
         .addChannelTypes(...GUILD_TEXT_CHANNEL_TYPES))
-      .addUserOption(option => option.setName("member")
-        .setDescription("Target member to clear messages"));
+      .addUserOption(option => option.setName("user")
+        .setDescription("Target user to clear messages"));
   }
 
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
@@ -56,7 +56,7 @@ export default class extends ChatInputCommand {
 
     const amount = interaction.options.getInteger("amount", true);
 
-    const target = interaction.options.getMember("member");
+    const target = interaction.options.getUser("user")?.id;
 
     await interaction.editReply({
       embeds: [

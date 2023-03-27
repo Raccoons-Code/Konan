@@ -220,6 +220,10 @@ export default class ClearMessages {
           msg.author.id !== targetMember);
       }
 
+      if (targetMember) {
+        this.ignored += messages.sweep(msg => msg.author.id !== targetMember);
+      }
+
       this.undeletable += messages.sweep(msg => !msg.bulkDeletable);
 
       await sleep(1000);
