@@ -42,15 +42,11 @@ client.on("interactionCreate", async function (interaction) {
 
   let execute = true;
 
-  if (interaction.appPermissions) {
-    if (command.options.appPermissions ?? false) {
-      const appPerms = interaction.appPermissions.missing(command.options.appPermissions!);
+  const appPerms = interaction.appPermissions?.missing(command.options.appPermissions!);
 
-      if (appPerms.length) {
-        execute = false;
-        await command.replyMissingPermission(interaction, appPerms, "missingPermission");
-      }
-    }
+  if (appPerms?.length) {
+    execute = false;
+    await command.replyMissingPermission(interaction, appPerms, "missingPermission");
   }
 
   try {
