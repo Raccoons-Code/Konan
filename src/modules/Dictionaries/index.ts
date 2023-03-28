@@ -20,7 +20,7 @@ export default class Dictionaries {
     return fetch(route)
       .then(res => res.text())
       .then(data => cache.set(locale.split(/[_-]/)[0], Util.filterInvalidChars(data.split(/[\r\n]+/g))))
-      .then(data => qdb.set<string[]>(locale.split(/[_-]/)[0], data.get(locale.split("-")[0])))
+      .then(data => qdb.set<string[]>(locale.split(/[_-]/)[0], data.get(locale.split("-")[0])!))
       .then(data => Util.limitWordsSize(data, wordSize))
       .catch(() => []);
   }
