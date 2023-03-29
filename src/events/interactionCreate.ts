@@ -184,7 +184,7 @@ const ComponentTypes = {
       ?.get(parsedId.c);
   },
 
-  [ComponentType.TextInput]: (interaction: any) => {
+  [ComponentType.TextInput]: function (interaction: any) {
     const parsedId = JSONparse<BaseComponentCustomId>(interaction.customId);
 
     if (!parsedId?.c) return;
