@@ -25,12 +25,21 @@ export function calculateBitFieldFromSelectMenus(
 export function createSelectMenuFromOptions(
   options: (APISelectMenuOption | SelectMenuComponentOptionData | StringSelectMenuOptionBuilder)[],
   customId: BaseComponentCustomId,
+  menuOptions?: {
+    placeholder: string | string[]
+  },
 ) {
   let index = 0;
 
   return splitArrayInGroups(options, 25)
     .map(group => new ActionRowBuilder<StringSelectMenuBuilder>()
       .addComponents(new StringSelectMenuBuilder()
+        .setPlaceholder(
+          Array.isArray(
+            menuOptions?.placeholder) ?
+            menuOptions?.placeholder[index] ?? "" :
+            menuOptions?.placeholder ?? "",
+        )
         .setCustomId(JSON.stringify({
           d: Date.now() + index++,
           ...customId,
@@ -83,14 +92,14 @@ export function setBitFieldValuesOnSelectMenus(
           type: select.type,
         })
           .setOptions(select.options.map(option => {
-            const value = JSONparse(option.value) ?? {};
+            const parsedValue = JSONparse(option.value) ?? {};
 
             return new StringSelectMenuOptionBuilder(option)
-              .setEmoji(values.includes(option.value) ? value.v ?
+              .setEmoji(values.includes(option.value) ? parsedValue.v ?
                 Danger : Success : option.emoji ?? {})
               .setValue(JSON.stringify({
-                ...value,
-                v: values.includes(option.value) ? value.v ? 0 : 1 : value.v,
+                ...parsedValue,
+                v: values.includes(option.value) ? parsedValue.v ? 0 : 1 : parsedValue.v,
               }));
           }));
       }));
