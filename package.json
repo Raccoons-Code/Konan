@@ -5,9 +5,9 @@
   "main": "out",
   "scripts": {
     "watch": "tsc -watch",
-    "dev": "nodemon --delay 0.3 out",
-    "build": "tsc",
+    "dev": "nodemon --delay 1 out",
     "start": "node out",
+    "build": "tsc",
     "lint": "eslint . --fix",
     "dbpush": "prisma db push",
     "postinstall": "prisma generate"
