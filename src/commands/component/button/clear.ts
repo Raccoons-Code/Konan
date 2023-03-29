@@ -1,8 +1,10 @@
-import { ButtonInteraction, EmbedBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, GuildTextBasedChannel } from "discord.js";
 import client from "../../../client";
+import cache from "../../../modules/Cache";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
 import ClearMessages from "../../../util/ClearMessages";
+import { calculateBitFieldFromSelectMenus } from "../../../util/commands/components/selectmenu";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -14,11 +16,32 @@ export default class extends ButtonCommand {
   }
 
   async execute(interaction: ButtonInteraction<"cached">) {
-    if (!interaction.channel?.isTextBased()) return;
+    const parsedId = JSON.parse(interaction.customId);
 
+    await this[<"clear">parsedId.sc]?.(interaction);
+
+    return;
+  }
+
+  async clear(interaction: ButtonInteraction<"cached">) {
     const locale = interaction.locale;
 
-    const appPerms = interaction.channel.permissionsFor(client.user!)
+    const parsedId = JSON.parse(interaction.customId);
+
+    const channel = await interaction.guild.channels.fetch(parsedId.channel) as GuildTextBasedChannel;
+
+    if (!channel?.isTextBased()) {
+      await interaction.update({
+        components: [],
+        embeds: [
+          new EmbedBuilder()
+            .setTitle("Missing channel."),
+        ],
+      });
+      return 1;
+    }
+
+    const appPerms = channel.permissionsFor(client.user!)
       ?.missing(this.options.channelAppPermissions!);
 
     if (appPerms?.length) {
@@ -26,40 +49,93 @@ export default class extends ButtonCommand {
       return 1;
     }
 
-    const parsedId = JSON.parse(interaction.customId);
+    const cancelId = JSON.stringify({
+      c: "clear",
+      sc: "cancel",
+      d: interaction.id,
+    });
 
     await interaction.update({
-      components: [],
+      components: [
+        new ActionRowBuilder<ButtonBuilder>()
+          .addComponents(new ButtonBuilder()
+            .setCustomId(cancelId)
+            .setEmoji("❌")
+            .setStyle(ButtonStyle.Secondary)),
+      ],
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
           .setTitle(`Trying to erase ${parsedId.amount} messages...`),
       ],
     });
 
-    const clearMessages = new ClearMessages({
-      channel: interaction.channel,
+    const bits = calculateBitFieldFromSelectMenus(interaction.message.components);
+
+    const targetUser = interaction.message.embeds[0]
+      .description?.match(/\d{17,}/g);
+
+    const clear = new ClearMessages({
+      channel,
       amount: parsedId.amount,
-      targetMember: parsedId.target,
+      filter: Number(bits),
+      targetUser,
+      interaction,
     });
 
+    cache.set(cancelId, clear);
+
     try {
-      await clearMessages.clear();
+      await clear.clear();
     } catch (error) {
+      cache.delete(cancelId);
+
       await interaction.editReply({
+        components: [],
         content: t("messageDeleteError", { locale }),
         embeds: [],
       });
+
       throw error;
     }
 
+    cache.delete(cancelId);
+
     await interaction.editReply({
-      content: t(clearMessages.cleared ? "messageDeleted" : "noDeletedMessages", {
-        count: clearMessages.cleared,
-        locale,
-        size: clearMessages.cleared,
-      }),
-      embeds: [],
+      components: [],
+      embeds: [
+        new EmbedBuilder(interaction.message.embeds[0].toJSON())
+          .setTitle((clear.cancelled ? "❌ " : "")
+            + t(clear.cleared ? "messageDeleted" : "noDeletedMessages", {
+              count: clear.cleared,
+              locale,
+              size: clear.cleared,
+            }))
+          .spliceFields(1, 1, {
+            name: t("result", { locale }),
+            value: `> ${t("found", { locale })}: ${clear.oldMessages.length}.`
+              + `\n> ${t("ignored", { locale })}: ${clear.ignored}.`,
+          }),
+      ],
     });
+
+    return;
+  }
+
+  async cancel(interaction: ButtonInteraction<"cached">) {
+    const clear = <ClearMessages>cache.get(interaction.customId);
+
+    clear?.stop();
+
+    cache.delete(interaction.customId);
+
+    await interaction.update({
+      components: [],
+      embeds: [
+        new EmbedBuilder(interaction.message.embeds[0].toJSON())
+          .setTitle("❌ Cancelled."),
+      ],
+    });
+
     return;
   }
 }

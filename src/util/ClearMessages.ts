@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { BitField, BitFieldResolvable, GuildMember, GuildTextBasedChannel, Message, PermissionFlagsBits } from "discord.js";
+import { BitField, BitFieldResolvable, EmbedBuilder, GuildMember, GuildTextBasedChannel, Interaction, Message, PermissionFlagsBits } from "discord.js";
 import { setTimeout as sleep } from "node:timers/promises";
 import client from "../client";
 import { MaxBulkDeletableMessageAge } from "./constants";
@@ -13,27 +13,31 @@ export default class ClearMessages {
   undeletable = 0;
 
   declare channel: GuildTextBasedChannel;
-  filter = ClearMessagesFiltersBitField.Default;
+  filter = ClearFiltersBitField.Default;
   author?: GuildMember;
   afterMessage?: string;
-  targetMember?: string;
+  targetUser?: string[];
+  interaction?: Interaction;
+  cancelled = false;
 
   attachments = 0;
   bots = 0;
-  crossposteds = 0;
+  crossposts = 0;
   olds = 0;
   pinneds = 0;
   threads = 0;
   users = 0;
-  targetMemberMessages = 0;
+  webhooks = 0;
+  targetUserMessages = 0;
   ignored = 0;
   ignoredAttachments = 0;
   ignoredBots = 0;
-  ignoredCrossposteds = 0;
+  ignoredCrossposts = 0;
   ignoredOlds = 0;
   ignoredPinneds = 0;
   ignoredThreads = 0;
   ignoredUsers = 0;
+  ignoredWebhooks = 0;
 
   oldMessages: string[] = [];
 
@@ -60,14 +64,14 @@ export default class ClearMessages {
   /**
    * @default true
    */
-  get ignoreCrossposteds() {
-    return this.filter.has("ignoreCrossposteds");
+  get ignoreCrossposts() {
+    return this.filter.has("ignoreCrossposts");
   }
   /**
    * @default true
    */
   get ignoreOlds() {
-    return this.filter.has("ignoreOlds");
+    return true;
   }
   /**
    * @default true
@@ -87,23 +91,28 @@ export default class ClearMessages {
   get ignoreUsers() {
     return this.filter.has("ignoreUsers");
   }
+  /**
+   * @default false
+   */
+  get ignoreWebhooks() {
+    return this.filter.has("ignoreWebhooks");
+  }
 
-  async clear(
-    channel = this.channel,
-    afterMessage = this.afterMessage,
-    targetMember = this.targetMember,
-  ) {
-    if (!channel) return this;
+  async clear() {
+    if (!this.channel) return this;
 
-    while (afterMessage || this.amountToClear) {
-      if (this.oldMessages.length)
+    while (this.afterMessage || this.amountToClear) {
+      if (this.oldMessages.length) {
         await sleep(1000);
 
-      if (!channel.viewable) {
+        if (this.cancelled) break;
+      }
+
+      if (!this.channel.viewable) {
         break;
       }
 
-      if (!channel.permissionsFor(client.user!)?.has([
+      if (!this.channel.permissionsFor(client.user!)?.has([
         PermissionFlagsBits.ManageMessages,
         PermissionFlagsBits.ReadMessageHistory,
       ])) {
@@ -111,23 +120,27 @@ export default class ClearMessages {
       }
 
       if (this.author) {
-        if (!channel.permissionsFor(this.author)?.has([
+        if (!this.channel.permissionsFor(this.author)?.has([
           PermissionFlagsBits.ManageMessages,
         ])) {
           break;
         }
       }
 
-      if (afterMessage || this.amountToClear > 100) {
+      if (this.afterMessage || this.amountToClear > 100) {
         this.limit = 100;
       } else {
         this.limit = this.amountToClear;
       }
 
-      const messages = await channel.messages.fetch({
-        after: afterMessage,
+      const messages = await this.channel.messages.fetch({
+        after: this.afterMessage,
         limit: this.limit,
       });
+
+      await sleep(1000);
+
+      if (this.cancelled) break;
 
       if (this.oldMessages.length) {
         messages.sweep(msg => this.oldMessages.includes(msg.id));
@@ -137,52 +150,61 @@ export default class ClearMessages {
 
       if (!messages.size) break;
 
-      for (const message of messages.values()) {
-        if (message.attachments.size) {
+      for (const msg of messages.values()) {
+        if (msg.attachments.size) {
           this.attachments++;
 
-          if (this.ignoreAttachments && targetMember !== message.author.id)
+          if (this.ignoreAttachments)
             this.ignoredAttachments++;
         }
 
-        if (message.author.bot) {
+        if (msg.author.bot) {
           this.bots++;
 
-          if (this.ignoreBots && targetMember !== message.author.id)
+          if (this.ignoreBots)
             this.ignoredBots++;
         } else {
           this.users++;
 
-          if (this.ignoreUsers && targetMember !== message.author.id)
+          if (this.ignoreUsers)
             this.ignoredUsers++;
         }
 
-        if (message.flags.any(["Crossposted", "IsCrosspost"])) {
-          this.crossposteds++;
+        if (msg.flags.any(["Crossposted", "IsCrosspost"])) {
+          this.crossposts++;
 
-          if (this.ignoreCrossposteds && targetMember !== message.author.id)
-            this.ignoredCrossposteds++;
+          if (this.ignoreCrossposts)
+            this.ignoredCrossposts++;
         }
 
-        if (message.pinned) {
+        if (msg.pinned) {
           this.pinneds++;
 
-          if (this.ignorePinneds && targetMember !== message.author.id)
+          if (this.ignorePinneds)
             this.ignoredPinneds++;
         }
 
-        if (message.hasThread) {
+        if (msg.hasThread) {
           this.threads++;
 
-          if (this.ignoreThreads && targetMember !== message.author.id)
+          if (this.ignoreThreads)
             this.ignoredThreads++;
         }
 
-        if (ClearMessages.messageIsOld(message))
-          this.olds++;
+        if (msg.webhookId) {
+          this.webhooks++;
 
-        if (targetMember === message.author.id)
-          this.targetMemberMessages++;
+          if (this.ignoreWebhooks)
+            this.ignoredWebhooks++;
+        }
+
+        if (ClearMessages.messageIsOld(msg)) {
+          this.olds++;
+        }
+
+        if (this.targetUser?.includes(msg.applicationId ?? msg.author.id)) {
+          this.targetUserMessages++;
+        }
       }
 
       if (this.ignoreOlds) {
@@ -191,66 +213,85 @@ export default class ClearMessages {
       }
 
       if (this.ignoreBots) {
-        this.ignored += messages.sweep(msg => msg.author.bot &&
-          msg.author.id !== targetMember);
+        this.ignored += messages.sweep(msg => msg.author.bot);
       }
 
       if (this.ignoreAttachments) {
-        this.ignored += messages.sweep(msg => msg.attachments.size &&
-          msg.author.id !== targetMember);
+        this.ignored += messages.sweep(msg => msg.attachments.size);
       }
 
-      if (this.ignoreCrossposteds) {
-        this.ignored += messages.sweep(msg => msg.flags.any(["Crossposted", "IsCrosspost"]) &&
-          msg.author.id !== targetMember);
+      if (this.ignoreCrossposts) {
+        this.ignored += messages.sweep(msg => msg.flags.any(["Crossposted", "IsCrosspost"]));
       }
 
       if (this.ignorePinneds) {
-        this.ignored += messages.sweep(msg => msg.pinned &&
-          msg.author.id !== targetMember);
+        this.ignored += messages.sweep(msg => msg.pinned);
       }
 
       if (this.ignoreThreads) {
-        this.ignored += messages.sweep(msg => msg.hasThread &&
-          msg.author.id !== targetMember);
+        this.ignored += messages.sweep(msg => msg.hasThread);
       }
 
       if (this.ignoreUsers) {
-        this.ignored += messages.sweep(msg => !msg.author.bot &&
-          msg.author.id !== targetMember);
+        this.ignored += messages.sweep(msg => !msg.author.bot);
       }
 
-      if (targetMember) {
-        this.ignored += messages.sweep(msg => msg.author.id !== targetMember);
+      if (this.ignoreWebhooks) {
+        this.ignored += messages.sweep(msg => msg.webhookId);
+      }
+
+      if (this.targetUser) {
+        this.ignored += messages.sweep(msg =>
+          !this.targetUser?.includes(msg.applicationId ?? msg.author.id));
       }
 
       this.undeletable += messages.sweep(msg => !msg.bulkDeletable);
 
-      await sleep(1000);
-
-      const clearedMessages = await channel.bulkDelete(messages);
+      const clearedMessages = await this.channel.bulkDelete(messages);
 
       if (!clearedMessages.size) break;
 
       this.cleared += clearedMessages.size;
 
-      if (!afterMessage) {
+      if (!this.afterMessage) {
         this.amountToClear -= clearedMessages.size;
 
-        if (!this.amountToClear) {
-          break;
-        }
+        if (!this.amountToClear) break;
       }
 
       await sleep(1000);
+
+      if (this.cancelled) break;
+
+      if (this.interaction && "message" in this.interaction) {
+        if (this.interaction.deferred || this.interaction.replied) {
+          await this.interaction.editReply({
+            embeds: [
+              new EmbedBuilder(this.interaction.message?.embeds[0]?.toJSON())
+                .spliceFields(1, 1, {
+                  name: "Stats",
+                  value: `> ${this.oldMessages.length} messages found.`
+                    + `\n> ${this.cleared} deleted messages.`
+                    + `\n> ${this.ignored} ignored messages.`,
+                  inline: true,
+                }),
+            ],
+          }).catch(() => null);
+        }
+      }
     }
 
-    if (afterMessage) {
-      await channel.messages.delete(afterMessage)
+    if (this.afterMessage && !this.cancelled) {
+      await this.channel.messages.delete(this.afterMessage)
         .then(() => this.cleared++)
         .catch(() => null);
     }
 
+    return this;
+  }
+
+  stop() {
+    this.cancelled = true;
     return this;
   }
 
@@ -275,55 +316,56 @@ export default class ClearMessages {
     if (options.afterMessage)
       this.afterMessage = options.afterMessage;
 
-    if (options.targetMember)
-      this.targetMember = options.targetMember;
+    if (options.targetUser)
+      this.targetUser = Array.isArray(options.targetUser) ?
+        options.targetUser :
+        [options.targetUser];
 
-    if (options.addFilter ?? false)
-      this.filter.add(options.addFilter!);
+    if (options.filter ?? false)
+      this.filter = new ClearFiltersBitField(options.filter);
 
-    if (options.remFilter ?? false)
-      this.filter.remove(options.remFilter!);
+    if (options.interaction)
+      this.interaction = options.interaction;
 
     return this;
   }
 
   static messageIsOld(message: Message) {
-    return Date.now() - message.createdTimestamp >= MaxBulkDeletableMessageAge;
+    return (Date.now() - message.createdTimestamp) >= MaxBulkDeletableMessageAge;
   }
 }
 
-export const clearMessagesFilters = [
+export const clearFilters = [
   "ignoreAttachments",
   "ignoreBots",
-  "ignoreCrossposteds",
-  "ignoreOlds",
+  "ignoreCrossposts",
   "ignorePinneds",
   "ignoreThreads",
   "ignoreUsers",
+  "ignoreWebhooks",
 ] as const;
 
-export const ClearMessagesFiltersBits = makeBits(clearMessagesFilters, "number");
+export const ClearFiltersBits = makeBits(clearFilters, "number");
 
-export class ClearMessagesFiltersBitField extends BitField<keyof typeof ClearMessagesFiltersBits, number> {
-  static Flags = ClearMessagesFiltersBits;
-  static All = new ClearMessagesFiltersBitField(clearMessagesFilters);
-  static Default = new ClearMessagesFiltersBitField([
-    ClearMessagesFiltersBits.ignoreCrossposteds,
-    ClearMessagesFiltersBits.ignoreOlds,
-    ClearMessagesFiltersBits.ignorePinneds,
+export class ClearFiltersBitField extends BitField<keyof typeof ClearFiltersBits, number> {
+  static Flags = ClearFiltersBits;
+  static All = new ClearFiltersBitField(clearFilters);
+  static Default = new ClearFiltersBitField([
+    ClearFiltersBits.ignoreCrossposts,
+    ClearFiltersBits.ignorePinneds,
   ]);
 }
 
-export type ClearMessagesFilterResolvable = BitFieldResolvable<keyof typeof ClearMessagesFiltersBits, number>;
+export type ClearMessagesFilterResolvable = BitFieldResolvable<keyof typeof ClearFiltersBits, number>;
 
 interface ClearMessagesOptions {
   channel: GuildTextBasedChannel | null
   author?: GuildMember | null
   amount?: number | null
   afterMessage?: string | null
-  targetMember?: string | null
-  addFilter?: ClearMessagesFilterResolvable
-  remFilter?: ClearMessagesFilterResolvable
+  targetUser?: string | string[] | null
+  filter?: ClearMessagesFilterResolvable
+  interaction?: Interaction
 }
 
 interface ClearMessagesWithAmountOptions extends ClearMessagesOptions {

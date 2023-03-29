@@ -1,8 +1,9 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, MessageContextMenuCommandInteraction, PermissionFlagsBits } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, MessageContextMenuCommandInteraction, PermissionFlagsBits, StringSelectMenuOptionBuilder, UserSelectMenuBuilder } from "discord.js";
 import client from "../../../../client";
 import MessageContextCommand from "../../../../structures/MessageContextCommand";
 import { t } from "../../../../translator";
-import ClearMessages from "../../../../util/ClearMessages";
+import ClearMessages, { clearFilters, ClearFiltersBitField, ClearFiltersBits } from "../../../../util/ClearMessages";
+import { createSelectMenuFromOptions } from "../../../../util/commands/components/selectmenu";
 import { getLocalizations } from "../../../../util/utils";
 
 export default class extends MessageContextCommand {
@@ -49,10 +50,27 @@ export default class extends MessageContextCommand {
       return 1;
     }
 
+    const clearFilter = ClearFiltersBitField.Default;
+
+    const holds = clearFilter.toArray().map(x => `${t(x, { locale })}`);
+
+    const clearOptions = clearFilters
+      .map((key) => new StringSelectMenuOptionBuilder()
+        .setEmoji(clearFilter.has(key) ? "✅" : "❌")
+        .setLabel(`${t(key, { locale })}`)
+        .setValue(JSON.stringify({
+          n: `${ClearFiltersBits[key]}`,
+          v: clearFilter.has(key) ? 1 : 0,
+        })));
+
     await interaction.editReply({
       embeds: [
         new EmbedBuilder()
           .setColor(Colors.DarkRed)
+          .setFields({
+            name: `${t("clearFilters", { locale })} [${holds.length}]`,
+            value: holds.join("\n") || "-",
+          })
           .setTitle(t("messageDeleteConfirm", {
             count: messages.size + 1,
             locale,
@@ -62,6 +80,21 @@ export default class extends MessageContextCommand {
           })),
       ],
       components: [
+        ...createSelectMenuFromOptions(clearOptions, {
+          c: "clear",
+          sc: "filters",
+        }, {
+          placeholder: `♻️ ${t("clearFilters", { locale })}`,
+        }),
+        new ActionRowBuilder<UserSelectMenuBuilder>()
+          .addComponents(new UserSelectMenuBuilder()
+            .setCustomId(JSON.stringify({
+              c: "clear",
+              sc: "users",
+            }))
+            .setMaxValues(25)
+            .setMinValues(0)
+            .setPlaceholder("🚸 Target users")),
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
             new ButtonBuilder()

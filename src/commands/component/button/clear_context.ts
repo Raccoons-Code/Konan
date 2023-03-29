@@ -1,8 +1,10 @@
-import { bold, ButtonInteraction, EmbedBuilder, messageLink } from "discord.js";
+import { ActionRowBuilder, bold, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, messageLink } from "discord.js";
 import client from "../../../client";
+import cache from "../../../modules/Cache";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
 import ClearMessages from "../../../util/ClearMessages";
+import { calculateBitFieldFromSelectMenus } from "../../../util/commands/components/selectmenu";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -26,10 +28,25 @@ export default class extends ButtonCommand {
       return 1;
     }
 
+    const cancelId = JSON.stringify({
+      c: "clear",
+      sc: "cancel",
+      d: interaction.id,
+    });
+
     const parsedId = JSON.parse(interaction.customId);
 
+    const targetUser = interaction.message.embeds[0]
+      .description?.match(/\d{17,}/g);
+
     await interaction.update({
-      components: [],
+      components: [
+        new ActionRowBuilder<ButtonBuilder>()
+          .addComponents(new ButtonBuilder()
+            .setCustomId(cancelId)
+            .setEmoji("❌")
+            .setStyle(ButtonStyle.Secondary)),
+      ],
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
           .setDescription(bold(`Trying to erase messages until [message](${messageLink(interaction.channelId, parsedId.msgId)})...`))
@@ -37,29 +54,57 @@ export default class extends ButtonCommand {
       ],
     });
 
-    const clearMessages = new ClearMessages({
+    const bits = calculateBitFieldFromSelectMenus(interaction.message.components);
+
+    const clear = new ClearMessages({
       afterMessage: parsedId.msgId,
       channel: interaction.channel,
+      filter: Number(bits),
+      targetUser,
+      interaction,
     });
 
+    cache.set(cancelId, clear);
+
     try {
-      await clearMessages.clear();
+      await clear.clear();
     } catch (error) {
+      cache.delete(cancelId);
+
       await interaction.editReply({
+        components: [],
         content: t("messageDeleteError", { locale }),
         embeds: [],
       });
+
       throw error;
     }
 
+    cache.delete(cancelId);
+
     await interaction.editReply({
-      content: t(clearMessages.cleared ? "messageDeleted" : "noDeletedMessages", {
-        count: clearMessages.cleared,
+      components: [],
+      content: t(clear.cleared ? "messageDeleted" : "noDeletedMessages", {
+        count: clear.cleared,
         locale,
-        size: clearMessages.cleared,
+        size: clear.cleared,
       }),
-      embeds: [],
+      embeds: [
+        new EmbedBuilder(interaction.message.embeds[0].toJSON())
+          .setTitle((clear.cancelled ? "❌ " : "")
+            + t(clear.cleared ? "messageDeleted" : "noDeletedMessages", {
+              count: clear.cleared,
+              locale,
+              size: clear.cleared,
+            }))
+          .spliceFields(1, 1, {
+            name: t("result", { locale }),
+            value: `> ${t("found", { locale })}: ${clear.oldMessages.length}.`
+              + `\n> ${t("ignored", { locale })}: ${clear.ignored}.`,
+          }),
+      ],
     });
+
     return;
   }
 }
