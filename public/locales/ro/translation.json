@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Comenzi reîncărcate cu succes (/).",
   "requiredParams": "Acești parametri sunt necesari: {{params}}.",
   "restoreError": "Restaurare eroare",
-  "role": "rol",
-  "roles": "roluri",
   "rtcRegion": "Regiunea RTC",
   "server404": "Nu s-a putut găsi serverul.",
   "serverCreatedAt": "Server creat la",

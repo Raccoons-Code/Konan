@@ -1,1 +1,21 @@
-{"automatic":"automatický","category":"Kategorie","channels":"kanály","checkers":"kontrolní skripty","chess":"šachy","donate":"darovat","false":"nepravda","fishing":"rybolov","full":"plná","members":"členové","mentionable":"zmíněný","owner":"vlastník","permissions":"oprávnění","restoring":"obnova","topic":"Téma","true":"pravda","type":"typ"}
+{
+  "automatic": "automatický",
+  "category": "Kategorie",
+  "channels": "kanály",
+  "checkers": "kontrolní skripty",
+  "chess": "šachy",
+  "donate": "darovat",
+  "false": "nepravda",
+  "fishing": "rybolov",
+  "full": "plná",
+  "members": "členové",
+  "mentionable": "zmíněný",
+  "owner": "vlastník",
+  "permissions": "oprávnění",
+  "restoring": "obnova",
+  "role": "role",
+  "roles": "role",
+  "topic": "Téma",
+  "true": "pravda",
+  "type": "typ"
+}

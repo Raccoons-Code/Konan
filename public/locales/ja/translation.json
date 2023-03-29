@@ -70,8 +70,6 @@
   "reloadedAppCommands": "アプリケーションコマンドの再読み込みに成功しました (/)。",
   "requiredParams": "これらのパラメータは必須です: {{params}}.",
   "restoreError": "復元エラー",
-  "role": "ロール",
-  "roles": "ロール",
   "rtcRegion": "RTC地域",
   "server404": "サーバーが見つかりませんでした。",
   "serverCreatedAt": "サーバー作成日時",

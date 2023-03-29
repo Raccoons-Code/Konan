@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Pomyślnie przeładowano komendy aplikacji (/).",
   "requiredParams": "Te parametry są wymagane: {{params}}.",
   "restoreError": "Błąd przywracania",
-  "role": "Rola",
-  "roles": "role",
   "rtcRegion": "Region RTC",
   "server404": "Nie można odnaleźć serwera.",
   "serverCreatedAt": "Serwer utworzony w",

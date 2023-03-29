@@ -70,8 +70,6 @@
   "reloadedAppCommands": "App-Befehle erfolgreich neu geladen (/).",
   "requiredParams": "Diese Parameter werden benötigt: {{params}}.",
   "restoreError": "Wiederherstellungsfehler",
-  "role": "rolle",
-  "roles": "rollen",
   "rtcRegion": "RTC-Region",
   "server404": "Server konnte nicht gefunden werden.",
   "serverCreatedAt": "Server erstellt am",

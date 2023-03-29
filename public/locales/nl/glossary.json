@@ -13,6 +13,8 @@
   "owner": "eigenaar",
   "permissions": "permissies",
   "restoring": "herstellen",
+  "role": "rol",
+  "roles": "rollen",
   "topic": "Onderwerp",
   "true": "waar",
   "type": "type"

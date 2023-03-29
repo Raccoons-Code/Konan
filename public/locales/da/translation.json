@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Genindlæste applikationskommandoer (/).",
   "requiredParams": "Disse parametre er påkrævet: {{params}}.",
   "restoreError": "Gendan fejl",
-  "role": "rolle",
-  "roles": "roller",
   "rtcRegion": "RTC Region",
   "server404": "Kunne ikke finde serveren.",
   "serverCreatedAt": "Server oprettet på",

@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Успешно перезагружены команды приложения (/).",
   "requiredParams": "Эти параметры требуются: {{params}}.",
   "restoreError": "Ошибка восстановления",
-  "role": "роль",
-  "roles": "роли",
   "rtcRegion": "Регион RTC",
   "server404": "Невозможно найти сервер.",
   "serverCreatedAt": "Сервер создан в",

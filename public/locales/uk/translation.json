@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Команди успішно перезавантажено (/).",
   "requiredParams": "Ці параметри необхідні: {{params}}.",
   "restoreError": "Помилка при відновленні",
-  "role": "роль",
-  "roles": "ролей",
   "rtcRegion": "Регіон РатК",
   "server404": "Не вдалося знайти сервер.",
   "serverCreatedAt": "Сервер, створений в",

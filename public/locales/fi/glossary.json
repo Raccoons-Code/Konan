@@ -13,6 +13,8 @@
   "owner": "omistaja",
   "permissions": "käyttöoikeudet",
   "restoring": "palautetaan",
+  "role": "rooli",
+  "roles": "roolit",
   "topic": "aihe",
   "true": "tosi",
   "type": "tyyppi"

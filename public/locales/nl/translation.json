@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Succesvol applicatie commando's (/) herladen.",
   "requiredParams": "Deze parameters zijn vereist: {{params}}.",
   "restoreError": "Fout bij herstellen",
-  "role": "rol",
-  "roles": "rollen",
   "rtcRegion": "RTC Regio",
   "server404": "Kan de server niet vinden.",
   "serverCreatedAt": "Server gemaakt op",

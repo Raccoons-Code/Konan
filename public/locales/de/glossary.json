@@ -13,6 +13,8 @@
   "owner": "besitzer",
   "permissions": "berechtigungen",
   "restoring": "wiederherstellen",
+  "role": "rolle",
+  "roles": "rollen",
   "topic": "thema",
   "true": "wahr",
   "type": "typ"

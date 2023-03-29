@@ -13,6 +13,8 @@
   "owner": "Propriétaire",
   "permissions": "permissions",
   "restoring": "restauration en cours",
+  "role": "Rôle",
+  "roles": "Rôles",
   "topic": "Sujet",
   "true": "vrai",
   "type": "Type de type"

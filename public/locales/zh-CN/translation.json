@@ -70,8 +70,6 @@
   "reloadedAppCommands": "成功重新加载应用程序命令 (/)。",
   "requiredParams": "这些参数是必需的： {{params}}。",
   "restoreError": "还原错误",
-  "role": "角色",
-  "roles": "角色",
   "rtcRegion": "RTC 区域",
   "server404": "找不到服务器。",
   "serverCreatedAt": "服务器创建于",

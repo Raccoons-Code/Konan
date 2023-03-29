@@ -13,6 +13,8 @@
   "owner": "ägare",
   "permissions": "behörigheter",
   "restoring": "återställer",
+  "role": "roll",
+  "roles": "roller",
   "topic": "Ämne",
   "true": "sant",
   "type": "typ"

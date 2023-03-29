@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Sovelluskomentojen uudelleenlataus onnistui (/).",
   "requiredParams": "Nämä parametrit ovat pakollisia: {{params}}.",
   "restoreError": "Palautusvirhe",
-  "role": "rooli",
-  "roles": "roolit",
   "rtcRegion": "Rtc Alue",
   "server404": "Palvelinta ei löytynyt.",
   "serverCreatedAt": "Palvelin luotu",

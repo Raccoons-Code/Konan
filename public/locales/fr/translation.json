@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Commandes d'application rechargées avec succès (/).",
   "requiredParams": "Ces paramètres sont requis : {{params}}.",
   "restoreError": "Erreur de restauration",
-  "role": "Rôle",
-  "roles": "Rôles",
   "rtcRegion": "Région RTC",
   "server404": "Impossible de trouver le serveur.",
   "serverCreatedAt": "Serveur créé le",

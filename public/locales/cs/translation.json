@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Příkazy aplikace byly úspěšně obnoveny (/).",
   "requiredParams": "Tyto parametry jsou povinné: {{params}}.",
   "restoreError": "Chyba při obnovení",
-  "role": "role",
-  "roles": "role",
   "rtcRegion": "Region RTC",
   "server404": "Nelze najít server.",
   "serverCreatedAt": "Server vytvořen v",

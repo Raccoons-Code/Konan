@@ -13,6 +13,8 @@
   "owner": "eier",
   "permissions": "tillatelser",
   "restoring": "gjenoppretter",
+  "role": "rolle",
+  "roles": "roller",
   "topic": "Emne",
   "true": "sann",
   "type": "type"

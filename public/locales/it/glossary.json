@@ -13,6 +13,8 @@
   "owner": "proprietario",
   "permissions": "autorizzazioni",
   "restoring": "ripristino",
+  "role": "ruolo",
+  "roles": "ruoli",
   "topic": "Argomento",
   "true": "vero",
   "type": "tipo"

@@ -13,6 +13,8 @@
   "owner": "dueño",
   "permissions": "permisos",
   "restoring": "restaurando",
+  "role": "rol",
+  "roles": "roles",
   "topic": "tema",
   "true": "verdad",
   "type": "tipo"

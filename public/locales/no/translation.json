@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Vellykket reload av applikasjonskommandoer (/).",
   "requiredParams": "Disse parameterne er nødvendig: {{params}}.",
   "restoreError": "Feil ved gjenoppretting",
-  "role": "rolle",
-  "roles": "roller",
   "rtcRegion": "RTC område",
   "server404": "Fant ikke tjeneren.",
   "serverCreatedAt": "Server opprettet på",

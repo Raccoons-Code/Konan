@@ -70,8 +70,6 @@
   "reloadedAppCommands": "Ladda om applikationskommandon (/).",
   "requiredParams": "Dessa parametrar krävs: {{params}}.",
   "restoreError": "Återställ fel",
-  "role": "roll",
-  "roles": "roller",
   "rtcRegion": "RTC Region",
   "server404": "Kunde inte hitta servern.",
   "serverCreatedAt": "Server skapad den",

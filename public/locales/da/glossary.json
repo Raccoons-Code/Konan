@@ -13,6 +13,8 @@
   "owner": "ejer",
   "permissions": "tilladelser",
   "restoring": "genoprette",
+  "role": "rolle",
+  "roles": "roller",
   "topic": "emne",
   "true": "sandt",
   "type": "type"
