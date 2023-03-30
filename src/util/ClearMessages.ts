@@ -1,7 +1,8 @@
 /* eslint-disable no-await-in-loop */
-import { BitField, BitFieldResolvable, EmbedBuilder, GuildMember, GuildTextBasedChannel, Interaction, Message, PermissionFlagsBits } from "discord.js";
+import { BitField, BitFieldResolvable, Collection, EmbedBuilder, GuildMember, GuildTextBasedChannel, Interaction, Message, PermissionFlagsBits } from "discord.js";
 import { setTimeout as sleep } from "node:timers/promises";
 import client from "../client";
+import { t } from "../translator";
 import { MaxBulkDeletableMessageAge } from "./constants";
 import { makeBits } from "./utils";
 
@@ -29,6 +30,7 @@ export default class ClearMessages {
   users = 0;
   webhooks = 0;
   targetUserMessages = 0;
+  found = 0;
   ignored = 0;
   ignoredAttachments = 0;
   ignoredBots = 0;
@@ -133,9 +135,9 @@ export default class ClearMessages {
         this.limit = this.amountToClear;
       }
 
-      const messages = await this.channel.messages.fetch({
+      let messages = await this.channel.messages.fetch({
         after: this.afterMessage,
-        limit: this.limit,
+        limit: 100,
       });
 
       await sleep(1000);
@@ -146,9 +148,14 @@ export default class ClearMessages {
         messages.sweep(msg => this.oldMessages.includes(msg.id));
       }
 
-      this.oldMessages.push(...messages.keys());
-
       if (!messages.size) break;
+
+      if (this.limit < 100) {
+        messages = new Collection(Array.from(messages.entries())
+          .slice(0, this.limit));
+      }
+
+      this.found += messages.size;
 
       for (const msg of messages.values()) {
         if (msg.attachments.size) {
@@ -247,6 +254,8 @@ export default class ClearMessages {
 
       this.undeletable += messages.sweep(msg => !msg.bulkDeletable);
 
+      this.oldMessages.push(...messages.keys());
+
       const clearedMessages = await this.channel.bulkDelete(messages);
 
       if (!clearedMessages.size) break;
@@ -265,14 +274,16 @@ export default class ClearMessages {
 
       if (this.interaction && "message" in this.interaction) {
         if (this.interaction.deferred || this.interaction.replied) {
+          const locale = this.interaction.locale;
+
           await this.interaction.editReply({
             embeds: [
               new EmbedBuilder(this.interaction.message?.embeds[0]?.toJSON())
                 .spliceFields(1, 1, {
-                  name: "Stats",
-                  value: `> ${this.oldMessages.length} messages found.`
-                    + `\n> ${this.cleared} deleted messages.`
-                    + `\n> ${this.ignored} ignored messages.`,
+                  name: t("result", { locale }),
+                  value: `> ${t("found", { locale })}: ${this.found}.`
+                    + `\n> ${t("ignored", { locale })}: ${this.ignored}.`
+                    + `\n> ${t("deleted", { locale })}: ${this.cleared}.`,
                   inline: true,
                 }),
             ],

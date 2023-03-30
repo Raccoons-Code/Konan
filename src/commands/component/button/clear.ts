@@ -112,7 +112,7 @@ export default class extends ButtonCommand {
             }))
           .spliceFields(1, 1, {
             name: t("result", { locale }),
-            value: `> ${t("found", { locale })}: ${clear.oldMessages.length}.`
+            value: `> ${t("found", { locale })}: ${clear.found}.`
               + `\n> ${t("ignored", { locale })}: ${clear.ignored}.`,
           }),
       ],
