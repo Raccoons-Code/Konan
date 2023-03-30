@@ -33,6 +33,8 @@ class EventHandler {
           .catch(error => {
             this.errors.push(error);
           }));
+
+        continue;
       }
     }
 
