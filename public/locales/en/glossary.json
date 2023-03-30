@@ -1,5 +1,6 @@
 {
   "automatic": "automatic",
+  "cancelled": "cancelled",
   "category": "category",
   "channels": "channels",
   "checkers": "checkers",

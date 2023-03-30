@@ -107,6 +107,8 @@
   "timeoutRemoved": "Successfully removed timeout.",
   "timeoutRemoveTimeoutOption": "Remove timeout",
   "tryAgain1Min": "Please try again in 1 minute.",
+  "tryingEraseMessagesUntil": "Trying to erase messages until [here]({{url}}).",
+  "tryingEraseNMessages": "Trying to erase {{amount}} messages...",
   "unbanError": "Unable to unban this user.",
   "undefinedServerName": "Undefined server name",
   "userBanned": "User successfully banned!",

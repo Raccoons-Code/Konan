@@ -81,6 +81,8 @@
   "timeoutError": "Erro! Não foi possível punir o membro!",
   "timeoutRemoved": "Tempo limite removido com êxito.",
   "tryAgain1Min": "Por favor, tente novamente em 1 minuto.",
+  "tryingEraseMessagesUntil": "Tentando apagar mensagens até [aqui]({{url}}).",
+  "tryingEraseNMessages": "Tentando apagar {{amount}} mensagens...",
   "unbanError": "Erro! Não foi possível desbanir este usuário.",
   "undefinedServerName": "Nome do servidor indefinido",
   "userBanned": "Usuário banido com sucesso!",
