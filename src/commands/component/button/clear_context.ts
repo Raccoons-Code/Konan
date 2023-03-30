@@ -91,7 +91,7 @@ export default class extends ButtonCommand {
       }),
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
-          .setTitle((clear.cancelled ? "❌ " : "")
+          .setTitle((clear.cancelled ? "❌ " : "✅ ")
             + t(clear.cleared ? "messageDeleted" : "noDeletedMessages", {
               count: clear.cleared,
               locale,
