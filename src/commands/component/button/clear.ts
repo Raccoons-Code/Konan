@@ -65,7 +65,10 @@ export default class extends ButtonCommand {
       ],
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
-          .setTitle(`Trying to erase ${parsedId.amount} messages...`),
+          .setTitle(t("tryingEraseNMessages", {
+            locale,
+            amount: parsedId.amount,
+          })),
       ],
     });
 
@@ -132,7 +135,7 @@ export default class extends ButtonCommand {
       components: [],
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
-          .setTitle("❌ Cancelled."),
+          .setTitle(`❌ ${t("cancelled", { locale: interaction.locale })}.`),
       ],
     });
 

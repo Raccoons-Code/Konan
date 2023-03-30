@@ -49,7 +49,10 @@ export default class extends ButtonCommand {
       ],
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
-          .setDescription(bold(`Trying to erase messages until [message](${messageLink(interaction.channelId, parsedId.msgId)})...`))
+          .setDescription(bold(t("tryingEraseMessagesUntil", {
+            locale,
+            url: messageLink(interaction.channelId, parsedId.msgId),
+          })))
           .setTitle(null),
       ],
     });
