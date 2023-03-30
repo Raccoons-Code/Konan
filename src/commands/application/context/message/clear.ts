@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, Mes
 import client from "../../../../client";
 import MessageContextCommand from "../../../../structures/MessageContextCommand";
 import { t } from "../../../../translator";
-import ClearMessages, { clearFilters, ClearFiltersBitField, ClearFiltersBits } from "../../../../util/ClearMessages";
+import ClearMessages, { ClearFiltersBitField, ClearFiltersBits, clearFiltersFlags } from "../../../../util/ClearMessages";
 import { createSelectMenuFromOptions } from "../../../../util/commands/components/selectmenu";
 import { getLocalizations } from "../../../../util/utils";
 
@@ -50,11 +50,11 @@ export default class extends MessageContextCommand {
       return 1;
     }
 
-    const clearFilter = ClearFiltersBitField.Default;
+    const clearFilter = new ClearFiltersBitField(ClearFiltersBitField.Default);
 
     const holds = clearFilter.toArray().map(x => `${t(x, { locale })}`);
 
-    const clearOptions = clearFilters
+    const clearOptions = clearFiltersFlags
       .map((key) => new StringSelectMenuOptionBuilder()
         .setEmoji(clearFilter.has(key) ? "✅" : "❌")
         .setLabel(`${t(key, { locale })}`)

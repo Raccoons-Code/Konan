@@ -14,7 +14,7 @@ export default class ClearMessages {
   undeletable = 0;
 
   declare channel: GuildTextBasedChannel;
-  filter = ClearFiltersBitField.Default;
+  filter = new ClearFiltersBitField(ClearFiltersBitField.Default);
   author?: GuildMember;
   afterMessage?: string;
   targetUser?: string[];
@@ -346,7 +346,7 @@ export default class ClearMessages {
   }
 }
 
-export const clearFilters = [
+export const clearFiltersFlags = [
   "ignoreAttachments",
   "ignoreBots",
   "ignoreCrossposts",
@@ -356,15 +356,15 @@ export const clearFilters = [
   "ignoreWebhooks",
 ] as const;
 
-export const ClearFiltersBits = makeBits(clearFilters, "number");
+export const ClearFiltersBits = makeBits(clearFiltersFlags, "number");
 
 export class ClearFiltersBitField extends BitField<keyof typeof ClearFiltersBits, number> {
   static Flags = ClearFiltersBits;
-  static All = new ClearFiltersBitField(clearFilters);
-  static Default = new ClearFiltersBitField([
+  static All = new this(clearFiltersFlags).bitfield;
+  static Default = new this([
     ClearFiltersBits.ignoreCrossposts,
     ClearFiltersBits.ignorePinneds,
-  ]);
+  ]).bitfield;
 }
 
 export type ClearMessagesFilterResolvable = BitFieldResolvable<keyof typeof ClearFiltersBits, number>;

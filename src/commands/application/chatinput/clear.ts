@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteracti
 import client from "../../../client";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
-import { clearFilters, ClearFiltersBitField, ClearFiltersBits } from "../../../util/ClearMessages";
+import { ClearFiltersBitField, ClearFiltersBits, clearFiltersFlags } from "../../../util/ClearMessages";
 import { createSelectMenuFromOptions } from "../../../util/commands/components/selectmenu";
 import { GUILD_TEXT_CHANNEL_TYPES } from "../../../util/constants";
 import { getLocalizations } from "../../../util/utils";
@@ -62,11 +62,11 @@ export default class extends ChatInputCommand {
       ?.match(/\d{17,}/g)))
       ?.map(id => userMention(id));
 
-    const clearFilter = ClearFiltersBitField.Default;
+    const clearFilter = new ClearFiltersBitField(ClearFiltersBitField.Default);
 
     const holds = clearFilter.toArray().map(x => t(x, { locale }));
 
-    const clearOptions = clearFilters
+    const clearOptions = clearFiltersFlags
       .map((key) => new StringSelectMenuOptionBuilder()
         .setEmoji(clearFilter.has(key) ? "✅" : "❌")
         .setLabel(`${t(key, { locale })}`)
