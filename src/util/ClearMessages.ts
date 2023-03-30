@@ -150,6 +150,8 @@ export default class ClearMessages {
 
       if (!messages.size) break;
 
+      this.oldMessages.push(...messages.keys());
+
       if (this.limit < 100) {
         messages = new Collection(Array.from(messages.entries())
           .slice(0, this.limit));
@@ -253,8 +255,6 @@ export default class ClearMessages {
       }
 
       this.undeletable += messages.sweep(msg => !msg.bulkDeletable);
-
-      this.oldMessages.push(...messages.keys());
 
       const clearedMessages = await this.channel.bulkDelete(messages);
 
