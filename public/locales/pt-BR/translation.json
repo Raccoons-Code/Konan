@@ -32,6 +32,7 @@
   "fetchingRandom": "Buscando um {{args[0]}} aleatório",
   "guessNumber": "Adivinhe o número.",
   "helpText": "Olá {{user}}, meu nome é Konan, um bot do Discord.\n\nPara ver meus comandos, pressione a tecla `/` no seu teclado.\n\nSe você estiver procurando mais detalhes sobre meus comandos, digite `/help` e pressione `tab` para ver a lista de comandos e acessar mais informações sobre eles.\n\nSe você quiser me adicionar ao seu servidor, clique no botão do link abaixo.",
+  "ignoredVeryOld": "Ignorados que são muito antigos",
   "information404": "Não foi possível encontrar estas informações.",
   "int1-100": "{{author}}, insira um número inteiro de 1 a 100.",
   "inviteLink": "Link de convite",

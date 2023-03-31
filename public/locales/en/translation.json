@@ -42,6 +42,7 @@
   "ignoreThreads": "Ignore threads",
   "ignoreUsers": "Ignore users",
   "ignoreWebhooks": "Ignore webhooks",
+  "ignoredVeryOld": "Ignored that are too old",
   "information404": "Could not find these information.",
   "int1-100": "{{author}}, enter an integer from 1 to 100.",
   "inviteLink": "Invite Link",

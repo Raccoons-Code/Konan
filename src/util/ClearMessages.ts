@@ -135,7 +135,7 @@ export default class ClearMessages {
         this.limit = this.amountToClear;
       }
 
-      let messages = await this.channel.messages.fetch({
+      const messages = await this.channel.messages.fetch({
         after: this.afterMessage,
         limit: 100,
       });
@@ -144,117 +144,9 @@ export default class ClearMessages {
 
       if (this.cancelled) break;
 
-      if (this.oldMessages.length) {
-        messages.sweep(msg => this.oldMessages.includes(msg.id));
-      }
+      this.#applyFilters(messages);
 
       if (!messages.size) break;
-
-      this.oldMessages.push(...messages.keys());
-
-      if (this.limit < 100) {
-        messages = new Collection(Array.from(messages.entries())
-          .slice(0, this.limit));
-      }
-
-      this.found += messages.size;
-
-      for (const msg of messages.values()) {
-        if (msg.attachments.size) {
-          this.attachments++;
-
-          if (this.ignoreAttachments)
-            this.ignoredAttachments++;
-        }
-
-        if (msg.author.bot) {
-          this.bots++;
-
-          if (this.ignoreBots)
-            this.ignoredBots++;
-        } else {
-          this.users++;
-
-          if (this.ignoreUsers)
-            this.ignoredUsers++;
-        }
-
-        if (msg.flags.any(["Crossposted", "IsCrosspost"])) {
-          this.crossposts++;
-
-          if (this.ignoreCrossposts)
-            this.ignoredCrossposts++;
-        }
-
-        if (msg.pinned) {
-          this.pinneds++;
-
-          if (this.ignorePinneds)
-            this.ignoredPinneds++;
-        }
-
-        if (msg.hasThread) {
-          this.threads++;
-
-          if (this.ignoreThreads)
-            this.ignoredThreads++;
-        }
-
-        if (msg.webhookId) {
-          this.webhooks++;
-
-          if (this.ignoreWebhooks)
-            this.ignoredWebhooks++;
-        }
-
-        if (ClearMessages.messageIsOld(msg)) {
-          this.olds++;
-        }
-
-        if (this.targetUser?.includes(msg.applicationId ?? msg.author.id)) {
-          this.targetUserMessages++;
-        }
-      }
-
-      if (this.ignoreOlds) {
-        this.ignoredOlds += this.olds;
-        this.ignored += messages.sweep(msg => ClearMessages.messageIsOld(msg));
-      }
-
-      if (this.ignoreBots) {
-        this.ignored += messages.sweep(msg => msg.author.bot);
-      }
-
-      if (this.ignoreAttachments) {
-        this.ignored += messages.sweep(msg => msg.attachments.size);
-      }
-
-      if (this.ignoreCrossposts) {
-        this.ignored += messages.sweep(msg => msg.flags.any(["Crossposted", "IsCrosspost"]));
-      }
-
-      if (this.ignorePinneds) {
-        this.ignored += messages.sweep(msg => msg.pinned);
-      }
-
-      if (this.ignoreThreads) {
-        this.ignored += messages.sweep(msg => msg.hasThread);
-      }
-
-      if (this.ignoreUsers) {
-        this.ignored += messages.sweep(msg => !msg.author.bot);
-      }
-
-      if (this.ignoreWebhooks) {
-        this.ignored += messages.sweep(msg => msg.webhookId);
-      }
-
-      if (this.targetUser) {
-        this.ignored += messages.sweep(msg =>
-          !this.targetUser?.includes(msg.applicationId ?? msg.author.id));
-      }
-
-      this.undeletable += messages.sweep(msg => !msg.bulkDeletable);
 
       const clearedMessages = await this.channel.bulkDelete(messages);
 
@@ -282,8 +174,11 @@ export default class ClearMessages {
                 .spliceFields(1, 1, {
                   name: t("result", { locale }),
                   value: `> ${t("found", { locale })}: ${this.found}.`
+                    + `\n> ${t("deleted", { locale })}: ${this.cleared}.`
                     + `\n> ${t("ignored", { locale })}: ${this.ignored}.`
-                    + `\n> ${t("deleted", { locale })}: ${this.cleared}.`,
+                    + (this.ignoredOlds ?
+                      `\n> ${t("ignoredVeryOld", { locale })}: ${this.ignoredOlds}` :
+                      ""),
                   inline: true,
                 }),
             ],
@@ -293,12 +188,138 @@ export default class ClearMessages {
     }
 
     if (this.afterMessage && !this.cancelled) {
-      await this.channel.messages.delete(this.afterMessage)
-        .then(() => this.cleared++)
+      const afterMessage = await this.channel.messages.fetch(this.afterMessage)
         .catch(() => null);
+
+      if (afterMessage) {
+        const messages = new Collection<string, Message>()
+          .set(this.afterMessage, afterMessage);
+
+        this.#applyFilters(messages);
+
+        if (messages.size) {
+          await this.channel.messages.delete(messages.firstKey()!)
+            .then(() => this.cleared++)
+            .catch(() => null);
+        }
+      }
     }
 
     return this;
+  }
+
+  #applyFilters(messages: Collection<string, Message>) {
+    if (this.oldMessages.length) {
+      messages.sweep(msg => this.oldMessages.includes(msg.id));
+    }
+
+    if (!messages.size) return;
+
+    this.oldMessages.push(...messages.keys());
+
+    if (this.limit < 100) {
+      const keys = Array.from(messages.keys()).slice(this.limit);
+      messages.sweep(msg => keys.includes(msg.id));
+    }
+
+    this.found += messages.size;
+
+    for (const msg of messages.values()) {
+      if (msg.attachments.size) {
+        this.attachments++;
+
+        if (this.ignoreAttachments)
+          this.ignoredAttachments++;
+      }
+
+      if (msg.author.bot) {
+        this.bots++;
+
+        if (this.ignoreBots)
+          this.ignoredBots++;
+      } else {
+        this.users++;
+
+        if (this.ignoreUsers)
+          this.ignoredUsers++;
+      }
+
+      if (msg.flags.any(["Crossposted", "IsCrosspost"])) {
+        this.crossposts++;
+
+        if (this.ignoreCrossposts)
+          this.ignoredCrossposts++;
+      }
+
+      if (msg.pinned) {
+        this.pinneds++;
+
+        if (this.ignorePinneds)
+          this.ignoredPinneds++;
+      }
+
+      if (msg.hasThread) {
+        this.threads++;
+
+        if (this.ignoreThreads)
+          this.ignoredThreads++;
+      }
+
+      if (msg.webhookId) {
+        this.webhooks++;
+
+        if (this.ignoreWebhooks)
+          this.ignoredWebhooks++;
+      }
+
+      if (ClearMessages.messageIsOld(msg)) {
+        this.olds++;
+      }
+
+      if (this.targetUser?.includes(msg.applicationId ?? msg.author.id)) {
+        this.targetUserMessages++;
+      }
+    }
+
+    if (this.ignoreOlds) {
+      this.ignoredOlds += this.olds;
+      this.ignored += messages.sweep(msg => ClearMessages.messageIsOld(msg));
+    }
+
+    if (this.ignoreBots) {
+      this.ignored += messages.sweep(msg => msg.author.bot);
+    }
+
+    if (this.ignoreAttachments) {
+      this.ignored += messages.sweep(msg => msg.attachments.size);
+    }
+
+    if (this.ignoreCrossposts) {
+      this.ignored += messages.sweep(msg => msg.flags.any(["Crossposted", "IsCrosspost"]));
+    }
+
+    if (this.ignorePinneds) {
+      this.ignored += messages.sweep(msg => msg.pinned);
+    }
+
+    if (this.ignoreThreads) {
+      this.ignored += messages.sweep(msg => msg.hasThread);
+    }
+
+    if (this.ignoreUsers) {
+      this.ignored += messages.sweep(msg => !msg.author.bot);
+    }
+
+    if (this.ignoreWebhooks) {
+      this.ignored += messages.sweep(msg => msg.webhookId);
+    }
+
+    if (this.targetUser) {
+      this.ignored += messages.sweep(msg =>
+        !this.targetUser?.includes(msg.applicationId ?? msg.author.id));
+    }
+
+    this.undeletable += messages.sweep(msg => !msg.bulkDeletable);
   }
 
   stop() {
