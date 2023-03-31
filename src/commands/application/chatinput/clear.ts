@@ -38,7 +38,7 @@ export default class extends ChatInputCommand {
         .setDescriptionLocalizations(getLocalizations("clearChannelOptionDescription"))
         .addChannelTypes(...GUILD_TEXT_CHANNEL_TYPES))
       .addStringOption(option => option.setName("users")
-        .setDescription("Target users to clear messages"));
+        .setDescription("Mention targets to delete messages."));
   }
 
   async execute(interaction: ChatInputCommandInteraction<"cached">) {

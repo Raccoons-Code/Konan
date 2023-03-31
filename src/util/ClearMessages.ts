@@ -17,10 +17,11 @@ export default class ClearMessages {
   filter = new ClearFiltersBitField(ClearFiltersBitField.Default);
   author?: GuildMember;
   afterMessage?: string;
-  targetUser?: string[];
+  target?: string[];
   interaction?: Interaction;
   cancelled = false;
 
+  found = 0;
   attachments = 0;
   bots = 0;
   crossposts = 0;
@@ -29,17 +30,19 @@ export default class ClearMessages {
   threads = 0;
   users = 0;
   webhooks = 0;
-  targetUserMessages = 0;
-  found = 0;
-  ignored = 0;
-  ignoredAttachments = 0;
-  ignoredBots = 0;
-  ignoredCrossposts = 0;
-  ignoredOlds = 0;
-  ignoredPinneds = 0;
-  ignoredThreads = 0;
-  ignoredUsers = 0;
-  ignoredWebhooks = 0;
+  targetMessages = 0;
+
+  ignored = {
+    count: 0,
+    attachments: 0,
+    bots: 0,
+    crossposts: 0,
+    olds: 0,
+    pinneds: 0,
+    threads: 0,
+    users: 0,
+    webhooks: 0,
+  };
 
   oldMessages: string[] = [];
 
@@ -176,8 +179,8 @@ export default class ClearMessages {
                   value: `> ${t("found", { locale })}: ${this.found}.`
                     + `\n> ${t("deleted", { locale })}: ${this.cleared}.`
                     + `\n> ${t("ignored", { locale })}: ${this.ignored}.`
-                    + (this.ignoredOlds ?
-                      `\n> ${t("ignoredVeryOld", { locale })}: ${this.ignoredOlds}` :
+                    + (this.ignored.olds ?
+                      `\n> ${t("ignoredVeryOld", { locale })}: ${this.ignored.olds}` :
                       ""),
                   inline: true,
                 }),
@@ -188,17 +191,17 @@ export default class ClearMessages {
     }
 
     if (this.afterMessage && !this.cancelled) {
-      const afterMessage = await this.channel.messages.fetch(this.afterMessage)
+      const message = await this.channel.messages.fetch(this.afterMessage)
         .catch(() => null);
 
-      if (afterMessage) {
+      if (message) {
         const messages = new Collection<string, Message>()
-          .set(this.afterMessage, afterMessage);
+          .set(this.afterMessage, message);
 
         this.#applyFilters(messages);
 
         if (messages.size) {
-          await this.channel.messages.delete(messages.firstKey()!)
+          await this.channel.messages.delete(this.afterMessage)
             .then(() => this.cleared++)
             .catch(() => null);
         }
@@ -229,94 +232,96 @@ export default class ClearMessages {
         this.attachments++;
 
         if (this.ignoreAttachments)
-          this.ignoredAttachments++;
+          this.ignored.attachments++;
       }
 
       if (msg.author.bot) {
         this.bots++;
 
         if (this.ignoreBots)
-          this.ignoredBots++;
+          this.ignored.bots++;
       } else {
         this.users++;
 
         if (this.ignoreUsers)
-          this.ignoredUsers++;
+          this.ignored.users++;
       }
 
       if (msg.flags.any(["Crossposted", "IsCrosspost"])) {
         this.crossposts++;
 
         if (this.ignoreCrossposts)
-          this.ignoredCrossposts++;
+          this.ignored.crossposts++;
       }
 
       if (msg.pinned) {
         this.pinneds++;
 
         if (this.ignorePinneds)
-          this.ignoredPinneds++;
+          this.ignored.pinneds++;
       }
 
       if (msg.hasThread) {
         this.threads++;
 
         if (this.ignoreThreads)
-          this.ignoredThreads++;
+          this.ignored.threads++;
       }
 
       if (msg.webhookId) {
         this.webhooks++;
 
         if (this.ignoreWebhooks)
-          this.ignoredWebhooks++;
+          this.ignored.webhooks++;
       }
 
       if (ClearMessages.messageIsOld(msg)) {
         this.olds++;
+
+        if (this.ignoreOlds)
+          this.ignored.olds++;
       }
 
-      if (this.targetUser?.includes(msg.applicationId ?? msg.author.id)) {
-        this.targetUserMessages++;
+      if (this.target?.includes(msg.applicationId ?? msg.author.id)) {
+        this.targetMessages++;
       }
     }
 
     if (this.ignoreOlds) {
-      this.ignoredOlds += this.olds;
-      this.ignored += messages.sweep(msg => ClearMessages.messageIsOld(msg));
+      this.ignored.count += messages.sweep(msg => ClearMessages.messageIsOld(msg));
     }
 
     if (this.ignoreBots) {
-      this.ignored += messages.sweep(msg => msg.author.bot);
+      this.ignored.count += messages.sweep(msg => msg.author.bot);
     }
 
     if (this.ignoreAttachments) {
-      this.ignored += messages.sweep(msg => msg.attachments.size);
+      this.ignored.count += messages.sweep(msg => msg.attachments.size);
     }
 
     if (this.ignoreCrossposts) {
-      this.ignored += messages.sweep(msg => msg.flags.any(["Crossposted", "IsCrosspost"]));
+      this.ignored.count += messages.sweep(msg => msg.flags.any(["Crossposted", "IsCrosspost"]));
     }
 
     if (this.ignorePinneds) {
-      this.ignored += messages.sweep(msg => msg.pinned);
+      this.ignored.count += messages.sweep(msg => msg.pinned);
     }
 
     if (this.ignoreThreads) {
-      this.ignored += messages.sweep(msg => msg.hasThread);
+      this.ignored.count += messages.sweep(msg => msg.hasThread);
     }
 
     if (this.ignoreUsers) {
-      this.ignored += messages.sweep(msg => !msg.author.bot);
+      this.ignored.count += messages.sweep(msg => !msg.author.bot);
     }
 
     if (this.ignoreWebhooks) {
-      this.ignored += messages.sweep(msg => msg.webhookId);
+      this.ignored.count += messages.sweep(msg => msg.webhookId);
     }
 
-    if (this.targetUser) {
-      this.ignored += messages.sweep(msg =>
-        !this.targetUser?.includes(msg.applicationId ?? msg.author.id));
+    if (this.target) {
+      this.ignored.count += messages.sweep(msg =>
+        !this.target?.includes(msg.applicationId ?? msg.author.id));
     }
 
     this.undeletable += messages.sweep(msg => !msg.bulkDeletable);
@@ -348,10 +353,9 @@ export default class ClearMessages {
     if (options.afterMessage)
       this.afterMessage = options.afterMessage;
 
-    if (options.targetUser)
-      this.targetUser = Array.isArray(options.targetUser) ?
-        options.targetUser :
-        [options.targetUser];
+    if (options.target)
+      this.target = Array.isArray(options.target) ?
+        options.target : [options.target];
 
     if (options.filter ?? false)
       this.filter = new ClearFiltersBitField(options.filter);
@@ -395,7 +399,7 @@ interface ClearMessagesOptions {
   author?: GuildMember | null
   amount?: number | null
   afterMessage?: string | null
-  targetUser?: string | string[] | null
+  target?: string | string[] | null
   filter?: ClearMessagesFilterResolvable
   interaction?: Interaction
 }

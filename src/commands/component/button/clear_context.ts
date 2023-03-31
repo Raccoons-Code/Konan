@@ -36,8 +36,7 @@ export default class extends ButtonCommand {
 
     const parsedId = JSON.parse(interaction.customId);
 
-    const targetUser = interaction.message.embeds[0]
-      .description?.match(/\d{17,}/g);
+    const target = interaction.message.embeds[0]?.description?.match(/\d{17,}/g);
 
     await interaction.update({
       components: [
@@ -63,7 +62,7 @@ export default class extends ButtonCommand {
       afterMessage: parsedId.msgId,
       channel: interaction.channel,
       filter: Number(bits),
-      targetUser,
+      target,
       interaction,
     });
 
@@ -103,7 +102,10 @@ export default class extends ButtonCommand {
           .spliceFields(1, 1, {
             name: t("result", { locale }),
             value: `> ${t("found", { locale })}: ${clear.found}.`
-              + `\n> ${t("ignored", { locale })}: ${clear.ignored}.`,
+              + `\n> ${t("ignored", { locale })}: ${clear.ignored.count}.`
+              + (clear.ignored.olds ?
+                `\n> ${t("ignoredVeryOld", { locale })}: ${clear.ignored.olds}` :
+                ""),
           }),
       ],
     });
