@@ -1,5 +1,6 @@
 import { env } from "node:process";
 import client, { appStats, logger, presence } from "../client";
+import prisma from "../database/prisma";
 import commandHandler from "../handlers/CommandHandler";
 import TopggAutoposter from "../modules/Topgg/autoposter";
 
@@ -29,6 +30,8 @@ client.once("ready", async function () {
     appStats.fetch(),
 
     client.application?.fetch(),
+
+    prisma.$connect(),
   ]);
 
   presence.start();

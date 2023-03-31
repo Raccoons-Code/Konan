@@ -7,16 +7,24 @@ client.on("guildDelete", async function (guild) {
 
     logger.oldGuild(guild),
 
-    prisma.wordleInstance.updateMany({
-      where: {
-        guildId: guild.id,
-        endedAt: {
-          isSet: false,
+    prisma.$transaction([
+      prisma.wordleInstance.updateMany({
+        where: {
+          guildId: guild.id,
+          endedAt: {
+            isSet: false,
+          },
         },
-      },
-      data: {
-        endedAt: new Date(),
-      },
-    }),
+        data: {
+          endedAt: new Date(),
+        },
+      }),
+
+      prisma.guild.delete({
+        where: {
+          id: guild.id,
+        },
+      }),
+    ]),
   ]);
 });
