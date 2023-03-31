@@ -14,7 +14,7 @@ model Guild {
   ObjectId  String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now()) @db.Timestamp
   id        String   @unique
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  User      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: Cascade)
   userId    String
 }
 
