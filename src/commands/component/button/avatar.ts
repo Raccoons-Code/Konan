@@ -24,7 +24,7 @@ export default class extends ButtonCommand {
     const target = await interaction.guild.members.fetch(id);
 
     if (!target) {
-      await interaction.update({
+      await interaction.editReply({
         components: [
           new ActionRowBuilder<ButtonBuilder>({
             components: [
