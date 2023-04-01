@@ -18,6 +18,10 @@ export default class extends ButtonCommand {
   async execute(interaction: ButtonInteraction<"cached">) {
     if (!interaction.channel?.isTextBased()) return;
 
+    await interaction.update({
+      components: [],
+    });
+
     const locale = interaction.locale;
 
     const appPerms = interaction.channel.permissionsFor(client.user!)
@@ -38,7 +42,7 @@ export default class extends ButtonCommand {
 
     const target = interaction.message.embeds[0]?.description?.match(/\d{17,}/g);
 
-    await interaction.update({
+    await interaction.editReply({
       components: [
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents(new ButtonBuilder()

@@ -1,5 +1,6 @@
-import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildMember, User } from "discord.js";
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
+import { t } from "../../../translator";
 import { getLocalizations } from "../../../util/utils";
 
 export default class extends ChatInputCommand {
@@ -23,16 +24,20 @@ export default class extends ChatInputCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
+    await interaction.deferReply({ ephemeral: true });
+
     const member = interaction.options.getMember("user") ?? interaction.member;
     const user = interaction.options.getUser("user") ?? interaction.user;
-    const target = <GuildMember | User>member ?? user;
+    const target = member ?? user;
+
+    const locale = interaction.locale;
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
         .addComponents([
           new ButtonBuilder()
             .setEmoji("🖼")
-            .setLabel("Link")
+            .setLabel(t("link", { locale }))
             .setStyle(ButtonStyle.Link)
             .setURL(target.displayAvatarURL({ size: 4096 })),
         ]),
@@ -46,14 +51,14 @@ export default class extends ChatInputCommand {
             id: user.id,
             next: "user",
           }))
-          .setLabel("User avatar")
+          .setLabel(t("viewUserAvatar", { locale }))
           .setStyle(ButtonStyle.Secondary),
       );
     }
 
     const name = user.displayAvatarURL().split("/").pop();
 
-    await interaction.reply({
+    await interaction.editReply({
       components,
       embeds: [
         new EmbedBuilder()
@@ -61,9 +66,13 @@ export default class extends ChatInputCommand {
           .setDescription(`${user}`)
           .setImage(`attachment://${name}`),
       ],
-      ephemeral: true,
       files: [
-        new AttachmentBuilder(target.displayAvatarURL({ size: 512 }), { name }),
+        new AttachmentBuilder(
+          await fetch(target.displayAvatarURL({ size: 512 }))
+            .then(res => res.arrayBuffer())
+            .then(res => Buffer.from(res)), {
+          name,
+        }),
       ],
     });
 

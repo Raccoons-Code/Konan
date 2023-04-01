@@ -16,6 +16,8 @@ export default class extends SelectMenuCommand {
     interaction: StringSelectMenuInteraction<"cached">,
     roles: SelectRolesManagement = { add: [], remove: [] },
   ) {
+    await interaction.deferUpdate();
+
     const optionDefault = getDefaultOptionFromSelect(interaction.message.components);
 
     if (optionDefault) {
@@ -51,6 +53,8 @@ export default class extends SelectMenuCommand {
     if (roles.add.length) {
       await interaction.member.roles.add(roles.add);
     }
+
+    await interaction.member.fetch();
 
     await this.setComponents(interaction, roles);
     await this.sendResponse(interaction, roles);
@@ -130,7 +134,7 @@ export default class extends SelectMenuCommand {
         }));
     });
 
-    await interaction.update({ components });
+    await interaction.editReply({ components });
     return;
   }
 
@@ -142,7 +146,7 @@ export default class extends SelectMenuCommand {
 
     const addFails: string[] = [];
 
-    const added = roles.add.reduce((acc, id) => {
+    const added = roles.add.reduce<string[]>((acc, id) => {
       const role = interaction.member.roles.resolve(id);
 
       if (!role) {
@@ -151,11 +155,11 @@ export default class extends SelectMenuCommand {
       }
 
       return acc.concat(roleMention(id));
-    }, <string[]>[]);
+    }, []);
 
     const removeFails: string[] = [];
 
-    const removed = roles.remove.reduce((acc, id) => {
+    const removed = roles.remove.reduce<string[]>((acc, id) => {
       const role = interaction.member.roles.resolve(id);
 
       if (role) {
@@ -164,7 +168,7 @@ export default class extends SelectMenuCommand {
       }
 
       return acc.concat(roleMention(id));
-    }, <string[]>[]);
+    }, []);
 
     const embeds = [
       new EmbedBuilder()

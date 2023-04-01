@@ -1,5 +1,6 @@
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, UserContextMenuCommandInteraction } from "discord.js";
 import UserContextCommand from "../../../../structures/UserContextCommand";
+import { t } from "../../../../translator";
 import { getLocalizations } from "../../../../util/utils";
 
 export default class extends UserContextCommand {
@@ -10,18 +11,22 @@ export default class extends UserContextCommand {
   }
 
   build() {
-    this.data.setNameLocalizations(getLocalizations("viewAvatar"));
+    this.data.setNameLocalizations(getLocalizations("viewAvatarName"));
   }
 
   async execute(interaction: UserContextMenuCommandInteraction<"cached">) {
+    await interaction.deferReply({ ephemeral: true });
+
     const target = interaction.targetMember ?? interaction.targetUser;
+
+    const locale = interaction.locale;
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
         .addComponents([
           new ButtonBuilder()
             .setEmoji("🖼")
-            .setLabel("Link")
+            .setLabel(t("link", { locale }))
             .setStyle(ButtonStyle.Link)
             .setURL(target.displayAvatarURL({ size: 4096 })),
         ]),
@@ -38,14 +43,14 @@ export default class extends UserContextCommand {
             id: interaction.targetUser.id,
             next: "user",
           }))
-          .setLabel("User avatar")
+          .setLabel(t("viewUserAvatar", { locale }))
           .setStyle(ButtonStyle.Secondary),
       );
     }
 
     const name = target.displayAvatarURL().split("/").pop();
 
-    await interaction.reply({
+    await interaction.editReply({
       components,
       embeds: [
         new EmbedBuilder()
@@ -57,9 +62,13 @@ export default class extends UserContextCommand {
           .setDescription(`${target}`)
           .setImage(`attachment://${name}`),
       ],
-      ephemeral: true,
       files: [
-        new AttachmentBuilder(target.displayAvatarURL({ size: 512 }), { name }),
+        new AttachmentBuilder(
+          await fetch(target.displayAvatarURL({ size: 512 }))
+            .then(res => res.arrayBuffer())
+            .then(res => Buffer.from(res)), {
+          name,
+        }),
       ],
     });
 

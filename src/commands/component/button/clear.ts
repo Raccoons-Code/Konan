@@ -24,6 +24,10 @@ export default class extends ButtonCommand {
   }
 
   async clear(interaction: ButtonInteraction<"cached">) {
+    await interaction.update({
+      components: [],
+    });
+
     const locale = interaction.locale;
 
     const parsedId = JSON.parse(interaction.customId);
@@ -31,8 +35,7 @@ export default class extends ButtonCommand {
     const channel = await interaction.guild.channels.fetch(parsedId.channel) as GuildTextBasedChannel;
 
     if (!channel?.isTextBased()) {
-      await interaction.update({
-        components: [],
+      await interaction.editReply({
         embeds: [
           new EmbedBuilder()
             .setTitle("Missing channel."),
@@ -55,7 +58,7 @@ export default class extends ButtonCommand {
       d: interaction.id,
     });
 
-    await interaction.update({
+    await interaction.editReply({
       components: [
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents(new ButtonBuilder()

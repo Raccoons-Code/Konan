@@ -1,6 +1,7 @@
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder } from "discord.js";
 import client from "../../../client";
 import ButtonCommand from "../../../structures/ButtonCommand";
+import { t } from "../../../translator";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -18,9 +19,11 @@ export default class extends ButtonCommand {
   }
 
   async member(interaction: ButtonInteraction<"cached">, id: string) {
-    const member = await interaction.guild.members.fetch(id);
+    await interaction.deferUpdate();
 
-    if (!member) {
+    const target = await interaction.guild.members.fetch(id);
+
+    if (!target) {
       await interaction.update({
         components: [
           new ActionRowBuilder<ButtonBuilder>({
@@ -34,35 +37,42 @@ export default class extends ButtonCommand {
       return 1;
     }
 
-    const name = member.displayAvatarURL().split("/").pop();
+    const locale = interaction.locale;
 
-    await interaction.update({
+    const name = target.displayAvatarURL().split("/").pop();
+
+    await interaction.editReply({
       components: [
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
             new ButtonBuilder()
               .setEmoji("🖼")
-              .setLabel("Link")
+              .setLabel(t("link", { locale }))
               .setStyle(ButtonStyle.Link)
-              .setURL(member.displayAvatarURL({ size: 4096 })),
+              .setURL(target.displayAvatarURL({ size: 4096 })),
             new ButtonBuilder()
               .setCustomId(JSON.stringify({
                 c: "avatar",
-                id: member.id,
+                id: target.id,
                 next: "user",
               }))
-              .setLabel("User avatar")
+              .setLabel(t("viewUserAvatar", { locale }))
               .setStyle(ButtonStyle.Secondary),
           ]),
       ],
       embeds: [
         new EmbedBuilder()
-          .setColor(member.displayColor ?? member.user.accentColor ?? "Random")
-          .setDescription(`${member}`)
+          .setColor(target.displayColor ?? target.user.accentColor ?? "Random")
+          .setDescription(`${target}`)
           .setImage(`attachment://${name}`),
       ],
       files: [
-        new AttachmentBuilder(member.displayAvatarURL({ size: 512 }), { name }),
+        new AttachmentBuilder(
+          await fetch(target.displayAvatarURL({ size: 512 }))
+            .then(res => res.arrayBuffer())
+            .then(res => Buffer.from(res)), {
+          name,
+        }),
       ],
     });
 
@@ -70,46 +80,55 @@ export default class extends ButtonCommand {
   }
 
   async user(interaction: ButtonInteraction, id: string) {
-    const user = await client.users.fetch(id);
+    await interaction.deferUpdate();
+
+    const target = await client.users.fetch(id);
+
+    const locale = interaction.locale;
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
         .addComponents([
           new ButtonBuilder()
             .setEmoji("🖼")
-            .setLabel("Link")
+            .setLabel(t("link", { locale }))
             .setStyle(ButtonStyle.Link)
-            .setURL(user.displayAvatarURL({ size: 4096 })),
+            .setURL(target.displayAvatarURL({ size: 4096 })),
         ]),
     ];
 
     const member = await interaction.guild?.members.fetch(id);
 
-    if (member?.avatar && member.avatar !== user.avatar) {
+    if (member?.avatar && member.avatar !== target.avatar) {
       components[0].addComponents(
         new ButtonBuilder()
           .setCustomId(JSON.stringify({
             c: "avatar",
-            id: user.id,
+            id: target.id,
             next: "member",
           }))
-          .setLabel("Member avatar")
+          .setLabel(t("viewMemberAvatar", { locale }))
           .setStyle(ButtonStyle.Secondary),
       );
     }
 
-    const name = user.displayAvatarURL().split("/").pop();
+    const name = target.displayAvatarURL().split("/").pop();
 
-    await interaction.update({
+    await interaction.editReply({
       components,
       embeds: [
         new EmbedBuilder()
-          .setColor(user.accentColor ?? "Random")
-          .setDescription(`${user}`)
+          .setColor(target.accentColor ?? "Random")
+          .setDescription(`${target}`)
           .setImage(`attachment://${name}`),
       ],
       files: [
-        new AttachmentBuilder(user.displayAvatarURL({ size: 512 }), { name }),
+        new AttachmentBuilder(
+          await fetch(target.displayAvatarURL({ size: 512 }))
+            .then(res => res.arrayBuffer())
+            .then(res => Buffer.from(res)), {
+          name,
+        }),
       ],
     });
 

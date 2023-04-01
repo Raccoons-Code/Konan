@@ -12,22 +12,19 @@ export default class extends ButtonCommand {
   }
 
   async execute(interaction: ButtonInteraction<"cached">) {
+    await interaction.deferUpdate();
+
     const parsedId = <ButtonRolesCustomId>JSON.parse(interaction.customId);
 
     const memberHasRole = interaction.member.roles.cache.has(parsedId.id);
 
-    try {
-      if (memberHasRole) {
-        await interaction.member.roles.remove(parsedId.id);
-      } else {
-        await interaction.member.roles.add(parsedId.id);
-      }
-    } catch (error) {
-      await interaction.deferUpdate();
-      throw error;
+    if (memberHasRole) {
+      await interaction.member.roles.remove(parsedId.id);
+    } else {
+      await interaction.member.roles.add(parsedId.id);
     }
 
-    await interaction.update({
+    await interaction.editReply({
       components: editButtonById(interaction.message.components, interaction.customId, {
         count: parsedId.count + (
           memberHasRole ?
