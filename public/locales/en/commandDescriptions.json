@@ -238,7 +238,6 @@
   "unbanDescription": "Revoke a user's ban.",
   "unbanUserDescription": "User ID",
   "unbanReasonDescription": "The reason to unban.",
-  "viewAvatar": "Ver avatar",
   "wordleDescription": "The game of wordle.",
   "wordleWordSizeDescription": "The size of the word to be drawn. default: 4",
   "wordleAddPlayersDescription": "Add players to the game. Format: `id` `@user`"

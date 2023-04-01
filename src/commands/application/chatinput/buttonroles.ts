@@ -526,7 +526,7 @@ export default class extends ChatInputCommand {
     const rolesId = Array.from(new Set(ids)).map(id => interaction.guild.roles.fetch(id));
 
     if (!rolesId.length) {
-      await interaction.editReply("No IDs were found in the roles input.");
+      await interaction.editReply(t("noIdsInRoleInput", { locale }));
       return 1;
     }
 
@@ -534,7 +534,7 @@ export default class extends ChatInputCommand {
       .then(rs => <Role[]>rs.filter(r => r).slice(0, 25));
 
     if (!roles.length) {
-      await interaction.editReply("No roles were found in the roles input.");
+      await interaction.editReply(t("noNewRoleFoudInRoleInput", { locale }));
       return 1;
     }
 
@@ -588,7 +588,7 @@ export default class extends ChatInputCommand {
 
     const rolesId = interaction.options.getString("roles")?.match(/\d{17,}/g);
     if (!rolesId) {
-      await interaction.editReply("No IDs were found in the roles input.");
+      await interaction.editReply(t("noIdsInRoleInput", { locale }));
       return 1;
     }
 
@@ -596,7 +596,7 @@ export default class extends ChatInputCommand {
       .map(id => interaction.guild.roles.fetch(id)))
       .then(rs => <Role[]>rs.filter(r => r).slice(0, 25));
     if (!roles.length) {
-      await interaction.editReply("No roles were found in the roles input.");
+      await interaction.editReply(t("noNewRoleFoudInRoleInput", { locale }));
       return 1;
     }
 
@@ -618,7 +618,7 @@ export default class extends ChatInputCommand {
 
     const rolesId = interaction.options.getString("roles")?.match(/\d{17,}/g);
     if (!rolesId) {
-      await interaction.editReply("No IDs were found in the roles input.");
+      await interaction.editReply(t("noIdsInRoleInput", { locale }));
       return 1;
     }
 

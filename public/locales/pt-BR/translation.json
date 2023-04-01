@@ -101,5 +101,7 @@
   "userNotOwner": "Você não é o dono do servidor.",
   "userTimedOut": "Usuário punido com sucesso. Até {{time}} {{timeR}}.",
   "userUnbanned": "Usuário desbanido com sucesso!",
+  "viewMemberAvatar": "Ver avatar de membro",
+  "viewUserAvatar": "Ver avatar de usuário",
   "wordsnack": "Caça palavras"
 }

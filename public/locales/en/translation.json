@@ -31,6 +31,7 @@
   "doYouMean??": "do you mean `{{string}}`?",
   "editError": "Unable to edit {{string}}!",
   "emojis": "emojis",
+  "emptyDictionaryOnLocale": "There are no words in the dictionary for your locale.",
   "expectedArguments": "Expected arguments:",
   "fetchingRandom": "Fetching a random {{args[0]}}",
   "guessNumber": "Guess the number.",
@@ -81,8 +82,10 @@
   "missingUserChannelPermission": "You don't have `{{permission}}` permission on this channel.",
   "moderateHierarchyError": "You cannot moderate members equal or superior to me or you.",
   "noDeletedMessages": "No deleted messages!",
-  "noIdsInUserInput": "No ID found in the user input.",
+  "noIdsInRoleInput": "No ID found in the roles input.",
+  "noIdsInUserInput": "No ID found in the users input.",
   "noMessagesFound": "No messages found!",
+  "noNewRoleFoudInRoleInput": "No new role were found in roles input.",
   "noNewPlayersAdded": "No new players were added.",
   "noValidUsersFound": "No valid users were found.",
   "numberCorrect": "{{number}} is correct, congratulations!",
@@ -129,6 +132,8 @@
   "userNotOwner": "You are not the owner of the server.",
   "userTimedOut": "User successfully punished. Until {{time}} {{timeR}}.",
   "userUnbanned": "User successfully unbanned!",
+  "viewMemberAvatar": "View member avatar",
+  "viewUserAvatar": "View user avatar",
   "wordsnack": "Word Snacks",
   "wordOnDictionary404": "{{word}} was not found in the dictionary."
 }

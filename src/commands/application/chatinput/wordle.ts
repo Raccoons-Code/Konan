@@ -185,7 +185,7 @@ export default class extends ChatInputCommand {
 
     const word = await dictionaries.random(locale, wordSize);
     if (!word) {
-      await interaction.editReply("There are no words in the dictionary for your locale.");
+      await interaction.editReply(t("emptyDictionaryOnLocale", { locale }));
       return 1;
     }
 
