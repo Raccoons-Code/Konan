@@ -1,4 +1,5 @@
 import { ButtonInteraction, EmbedBuilder, GuildMember, User, userMention } from "discord.js";
+import { setTimeout as sleep } from "node:timers/promises";
 import ButtonCommand from "../../../structures/ButtonCommand";
 
 export default class extends ButtonCommand {
@@ -10,8 +11,18 @@ export default class extends ButtonCommand {
   }
 
   async execute(interaction: ButtonInteraction<"cached">) {
-    const kicking: Promise<string | void | GuildMember | User>[] = [];
+    await interaction.update({
+      components: [],
+    });
+
+    const kicking: Promise<void>[] = [];
+    const kicked: (string | GuildMember | User)[] = [];
     const failed: string[] = [];
+    let index = 0;
+
+    await interaction.editReply({
+      content: "Kicking...",
+    });
 
     for (const embed of interaction.message.embeds) {
       const ids = embed.description?.match(/\d{17,}/g) ?? [];
@@ -21,21 +32,44 @@ export default class extends ButtonCommand {
       const reason = `${interaction.member.displayName}: ${reasonField.value}`
         .slice(0, 512);
 
-      kicking.push(...ids.map(id =>
-        interaction.guild.members.kick(id, reason)
-          .catch(() => {
-            failed.push(userMention(id));
-          })));
+      kicking.push(...ids.map(async (id, i) => {
+        await sleep((i + index) * 1000);
+
+        try {
+          const kick = await interaction.guild.members.kick(id, reason);
+
+          kicked.push(kick);
+        } catch {
+          failed.push(userMention(id));
+        }
+
+        await interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(failed.length ?
+                `❌ ${failed.join(" ")}`.slice(0, 4096) :
+                null)
+              .setFields([{
+                name: "Amount of kicked users",
+                value: `${kicked.length}/${ids.length}`,
+              }])
+              .setTitle("Kick Result"),
+          ],
+        }).catch(() => null);
+      }));
+
+      index += ids.length;
     }
 
-    const kicked = await Promise.all(kicking)
-      .then(kicks => kicks.filter(kick => kick));
+    await Promise.all(kicking);
 
-    await interaction.update({
-      components: [],
+    await interaction.editReply({
+      content: null,
       embeds: [
         new EmbedBuilder()
-          .setDescription(failed.length ? `❌ ${failed.join(" ")}`.slice(0, 4096) : null)
+          .setDescription(failed.length ?
+            `❌ ${failed.join(" ")}`.slice(0, 4096) :
+            null)
           .setFields([{
             name: "Amount of kicked users",
             value: `${kicked.length}/${kicked.length + failed.length}`,
