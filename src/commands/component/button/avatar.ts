@@ -19,23 +19,17 @@ export default class extends ButtonCommand {
   }
 
   async member(interaction: ButtonInteraction<"cached">, id: string) {
-    await interaction.deferUpdate();
+    await interaction.update({
+      components: [
+        new ActionRowBuilder<ButtonBuilder>({
+          components: interaction.message.components[0].components.slice(0, 1),
+        }),
+      ],
+    });
 
     const target = await interaction.guild.members.fetch(id);
 
-    if (!target) {
-      await interaction.editReply({
-        components: [
-          new ActionRowBuilder<ButtonBuilder>({
-            components: [
-              interaction.message.components[0].toJSON().components[0],
-            ],
-          }),
-        ],
-      });
-
-      return 1;
-    }
+    if (!target) return 1;
 
     const locale = interaction.locale;
 
@@ -80,7 +74,13 @@ export default class extends ButtonCommand {
   }
 
   async user(interaction: ButtonInteraction, id: string) {
-    await interaction.deferUpdate();
+    await interaction.update({
+      components: [
+        new ActionRowBuilder<ButtonBuilder>({
+          components: interaction.message.components[0].components.slice(0, 1),
+        }),
+      ],
+    });
 
     const target = await client.users.fetch(id);
 
