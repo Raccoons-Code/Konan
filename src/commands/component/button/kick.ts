@@ -19,6 +19,15 @@ export default class extends ButtonCommand {
     const kicked: (string | GuildMember | User)[] = [];
     const failed: string[] = [];
     let index = 0;
+    let num = 0;
+
+    for (const embed of interaction.message.embeds) {
+      const ids = embed.description?.match(/\d{17,}/g);
+
+      if (ids?.length) {
+        num += ids.length;
+      }
+    }
 
     await interaction.editReply({
       content: "Kicking...",
@@ -51,7 +60,7 @@ export default class extends ButtonCommand {
                 null)
               .setFields([{
                 name: "Amount of kicked users",
-                value: `${kicked.length}/${ids.length}`,
+                value: `${kicked.length}/${num}`,
               }])
               .setTitle("Kick Result"),
           ],
@@ -72,7 +81,7 @@ export default class extends ButtonCommand {
             null)
           .setFields([{
             name: "Amount of kicked users",
-            value: `${kicked.length}/${kicked.length + failed.length}`,
+            value: `${kicked.length}/${num}`,
           }])
           .setTitle("Kick Result"),
       ],

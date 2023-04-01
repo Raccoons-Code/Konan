@@ -20,6 +20,15 @@ export default class extends ButtonCommand {
     const banned: (string | User | GuildMember)[] = [];
     const failed: string[] = [];
     let index = 0;
+    let num = 0;
+
+    for (const embed of interaction.message.embeds) {
+      const ids = embed.description?.match(/\d{17,}/g);
+
+      if (ids?.length) {
+        num += ids.length;
+      }
+    }
 
     await interaction.editReply({
       content: "Banning...",
@@ -57,7 +66,7 @@ export default class extends ButtonCommand {
                 null)
               .setFields([{
                 name: "Amount of banned users",
-                value: `${banned.length}/${ids.length}`,
+                value: `${banned.length}/${num}`,
               }])
               .setTitle("Ban Result"),
           ],
@@ -78,7 +87,7 @@ export default class extends ButtonCommand {
             null)
           .setFields([{
             name: "Amount of banned users",
-            value: `${banned.length}/${banned.length + failed.length}`,
+            value: `${banned.length}/${num}`,
           }])
           .setTitle("Ban Result"),
       ],
