@@ -83,7 +83,7 @@ export default class ApplicationStats {
   }
 
   async fetch(options?: FetchStatsOptions): Promise<Stats> {
-    if (!options) return this.fetch_stats().catch(() => this);
+    if (!options) return this._fetch_stats();
 
     if (Array.isArray(options.filter)) {
       const promises = [];
@@ -96,12 +96,12 @@ export default class ApplicationStats {
       return this;
     }
 
-    await this[`fetch_${options.filter ?? "stats"}`]();
+    await this[`_fetch_${options.filter ?? "stats"}`]();
 
     return this;
   }
 
-  private async fetch_channels() {
+  private async _fetch_channels() {
     return this.#channels.then(channels => {
       this.totalChannels = channels.reduce((acc, channelCount) => acc + channelCount, 0);
 
@@ -109,7 +109,7 @@ export default class ApplicationStats {
     });
   }
 
-  private async fetch_emojis() {
+  private async _fetch_emojis() {
     return this.#emojis.then(emojis => {
       this.totalEmojis = emojis.reduce((acc, emojiCount) => acc + emojiCount, 0);
 
@@ -117,7 +117,7 @@ export default class ApplicationStats {
     });
   }
 
-  private async fetch_guilds() {
+  private async _fetch_guilds() {
     return this.#guilds.then(guilds => {
       this.totalGuilds = guilds.reduce((acc, guildCount) => acc + guildCount, 0);
 
@@ -125,7 +125,7 @@ export default class ApplicationStats {
     });
   }
 
-  private async fetch_users() {
+  private async _fetch_users() {
     return this.#users.then(users => {
       this.totalUsers = users.reduce((acc, userCount) => acc + userCount, 0);
 
@@ -133,7 +133,7 @@ export default class ApplicationStats {
     });
   }
 
-  private async fetch_voice_adapters() {
+  private async _fetch_voice_adapters() {
     return this.#voice_adapters.then(voiceAdapters => {
       this.totalVoiceAdapters = voiceAdapters.reduce((acc, voiceAdapterCount) => acc + voiceAdapterCount, 0);
 
@@ -141,13 +141,13 @@ export default class ApplicationStats {
     });
   }
 
-  private async fetch_stats() {
+  private async _fetch_stats() {
     return Promise.all([
-      this.fetch_channels(),
-      this.fetch_emojis(),
-      this.fetch_guilds(),
-      this.fetch_users(),
-      this.fetch_voice_adapters(),
+      this._fetch_channels(),
+      this._fetch_emojis(),
+      this._fetch_guilds(),
+      this._fetch_users(),
+      this._fetch_voice_adapters(),
     ])
       .then(() => this);
   }
