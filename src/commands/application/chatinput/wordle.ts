@@ -4,6 +4,8 @@ import prisma from "../../../database/prisma";
 import { dictionaries } from "../../../modules/Dictionaries";
 import wordle from "../../../modules/Wordle";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
+import { t } from "../../../translator";
+import { getLocalizations } from "../../../util/utils";
 
 
 export default class extends ChatInputCommand {
@@ -18,12 +20,18 @@ export default class extends ChatInputCommand {
 
   build() {
     this.data
+      .setNameLocalizations(getLocalizations("wordleName"))
+      .setDescriptionLocalizations(getLocalizations("wordleDescription"))
       .addIntegerOption(option => option.setName("word_size")
         .setDescription("The size of the word to be drawn. default: 4")
+        .setNameLocalizations(getLocalizations("wordleWordSizeName"))
+        .setDescriptionLocalizations(getLocalizations("wordleWordSizeDescription"))
         .setMaxValue(10)
         .setMinValue(4))
       .addStringOption(option => option.setName("add_players")
-        .setDescription("Add players to the game. Format: `id` `@user`"));
+        .setDescription("Add players to the game. Format: `id` `@user`")
+        .setNameLocalizations(getLocalizations("wordleAddPlayersName"))
+        .setDescriptionLocalizations(getLocalizations("wordleAddPlayersDescription")));
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
@@ -37,7 +45,7 @@ export default class extends ChatInputCommand {
     if (playersId?.length) {
       if (!interaction.guild) {
         await interaction.reply({
-          content: "You need to be in a server to use this option.",
+          content: t("onlyOnServerOption", { locale }),
           ephemeral: true,
         });
         return 1;
@@ -50,7 +58,7 @@ export default class extends ChatInputCommand {
 
       if (!playersId.length) {
         await interaction.reply({
-          content: "No valid users were found.",
+          content: t("noValidUsersFound", { locale }),
           ephemeral: true,
         });
         return 1;
@@ -82,7 +90,7 @@ export default class extends ChatInputCommand {
             !oldInstance.quitters.includes(id));
 
           if (!playersId.length) {
-            await interaction.editReply("No new players were added.");
+            await interaction.editReply(t("noNewPlayersAdded", { locale }));
             return 1;
           }
 
@@ -105,9 +113,12 @@ export default class extends ChatInputCommand {
                   {
                     name: `Players [${playersId.concat(interaction.user.id).length}]`,
                     value: `${players.splice(0, 10).join("\n")}`
-                      + `${players.length ?
-                        `\n...and ${inlineCode(`${players.length}`)} more` :
-                        ""}`,
+                      + (players.length ?
+                        `\n${t("andNMore", {
+                          locale,
+                          n: inlineCode(`${players.length}`),
+                        })}` :
+                        ""),
                   },
                 ] : []),
             ],
@@ -119,7 +130,7 @@ export default class extends ChatInputCommand {
                 .addComponents([
                   new ButtonBuilder()
                     .setEmoji("🔍")
-                    .setLabel("Join to the game")
+                    .setLabel(t("joinGame", { locale }))
                     .setStyle(ButtonStyle.Link)
                     .setURL(messageLink(oldInstance.channelId, oldInstance.messageId)),
                 ]),
@@ -142,7 +153,7 @@ export default class extends ChatInputCommand {
               .addComponents([
                 new ButtonBuilder()
                   .setEmoji("🔍")
-                  .setLabel("Join to the game")
+                  .setLabel(t("joinGame", { locale }))
                   .setStyle(ButtonStyle.Link)
                   .setURL(messageLink(oldInstance.channelId, oldInstance.messageId)),
                 new ButtonBuilder()

@@ -22,8 +22,8 @@ export default class extends ChatInputCommand {
       .setDescriptionLocalizations(getLocalizations("deployDescription"))
       .addStringOption(option => option.setName("type")
         .setDescription("The type of deploy.")
-        .setNameLocalizations(getLocalizations("deployTypeOptionName"))
-        .setDescriptionLocalizations(getLocalizations("deployTypeOptionDescription"))
+        .setNameLocalizations(getLocalizations("deployTypeName"))
+        .setDescriptionLocalizations(getLocalizations("deployTypeDescription"))
         .setChoices({
           name: "Global",
           value: "global",
@@ -36,8 +36,8 @@ export default class extends ChatInputCommand {
         .setRequired(true))
       .addBooleanOption(option => option.setName("reset")
         .setDescription("Whether to reset the commands.")
-        .setNameLocalizations(getLocalizations("deployResetOptionName"))
-        .setDescriptionLocalizations(getLocalizations("deployResetOptionDescription")));
+        .setNameLocalizations(getLocalizations("deployResetName"))
+        .setDescriptionLocalizations(getLocalizations("deployResetDescription")));
   }
 
   async execute(interaction: ChatInputCommandInteraction) {

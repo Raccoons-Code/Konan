@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, Mes
 import client from "../../../../client";
 import MessageContextCommand from "../../../../structures/MessageContextCommand";
 import { t } from "../../../../translator";
-import ClearMessages, { ClearFiltersBitField, ClearFiltersBits, clearFiltersFlags } from "../../../../util/ClearMessages";
+import { ClearFiltersBitField, ClearFiltersBits, clearFiltersFlags } from "../../../../util/ClearMessages";
 import { createSelectMenuFromOptions } from "../../../../util/commands/components/selectmenu";
 import { getLocalizations } from "../../../../util/utils";
 
@@ -43,9 +43,7 @@ export default class extends MessageContextCommand {
       limit: 100,
     }).catch(() => null);
 
-    messages?.sweep(msg => ClearMessages.messageIsOld(msg));
-
-    if (!messages?.size) {
+    if (!messages) {
       await interaction.editReply(t("noMessagesFound", { locale }));
       return 1;
     }
@@ -94,7 +92,7 @@ export default class extends MessageContextCommand {
             }))
             .setMaxValues(25)
             .setMinValues(0)
-            .setPlaceholder("🚸 Target users")),
+            .setPlaceholder(`🚸 ${t("targetUsers", { locale })}`)),
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
             new ButtonBuilder()

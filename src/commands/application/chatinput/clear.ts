@@ -27,18 +27,20 @@ export default class extends ChatInputCommand {
       .setDescriptionLocalizations(getLocalizations("clearDescription"))
       .addIntegerOption(option => option.setName("amount")
         .setDescription("The amount of messages to delete.")
-        .setNameLocalizations(getLocalizations("clearAmountOptionName"))
-        .setDescriptionLocalizations(getLocalizations("clearAmountOptionDescription"))
+        .setNameLocalizations(getLocalizations("clearAmountName"))
+        .setDescriptionLocalizations(getLocalizations("clearAmountDescription"))
         .setMaxValue(1000)
         .setMinValue(1)
         .setRequired(true))
       .addChannelOption(option => option.setName("channel")
         .setDescription("Select a channel to clear.")
-        .setNameLocalizations(getLocalizations("clearChannelOptionName"))
-        .setDescriptionLocalizations(getLocalizations("clearChannelOptionDescription"))
+        .setNameLocalizations(getLocalizations("clearChannelName"))
+        .setDescriptionLocalizations(getLocalizations("clearChannelDescription"))
         .addChannelTypes(...GUILD_TEXT_CHANNEL_TYPES))
       .addStringOption(option => option.setName("users")
-        .setDescription("Mention targets to delete messages."));
+        .setDescription("Mention targets to delete messages.")
+        .setNameLocalizations(getLocalizations("clearUsersName"))
+        .setDescriptionLocalizations(getLocalizations("clearUsersDescription")));
   }
 
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
@@ -69,7 +71,7 @@ export default class extends ChatInputCommand {
     const clearOptions = clearFiltersFlags
       .map((key) => new StringSelectMenuOptionBuilder()
         .setEmoji(clearFilter.has(key) ? "✅" : "❌")
-        .setLabel(`${t(key, { locale })}`)
+        .setLabel(t(key, { locale }))
         .setValue(JSON.stringify({
           n: `${ClearFiltersBits[key]}`,
           v: clearFilter.has(key),

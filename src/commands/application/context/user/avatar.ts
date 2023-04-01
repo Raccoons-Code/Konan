@@ -1,11 +1,16 @@
 import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, UserContextMenuCommandInteraction } from "discord.js";
 import UserContextCommand from "../../../../structures/UserContextCommand";
+import { getLocalizations } from "../../../../util/utils";
 
 export default class extends UserContextCommand {
   constructor() {
     super();
 
     this.data.setName("View avatar");
+  }
+
+  build() {
+    this.data.setNameLocalizations(getLocalizations("viewAvatar"));
   }
 
   async execute(interaction: UserContextMenuCommandInteraction<"cached">) {

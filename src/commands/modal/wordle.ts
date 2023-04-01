@@ -3,6 +3,7 @@ import prisma from "../../database/prisma";
 import { dictionaries } from "../../modules/Dictionaries";
 import wordle from "../../modules/Wordle";
 import ModalSubmit from "../../structures/ModalSubmit";
+import { t } from "../../translator";
 
 export default class extends ModalSubmit {
   constructor() {
@@ -18,7 +19,10 @@ export default class extends ModalSubmit {
 
     if (!await dictionaries.hasAsync(locale, userAttempt)) {
       await interaction.reply({
-        content: `${inlineCode(userAttempt)} was not found in the dictionary.`,
+        content: t("wordOnDictionary404", {
+          locale,
+          word: inlineCode(userAttempt),
+        }),
         ephemeral: true,
       });
       return 1;

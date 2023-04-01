@@ -5,6 +5,7 @@ import ChatInputCommand from "../../../structures/ChatInputCommand";
 /* import { t } from "../../../translator"; */
 import { isBannableBy } from "../../../util/commands/utils";
 import { getLocalizations } from "../../../util/utils";
+import { t } from "../../../translator";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -64,12 +65,12 @@ export default class extends ChatInputCommand {
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
     await interaction.deferReply({ ephemeral: true });
 
-    /* const locale = interaction.locale; */
+    const locale = interaction.locale;
 
     const usersId = interaction.options.getString("users")?.match(/\d{17,}/g);
 
     if (!usersId?.length) {
-      await interaction.editReply("No IDs were found in the users input.");
+      await interaction.editReply(t("noIdsInUserInput", { locale }));
       return 1;
     }
 

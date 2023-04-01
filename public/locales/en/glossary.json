@@ -16,10 +16,12 @@
   "mentionable": "mentionable",
   "owner": "owner",
   "permissions": "permissions",
+  "players": "players",
   "restoring": "restoring",
   "result": "result",
   "role": "role",
   "roles": "roles",
+  "target": "target",
   "topic": "topic",
   "true": "true",
   "type": "type"
