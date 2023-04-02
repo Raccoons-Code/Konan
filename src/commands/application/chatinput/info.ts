@@ -328,7 +328,10 @@ export default class extends ChatInputCommand {
     const guild = interaction.guild;
     const locale = interaction.locale;
 
-    await guild.fetch();
+    await Promise.all([
+      guild.fetch(),
+      guild.members.fetch({ withPresences: true }),
+    ]);
 
     const MPSText = Object.entries(getAllMembersPresenceStatus(guild))
       .map(([status, count]) => `${emojis[status] ?? status} ${inlineCode(`${count}`)}`)
