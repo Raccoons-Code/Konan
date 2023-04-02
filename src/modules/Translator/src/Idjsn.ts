@@ -6,6 +6,8 @@ import PostProcessor from "./PostProcessor";
 import Translator from "./Translator";
 import Util from "./Util";
 
+type locale = string;
+
 class Idjsn {
   declare interpolator: Interpolator;
   declare postProcessor: PostProcessor;
@@ -46,18 +48,31 @@ class Idjsn {
     this.translator = new Translator(options);
   }
 
-  t(key: string | string[], options: Options = {}): string {
-    if (Array.isArray(key))
+  /**
+   * @param key
+   * @param options - `Options` OR `locale`
+   */
+  t(key: string | string[], options: Options | locale = {}): string {
+    if (typeof options === "string") {
+      options = { locale: options };
+    }
+
+    if (Array.isArray(key)) {
       return key.reduce((acc, k) => `${acc} ${this.t(k, options)}`, "");
+    }
 
     key = this.translator.translate(key, options);
 
     if (typeof key === "string") {
       key = this.interpolator.interpolate(key, options);
 
-      if (typeof options.capitalize === "boolean" || typeof this.options.capitalize === "boolean")
-        if (options.capitalize !== null)
+      if (
+        typeof options.capitalize === "boolean" || typeof this.options.capitalize === "boolean"
+      ) {
+        if (options.capitalize !== null) {
           key = this.postProcessor.capitalize(key, options);
+        }
+      }
     }
 
     return key;
