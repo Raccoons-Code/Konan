@@ -6,6 +6,8 @@ export async function findOrCreateChannelWebhook(channel: ChannelResolvable, rea
     channel = await client.channels.fetch(channel) as Channel;
   }
 
+  if (!channel) return;
+
   if ("fetchWebhooks" in channel) {
     const webhook = await channel.fetchWebhooks()
       .then(whs => whs.find(wh => wh.applicationId === client.user?.id))
