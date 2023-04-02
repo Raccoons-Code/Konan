@@ -22,7 +22,8 @@ export default class extends ButtonCommand {
     await interaction.update({
       components: [
         new ActionRowBuilder<ButtonBuilder>({
-          components: interaction.message.components[0].components.slice(0, 1),
+          components: interaction.message.components[0]
+            .toJSON().components.slice(0, 1),
         }),
       ],
     });
@@ -77,7 +78,8 @@ export default class extends ButtonCommand {
     await interaction.update({
       components: [
         new ActionRowBuilder<ButtonBuilder>({
-          components: interaction.message.components[0].components.slice(0, 1),
+          components: interaction.message.components[0]
+            .toJSON().components.slice(0, 1),
         }),
       ],
     });
