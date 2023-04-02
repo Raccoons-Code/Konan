@@ -20,7 +20,7 @@ client.on("guildDelete", async function (guild) {
         },
       }),
 
-      prisma.guild.delete({
+      prisma.guild.deleteMany({
         where: {
           id: guild.id,
         },
