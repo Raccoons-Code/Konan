@@ -134,6 +134,7 @@
   "userUnbanned": "User successfully unbanned!",
   "viewMemberAvatar": "View member avatar",
   "viewUserAvatar": "View user avatar",
+  "viewUserBanner": "View user banner",
   "wordsnack": "Word Snacks",
   "wordOnDictionary404": "{{word}} was not found in the dictionary."
 }

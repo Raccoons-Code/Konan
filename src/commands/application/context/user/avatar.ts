@@ -19,6 +19,8 @@ export default class extends UserContextCommand {
 
     const target = interaction.targetMember ?? interaction.targetUser;
 
+    interaction.targetUser.banner ?? await interaction.targetUser.fetch();
+
     const locale = interaction.locale;
 
     const components = [
@@ -44,6 +46,19 @@ export default class extends UserContextCommand {
             next: "user",
           }))
           .setLabel(t("viewUserAvatar", { locale }))
+          .setStyle(ButtonStyle.Secondary),
+      );
+    }
+
+    if (interaction.targetUser.banner) {
+      components[0].addComponents(
+        new ButtonBuilder()
+          .setCustomId(JSON.stringify({
+            c: "avatar",
+            id: interaction.targetUser.id,
+            next: "banner",
+          }))
+          .setLabel(t("viewUserBanner", { locale }))
           .setStyle(ButtonStyle.Secondary),
       );
     }

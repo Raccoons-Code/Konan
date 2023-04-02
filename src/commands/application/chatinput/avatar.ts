@@ -28,8 +28,10 @@ export default class extends ChatInputCommand {
 
     const user = interaction.options.getUser("user") ?? interaction.user;
     const member = interaction.options.getMember("user") ??
-      user.id === interaction.user.id ? interaction.member : null;
+      (user.id === interaction.user.id ? interaction.member : null);
     const target = member ?? user;
+
+    user.banner ?? await user.fetch();
 
     const locale = interaction.locale;
 
@@ -45,26 +47,35 @@ export default class extends ChatInputCommand {
     ];
 
     if (member?.avatar && member.avatar !== user.avatar) {
-      components[0].addComponents(
-        new ButtonBuilder()
-          .setCustomId(JSON.stringify({
-            c: "avatar",
-            id: user.id,
-            next: "user",
-          }))
-          .setLabel(t("viewUserAvatar", { locale }))
-          .setStyle(ButtonStyle.Secondary),
-      );
+      components[0].addComponents(new ButtonBuilder()
+        .setCustomId(JSON.stringify({
+          c: "avatar",
+          id: user.id,
+          next: "user",
+        }))
+        .setLabel(t("viewUserAvatar", { locale }))
+        .setStyle(ButtonStyle.Secondary));
     }
 
-    const name = user.displayAvatarURL().split("/").pop();
+    if (user.banner) {
+      components[0].addComponents(new ButtonBuilder()
+        .setCustomId(JSON.stringify({
+          c: "avatar",
+          id: user.id,
+          next: "banner",
+        }))
+        .setLabel(t("viewUserBanner", { locale }))
+        .setStyle(ButtonStyle.Secondary));
+    }
+
+    const name = target.displayAvatarURL().split("/").pop();
 
     await interaction.editReply({
       components,
       embeds: [
         new EmbedBuilder()
           .setColor(member?.displayColor ?? user.accentColor ?? "Random")
-          .setDescription(`${user}`)
+          .setDescription(`${target}`)
           .setImage(`attachment://${name}`),
       ],
       files: [
