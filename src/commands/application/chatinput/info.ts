@@ -369,7 +369,7 @@ export default class extends ChatInputCommand {
     const user = interaction.options.getUser("user") ?? interaction.user;
     const member = interaction.options.getMember("user") ?? interaction.member;
 
-    await user.fetch();
+    user.banner ?? await user.fetch();
 
     const embeds = [
       new EmbedBuilder()
