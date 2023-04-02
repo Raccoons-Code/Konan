@@ -178,7 +178,7 @@ export default class ClearMessages {
                   name: t("result", { locale }),
                   value: `> ${t("found", { locale })}: ${this.found}.`
                     + `\n> ${t("deleted", { locale })}: ${this.cleared}.`
-                    + `\n> ${t("ignored", { locale })}: ${this.ignored}.`
+                    + `\n> ${t("ignored", { locale })}: ${this.ignored.count}.`
                     + (this.ignored.olds ?
                       `\n> ${t("ignoredVeryOld", { locale })}: ${this.ignored.olds}` :
                       ""),
