@@ -67,13 +67,14 @@ export default class extends ChatInputAutocomplete {
           embed.description ? ` | ${embed.description}` : "",
         ].join("").slice(0, 100);
 
-        if (embed.title || embed.description)
+        if (embed.title || embed.description) {
           res.push({
             name,
             value: message.id,
           });
 
-        if (res.length === 25) break;
+          if (res.length === 25) break;
+        }
       }
 
       return res;

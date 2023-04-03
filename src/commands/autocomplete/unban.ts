@@ -28,7 +28,7 @@ export default class extends ChatInputAutocomplete {
       if (pattern.test(name)) {
         res.push({
           name: name.slice(0, 100),
-          value: `${ban.user.id}`,
+          value: ban.user.id,
         });
 
         if (res.length === 25) break;

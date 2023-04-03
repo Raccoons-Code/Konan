@@ -9,16 +9,19 @@ export default class Help extends ChatInputAutocomplete {
     });
   }
 
-  async execute(interaction: AutocompleteInteraction, res: ApplicationCommandOptionChoiceData[] = []) {
+  async execute(
+    interaction: AutocompleteInteraction,
+    res: ApplicationCommandOptionChoiceData[] = [],
+  ) {
     const locale = interaction.locale;
 
     const focused = interaction.options.getFocused(true);
     const pattern = RegExp(focused.value, "i");
 
     if (focused.name === "command") {
-      let commands = commandHandler.chatInputApplicationCommands;
+      let commands = commandHandler.chatInputApplicationCommands.toJSON();
 
-      if (!commands?.size) {
+      if (!commands?.length) {
         await interaction.respond(res);
         return 1;
       }
@@ -36,7 +39,7 @@ export default class Help extends ChatInputAutocomplete {
         });
       }
 
-      for (const command of commands.values()) {
+      for (const command of commands) {
         const name = [
           command.data.name_localizations?.[locale] ?? command.data.name,
           command.data.description_localizations?.[locale] ?? command.data.description,
@@ -44,7 +47,7 @@ export default class Help extends ChatInputAutocomplete {
 
         res.push({
           name,
-          value: `${command.data.name}`,
+          value: command.data.name,
         });
 
         if (res.length === 25) break;

@@ -17,12 +17,13 @@ export default class extends ChatInputAutocomplete {
     const pattern = RegExp(focused.value, "i");
 
     if (focused.name === "emojis") {
-      const emojis = Object.entries(memory.Emojis).filter(a => pattern.test(a[0]));
+      const emojis = Object.keys(memory.Emojis)
+        .filter(a => pattern.test(a));
 
       for (const emoji of emojis) {
         res.push({
-          name: emoji[0],
-          value: emoji[0],
+          name: emoji,
+          value: emoji,
         });
       }
     }
