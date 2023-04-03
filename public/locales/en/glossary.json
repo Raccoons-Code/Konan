@@ -1,5 +1,6 @@
 {
   "automatic": "automatic",
+  "banning": "banning",
   "cancelled": "cancelled",
   "category": "category",
   "channels": "channels",
@@ -12,6 +13,7 @@
   "found": "encontrado",
   "full": "full",
   "ignored": "ignored",
+  "kicking": "kicking",
   "link": "link",
   "members": "members",
   "mentionable": "mentionable",

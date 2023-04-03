@@ -1,5 +1,6 @@
 {
   "automatic": "automático",
+  "banning": "banindo",
   "cancelled": "cancelado",
   "category": "categoria",
   "channels": "canais",
@@ -12,6 +13,7 @@
   "found": "encontrado",
   "full": "cheio",
   "ignored": "ignorado",
+  "kicking": "expulsando",
   "members": "membros",
   "mentionable": "mencionável",
   "owner": "dono",
