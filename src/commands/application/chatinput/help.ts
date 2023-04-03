@@ -46,7 +46,7 @@ export default class extends ChatInputCommand {
     const buttons = [
       new ButtonBuilder()
         .setEmoji("📮") // :postbox:
-        .setLabel(t("inviteLink", { locale }))
+        .setLabel(t("inviteLink", interaction.locale))
         .setStyle(ButtonStyle.Link)
         .setURL(client.generateInvite({
           scopes: [OAuth2Scopes.ApplicationsCommands, OAuth2Scopes.Bot],
@@ -57,14 +57,14 @@ export default class extends ChatInputCommand {
     if (env.GUILD_INVITE)
       buttons.push(new ButtonBuilder()
         .setEmoji("🪤") // :mouse_trap:
-        .setLabel(t("supportServer", { locale }))
+        .setLabel(t("supportServer", interaction.locale))
         .setStyle(ButtonStyle.Link)
         .setURL(`${RouteBases.invite}/${env.GUILD_INVITE}`));
 
     if (env.DONATE_LINK)
       buttons.push(new ButtonBuilder()
         .setEmoji("💸") // :money_with_wings:
-        .setLabel(t("donate", { locale }))
+        .setLabel(t("donate", interaction.locale))
         .setStyle(ButtonStyle.Link)
         .setURL(env.DONATE_LINK));
 
@@ -102,7 +102,7 @@ export default class extends ChatInputCommand {
             + "[Terms of Service & Privacy](https://github.com/Raccoons-Code/Konan/wiki/Terms-of-Service-&-Privacy)",
           )
           .setThumbnail(avatarURL)
-          .setTitle(t("konanSupport", { locale })),
+          .setTitle(t("konanSupport", interaction.locale)),
       ],
     });
 
@@ -110,14 +110,12 @@ export default class extends ChatInputCommand {
   }
 
   async command(interaction: ChatInputCommandInteraction, commandName: string) {
-    const locale = interaction.locale;
-
     const slashCommands = commandHandler.chatInputApplicationCommands;
 
     const command = slashCommands.get(commandName);
 
     if (!command) {
-      await interaction.editReply(t("command404", { locale }));
+      await interaction.editReply(t("command404", interaction.locale));
       return 1;
     }
 

@@ -33,14 +33,12 @@ export default class extends ChatInputCommand {
 
     user.banner ?? await user.fetch();
 
-    const locale = interaction.locale;
-
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
         .addComponents([
           new ButtonBuilder()
             .setEmoji("🖼")
-            .setLabel(t("link", { locale }))
+            .setLabel(t("link", interaction.locale))
             .setStyle(ButtonStyle.Link)
             .setURL(target.displayAvatarURL({ size: 4096 })),
         ]),
@@ -53,7 +51,7 @@ export default class extends ChatInputCommand {
           id: user.id,
           next: "user",
         }))
-        .setLabel(t("viewUserAvatar", { locale }))
+        .setLabel(t("viewUserAvatar", interaction.locale))
         .setStyle(ButtonStyle.Secondary));
     }
 
@@ -64,7 +62,7 @@ export default class extends ChatInputCommand {
           id: user.id,
           next: "banner",
         }))
-        .setLabel(t("viewUserBanner", { locale }))
+        .setLabel(t("viewUserBanner", interaction.locale))
         .setStyle(ButtonStyle.Secondary));
     }
 
@@ -79,12 +77,7 @@ export default class extends ChatInputCommand {
           .setImage(`attachment://${name}`),
       ],
       files: [
-        new AttachmentBuilder(
-          await fetch(target.displayAvatarURL({ size: 512 }))
-            .then(res => res.arrayBuffer())
-            .then(res => Buffer.from(res)), {
-          name,
-        }),
+        new AttachmentBuilder(target.displayAvatarURL({ size: 512 }), { name }),
       ],
     });
 

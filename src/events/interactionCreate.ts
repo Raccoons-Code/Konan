@@ -54,8 +54,6 @@ client.on("interactionCreate", async function (interaction) {
       await command.execute(interaction);
     }
   } catch (error: any) {
-    const locale = interaction.locale;
-
     const embeds = [
       new EmbedBuilder()
         .setColor(Colors.DarkRed)
@@ -72,7 +70,7 @@ client.on("interactionCreate", async function (interaction) {
       components.push(new ActionRowBuilder<ButtonBuilder>()
         .addComponents(new ButtonBuilder()
           .setStyle(ButtonStyle.Link)
-          .setLabel(t("supportServer", { locale }))
+          .setLabel(t("supportServer", interaction.locale))
           .setURL(`${RouteBases.invite}/${env.GUILD_INVITE}`)));
 
     try {

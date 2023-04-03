@@ -44,18 +44,18 @@ export default class extends MessageContextCommand {
     }).catch(() => null);
 
     if (!messages) {
-      await interaction.editReply(t("noMessagesFound", { locale }));
+      await interaction.editReply(t("noMessagesFound", interaction.locale));
       return 1;
     }
 
     const clearFilter = new ClearFiltersBitField(ClearFiltersBitField.Default);
 
-    const holds = clearFilter.toArray().map(x => `${t(x, { locale })}`);
+    const holds = clearFilter.toArray().map(x => `${t(x, interaction.locale)}`);
 
     const clearOptions = clearFiltersFlags
       .map((key) => new StringSelectMenuOptionBuilder()
         .setEmoji(clearFilter.has(key) ? "✅" : "❌")
-        .setLabel(`${t(key, { locale })}`)
+        .setLabel(`${t(key, interaction.locale)}`)
         .setValue(JSON.stringify({
           n: `${ClearFiltersBits[key]}`,
           v: clearFilter.has(key) ? 1 : 0,
@@ -66,7 +66,7 @@ export default class extends MessageContextCommand {
         new EmbedBuilder()
           .setColor(Colors.DarkRed)
           .setFields({
-            name: `${t("clearFilters", { locale })} [${holds.length}]`,
+            name: `${t("clearFilters", interaction.locale)} [${holds.length}]`,
             value: holds.join("\n") || "-",
           })
           .setTitle(t("messageDeleteConfirm", {
@@ -82,7 +82,7 @@ export default class extends MessageContextCommand {
           c: "clear",
           sc: "filters",
         }, {
-          placeholder: `♻️ ${t("clearFilters", { locale })}`,
+          placeholder: `♻️ ${t("clearFilters", interaction.locale)}`,
         }),
         new ActionRowBuilder<UserSelectMenuBuilder>()
           .addComponents(new UserSelectMenuBuilder()
@@ -92,7 +92,7 @@ export default class extends MessageContextCommand {
             }))
             .setMaxValues(25)
             .setMinValues(0)
-            .setPlaceholder(`🚸 ${t("targetUsers", { locale })}`)),
+            .setPlaceholder(`🚸 ${t("targetUsers", interaction.locale)}`)),
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
             new ButtonBuilder()

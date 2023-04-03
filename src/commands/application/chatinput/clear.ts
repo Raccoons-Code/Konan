@@ -66,12 +66,12 @@ export default class extends ChatInputCommand {
 
     const clearFilter = new ClearFiltersBitField(ClearFiltersBitField.Default);
 
-    const holds = clearFilter.toArray().map(x => t(x, { locale }));
+    const holds = clearFilter.toArray().map(x => t(x, interaction.locale));
 
     const clearOptions = clearFiltersFlags
       .map((key) => new StringSelectMenuOptionBuilder()
         .setEmoji(clearFilter.has(key) ? "✅" : "❌")
-        .setLabel(t(key, { locale }))
+        .setLabel(t(key, interaction.locale))
         .setValue(JSON.stringify({
           n: `${ClearFiltersBits[key]}`,
           v: clearFilter.has(key),
@@ -83,7 +83,7 @@ export default class extends ChatInputCommand {
           .setColor(Colors.DarkRed)
           .setDescription(ids?.length ? `Target: ${ids?.join(" ")}` : null)
           .setFields({
-            name: `${t("clearFilters", { locale })} [${holds.length}]`,
+            name: `${t("clearFilters", interaction.locale)} [${holds.length}]`,
             value: holds.join("\n") || "-",
           })
           .setTitle(t("messageDeleteConfirm", {
@@ -97,7 +97,7 @@ export default class extends ChatInputCommand {
           c: "clear",
           sc: "filters",
         }, {
-          placeholder: `♻️ ${t("clearFilters", { locale })}`,
+          placeholder: `♻️ ${t("clearFilters", interaction.locale)}`,
         }),
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([

@@ -45,7 +45,7 @@ export default class extends ChatInputCommand {
     if (playersId?.length) {
       if (!interaction.guild) {
         await interaction.reply({
-          content: t("onlyOnServerOption", { locale }),
+          content: t("onlyOnServerOption", interaction.locale),
           ephemeral: true,
         });
         return 1;
@@ -58,7 +58,7 @@ export default class extends ChatInputCommand {
 
       if (!playersId.length) {
         await interaction.reply({
-          content: t("noValidUsersFound", { locale }),
+          content: t("noValidUsersFound", interaction.locale),
           ephemeral: true,
         });
         return 1;
@@ -90,7 +90,7 @@ export default class extends ChatInputCommand {
             !oldInstance.quitters.includes(id));
 
           if (!playersId.length) {
-            await interaction.editReply(t("noNewPlayersAdded", { locale }));
+            await interaction.editReply(t("noNewPlayersAdded", interaction.locale));
             return 1;
           }
 
@@ -130,7 +130,7 @@ export default class extends ChatInputCommand {
                 .addComponents([
                   new ButtonBuilder()
                     .setEmoji("🔍")
-                    .setLabel(t("joinGame", { locale }))
+                    .setLabel(t("joinGame", interaction.locale))
                     .setStyle(ButtonStyle.Link)
                     .setURL(messageLink(oldInstance.channelId, oldInstance.messageId)),
                 ]),
@@ -153,7 +153,7 @@ export default class extends ChatInputCommand {
               .addComponents([
                 new ButtonBuilder()
                   .setEmoji("🔍")
-                  .setLabel(t("joinGame", { locale }))
+                  .setLabel(t("joinGame", interaction.locale))
                   .setStyle(ButtonStyle.Link)
                   .setURL(messageLink(oldInstance.channelId, oldInstance.messageId)),
                 new ButtonBuilder()
@@ -185,7 +185,7 @@ export default class extends ChatInputCommand {
 
     const word = await dictionaries.random(locale, wordSize);
     if (!word) {
-      await interaction.editReply(t("emptyDictionaryOnLocale", { locale }));
+      await interaction.editReply(t("emptyDictionaryOnLocale", interaction.locale));
       return 1;
     }
 

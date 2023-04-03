@@ -481,7 +481,7 @@ export default class extends ChatInputCommand {
 
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -489,11 +489,11 @@ export default class extends ChatInputCommand {
 
     const message = channel.messages.cache.get(message_id);
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
@@ -548,7 +548,7 @@ export default class extends ChatInputCommand {
       const role = interaction.options.getRole("role");
 
       if (role ? componentsHasRoles(message.components, role) : true) {
-        await interaction.editReply(t("itemAddError", { locale }));
+        await interaction.editReply(t("itemAddError", interaction.locale));
         return 1;
       }
 
@@ -583,11 +583,9 @@ export default class extends ChatInputCommand {
   }
 
   async add(interaction: ChatInputCommandInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -595,18 +593,18 @@ export default class extends ChatInputCommand {
 
     const message = channel.messages.cache.get(message_id);
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
     const role = interaction.options.getRole("role");
 
     if (role ? componentsHasRoles(message.components, role) : true) {
-      await interaction.editReply(t("itemAddError", { locale }));
+      await interaction.editReply(t("itemAddError", interaction.locale));
       return 1;
     }
 
@@ -654,11 +652,11 @@ export default class extends ChatInputCommand {
           components,
         });
       } catch (error) {
-        await interaction.editReply(t("itemAddError", { locale }));
+        await interaction.editReply(t("itemAddError", interaction.locale));
         throw error;
       }
 
-      await interaction.editReply(t("itemAdded", { locale }));
+      await interaction.editReply(t("itemAdded", interaction.locale));
       return;
     }
 
@@ -685,11 +683,11 @@ export default class extends ChatInputCommand {
       try {
         await message.edit({ components });
       } catch (error) {
-        await interaction.editReply(t("itemAddError", { locale }));
+        await interaction.editReply(t("itemAddError", interaction.locale));
         throw error;
       }
 
-      await interaction.editReply(t("itemAdded", { locale }));
+      await interaction.editReply(t("itemAdded", interaction.locale));
       return;
     }
 
@@ -697,11 +695,9 @@ export default class extends ChatInputCommand {
   }
 
   async remove(interaction: ChatInputCommandInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -709,11 +705,11 @@ export default class extends ChatInputCommand {
 
     const message = channel.messages.cache.get(message_id);
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
@@ -727,11 +723,11 @@ export default class extends ChatInputCommand {
           components: message.components.filter(row => row.components[0].customId !== menuId),
         });
       } catch (error) {
-        await interaction.editReply(t("itemRemoveError", { locale }));
+        await interaction.editReply(t("itemRemoveError", interaction.locale));
         throw error;
       }
 
-      await interaction.editReply(t("itemRemoved", { locale }));
+      await interaction.editReply(t("itemRemoved", interaction.locale));
       return;
     }
 
@@ -743,11 +739,11 @@ export default class extends ChatInputCommand {
       try {
         await message.edit({ components });
       } catch (error) {
-        await interaction.editReply(t("itemRemoveError", { locale }));
+        await interaction.editReply(t("itemRemoveError", interaction.locale));
         throw error;
       }
 
-      await interaction.editReply(t("itemRemoved", { locale }));
+      await interaction.editReply(t("itemRemoved", interaction.locale));
       return;
     }
   }
@@ -769,7 +765,7 @@ export default class extends ChatInputCommand {
       .map(id => interaction.guild.roles.fetch(id));
 
     if (!rolesId.length) {
-      await interaction.editReply(t("noIdsInRoleInput", { locale }));
+      await interaction.editReply(t("noIdsInRoleInput", interaction.locale));
       return 1;
     }
 
@@ -777,7 +773,7 @@ export default class extends ChatInputCommand {
       .then(rs => <Role[]>rs.filter(role => role));
 
     if (!roles.length) {
-      await interaction.editReply(t("noNewRoleFoudInRoleInput", { locale }));
+      await interaction.editReply(t("noNewRoleFoudInRoleInput", interaction.locale));
       return 1;
     }
 
@@ -786,7 +782,7 @@ export default class extends ChatInputCommand {
 
     const channel = interaction.options.getChannel("channel") ?? interaction.channel;
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -812,19 +808,17 @@ export default class extends ChatInputCommand {
   }
 
   async bulk_add(interaction: ChatInputCommandInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const ids = interaction.options.getString("roles")?.match(/\d{17,}/g) ?? [];
 
     const rolesId = Array.from(new Set(ids));
     if (!rolesId) {
-      await interaction.editReply(t("noIdsInRoleInput", { locale }));
+      await interaction.editReply(t("noIdsInRoleInput", interaction.locale));
       return 1;
     }
 
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -832,11 +826,11 @@ export default class extends ChatInputCommand {
 
     const message = await channel.messages.fetch(message_id).catch(() => null);
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
@@ -856,27 +850,25 @@ export default class extends ChatInputCommand {
     try {
       await message.edit({ components });
     } catch (error) {
-      await interaction.editReply(t("itemAddError", { locale }));
+      await interaction.editReply(t("itemAddError", interaction.locale));
       throw error;
     }
 
-    await interaction.editReply(t("itemAdded", { locale }));
+    await interaction.editReply(t("itemAdded", interaction.locale));
     return;
   }
 
   async bulk_remove(interaction: ChatInputCommandInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const rolesId = interaction.options.getString("roles")?.match(/\d{17,}/g);
 
     if (!rolesId) {
-      await interaction.editReply(t("noIdsInRoleInput", { locale }));
+      await interaction.editReply(t("noIdsInRoleInput", interaction.locale));
       return 1;
     }
 
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -885,11 +877,11 @@ export default class extends ChatInputCommand {
     const message = await channel.messages.fetch(message_id).catch(() => null);
 
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
@@ -898,11 +890,11 @@ export default class extends ChatInputCommand {
         components: removeOptionsByRolesFromSelect(rolesId, message.components),
       });
     } catch (error) {
-      await interaction.editReply(t("itemRemoveError", { locale }));
+      await interaction.editReply(t("itemRemoveError", interaction.locale));
       throw error;
     }
 
-    await interaction.editReply(t("itemRemoved", { locale }));
+    await interaction.editReply(t("itemRemoved", interaction.locale));
     return;
   }
 }

@@ -169,18 +169,16 @@ export default class ClearMessages {
 
       if (this.interaction && "message" in this.interaction) {
         if (this.interaction.deferred || this.interaction.replied) {
-          const locale = this.interaction.locale;
-
           await this.interaction.editReply({
             embeds: [
               new EmbedBuilder(this.interaction.message?.embeds[0]?.toJSON())
                 .spliceFields(1, 1, {
-                  name: t("result", { locale }),
-                  value: `> ${t("found", { locale })}: ${this.found}.`
-                    + `\n> ${t("deleted", { locale })}: ${this.cleared}.`
-                    + `\n> ${t("ignored", { locale })}: ${this.ignored.count}.`
+                  name: t("result", this.interaction.locale),
+                  value: `> ${t("found", this.interaction.locale)}: ${this.found}.`
+                    + `\n> ${t("deleted", this.interaction.locale)}: ${this.cleared}.`
+                    + `\n> ${t("ignored", this.interaction.locale)}: ${this.ignored.count}.`
                     + (this.ignored.olds ?
-                      `\n> ${t("ignoredVeryOld", { locale })}: ${this.ignored.olds}` :
+                      `\n> ${t("ignoredVeryOld", this.interaction.locale)}: ${this.ignored.olds}` :
                       ""),
                   inline: true,
                 }),

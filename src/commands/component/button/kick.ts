@@ -1,6 +1,7 @@
 import { ButtonInteraction, EmbedBuilder, GuildMember, User, userMention } from "discord.js";
 import { setTimeout as sleep } from "node:timers/promises";
 import ButtonCommand from "../../../structures/ButtonCommand";
+import { t } from "../../../translator";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -30,7 +31,7 @@ export default class extends ButtonCommand {
     }
 
     await interaction.editReply({
-      content: "Kicking...",
+      content: t("kicking", interaction.locale) + "...",
     });
 
     for (const embed of interaction.message.embeds) {
@@ -55,14 +56,15 @@ export default class extends ButtonCommand {
         await interaction.editReply({
           embeds: [
             new EmbedBuilder()
-              .setDescription(failed.length ?
-                `❌ ${failed.join(" ")}`.slice(0, 4096) :
-                null)
+              .setDescription((
+                (kicked.length ? `✅ ${kicked.join(" ")}\n` : "")
+                + (failed.length ? `\n❌ ${failed.join(" ")}` : "")
+              ) || null)
               .setFields([{
-                name: "Amount of kicked users",
+                name: t("kickedAmount", interaction.locale),
                 value: `${kicked.length}/${num}`,
               }])
-              .setTitle("Kick Result"),
+              .setTitle(t("kickResult", interaction.locale)),
           ],
         }).catch(() => null);
       }));
@@ -76,14 +78,15 @@ export default class extends ButtonCommand {
       content: null,
       embeds: [
         new EmbedBuilder()
-          .setDescription(failed.length ?
-            `❌ ${failed.join(" ")}`.slice(0, 4096) :
-            null)
+          .setDescription((
+            (kicked.length ? `✅ ${kicked.join(" ")}\n` : "")
+            + (failed.length ? `\n❌ ${failed.join(" ")}` : "")
+          ) || null)
           .setFields([{
-            name: "Amount of kicked users",
+            name: t("kickedAmount", interaction.locale),
             value: `${kicked.length}/${num}`,
           }])
-          .setTitle("Kick Result"),
+          .setTitle(t("kickResult", interaction.locale)),
       ],
     });
 

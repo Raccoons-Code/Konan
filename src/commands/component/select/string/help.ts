@@ -34,7 +34,7 @@ export default class extends SelectMenuCommand {
     const buttons = [
       new ButtonBuilder()
         .setEmoji("📮") // :postbox:
-        .setLabel(t("inviteLink", { locale }))
+        .setLabel(t("inviteLink", interaction.locale))
         .setStyle(ButtonStyle.Link)
         .setURL(client.generateInvite({
           scopes: [OAuth2Scopes.ApplicationsCommands, OAuth2Scopes.Bot],
@@ -45,14 +45,14 @@ export default class extends SelectMenuCommand {
     if (env.GUILD_INVITE)
       buttons.push(new ButtonBuilder()
         .setEmoji("🪤") // :mouse_trap:
-        .setLabel(t("supportServer", { locale }))
+        .setLabel(t("supportServer", interaction.locale))
         .setStyle(ButtonStyle.Link)
         .setURL(`${RouteBases.invite}/${env.GUILD_INVITE}`));
 
     if (env.DONATE_LINK)
       buttons.push(new ButtonBuilder()
         .setEmoji("💸") // :money_with_wings:
-        .setLabel(t("donate", { locale }))
+        .setLabel(t("donate", interaction.locale))
         .setStyle(ButtonStyle.Link)
         .setURL(env.DONATE_LINK));
 
@@ -90,14 +90,12 @@ export default class extends SelectMenuCommand {
             + "[Terms of Service & Privacy](https://github.com/Raccoons-Code/Konan/wiki/Terms-of-Service-&-Privacy)",
           )
           .setThumbnail(avatarURL)
-          .setTitle(t("konanSupport", { locale })),
+          .setTitle(t("konanSupport", interaction.locale)),
       ],
     });
   }
 
   async commands(interaction: StringSelectMenuInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const commands = commandHandler.chatInputApplicationCommands;
 
     const slashCommands = commands.toJSON().filter((c) => !c.options.private);
@@ -123,15 +121,13 @@ export default class extends SelectMenuCommand {
           .setColor("Random")
           .setFields(this.convertCommandsToEmbedFields(slashCommands))
           .setFooter({ text: `Total: ${slashCommands.length}` })
-          .setTitle(t("konanSupport", { locale }))],
+          .setTitle(t("konanSupport", interaction.locale))],
     });
 
     return;
   }
 
   async localization(interaction: StringSelectMenuInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const description = Object.entries(Translator.options.stats!).reduce((acc, [key, value]) =>
       `${acc}\n${`${formatLocale(key).padStart(15)} = ${value}%`.padEnd(15)}`, "");
 
@@ -144,7 +140,7 @@ export default class extends SelectMenuCommand {
         new EmbedBuilder()
           .setColor("Random")
           .setDescription(codeBlock("css", description))
-          .setTitle(t("konanSupport", { locale })),
+          .setTitle(t("konanSupport", interaction.locale)),
       ],
     });
 
@@ -214,8 +210,6 @@ export default class extends SelectMenuCommand {
   }
 
   async setCommandCategory(interaction: StringSelectMenuInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const commands = commandHandler.commandsByCategory.get(interaction.values[0]);
 
     const slashCommands = commands?.toJSON().filter((c: any) => !c.options?.private);
@@ -235,7 +229,7 @@ export default class extends SelectMenuCommand {
             .setColor("Random")
             .setDescription("No commands found in this category.")
             .setFooter({ text: "Total: 0" })
-            .setTitle(t("konanSupport", { locale })),
+            .setTitle(t("konanSupport", interaction.locale)),
         ],
       });
       return;
@@ -256,7 +250,7 @@ export default class extends SelectMenuCommand {
           .setColor("Random")
           .setFields(this.convertCommandsToEmbedFields(slashCommands))
           .setFooter({ text: `Total: ${slashCommands.length}` })
-          .setTitle(t("konanSupport", { locale })),
+          .setTitle(t("konanSupport", interaction.locale)),
       ],
     });
 

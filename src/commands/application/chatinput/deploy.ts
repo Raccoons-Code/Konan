@@ -43,8 +43,6 @@ export default class extends ChatInputCommand {
   async execute(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply({ ephemeral: true });
 
-    const locale = interaction.locale;
-
     const type = interaction.options.getString("type");
     const reset = interaction.options.getBoolean("reset");
 
@@ -54,10 +52,10 @@ export default class extends ChatInputCommand {
         reset: Boolean(reset),
       });
     } catch (error) {
-      await interaction.editReply(`${t(["reloadAppCommandsError", "type"], { locale })} ${type}`);
+      await interaction.editReply(`${t(["reloadAppCommandsError", "type"], interaction.locale)} ${type}`);
       throw error;
     }
 
-    await interaction.editReply(`${t(["reloadedAppCommands", "type"], { locale })} ${type}`);
+    await interaction.editReply(`${t(["reloadedAppCommands", "type"], interaction.locale)} ${type}`);
   }
 }

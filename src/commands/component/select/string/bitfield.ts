@@ -35,8 +35,6 @@ export default class extends SelectMenuCommand {
     hold: typeof IntentsBitField | typeof PermissionsBitField,
     type?: "number" | "bigint",
   ) {
-    const locale = interaction.locale;
-
     const components = setBitFieldValuesOnSelectMenus(
       interaction.message.components,
       interaction.values,
@@ -51,7 +49,7 @@ export default class extends SelectMenuCommand {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const holds = bitField.toArray().map(x => `${t(x, { locale })}: ${inlineCode(`${hold.Flags[x]}`)}`);
+    const holds = bitField.toArray().map(x => `${t(x, interaction.locale)}: ${inlineCode(`${hold.Flags[x]}`)}`);
 
     let num = Number(bitField.bitfield);
 

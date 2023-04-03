@@ -1,10 +1,10 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionFlagsBits, User } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, Collection, EmbedBuilder, PermissionFlagsBits, User } from "discord.js";
 import client from "../../../client";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 /* import { t } from "../../../translator"; */
+import { t } from "../../../translator";
 import { isKickableBy } from "../../../util/commands/utils";
 import { getLocalizations } from "../../../util/utils";
-import { t } from "../../../translator";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -39,75 +39,58 @@ export default class extends ChatInputCommand {
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
     await interaction.deferReply({ ephemeral: true });
 
-    const locale = interaction.locale;
-
     const usersId = interaction.options.getString("users")?.match(/\d{17,}/g);
 
     if (!usersId?.length) {
-      await interaction.editReply(t("noIdsInUserInput", { locale }));
+      await interaction.editReply(t("noIdsInUserInput", interaction.locale));
       return 1;
     }
 
-    let members = await interaction.guild.members.fetch({ user: usersId })
-      .then(members => members.toJSON())
-      .catch(() => <GuildMember[]>[]);
+    const members = await interaction.guild.members.fetch({ user: usersId });
 
-    const users = await Promise.all(usersId
-      .filter(id => !members.some(member => member.id === id))
-      .map(id => client.users.fetch(id).catch(() => null)))
-      .then(users => <User[]>users.filter(user => user));
+    const users = new Collection<string, User>();
 
-    if (!members.length && !users.length) {
-      await interaction.editReply("No kickable users were found in the users input.");
-      return 1;
+    const promises = [];
+
+    for (const id of usersId) {
+      if (members.has(id)) continue;
+
+      promises.push(client.users.fetch(id)
+        .then(user => users.set(id, user))
+        .catch(() => null));
     }
 
-    members = members.filter(member => member.kickable &&
-      isKickableBy(member, interaction.member));
+    await Promise.all(promises);
+
+    members.sweep(member => !member.kickable || !isKickableBy(member, interaction.member));
+
+    if (!members.size && !users.size) {
+      await interaction.editReply(t("noKickableFoundInUsersInput", interaction.locale));
+      return 1;
+    }
 
     const reason = interaction.options.getString("reason") || "-";
 
-    /* if ((members.length + users.length) < 2) {
-      const [user] = [...members, ...users];
-
-      if ("kickable" in user) {
-        if (!user.kickable || !isKickableBy(user, interaction.member)) {
-          await interaction.editReply(t("kickHierarchyError", { locale }));
-          return 1;
-        }
-      }
-
-      try {
-        await interaction.guild.members.kick(user.id, reason);
-      } catch (error) {
-        await interaction.editReply(t("kickError", { locale }));
-        throw error;
-      }
-
-      await interaction.editReply(t("userKicked", { locale }));
-      return;
-    } */
-
     const embeds: EmbedBuilder[] = [];
 
-    if (members.length) {
+    if (members.size) {
       embeds.push(new EmbedBuilder()
-        .setDescription(members.join(" ").slice(0, 4096))
+        .setDescription(members.toJSON().join(" ").slice(0, 4096))
         .setFields([{
-          name: "Reason for kick",
+          name: t("kickReason", interaction.locale),
           value: reason,
         }])
-        .setTitle(members.length > 1 ? `Chunk of members to kick [${members.length}]` : "Kick member"));
+        .setTitle(`${t("memberKickGroup", interaction.locale)} [${members.size}]`));
     }
 
-    if (users.length) {
+    if (users.size) {
       embeds.push(new EmbedBuilder()
-        .setDescription(users.join(" ").slice(0, 4096))
+        .setDescription(users.toJSON().join(" ").slice(0, 4096))
         .setFields([{
-          name: "Reason for kick",
+          name: t("kickReason", interaction.locale),
           value: reason,
         }])
-        .setTitle(users.length > 1 ? `Chunk of users to kick [${users.length}]` : "Kick user"));
+        .setTitle(`${t("userKickGroup", interaction.locale)} [${users.size}]`));
     }
 
     await interaction.editReply({

@@ -43,8 +43,6 @@ export default class extends ChatInputCommand {
   }
 
   async intents(interaction: ChatInputCommandInteraction) {
-    const locale = interaction.locale;
-
     const bits = interaction.options.getString("bits");
 
     if (bits) return this.intentsForBits(interaction, { bits });
@@ -52,7 +50,7 @@ export default class extends ChatInputCommand {
     const intentsOptions = INTENTS_STRING
       .map((key) => new StringSelectMenuOptionBuilder()
         .setEmoji("❌")
-        .setLabel(`${t(key, { locale })} #${GatewayIntentBits[key]}`)
+        .setLabel(`${t(key, interaction.locale)} #${GatewayIntentBits[key]}`)
         .setValue(JSON.stringify({ n: `${GatewayIntentBits[key]}`, v: 0 })));
 
     await interaction.editReply({
@@ -71,15 +69,13 @@ export default class extends ChatInputCommand {
   }
 
   async intentsForBits(interaction: ChatInputCommandInteraction, Intents: IntentsOptions) {
-    const locale = interaction.locale;
-
     const embeds = <EmbedBuilder[]>[];
 
     if (Intents.bits) {
       const bitField = new IntentsBitField(<any[]>Intents.bits.split(",").map(bit => isNaN(+bit) ? bit : Number(bit)));
 
       const intents = bitField.toArray()
-        .map(x => `${t(x, { locale })}: ${inlineCode(`${GatewayIntentBits[x]}`)}`);
+        .map(x => `${t(x, interaction.locale)}: ${inlineCode(`${GatewayIntentBits[x]}`)}`);
 
       embeds.push(
         new EmbedBuilder()
@@ -95,8 +91,6 @@ export default class extends ChatInputCommand {
   }
 
   async permissions(interaction: ChatInputCommandInteraction) {
-    const locale = interaction.locale;
-
     const role = <Role>interaction.options.getRole("role");
     const member = <GuildMember>interaction.options.getMember("user");
     const bits = <string>interaction.options.getString("bits");
@@ -105,7 +99,7 @@ export default class extends ChatInputCommand {
 
     const permissionsOptions = PERMISSIONS_STRING.map((key) =>
       new StringSelectMenuOptionBuilder().setEmoji("❌")
-        .setLabel(`${t(key, { locale })} #${PermissionFlagsBits[key]}`)
+        .setLabel(`${t(key, interaction.locale)} #${PermissionFlagsBits[key]}`)
         .setValue(JSON.stringify({ n: `${PermissionFlagsBits[key]}`, v: 0 })));
 
     const permissionsRows = createSelectMenuFromOptions(permissionsOptions, {
@@ -126,15 +120,13 @@ export default class extends ChatInputCommand {
   }
 
   async permissionsForMention(interaction: ChatInputCommandInteraction, mentions: MentionsOptions) {
-    const locale = interaction.locale;
-
     const embeds = <EmbedBuilder[]>[];
 
     if (mentions.role) {
       const bitField = new PermissionsBitField(<PermissionsBitField>mentions.role.permissions);
 
       const permissions = bitField.toArray()
-        .map(x => `${t(x, { locale })}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
+        .map(x => `${t(x, interaction.locale)}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
 
       embeds.push(
         new EmbedBuilder()
@@ -149,7 +141,7 @@ export default class extends ChatInputCommand {
       const bitField = new PermissionsBitField(<PermissionsBitField>mentions.member.permissions);
 
       const permissions = bitField.toArray()
-        .map(x => `${t(x, { locale })}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
+        .map(x => `${t(x, interaction.locale)}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
 
       embeds.push(
         new EmbedBuilder()
@@ -168,7 +160,7 @@ export default class extends ChatInputCommand {
         bitField.bitfield = PermissionsBitField.All;
 
       const intents = bitField.toArray()
-        .map(x => `${t(x, { locale })}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
+        .map(x => `${t(x, interaction.locale)}: ${inlineCode(`${PermissionFlagsBits[x]}`)}`);
 
       embeds.push(
         new EmbedBuilder()

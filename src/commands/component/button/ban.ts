@@ -2,6 +2,7 @@ import { ButtonInteraction, EmbedBuilder, GuildMember, User, userMention } from 
 import ms from "ms";
 import { setTimeout as sleep } from "node:timers/promises";
 import ButtonCommand from "../../../structures/ButtonCommand";
+import { t } from "../../../translator";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -31,7 +32,7 @@ export default class extends ButtonCommand {
     }
 
     await interaction.editReply({
-      content: "Banning...",
+      content: t("banning", interaction.locale) + "...",
     });
 
     for (const embed of interaction.message.embeds) {
@@ -61,14 +62,15 @@ export default class extends ButtonCommand {
         await interaction.editReply({
           embeds: [
             new EmbedBuilder()
-              .setDescription(failed.length ?
-                `❌ ${failed.join(" ")}`.slice(0, 4096) :
-                null)
+              .setDescription((
+                (banned.length ? `✅ ${banned.join(" ")}\n` : "")
+                + (failed.length ? `\n❌ ${failed.join(" ")}` : "")
+              ) || null)
               .setFields([{
-                name: "Amount of banned users",
+                name: t("bannedAmount", interaction.locale),
                 value: `${banned.length}/${num}`,
               }])
-              .setTitle("Ban Result"),
+              .setTitle(t("banResult", interaction.locale)),
           ],
         }).catch(() => null);
       }));
@@ -82,14 +84,15 @@ export default class extends ButtonCommand {
       content: null,
       embeds: [
         new EmbedBuilder()
-          .setDescription(failed.length ?
-            `❌ ${failed.join(" ")}`.slice(0, 4096) :
-            null)
+          .setDescription((
+            (banned.length ? `✅ ${banned.join(" ")}\n` : "")
+            + (failed.length ? `\n❌ ${failed.join(" ")}` : "")
+          ) || null)
           .setFields([{
-            name: "Amount of banned users",
+            name: t("bannedAmount", interaction.locale),
             value: `${banned.length}/${num}`,
           }])
-          .setTitle("Ban Result"),
+          .setTitle(t("banResult", interaction.locale)),
       ],
     });
 

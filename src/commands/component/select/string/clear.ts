@@ -32,16 +32,14 @@ export default class extends SelectMenuCommand {
 
     const bitField = new ClearFiltersBitField(bits);
 
-    const locale = interaction.locale;
-
-    const holds = bitField.toArray().map(x => `${t(x, { locale })}`);
+    const holds = bitField.toArray().map(x => `${t(x, interaction.locale)}`);
 
     await interaction.update({
       components,
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
           .setFields({
-            name: `${t("clearFilters", { locale })} [${holds.length}]`,
+            name: `${t("clearFilters", interaction.locale)} [${holds.length}]`,
             value: holds.join("\n") || "-",
           }),
       ],

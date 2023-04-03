@@ -11,10 +11,6 @@ export default class extends ChatInputCommand {
       .setDescription("Opens a calculator");
   }
 
-  build() {
-    this.data;
-  }
-
   async execute(interaction: ChatInputCommandInteraction) {
     await interaction.reply({
       components: [

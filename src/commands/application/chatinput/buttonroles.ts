@@ -327,7 +327,7 @@ export default class extends ChatInputCommand {
 
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -336,11 +336,11 @@ export default class extends ChatInputCommand {
 
     const message = await channel.messages.fetch(message_id).catch(() => null);
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
@@ -402,11 +402,9 @@ export default class extends ChatInputCommand {
   }
 
   async add(interaction: ChatInputCommandInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -415,18 +413,18 @@ export default class extends ChatInputCommand {
 
     const message = await channel.messages.fetch(message_id).catch(() => null);
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
     const role = interaction.options.getRole("role");
 
     if (role ? componentsHasRoles(message.components, role) : true) {
-      await interaction.editReply(t("itemAddError", { locale }));
+      await interaction.editReply(t("itemAddError", interaction.locale));
       return 1;
     }
 
@@ -454,21 +452,19 @@ export default class extends ChatInputCommand {
           ]),
         });
       } catch (error) {
-        await interaction.editReply(t("buttonAddError", { locale }));
+        await interaction.editReply(t("buttonAddError", interaction.locale));
         throw error;
       }
 
-      await interaction.editReply(t("buttonAdded", { locale }));
+      await interaction.editReply(t("buttonAdded", interaction.locale));
       return;
     }
   }
 
   async remove(interaction: ChatInputCommandInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -477,11 +473,11 @@ export default class extends ChatInputCommand {
 
     const message = await channel.messages.fetch(message_id).catch(() => null);
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
@@ -495,11 +491,11 @@ export default class extends ChatInputCommand {
       try {
         await message.edit({ components });
       } catch (error) {
-        await interaction.editReply(t("buttonRemoveError", { locale }));
+        await interaction.editReply(t("buttonRemoveError", interaction.locale));
         throw error;
       }
 
-      await interaction.editReply(t("buttonRemoved", { locale }));
+      await interaction.editReply(t("buttonRemoved", interaction.locale));
       return;
     }
   }
@@ -517,7 +513,7 @@ export default class extends ChatInputCommand {
 
     const channel = interaction.options.getChannel("channel") ?? interaction.channel;
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -526,7 +522,7 @@ export default class extends ChatInputCommand {
     const rolesId = Array.from(new Set(ids)).map(id => interaction.guild.roles.fetch(id));
 
     if (!rolesId.length) {
-      await interaction.editReply(t("noIdsInRoleInput", { locale }));
+      await interaction.editReply(t("noIdsInRoleInput", interaction.locale));
       return 1;
     }
 
@@ -534,7 +530,7 @@ export default class extends ChatInputCommand {
       .then(rs => <Role[]>rs.filter(r => r).slice(0, 25));
 
     if (!roles.length) {
-      await interaction.editReply(t("noNewRoleFoudInRoleInput", { locale }));
+      await interaction.editReply(t("noNewRoleFoudInRoleInput", interaction.locale));
       return 1;
     }
 
@@ -560,11 +556,9 @@ export default class extends ChatInputCommand {
   }
 
   async bulk_add(interaction: ChatInputCommandInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -572,11 +566,11 @@ export default class extends ChatInputCommand {
 
     const message = await channel.messages.fetch(message_id).catch(() => null);
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
@@ -588,7 +582,7 @@ export default class extends ChatInputCommand {
 
     const rolesId = interaction.options.getString("roles")?.match(/\d{17,}/g);
     if (!rolesId) {
-      await interaction.editReply(t("noIdsInRoleInput", { locale }));
+      await interaction.editReply(t("noIdsInRoleInput", interaction.locale));
       return 1;
     }
 
@@ -596,7 +590,7 @@ export default class extends ChatInputCommand {
       .map(id => interaction.guild.roles.fetch(id)))
       .then(rs => <Role[]>rs.filter(r => r).slice(0, 25));
     if (!roles.length) {
-      await interaction.editReply(t("noNewRoleFoudInRoleInput", { locale }));
+      await interaction.editReply(t("noNewRoleFoudInRoleInput", interaction.locale));
       return 1;
     }
 
@@ -605,26 +599,24 @@ export default class extends ChatInputCommand {
         components: addButtonsByRoles({ roles }, message.components).slice(0, 5),
       });
     } catch (error) {
-      await interaction.editReply(t("buttonAddError", { locale }));
+      await interaction.editReply(t("buttonAddError", interaction.locale));
       throw error;
     }
 
-    await interaction.editReply(t("buttonAdded", { locale }));
+    await interaction.editReply(t("buttonAdded", interaction.locale));
     return;
   }
 
   async bulk_remove(interaction: ChatInputCommandInteraction<"cached">) {
-    const locale = interaction.locale;
-
     const rolesId = interaction.options.getString("roles")?.match(/\d{17,}/g);
     if (!rolesId) {
-      await interaction.editReply(t("noIdsInRoleInput", { locale }));
+      await interaction.editReply(t("noIdsInRoleInput", interaction.locale));
       return 1;
     }
 
     const channel = interaction.options.getChannel("channel");
     if (!channel?.isTextBased()) {
-      await interaction.editReply(t("channel404", { locale }));
+      await interaction.editReply(t("channel404", interaction.locale));
       return 1;
     }
 
@@ -632,11 +624,11 @@ export default class extends ChatInputCommand {
 
     const message = await channel.messages.fetch(message_id).catch(() => null);
     if (!message) {
-      await interaction.editReply(t("message404", { locale }));
+      await interaction.editReply(t("message404", interaction.locale));
       return 1;
     }
     if (!message.editable) {
-      await interaction.editReply(t("messageNotEditable", { locale }));
+      await interaction.editReply(t("messageNotEditable", interaction.locale));
       return 1;
     }
 
@@ -645,11 +637,11 @@ export default class extends ChatInputCommand {
     try {
       await message.edit({ components });
     } catch (error) {
-      await interaction.editReply(t("buttonRemoveError", { locale }));
+      await interaction.editReply(t("buttonRemoveError", interaction.locale));
       throw error;
     }
 
-    await interaction.editReply(t("buttonRemoved", { locale }));
+    await interaction.editReply(t("buttonRemoved", interaction.locale));
     return;
   }
 }

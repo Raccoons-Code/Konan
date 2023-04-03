@@ -22,8 +22,6 @@ export default class extends ButtonCommand {
   }
 
   async commands(interaction: ButtonInteraction) {
-    const locale = interaction.locale;
-
     const parsedId = <HelpButtonCustomId>JSON.parse(interaction.customId);
 
     const commands = commandHandler.commandsByCategory.get(parsedId.cbc) ??
@@ -51,7 +49,7 @@ export default class extends ButtonCommand {
           .setColor("Random")
           .setFields(this.convertCommandsToEmbedFields(slashCommands, parsedId.p))
           .setFooter({ text: `Total: ${slashCommands.length}` })
-          .setTitle(t("konanSupport", { locale }))],
+          .setTitle(t("konanSupport", interaction.locale))],
     });
 
     return;

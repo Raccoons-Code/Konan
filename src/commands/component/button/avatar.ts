@@ -35,12 +35,10 @@ export default class extends ButtonCommand {
 
     const components = [new ActionRowBuilder<ButtonBuilder>()];
 
-    const locale = interaction.locale;
-
     if (user.banner) {
       components[0].addComponents(new ButtonBuilder()
         .setEmoji("🖼")
-        .setLabel(t("link", { locale }))
+        .setLabel(t("link", interaction.locale))
         .setStyle(ButtonStyle.Link)
         .setURL(user.bannerURL({ size: 4096 })!));
     }
@@ -51,7 +49,7 @@ export default class extends ButtonCommand {
         id: user.id,
         next: "user",
       }))
-      .setLabel(t("viewUserAvatar", { locale }))
+      .setLabel(t("viewUserAvatar", interaction.locale))
       .setStyle(ButtonStyle.Secondary));
 
     if (member?.avatar && member.avatar !== user.avatar) {
@@ -61,7 +59,7 @@ export default class extends ButtonCommand {
           id: user.id,
           next: "member",
         }))
-        .setLabel(t("viewMemberAvatar", { locale }))
+        .setLabel(t("viewMemberAvatar", interaction.locale))
         .setStyle(ButtonStyle.Secondary));
     }
 
@@ -84,12 +82,7 @@ export default class extends ButtonCommand {
           .setImage(`attachment://${name}`),
       ],
       files: [
-        new AttachmentBuilder(
-          await fetch(user.bannerURL({ size: 512 })!)
-            .then(res => res.arrayBuffer())
-            .then(res => Buffer.from(res)), {
-          name,
-        }),
+        new AttachmentBuilder(user.bannerURL({ size: 512 })!, { name }),
       ],
     });
 
@@ -111,14 +104,12 @@ export default class extends ButtonCommand {
 
     user.banner ?? await user.fetch();
 
-    const locale = interaction.locale;
-
     const components = [new ActionRowBuilder<ButtonBuilder>()];
 
     if (member) {
       components[0].addComponents(new ButtonBuilder()
         .setEmoji("🖼")
-        .setLabel(t("link", { locale }))
+        .setLabel(t("link", interaction.locale))
         .setStyle(ButtonStyle.Link)
         .setURL(member.displayAvatarURL({ size: 4096 })));
     }
@@ -129,7 +120,7 @@ export default class extends ButtonCommand {
         id: user.id,
         next: "user",
       }))
-      .setLabel(t("viewUserAvatar", { locale }))
+      .setLabel(t("viewUserAvatar", interaction.locale))
       .setStyle(ButtonStyle.Secondary));
 
     if (user.banner) {
@@ -140,7 +131,7 @@ export default class extends ButtonCommand {
             id: user.id,
             next: "banner",
           }))
-          .setLabel(t("viewUserBanner", { locale }))
+          .setLabel(t("viewUserBanner", interaction.locale))
           .setStyle(ButtonStyle.Secondary),
       );
     }
@@ -164,12 +155,7 @@ export default class extends ButtonCommand {
           .setImage(`attachment://${name}`),
       ],
       files: [
-        new AttachmentBuilder(
-          await fetch(member.displayAvatarURL({ size: 512 }))
-            .then(res => res.arrayBuffer())
-            .then(res => Buffer.from(res)), {
-          name,
-        }),
+        new AttachmentBuilder(member.displayAvatarURL({ size: 512 }), { name }),
       ],
     });
 
@@ -191,14 +177,12 @@ export default class extends ButtonCommand {
 
     user.banner ?? await user.fetch();
 
-    const locale = interaction.locale;
-
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
         .addComponents([
           new ButtonBuilder()
             .setEmoji("🖼")
-            .setLabel(t("link", { locale }))
+            .setLabel(t("link", interaction.locale))
             .setStyle(ButtonStyle.Link)
             .setURL(user.displayAvatarURL({ size: 4096 })),
         ]),
@@ -211,7 +195,7 @@ export default class extends ButtonCommand {
           id: user.id,
           next: "member",
         }))
-        .setLabel(t("viewMemberAvatar", { locale }))
+        .setLabel(t("viewMemberAvatar", interaction.locale))
         .setStyle(ButtonStyle.Secondary));
     }
 
@@ -222,7 +206,7 @@ export default class extends ButtonCommand {
           id: user.id,
           next: "banner",
         }))
-        .setLabel(t("viewUserBanner", { locale }))
+        .setLabel(t("viewUserBanner", interaction.locale))
         .setStyle(ButtonStyle.Secondary));
     }
 
@@ -237,12 +221,7 @@ export default class extends ButtonCommand {
           .setImage(`attachment://${name}`),
       ],
       files: [
-        new AttachmentBuilder(
-          await fetch(user.displayAvatarURL({ size: 512 }))
-            .then(res => res.arrayBuffer())
-            .then(res => Buffer.from(res)), {
-          name,
-        }),
+        new AttachmentBuilder(user.displayAvatarURL({ size: 512 }), { name }),
       ],
     });
 

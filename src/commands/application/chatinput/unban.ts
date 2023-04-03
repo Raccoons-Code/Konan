@@ -37,14 +37,12 @@ export default class extends ChatInputCommand {
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
     await interaction.deferReply({ ephemeral: true });
 
-    const locale = interaction.locale;
-
     const id = interaction.options.getString("user", true);
 
     const ban = await interaction.guild.bans.fetch(id);
 
     if (!ban) {
-      await interaction.editReply(t("ban404", { locale }));
+      await interaction.editReply(t("ban404", interaction.locale));
       return 1;
     }
 
@@ -54,11 +52,11 @@ export default class extends ChatInputCommand {
     try {
       await interaction.guild.bans.remove(id, reason);
     } catch (error) {
-      await interaction.editReply(t("unbanError", { locale }));
+      await interaction.editReply(t("unbanError", interaction.locale));
       throw error;
     }
 
-    await interaction.editReply(t("userUnbanned", { locale }));
+    await interaction.editReply(t("userUnbanned", interaction.locale));
     return;
   }
 }

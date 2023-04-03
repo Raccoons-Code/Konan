@@ -79,7 +79,7 @@ export default class extends ButtonCommand {
 
       await interaction.editReply({
         components: [],
-        content: t("messageDeleteError", { locale }),
+        content: t("messageDeleteError", interaction.locale),
         embeds: [],
       });
 
@@ -104,11 +104,11 @@ export default class extends ButtonCommand {
               size: clear.cleared,
             }))
           .spliceFields(1, 1, {
-            name: t("result", { locale }),
-            value: `> ${t("found", { locale })}: ${clear.found}.`
-              + `\n> ${t("ignored", { locale })}: ${clear.ignored.count}.`
+            name: t("result", interaction.locale),
+            value: `> ${t("found", interaction.locale)}: ${clear.found}.`
+              + `\n> ${t("ignored", interaction.locale)}: ${clear.ignored.count}.`
               + (clear.ignored.olds ?
-                `\n> ${t("ignoredVeryOld", { locale })}: ${clear.ignored.olds}` :
+                `\n> ${t("ignoredVeryOld", interaction.locale)}: ${clear.ignored.olds}` :
                 ""),
           }),
       ],
