@@ -21,7 +21,7 @@ export default abstract class BaseCommand extends Base {
 
     const embeds = [
       new EmbedBuilder()
-        .setDescription(t("onlyOnServer", { locale: interaction.locale })),
+        .setDescription(t("onlyOnServer", interaction.locale)),
     ];
 
     if (interaction.deferred || interaction.replied) {
@@ -54,7 +54,7 @@ export default abstract class BaseCommand extends Base {
       new EmbedBuilder()
         .setDescription(t(key, {
           locale: interaction.locale,
-          permission: t(permission[0], { locale: interaction.locale }),
+          permission: t(permission[0], interaction.locale),
         })),
     ];
 

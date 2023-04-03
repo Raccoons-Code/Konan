@@ -140,7 +140,7 @@ export default class extends ButtonCommand {
       components: [],
       embeds: [
         new EmbedBuilder(interaction.message.embeds[0].toJSON())
-          .setTitle(`❌ ${t("cancelled", { locale: interaction.locale })}.`),
+          .setTitle(`❌ ${t("cancelled", interaction.locale)}.`),
       ],
     });
 

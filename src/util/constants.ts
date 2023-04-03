@@ -62,7 +62,7 @@ export const GUILD_TEXT_CHANNEL_TYPES: Extract<ApplicationCommandOptionAllowedCh
   ChannelType.PublicThread,
 ];
 
-export const CONTENT_LENGTH = 4096;
+export const CONTENT_LENGTH = 4_096;
 
 export const HELP_PAGE_LIMIT = 10;
 
