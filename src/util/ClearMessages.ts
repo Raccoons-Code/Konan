@@ -175,7 +175,7 @@ export default class ClearMessages {
                 .spliceFields(1, 1, {
                   name: t("result", this.interaction.locale),
                   value: `> ${t("found", this.interaction.locale)}: ${this.found}.`
-                    + `\n> ${t("deleted", this.interaction.locale)}: ${this.cleared}.`
+                    + `\n> ${t("deleted", this.interaction.locale)}: ${this.cleared} / ${this.amount}.`
                     + `\n> ${t("ignored", this.interaction.locale)}: ${this.ignored.count}.`
                     + (this.ignored.olds ?
                       `\n> ${t("ignoredVeryOld", this.interaction.locale)}: ${this.ignored.olds}` :

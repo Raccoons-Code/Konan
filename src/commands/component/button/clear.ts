@@ -117,7 +117,7 @@ export default class extends ButtonCommand {
             }))
           .spliceFields(1, 1, {
             name: t("result", interaction.locale),
-            value: `> ${t("found", interaction.locale)}: ${clear.found}.`
+            value: `> ${t("found", interaction.locale)}: ${clear.found} / ${clear.amount}.`
               + `\n> ${t("ignored", interaction.locale)}: ${clear.ignored.count}.`
               + (clear.ignored.olds ?
                 `\n> ${t("ignoredVeryOld", interaction.locale)}: ${clear.ignored.olds}` :
