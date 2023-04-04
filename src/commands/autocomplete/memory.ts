@@ -18,7 +18,7 @@ export default class extends ChatInputAutocomplete {
 
     if (focused.name === "emojis") {
       const emojis = Object.keys(memory.Emojis)
-        .filter(a => pattern.test(a));
+        .filter(emoji => pattern.test(emoji));
 
       for (const emoji of emojis) {
         res.push({

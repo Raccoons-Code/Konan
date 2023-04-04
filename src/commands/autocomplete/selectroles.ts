@@ -52,28 +52,28 @@ export default class extends ChatInputAutocomplete {
     const pattern = RegExp(focused.value, "i");
 
     if (focused.name === "message_id") {
-      const messages = await channel.messages.fetch({ limit: 100 })
-        .then(msgs => msgs.toJSON().filter(msg =>
-          msg.author.id === client.user?.id &&
-          pattern.test(msg.id) &&
-          msg.components.some(c => this.CommandNameRegExp.test(c.components[0].customId!))));
+      const messages = await channel.messages.fetch({ limit: 100 });
 
-      for (const message of messages) {
+      messages.sweep(msg => msg.author.id !== client.user?.id ||
+        msg.components.every(c => !this.CommandNameRegExp.test(c.components[0].customId!)));
+
+      for (const message of messages.values()) {
         const [embed] = message.embeds;
 
         const name = [
           message.id,
           embed.title ? ` | ${embed.title}` : "",
           embed.description ? ` | ${embed.description}` : "",
-        ].join("").slice(1, 100);
+        ].join("");
 
-        if (pattern.test(name) && (embed.title || embed.description))
+        if ((embed.title || embed.description) && pattern.test(name)) {
           res.push({
-            name,
+            name: name.slice(1, 100),
             value: message.id,
           });
 
-        if (res.length === 25) break;
+          if (res.length === 25) break;
+        }
       }
 
       return res;
