@@ -117,6 +117,19 @@ export default class ClearMessages {
         break;
       }
 
+      if (this.afterMessage || this.amountToClear > 100) {
+        this.limit = 100;
+      } else {
+        this.limit = this.amountToClear;
+      }
+
+      const messages = await this.channel.messages.fetch({
+        after: this.afterMessage,
+        limit: 100,
+      });
+
+      await sleep(1000);
+
       if (!this.channel.permissionsFor(client.user!)?.has([
         PermissionFlagsBits.ManageMessages,
         PermissionFlagsBits.ReadMessageHistory,
@@ -131,19 +144,6 @@ export default class ClearMessages {
           break;
         }
       }
-
-      if (this.afterMessage || this.amountToClear > 100) {
-        this.limit = 100;
-      } else {
-        this.limit = this.amountToClear;
-      }
-
-      const messages = await this.channel.messages.fetch({
-        after: this.afterMessage,
-        limit: 100,
-      });
-
-      await sleep(1000);
 
       if (this.cancelled) break;
 
