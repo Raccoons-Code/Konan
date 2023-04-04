@@ -30,8 +30,11 @@ export default class TopggShardingAutoposter {
 
   async post() {
     if (api) {
-      await api.postStats(await this.getStats())
-        .catch(error => logger.commonError(error));
+      try {
+        await api.postStats(await this.getStats());
+      } catch (error: any) {
+        await logger.commonError(error);
+      }
     }
   }
 

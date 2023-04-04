@@ -32,8 +32,11 @@ export default class TopggAutoposter {
 
   async post() {
     if (api) {
-      await api.postStats(this.getStats())
-        .catch(error => logger.commonError(error));
+      try {
+        await api.postStats(this.getStats());
+      } catch (error: any) {
+        await logger.commonError(error);
+      }
     }
   }
 
