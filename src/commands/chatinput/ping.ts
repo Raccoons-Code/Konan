@@ -40,6 +40,7 @@ export default class extends Command {
       "Channels",
       "Emojis",
       "Users",
+      "Interactions",
       "Uptime",
     ]];
 
@@ -47,6 +48,7 @@ export default class extends Command {
       channels: client.channels.cache.size,
       emojis: client.emojis.cache.size,
       guilds: client.guilds.cache.size,
+      interactions: client.interactions,
       readyAt: client.readyAt,
       readyTimestamp: client.readyTimestamp,
       uptime: client.uptime,
@@ -69,6 +71,7 @@ export default class extends Command {
         value.channels,
         value.emojis,
         value.users,
+        value.interactions,
         ms(Date.now() - value.readyTimestamp!),
       ]);
     }
