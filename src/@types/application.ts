@@ -13,12 +13,15 @@ export interface Stats {
   channels: number
   emojis: number
   guilds: number
+  interactions: number
   messages: number
   shardIds: number[]
   shards: number
   totalChannels: number
   totalEmojis: number
   totalGuilds: number
+  totalInteractions: number
+  totalMessages: number
   totalUsers: number
   totalVoiceAdapters: number
   userMessages: number
@@ -30,5 +33,7 @@ export type StatsFilter =
   | "channels"
   | "emojis"
   | "guilds"
+  | "interactions"
+  | "messages"
   | "users"
   | "voice_adapters";

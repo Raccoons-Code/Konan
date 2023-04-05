@@ -1,8 +1,9 @@
 import "discord.js";
+import ApplicationStats from "../../client/ApplicationStats";
 
 declare module "discord.js" {
   interface Client {
-    get interactions(): number;
+    get appStats(): ApplicationStats
   }
 
   interface Message {

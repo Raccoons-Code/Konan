@@ -9,6 +9,8 @@ export default class ApplicationStats {
   totalChannels = 0;
   totalEmojis = 0;
   totalGuilds = 0;
+  totalInteractions = 0;
+  totalMessages = 0;
   totalUsers = 0;
   totalVoiceAdapters = 0;
   userMessages = 0;
@@ -34,6 +36,20 @@ export default class ApplicationStats {
       return client.shard.fetchClientValues("guilds.cache.size") as Promise<number[]>;
 
     return Promise.all([client.guilds.cache.size]);
+  }
+
+  get #interactions() {
+    if (client.shard)
+      return client.shard.fetchClientValues("appStats.interactions") as Promise<number[]>;
+
+    return Promise.all([this.interactions]);
+  }
+
+  get #messages() {
+    if (client.shard)
+      return client.shard.fetchClientValues("appStats.messages") as Promise<number[]>;
+
+    return Promise.all([this.messages]);
   }
 
   get #users() {
@@ -125,6 +141,22 @@ export default class ApplicationStats {
     });
   }
 
+  private async _fetch_interactions() {
+    return this.#interactions.then(interactions => {
+      this.totalInteractions = interactions.reduce((acc, interactionCount) => acc + interactionCount, 0);
+
+      return this;
+    });
+  }
+
+  private async _fetch_messages() {
+    return this.#messages.then(messages => {
+      this.totalMessages = messages.reduce((acc, messageCount) => acc + messageCount, 0);
+
+      return this;
+    });
+  }
+
   private async _fetch_users() {
     return this.#users.then(users => {
       this.totalUsers = users.reduce((acc, userCount) => acc + userCount, 0);
@@ -146,9 +178,34 @@ export default class ApplicationStats {
       this._fetch_channels(),
       this._fetch_emojis(),
       this._fetch_guilds(),
+      this._fetch_interactions(),
+      this._fetch_messages(),
       this._fetch_users(),
       this._fetch_voice_adapters(),
     ])
       .then(() => this);
+  }
+
+  toJSON(): Stats {
+    return {
+      botMessages: this.botMessages,
+      channels: this.channels,
+      emojis: this.emojis,
+      guilds: this.guilds,
+      interactions: this.interactions,
+      messages: this.messages,
+      shards: this.shards,
+      shardIds: this.shardIds,
+      totalChannels: this.totalChannels,
+      totalEmojis: this.totalEmojis,
+      totalGuilds: this.totalGuilds,
+      totalInteractions: this.totalInteractions,
+      totalMessages: this.totalMessages,
+      totalUsers: this.totalUsers,
+      totalVoiceAdapters: this.totalVoiceAdapters,
+      userMessages: this.userMessages,
+      users: this.users,
+      voiceAdapters: this.voiceAdapters,
+    };
   }
 }

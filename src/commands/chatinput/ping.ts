@@ -1,6 +1,6 @@
 import { AttachmentBuilder, Message, Status } from "discord.js";
 import ms from "ms";
-import client from "../../client";
+import client, { appStats } from "../../client";
 import Command from "../../structures/Command";
 import { makeMultiTable } from "../../util/utils";
 
@@ -32,28 +32,28 @@ export default class extends Command {
   async shards(_message: Message, sent: Message) {
     if (!client.shard) return 1;
 
+    const promises = [
+      appStats.fetch(),
+    ];
+
     const pingShards: (number | string)[][] = [[
       "Shard",
       "Status",
-      "Ping",
-      "Guilds",
-      "Channels",
-      "Emojis",
-      "Users",
-      "Interactions",
       "Uptime",
+      "Ping",
+      "Interactions",
+      "Messages",
+      "Users",
+      "Emojis",
+      "Channels",
+      "Guilds",
     ]];
 
     const data = await client.shard.broadcastEval(client => ({
-      channels: client.channels.cache.size,
-      emojis: client.emojis.cache.size,
-      guilds: client.guilds.cache.size,
-      interactions: client.interactions,
+      appStats: client.appStats,
       readyAt: client.readyAt,
       readyTimestamp: client.readyTimestamp,
       uptime: client.uptime,
-      users: client.users.cache.size,
-      voiceAdapters: client.voice.adapters.size,
       wsPing: client.ws.ping,
       wsStatus: client.ws.status,
     }));
@@ -64,17 +64,33 @@ export default class extends Command {
       const shard = client.ws.shards.at(i);
 
       pingShards.push([
-        shard?.id ?? "",
-        Status[shard?.status ?? NaN] ?? "",
-        shard?.ping ?? "",
-        value.guilds,
-        value.channels,
-        value.emojis,
-        value.users,
-        value.interactions,
+        shard?.id ?? i,
+        Status[shard?.status ?? value.wsStatus] ?? "",
         ms(Date.now() - value.readyTimestamp!),
+        `${shard?.ping ?? value.wsPing}ms`,
+        value.appStats.interactions,
+        value.appStats.messages,
+        value.appStats.users,
+        value.appStats.emojis,
+        value.appStats.channels,
+        value.appStats.guilds,
       ]);
     }
+
+    await Promise.all(promises);
+
+    pingShards.push([
+      "TOTAL",
+      appStats.shards,
+      "",
+      "",
+      appStats.totalInteractions,
+      appStats.totalMessages,
+      appStats.totalUsers,
+      appStats.totalEmojis,
+      appStats.totalChannels,
+      appStats.totalGuilds,
+    ]);
 
     await sent.edit({
       files: [
