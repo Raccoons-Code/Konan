@@ -1,4 +1,5 @@
 import { AttachmentBuilder, Message, Status } from "discord.js";
+import ms from "ms";
 import client from "../../client";
 import Command from "../../structures/Command";
 import { makeMultiTable } from "../../util/utils";
@@ -16,10 +17,7 @@ export default class extends Command {
     const sent = await message.reply("Pong!");
 
     if (message.args?.length) {
-      const fn = this[message.args[0].toLowerCase()];
-
-      if (fn) {
-        await fn(sent);
+      if (!await this[message.args[0].toLowerCase()]?.(message, sent)) {
         return;
       }
     }
@@ -31,14 +29,47 @@ export default class extends Command {
     return;
   }
 
-  async shards(sent: Message) {
-    const pingShards: string[][] = [["Shard", "Status", "Ping"]];
+  async shards(_message: Message, sent: Message) {
+    if (!client.shard) return 1;
 
-    for (const shard of client.ws.shards.values()) {
+    const pingShards: (number | string)[][] = [[
+      "Shard",
+      "Status",
+      "Ping",
+      "Guilds",
+      "Channels",
+      "Emojis",
+      "Users",
+      "Uptime",
+    ]];
+
+    const data = await client.shard.broadcastEval(client => ({
+      channels: client.channels.cache.size,
+      emojis: client.emojis.cache.size,
+      guilds: client.guilds.cache.size,
+      readyAt: client.readyAt,
+      readyTimestamp: client.readyTimestamp,
+      uptime: client.uptime,
+      users: client.users.cache.size,
+      voiceAdapters: client.voice.adapters.size,
+      wsPing: client.ws.ping,
+      wsStatus: client.ws.status,
+    }));
+
+    for (let i = 0; i < data.length; i++) {
+      const value = data[i];
+
+      const shard = client.ws.shards.at(i);
+
       pingShards.push([
-        `${shard.id}`,
-        `${Status[shard.status]}`,
-        `${shard.ping}`,
+        shard?.id ?? "",
+        Status[shard?.status ?? NaN] ?? "",
+        shard?.ping ?? "",
+        value.guilds,
+        value.channels,
+        value.emojis,
+        value.users,
+        ms(Date.now() - value.readyTimestamp!),
       ]);
     }
 
@@ -49,5 +80,7 @@ export default class extends Command {
         }),
       ],
     });
+
+    return;
   }
 }
