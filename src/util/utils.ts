@@ -69,20 +69,20 @@ export function makeBits<T extends string | number | symbol>(array: Readonly<T[]
 }
 
 export function makeMultiTable(arrayOfArrays: string[][], sep = " | ") {
-  const greaterStrings: string[] = [];
+  const greaterValues: string[] = [];
 
   for (const array of arrayOfArrays) {
     for (let j = 0; j < array.length; j++) {
-      const value = array[j];
+      const value = `${array[j] ?? ""}`;
 
-      if (!greaterStrings[j]) {
-        greaterStrings[j] = value;
+      if (!greaterValues[j]) {
+        greaterValues[j] = value;
 
         continue;
       }
 
-      if (value.length > greaterStrings[j]?.length) {
-        greaterStrings[j] = value;
+      if (value.length > greaterValues[j].length) {
+        greaterValues[j] = value;
 
         continue;
       }
@@ -94,7 +94,7 @@ export function makeMultiTable(arrayOfArrays: string[][], sep = " | ") {
   }
 
   return arrayOfArrays.map(array => array.map((value, j) =>
-    `${value ?? ""}`.padEnd(greaterStrings[j].length))
+    `${value ?? ""}`.padEnd(greaterValues[j].length))
     .join(sep)).join("\n");
 }
 
