@@ -208,6 +208,7 @@ export default class ApplicationStats {
     }))
       .then(result => {
         const keys = <(keyof typeof result[number])[]>Object.keys(result[0]);
+
         const values = keys.reduce((acc, val) => {
           acc[val] = 0;
           return acc;
