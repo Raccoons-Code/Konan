@@ -17,15 +17,27 @@ export default class PresenceManager {
     { name: `${appStats.users || "Fetching"} users`, type: ActivityType.Watching },
   ];
 
-  setPresence() {
+  get shardActivities(): ActivitiesOptions[] {
+    return [{
+      name: `Shard ${appStats.shardId + 1}/${appStats.shards}`,
+      type: ActivityType.Listening,
+    }];
+  }
+
+  setPresence(shard = this.random) {
     client.user?.setPresence({
-      activities: this.activities,
+      activities: shard ? this.shardActivities : this.activities,
+      shardId: shard ? appStats.shardId : undefined,
     });
+  }
+
+  private get random() {
+    return Boolean(Math.random());
   }
 
   start() {
     this.stop();
-    this.setPresence();
+    this.setPresence(true);
     this.interval = setInterval(() => this.setPresence(), 1000 * 60);
   }
 

@@ -37,19 +37,7 @@ export default class extends Command {
       appStats.fetch(),
     ];
 
-    const pingShards: (string | { toString(): string })[][] = [[
-      "Shard",
-      "Status",
-      "Uptime",
-      "Ping",
-      "Memory",
-      "Interactions",
-      "Messages",
-      "Users",
-      "Emojis",
-      "Channels",
-      "Guilds",
-    ]];
+    const pingShards: (string | { toString(): string })[][] = [];
 
     const shardsData = await client.shard.broadcastEval(client => ({
       stats: client.appStats,
@@ -69,9 +57,8 @@ export default class extends Command {
       totalMemory += data.stats.memoryUsage.heapUsed;
       totalPing += shard?.ping ?? data.wsPing;
 
-      pingShards.push([
-        data.stats.shardId
-        + `${data.stats.shardId === appStats.shardId ? "🔰" : ""}`,
+      pingShards[data.stats.shardId === appStats.shardId ? "unshift" : "push"]([
+        data.stats.shardId,
         Status[shard?.status ?? data.wsStatus] ?? "",
         ms(Date.now() - data.readyTimestamp!),
         `${shard?.ping ?? data.wsPing}ms`,
@@ -84,6 +71,20 @@ export default class extends Command {
         data.stats.guilds,
       ]);
     }
+
+    pingShards.unshift([
+      "Shard",
+      "Status",
+      "Uptime",
+      "Ping",
+      "Memory",
+      "Interactions",
+      "Messages",
+      "Users",
+      "Emojis",
+      "Channels",
+      "Guilds",
+    ]);
 
     await Promise.all(promises);
 
