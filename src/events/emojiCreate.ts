@@ -1,5 +1,5 @@
 import client, { appStats } from "../client";
 
 client.on("emojiCreate", async function (_emoji) {
-  appStats.fetch({ filter: "emojis" });
+  appStats.fetch();
 });

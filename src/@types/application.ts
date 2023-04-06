@@ -14,13 +14,16 @@ export interface Stats {
   emojis: number
   guilds: number
   interactions: number
+  memoryUsage: NodeJS.MemoryUsage
   messages: number
+  shardId: number
   shardIds: number[]
   shards: number
   totalChannels: number
   totalEmojis: number
   totalGuilds: number
   totalInteractions: number
+  totalMemoryUsage: number
   totalMessages: number
   totalUsers: number
   totalVoiceAdapters: number

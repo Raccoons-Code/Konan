@@ -1,5 +1,5 @@
 import { stripIndents } from "common-tags";
-import { ButtonInteraction, calculateShardId, codeBlock, EmbedBuilder, time } from "discord.js";
+import { ButtonInteraction, codeBlock, EmbedBuilder, time } from "discord.js";
 import { memoryUsage, versions } from "node:process";
 import { InfoCustomId } from "../../../@types";
 import client, { appStats } from "../../../client";
@@ -32,8 +32,6 @@ export default class extends ButtonCommand {
     const iconURL = me?.displayAvatarURL() ?? user?.displayAvatarURL();
     const username = me?.displayName ?? user?.username;
 
-    const heapUsed = memoryUsage().heapUsed;
-
     const engine = stripIndents(`
       Node : ${versions.node}
     `);
@@ -45,7 +43,7 @@ export default class extends ButtonCommand {
     const machine = stripIndents(`
       CPU : ${CPU_MODEL} (${CPU_CORES} cores)
       OS  : ${OS_VERSION}
-      RAM : ${new Bytes(heapUsed)} / ${new Bytes(TOTAL_RAM)}
+      RAM : ${new Bytes(memoryUsage().heapUsed)} / ${new Bytes(TOTAL_RAM)}
     `);
 
     const stats: [string, string | number][] = [
@@ -53,19 +51,13 @@ export default class extends ButtonCommand {
     ];
 
     if (client.shard) {
-      if (interaction.guildId) {
-        const id = calculateShardId(interaction.guildId, client.shard.count);
-
-        stats.unshift(["Shard", `${id + 1}/${client.shard.count}`]);
-      } else {
-        stats.unshift(["Shards", `${client.shard.count}`]);
-      }
+      stats.unshift(["Shard", `${appStats.shardId + 1}/${client.shard.count}`]);
     }
 
     if (VERSION)
       stats.push(["Version", VERSION]);
 
-    await appStats.fetch({ filter: "users" });
+    await appStats.fetch();
 
     stats.unshift(
       ["Servers", appStats.guilds < appStats.totalGuilds ?
@@ -80,8 +72,12 @@ export default class extends ButtonCommand {
       ["Emojis", appStats.emojis < appStats.totalEmojis ?
         `${appStats.emojis}/${appStats.totalEmojis}` :
         appStats.emojis],
-      ["Messages", appStats.messages],
-      ["Interactions", appStats.interactions],
+      ["Messages", appStats.messages < appStats.totalMessages ?
+        `${appStats.messages}/${appStats.totalMessages}` :
+        appStats.messages],
+      ["Interactions", appStats.interactions < appStats.totalInteractions ?
+        `${appStats.interactions}/${appStats.totalInteractions}` :
+        appStats.interactions],
     );
 
     await interaction.update({

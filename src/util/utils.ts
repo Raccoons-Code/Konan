@@ -69,7 +69,7 @@ export function makeBits<T extends string | number | symbol>(array: Readonly<T[]
 }
 
 export function makeMultiTable(
-  arrayOfArrays: (number | string)[][],
+  arrayOfArrays: (string | { toString(): string })[][],
   sep = " | ",
 ) {
   const greaterValues: string[] = [];

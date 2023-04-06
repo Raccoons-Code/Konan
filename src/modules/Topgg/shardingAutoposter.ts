@@ -17,9 +17,7 @@ export default class TopggShardingAutoposter {
     this.stop();
 
     if (api) {
-      this.interval = setInterval(async () => {
-        await this.post();
-      }, this.postInterval);
+      this.interval = setInterval(() => this.post(), this.postInterval);
     }
   }
 

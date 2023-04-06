@@ -1,5 +1,5 @@
-import client, { appStats } from "../client";
+import client from "../client";
 
-client.on("shardDisconnect", async function (_closeEvent, _shardId) {
-  await appStats.fetch();
+client.on("shardDisconnect", async function (closeEvent, shardId) {
+  console.log(shardId);
 });

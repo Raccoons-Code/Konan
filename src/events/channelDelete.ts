@@ -3,7 +3,7 @@ import prisma from "../database/prisma";
 
 client.on("channelDelete", async function (channel) {
   await Promise.all([
-    appStats.fetch({ filter: "channels" }),
+    appStats.fetch(),
 
     prisma.wordleInstance.updateMany({
       where: {

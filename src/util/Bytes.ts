@@ -17,6 +17,9 @@ export default class Bytes<T extends number> {
 
   get #bytes() {
     if (!this.x) return "0.00";
+
+    while (!this.#unit) this.index--;
+
     return (this.x / Math.pow(1024, this.index)).toFixed(2);
   }
 

@@ -1,6 +1,5 @@
 import { BotStats } from "@top-gg/sdk";
-import { calculateShardId } from "discord.js";
-import client, { logger } from "../../client";
+import client, { appStats, logger } from "../../client";
 import api from "./api";
 
 export default class TopggAutoposter {
@@ -19,9 +18,7 @@ export default class TopggAutoposter {
     this.stop();
 
     if (api) {
-      this.interval = setInterval(async () => {
-        await this.post();
-      }, this.postInterval);
+      this.interval = setInterval(() => this.post(), this.postInterval);
     }
   }
 
@@ -41,14 +38,9 @@ export default class TopggAutoposter {
   }
 
   getStats(): BotStats {
-    let shardId = 0;
-    if (client.guilds.cache.size && client.shard) {
-      shardId = calculateShardId(client.guilds.cache.firstKey()!, client.shard.count);
-    }
-
     return {
       serverCount: client.guilds.cache.size,
-      shardId,
+      shardId: appStats.shardId,
       shardCount: client.shard?.count ?? 1,
     };
   }

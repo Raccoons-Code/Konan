@@ -2,6 +2,7 @@ import { AttachmentBuilder, Message, Status } from "discord.js";
 import ms from "ms";
 import client, { appStats } from "../../client";
 import Command from "../../structures/Command";
+import Bytes from "../../util/Bytes";
 import { makeMultiTable } from "../../util/utils";
 
 export default class extends Command {
@@ -36,11 +37,12 @@ export default class extends Command {
       appStats.fetch(),
     ];
 
-    const pingShards: (number | string)[][] = [[
+    const pingShards: (string | { toString(): string })[][] = [[
       "Shard",
       "Status",
       "Uptime",
       "Ping",
+      "Memory",
       "Interactions",
       "Messages",
       "Users",
@@ -49,8 +51,8 @@ export default class extends Command {
       "Guilds",
     ]];
 
-    const data = await client.shard.broadcastEval(client => ({
-      appStats: client.appStats,
+    const shardsData = await client.shard.broadcastEval(client => ({
+      stats: client.appStats,
       readyAt: client.readyAt,
       readyTimestamp: client.readyTimestamp,
       uptime: client.uptime,
@@ -58,22 +60,28 @@ export default class extends Command {
       wsStatus: client.ws.status,
     }));
 
-    for (let i = 0; i < data.length; i++) {
-      const value = data[i];
+    let totalMemory = 0;
+    let totalPing = 0;
 
-      const shard = client.ws.shards.at(i);
+    for (const data of shardsData) {
+      const shard = client.ws.shards.get(data.stats.shardId);
+
+      totalMemory += data.stats.memoryUsage.heapUsed;
+      totalPing += shard?.ping ?? data.wsPing;
 
       pingShards.push([
-        shard?.id ?? i,
-        Status[shard?.status ?? value.wsStatus] ?? "",
-        ms(Date.now() - value.readyTimestamp!),
-        `${shard?.ping ?? value.wsPing}ms`,
-        value.appStats.interactions,
-        value.appStats.messages,
-        value.appStats.users,
-        value.appStats.emojis,
-        value.appStats.channels,
-        value.appStats.guilds,
+        data.stats.shardId
+        + `${data.stats.shardId === appStats.shardId ? "🔰" : ""}`,
+        Status[shard?.status ?? data.wsStatus] ?? "",
+        ms(Date.now() - data.readyTimestamp!),
+        `${shard?.ping ?? data.wsPing}ms`,
+        new Bytes(data.stats.memoryUsage.heapUsed),
+        data.stats.interactions,
+        data.stats.messages,
+        data.stats.users,
+        data.stats.emojis,
+        data.stats.channels,
+        data.stats.guilds,
       ]);
     }
 
@@ -83,7 +91,8 @@ export default class extends Command {
       "TOTAL",
       appStats.shards,
       "",
-      "",
+      `~${Math.floor(totalPing / appStats.shards)}ms`,
+      new Bytes(totalMemory),
       appStats.totalInteractions,
       appStats.totalMessages,
       appStats.totalUsers,
