@@ -219,7 +219,7 @@ export default class ApplicationStats {
             acc[key] += val[key];
           }
           return acc;
-        }, <Record<string, number>>values);
+        }, values);
 
         for (const key of keys) {
           this[`total${key}`] = values[key];
