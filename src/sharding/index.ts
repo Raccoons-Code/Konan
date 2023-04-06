@@ -22,5 +22,3 @@ sharding.on("shardCreate", async function (shard) {
     }
   });
 });
-
-sharding.spawn({ timeout: 60_000 });
