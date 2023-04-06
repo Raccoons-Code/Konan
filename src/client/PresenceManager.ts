@@ -32,7 +32,7 @@ export default class PresenceManager {
   }
 
   private get random() {
-    return Boolean(Math.random());
+    return Boolean(Math.round(Math.random()));
   }
 
   start() {
