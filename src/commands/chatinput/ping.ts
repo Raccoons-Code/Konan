@@ -1,8 +1,8 @@
 import { AttachmentBuilder, Message, Status } from "discord.js";
-import ms from "ms";
 import client, { appStats } from "../../client";
 import Command from "../../structures/Command";
 import Bytes from "../../util/Bytes";
+import ParseMs from "../../util/ParseMs";
 import { makeMultiTable } from "../../util/utils";
 
 export default class extends Command {
@@ -60,7 +60,7 @@ export default class extends Command {
       pingShards[data.stats.shardId === appStats.shardId ? "unshift" : "push"]([
         data.stats.shardId,
         Status[shard?.status ?? data.wsStatus] ?? "",
-        ms(Date.now() - data.readyTimestamp!),
+        new ParseMs(data.uptime!),
         `${shard?.ping ?? data.wsPing}ms`,
         new Bytes(data.stats.memoryUsage.heapUsed),
         data.stats.interactions,
@@ -83,13 +83,13 @@ export default class extends Command {
       "Users",
       "Emojis",
       "Channels",
-      "Guilds",
+      "Servers",
     ]);
 
     await Promise.all(promises);
 
     pingShards.push([
-      "TOTAL",
+      "Total",
       appStats.shards,
       "",
       `~${Math.floor(totalPing / appStats.shards)}ms`,
