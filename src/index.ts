@@ -7,9 +7,11 @@ import pm2 from "pm2";
 import { BaseData } from "./@types";
 import sharding from "./sharding";
 
-if (env.PM2_INSTANCE_ID) {
-  const INSTANCE_ID = Number(env.PM2_INSTANCE_ID);
+const INSTANCE_ID = Number(env.PM2_INSTANCE_ID);
 
+if (isNaN(INSTANCE_ID)) {
+  sharding.spawn({ timeout: 60_000 });
+} else {
   console.log("Cluster", INSTANCE_ID, "started at", new Date().toLocaleString());
 
   let TOTAL_SHARDS: number;
@@ -133,6 +135,4 @@ if (env.PM2_INSTANCE_ID) {
         });
     }
   });
-} else {
-  sharding.spawn({ timeout: 60_000 });
 }
