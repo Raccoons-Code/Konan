@@ -20,7 +20,7 @@ export default class ParseMs {
   }
 
   formatShort(ms: number): string {
-    let levels = 0;
+    let levels = 1;
 
     return ["d", "h", "m", "s", "ms"].reduce((acc, val) => {
       const sub = Math.floor(ms / ParseMs[<"s">val]);
