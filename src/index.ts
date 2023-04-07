@@ -6,32 +6,30 @@ import { setTimeout as sleep } from "node:timers/promises";
 import pm2 from "pm2";
 import { BaseData } from "./@types";
 import sharding from "./sharding";
+import { CLUSTER_ID } from "./util/constants";
 
-const INSTANCE_ID = Number(env.PM2_INSTANCE_ID);
-
-if (isNaN(INSTANCE_ID)) {
+if (isNaN(CLUSTER_ID)) {
   sharding.spawn({ timeout: 60_000 });
 } else {
-  console.log("Cluster", INSTANCE_ID, "started at", new Date().toLocaleString());
+  console.log("Cluster", CLUSTER_ID, "started at", new Date().toLocaleString());
 
   let TOTAL_SHARDS: number;
 
-  console.log("Cluster", INSTANCE_ID, "connected");
+  console.log("Cluster", CLUSTER_ID, "connected");
 
   pm2.list(function (err, processes) {
-    console.log("Cluster", INSTANCE_ID, "trying to list clusters");
+    console.log("Cluster", CLUSTER_ID, "trying to list clusters");
 
-    if (err) {
-      console.error(err);
-      process.exit(1);
-    }
+    if (err) throw err;
 
-    console.log("Cluster", INSTANCE_ID, "listed", processes.length, "clusters");
+    console.log("Cluster", CLUSTER_ID, "listed", processes.length, "clusters");
+
+    env.CLUSTERS = `${processes.length}`;
 
     const calculateShards = function () {
       const shardsInCluster = Math.floor(TOTAL_SHARDS / processes.length);
 
-      const initShardId = shardsInCluster * INSTANCE_ID;
+      const initShardId = shardsInCluster * CLUSTER_ID;
 
       const finalShardId = initShardId + shardsInCluster;
 
@@ -42,26 +40,20 @@ if (isNaN(INSTANCE_ID)) {
       }
     };
 
-    if (INSTANCE_ID) {
+    if (CLUSTER_ID) {
       pm2.sendDataToProcessId(0, {
         id: 0,
-        data: { id: INSTANCE_ID },
+        data: { id: CLUSTER_ID },
         topic: "getTotalShards",
       }, async function (err) {
-        if (err) {
-          console.error(err);
-          process.exit(1);
-        }
+        if (err) throw err;
 
         await new Promise((resolve, _) => {
           const listener = function (message: BaseData) {
             console.log(
-              "Cluster",
-              message.id,
-              "received message from",
-              message.data.id,
-              "with topic:",
-              message.topic,
+              "Cluster", CLUSTER_ID,
+              "received message from", message.data.id,
+              "with topic:", message.topic,
             );
 
             if (message.topic === "setTotalShards") {
@@ -81,12 +73,9 @@ if (isNaN(INSTANCE_ID)) {
     } else {
       process.on("message", async function (message: BaseData) {
         console.log(
-          "Cluster",
-          message.id,
-          "received message from",
-          message.data.id,
-          "with topic:",
-          message.topic,
+          "Cluster", CLUSTER_ID,
+          "received message from", message.data.id,
+          "with topic:", message.topic,
         );
 
         if (message.topic === "getTotalShards") {
@@ -102,7 +91,7 @@ if (isNaN(INSTANCE_ID)) {
                 pm2.sendDataToProcessId(message.data.id, {
                   id: message.data.id,
                   data: {
-                    id: INSTANCE_ID,
+                    id: CLUSTER_ID,
                     totalShards: TOTAL_SHARDS,
                   },
                   topic: "setTotalShards",
