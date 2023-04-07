@@ -12,6 +12,7 @@ declare namespace NodeJS {
     DISCORD_TEST_GUILD_ID?: string
     DISCORD_TOKEN?: string
     NODE_ENV?: "development" | "production"
+    PM2_INSTANCE_ID?: string
     TOPGG_TOKEN?: string
   }
 }

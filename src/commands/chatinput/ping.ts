@@ -1,4 +1,5 @@
 import { AttachmentBuilder, Message, Status } from "discord.js";
+import { env } from "process";
 import client, { appStats } from "../../client";
 import Command from "../../structures/Command";
 import Bytes from "../../util/Bytes";
@@ -57,20 +58,37 @@ export default class extends Command {
       totalMemory += data.stats.memoryUsage.heapUsed;
       totalPing += shard?.ping ?? data.wsPing;
 
-      pingShards[data.stats.shardId === appStats.shardId ? "unshift" : "push"]([
-        data.stats.shardId,
-        Status[shard?.status ?? data.wsStatus] ?? "",
-        new ParseMs(data.uptime!),
-        `${shard?.ping ?? data.wsPing}ms`,
-        new Bytes(data.stats.memoryUsage.heapUsed),
-        data.stats.interactions,
-        data.stats.messages,
-        data.stats.users,
-        data.stats.emojis,
-        data.stats.channels,
-        data.stats.guilds,
-      ]);
+      pingShards[data.stats.shardId === appStats.shardId ? "unshift" : "push"](
+        (env.PM2_INSTANCE_ID ? [env.PM2_INSTANCE_ID] : <any>[]).concat([
+          data.stats.shardId,
+          Status[shard?.status ?? data.wsStatus] ?? "",
+          new ParseMs(data.uptime!),
+          `${shard?.ping ?? data.wsPing}ms`,
+          new Bytes(data.stats.memoryUsage.heapUsed),
+          data.stats.interactions,
+          data.stats.messages,
+          data.stats.users,
+          data.stats.emojis,
+          data.stats.channels,
+          data.stats.guilds,
+        ]));
     }
+
+    await Promise.all(promises);
+
+    const total = [
+      "Total",
+      `${shardsData.length}/${appStats.shards}`,
+      "",
+      `~${Math.floor(totalPing / shardsData.length)}ms`,
+      new Bytes(totalMemory),
+      appStats.totalInteractions,
+      appStats.totalMessages,
+      appStats.totalUsers,
+      appStats.totalEmojis,
+      appStats.totalChannels,
+      appStats.totalGuilds,
+    ];
 
     pingShards.unshift([
       "Shard",
@@ -86,21 +104,14 @@ export default class extends Command {
       "Servers",
     ]);
 
-    await Promise.all(promises);
+    if (env.PM2_INSTANCE_ID) {
+      pingShards[0].unshift("Cluster");
+      total.unshift("Total");
+      total[1] = total[2];
+      total[2] = "";
+    }
 
-    pingShards.push([
-      "Total",
-      appStats.shards,
-      "",
-      `~${Math.floor(totalPing / appStats.shards)}ms`,
-      new Bytes(totalMemory),
-      appStats.totalInteractions,
-      appStats.totalMessages,
-      appStats.totalUsers,
-      appStats.totalEmojis,
-      appStats.totalChannels,
-      appStats.totalGuilds,
-    ]);
+    pingShards.push(total);
 
     await sent.edit({
       files: [
