@@ -1,5 +1,5 @@
 export default class Bytes<T extends number> {
-  #units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  static units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   index: number;
   bytes: string;
   unit: string;
@@ -24,7 +24,7 @@ export default class Bytes<T extends number> {
   }
 
   get #unit() {
-    return this.#units[this.index];
+    return Bytes.units[this.index];
   }
 
   toArray(): [bytes: number, unit: string] {

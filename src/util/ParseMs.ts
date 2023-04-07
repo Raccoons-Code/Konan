@@ -7,7 +7,11 @@ export default class ParseMs {
 
   declare result: number | string | undefined;
 
-  constructor(ms: number | string) {
+  constructor(public ms: number | string, public options: Options = {}) {
+    if (!this.options.levels) {
+      this.options.levels = 2;
+    }
+
     if (typeof ms === "number") {
       this.result = this.formatShort(ms);
     } else {
@@ -16,11 +20,25 @@ export default class ParseMs {
   }
 
   formatShort(ms: number): string {
+    let levels = 0;
+
     return ["d", "h", "m", "s", "ms"].reduce((acc, val) => {
       const sub = Math.floor(ms / ParseMs[<"s">val]);
+
       if (!sub) return acc;
+
       ms -= (sub * ParseMs[<"s">val]);
+
+      if (this.options.levels) {
+        if (levels < this.options.levels) {
+          levels++;
+        } else {
+          return acc;
+        }
+      }
+
       acc.push(`${sub}${val}`);
+
       return acc;
     }, <string[]>[]).join(" ");
   }
@@ -44,4 +62,11 @@ export default class ParseMs {
   toString() {
     return `${this.result}`;
   }
+}
+
+interface Options {
+  /**
+   * @default 2
+   */
+  levels?: number
 }
