@@ -136,4 +136,3 @@ if (env.PM2_INSTANCE_ID) {
 } else {
   sharding.spawn({ timeout: 60_000 });
 }
-
