@@ -11,4 +11,4 @@ RUN npm run build
 
 USER node
 ENV NODE_ENV=production
-CMD ["pm2-runtime", "process.yml"]
+CMD ["pm2-runtime", "process.yml", "--only", "konan"]
