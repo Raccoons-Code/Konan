@@ -11,4 +11,4 @@ RUN npm run build
 
 USER node
 ENV NODE_ENV=production
-CMD ["/bin/sh", "-c", "pm2-runtime 'npm start'"]
+CMD ["pm2-runtime", "process.yml"]
