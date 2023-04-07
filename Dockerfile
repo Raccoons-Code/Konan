@@ -9,4 +9,4 @@ RUN npm run build
 
 USER node
 ENV NODE_ENV=production
-CMD ["npm", "start"]
+CMD ["pm2-runtime", "start"]
