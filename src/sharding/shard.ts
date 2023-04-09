@@ -1,3 +1,4 @@
+import "source-map-support/register";
 import "../@prototypes";
 import eventHandler from "../handlers/EventHandler";
 import client from "./../client";
