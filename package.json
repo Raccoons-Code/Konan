@@ -1,13 +1,12 @@
 {
   "name": "konan",
-  "version": "0.31.33-5",
+  "version": "0.31.34",
   "description": "A multi-purpose bot totally original and open-source.",
   "main": "out",
   "scripts": {
     "watch": "tsc -watch",
     "dev": "nodemon --delay 1 out",
     "start": "node out",
-    "start:pm2": "pm2 start",
     "build": "tsc",
     "lint": "eslint . --fix",
     "dbpush": "prisma db push",
