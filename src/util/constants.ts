@@ -4,13 +4,6 @@ import { cpus, totalmem, version } from "node:os";
 import { extname, join } from "node:path";
 import { env } from "node:process";
 
-export const CLUSTER_ID = Number(env.PM2_INSTANCE_ID);
-
-if (!isNaN(CLUSTER_ID)) {
-  env.CLUSTER_ID = env.PM2_INSTANCE_ID;
-  env.CLUSTERING = "true";
-}
-
 export const FILE_EXT = extname(__filename);
 
 export const COMMANDS_PATH = join(__dirname, "..", "commands");

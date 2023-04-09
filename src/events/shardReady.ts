@@ -7,7 +7,7 @@ import TopggAutoposter from "../modules/Topgg/autoposter";
 client.on("shardReady", async function (shardId, _unavailableGuilds) {
   appStats.shardId = shardId;
 
-  console.log("Ready!");
+  console.log(`Shard ${shardId} ready!`);
 
   if (env.DISCORD_ERROR_CHANNEL) {
     try {
@@ -44,5 +44,5 @@ client.on("shardReady", async function (shardId, _unavailableGuilds) {
 
   new TopggAutoposter();
 
-  console.log("Ready! End!");
+  console.log(`Shard ${shardId} ready done!`);
 });
