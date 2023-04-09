@@ -3,7 +3,7 @@ import { APIApplicationCommand, BaseApplicationCommandData, Collection, Permissi
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { env } from "node:process";
-import { CommandTypes } from "../@enum";
+import { ApplicationCommandTypes, CommandTypes } from "../@enum";
 import { CommandRegisterOptions } from "../@types";
 import client from "../client";
 import BaseApplicationCommand from "../structures/BaseApplicationCommand";
@@ -13,13 +13,14 @@ import { COMMANDS_PATH, FILE_EXT } from "../util/constants";
 import { isClass } from "../util/utils";
 
 class CommandHandler {
-  commands = new Collection<string, Collection<string, BaseCommand>>();
-  commandsByCategory = new Collection<string, Collection<string, ChatInputCommand>>();
+  commands = new Collection<`${CommandTypes}`, Collection<string, BaseCommand>>();
+  commandsByCategory = new Collection<`${ApplicationCommandTypes}`, Collection<string, ChatInputCommand>>();
   permissions = new PermissionsBitField();
   errors: Error[] = [];
 
   get applicationCommandTypes() {
-    return Array.from(this.commands.keys()).filter(t => t.startsWith("application"));
+    return Array.from(this.commands.keys())
+      .filter(t => t.startsWith("application")) as `${ApplicationCommandTypes}`[];
   }
 
   get applicationCommands() {
@@ -45,7 +46,7 @@ class CommandHandler {
 
     if (!files.length) return;
 
-    const category = dir
+    const category = <`${CommandTypes}`>dir
       .replace(COMMANDS_PATH, "")
       .split(/[/\\]/)
       .join(".")

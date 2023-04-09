@@ -6,6 +6,7 @@ import client, { appOwners, appStats, logger } from "../client";
 import commandHandler from "../handlers/CommandHandler";
 import { t } from "../translator";
 import { contentWithCodeBlockLength, JSONparse } from "../util/utils";
+import BaseApplicationCommand from "../structures/BaseApplicationCommand";
 
 export const options = <EventOptions>{
   intents: [
@@ -30,7 +31,7 @@ export const options = <EventOptions>{
 };
 
 client.on("interactionCreate", async function (interaction) {
-  const command = InteractionTypes[interaction.type]?.(<any>interaction);
+  const command = <BaseApplicationCommand>InteractionTypes[interaction.type]?.(<any>interaction);
 
   if (!command) return;
 

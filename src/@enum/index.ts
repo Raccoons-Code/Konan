@@ -16,3 +16,9 @@ export const enum CommandTypes {
   ComponentTextInput = "component.textinput",
   Modal = "modal"
 }
+
+export const enum ApplicationCommandTypes {
+  ApplicationChatInput = "application.chatinput",
+  ApplicationContextMessage = "application.context.message",
+  ApplicationContextUser = "application.context.user",
+}

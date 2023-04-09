@@ -5,6 +5,7 @@ import ButtonCommand from "../../../structures/ButtonCommand";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { HELP_PAGE_LIMIT } from "../../../util/constants";
+import { ApplicationCommandTypes } from "../../../@enum";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -24,7 +25,7 @@ export default class extends ButtonCommand {
   async commands(interaction: ButtonInteraction) {
     const parsedId = <HelpButtonCustomId>JSON.parse(interaction.customId);
 
-    const commands = commandHandler.commandsByCategory.get(parsedId.cbc) ??
+    const commands = commandHandler.commandsByCategory.get(<ApplicationCommandTypes>parsedId.cbc) ??
       commandHandler.chatInputApplicationCommands;
 
     const slashCommands = commands.toJSON().filter(c => !c.options.private);

@@ -8,6 +8,7 @@ import Translator, { t } from "../../../../translator";
 import { HELP_PAGE_LIMIT } from "../../../../util/constants";
 import { formatLocale } from "../../../../util/Locales";
 import { mathRandom } from "../../../../util/utils";
+import { ApplicationCommandTypes } from "../../../../@enum";
 
 export default class extends SelectMenuCommand {
   constructor() {
@@ -210,7 +211,7 @@ export default class extends SelectMenuCommand {
   }
 
   async setCommandCategory(interaction: StringSelectMenuInteraction<"cached">) {
-    const commands = commandHandler.commandsByCategory.get(interaction.values[0]);
+    const commands = commandHandler.commandsByCategory.get(<ApplicationCommandTypes>interaction.values[0]);
 
     const slashCommands = commands?.toJSON().filter((c: any) => !c.options?.private);
 
