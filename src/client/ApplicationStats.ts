@@ -1,4 +1,4 @@
-import { memoryUsage } from "node:process";
+import { cpuUsage, memoryUsage } from "node:process";
 import client from ".";
 import { /* FetchStatsOptions, */ Stats } from "../@types";
 
@@ -78,6 +78,10 @@ export default class ApplicationStats {
 
   get channels() {
     return client.channels.cache.size;
+  }
+
+  get cpuUsage() {
+    return cpuUsage();
   }
 
   get emojis() {
