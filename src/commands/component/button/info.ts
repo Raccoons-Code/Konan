@@ -1,12 +1,13 @@
 import { stripIndents } from "common-tags";
 import { ButtonInteraction, codeBlock, EmbedBuilder, time } from "discord.js";
 import { memoryUsage, versions } from "node:process";
-import { InfoCustomId } from "../../../@types";
+import { BaseProcessMessage, InfoCustomId, Stats } from "../../../@types";
 import client, { appStats } from "../../../client";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import Bytes from "../../../util/Bytes";
 import { CPU_CORES, CPU_MODEL, DJS_VERSION, OS_VERSION, TOTAL_RAM, VERSION } from "../../../util/constants";
 import { makeTable } from "../../../util/utils";
+import { fetchProcessResponse } from "../../../util/Process";
 
 const inline = true;
 
@@ -57,28 +58,48 @@ export default class extends ButtonCommand {
     if (VERSION)
       stats.push(["Version", VERSION]);
 
-    await appStats.fetch();
+      const status = await fetchProcessResponse({
+        action: "stats",
+      }) as (BaseProcessMessage & { data: Stats })[];
 
-    stats.unshift(
-      ["Servers", appStats.guilds < appStats.totalGuilds ?
-        `${appStats.guilds}/${appStats.totalGuilds}` :
-        appStats.guilds],
-      ["Channels", appStats.channels < appStats.totalChannels ?
-        `${appStats.channels}/${appStats.totalChannels}` :
-        appStats.channels],
-      ["Users", appStats.users < appStats.totalUsers ?
-        `${appStats.users}/${appStats.totalUsers}` :
-        appStats.users],
-      ["Emojis", appStats.emojis < appStats.totalEmojis ?
-        `${appStats.emojis}/${appStats.totalEmojis}` :
-        appStats.emojis],
-      ["Messages", appStats.messages < appStats.totalMessages ?
-        `${appStats.messages}/${appStats.totalMessages}` :
-        appStats.messages],
-      ["Interactions", appStats.interactions < appStats.totalInteractions ?
-        `${appStats.interactions}/${appStats.totalInteractions}` :
-        appStats.interactions],
-    );
+      const data = status.reduce((acc, cur) => {
+        acc.channels += cur.data.channels;
+        acc.emojis += cur.data.emojis;
+        acc.guilds += cur.data.guilds;
+        acc.interactions += cur.data.interactions;
+        acc.messages += cur.data.messages;
+        acc.users += cur.data.users;
+
+        return acc;
+      }, <Stats>{
+        channels: 0,
+        emojis: 0,
+        guilds: 0,
+        interactions: 0,
+        messages: 0,
+        users: 0,
+      });
+
+      stats.unshift(
+        ["Servers", appStats.guilds < data.guilds ?
+          `${appStats.guilds}/${data.guilds}` :
+          appStats.guilds],
+        ["Channels", appStats.channels < data.channels ?
+          `${appStats.channels}/${data.channels}` :
+          appStats.channels],
+        ["Users", appStats.users < data.users ?
+          `${appStats.users}/${data.users}` :
+          appStats.users],
+        ["Emojis", appStats.emojis < data.emojis ?
+          `${appStats.emojis}/${data.emojis}` :
+          appStats.emojis],
+        ["Messages", appStats.messages < data.messages ?
+          `${appStats.messages}/${data.messages}` :
+          appStats.messages],
+        ["Interactions", appStats.interactions < data.interactions ?
+          `${appStats.interactions}/${data.interactions}` :
+          appStats.interactions],
+      );
 
     await interaction.update({
       embeds: [
