@@ -132,14 +132,14 @@ export default class ClusteringManager extends EventEmitter {
 
     if (this.isPrimary) {
       for (let i = 0; i < totalWorkers; i++) {
-        const child = cluster.fork();
+        const worker = cluster.fork();
 
         await new Promise((resolve, _) => {
-          cluster.on("message", async (worker, message, _handle) => {
+          worker.setMaxListeners(worker.getMaxListeners() + 1);
+          worker.on("message", (message) => {
             if (message !== "ready") return;
-            if (child.id !== worker.id) return;
-
-            resolve("ready");
+            worker.setMaxListeners((worker.getMaxListeners() || 1) - 1);
+            resolve(message);
           });
         });
       }
