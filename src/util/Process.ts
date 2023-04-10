@@ -18,6 +18,7 @@ export function fetchProcessResponse<T extends BaseProcessMessage>(message: Part
     return promise;
   } else {
     const promises = [];
+    const received: T[] = [];
 
     const originId = message.id;
 
@@ -25,8 +26,9 @@ export function fetchProcessResponse<T extends BaseProcessMessage>(message: Part
       const id = Date.now() + i;
 
       promises.push(waitProcessResponse<T>(msg => {
-        if (id === msg.id) {
+        if (id === msg.id && msg.fromShard === i) {
           msg.id = originId;
+          received.push(msg);
           return true;
         }
       }));
@@ -37,7 +39,7 @@ export function fetchProcessResponse<T extends BaseProcessMessage>(message: Part
       client.shard?.send(message);
     }
 
-    return Promise.all(promises);
+    return Promise.all(promises).catch(() => <T[]>received);
   }
 }
 

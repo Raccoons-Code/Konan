@@ -9,7 +9,7 @@ export interface BaseProcessMessage {
   id: number
   action?: string
   actionType?: string
-  data?: any
+  data?: unknown
   error?: any
   fromShard: number
   fromWorker?: number

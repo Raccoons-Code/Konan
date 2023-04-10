@@ -49,6 +49,7 @@ cluster.on("fork", (worker) => {
     }
 
     if (message.replyWorker) {
+      message.fromWorker = worker.id;
       const replyWorker = message.replyWorker;
       delete message.replyWorker;
       cluster.workers?.[replyWorker]?.emit("message", message);
@@ -56,6 +57,7 @@ cluster.on("fork", (worker) => {
     }
 
     if (message.toWorker) {
+      message.fromWorker = worker.id;
       const toWorker = message.toWorker;
       delete message.toWorker;
       cluster.workers?.[toWorker]?.emit("message", message);

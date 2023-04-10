@@ -1,3 +1,5 @@
+import { Status } from "discord.js";
+
 export interface FetchStatsOptions {
   filter?: StatsFilter | StatsFilter[]
 }
@@ -17,6 +19,8 @@ export interface Stats {
   cpuUsage: NodeJS.CpuUsage
   memoryUsage: NodeJS.MemoryUsage
   messages: number
+  readyAt: Date | null
+  readyTimestamp: number | null
   shardId: number
   shardIds: number[]
   shards: number
@@ -28,9 +32,12 @@ export interface Stats {
   totalMessages: number
   totalUsers: number
   totalVoiceAdapters: number
+  uptime: number | null
   userMessages: number
   users: number
-  voiceAdapters: number;
+  voiceAdapters: number
+  wsPing: number | null
+  wsStatus: Status
 }
 
 export type StatsFilter =

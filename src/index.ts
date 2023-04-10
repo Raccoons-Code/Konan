@@ -1,5 +1,5 @@
 import "dotenv/config";
 import "source-map-support/register";
-import sharding from "./sharding";
+import clustering from "./clustering";
 
-sharding.spawn();
+clustering.spawn();

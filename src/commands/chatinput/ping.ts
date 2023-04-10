@@ -1,9 +1,10 @@
 import { AttachmentBuilder, Message, Status } from "discord.js";
-import { env } from "process";
+import { BaseProcessMessage, Stats } from "../../@types";
 import client, { appStats } from "../../client";
 import Command from "../../structures/Command";
 import Bytes from "../../util/Bytes";
 import ParseMs from "../../util/ParseMs";
+import { fetchProcessResponse } from "../../util/Process";
 import { makeMultiTable } from "../../util/utils";
 
 export default class extends Command {
@@ -34,63 +35,64 @@ export default class extends Command {
   async shards(_message: Message, sent: Message) {
     if (!client.shard) return 1;
 
-    const promises = [
-      appStats.fetch(),
-    ];
+    const response = await fetchProcessResponse({
+      action: "stats",
+    }) as (BaseProcessMessage & { data: Stats })[];
 
     const pingShards: (string | { toString(): string })[][] = [];
 
-    const shardsData = await client.shard.broadcastEval(client => ({
-      stats: client.appStats,
-      readyAt: client.readyAt,
-      readyTimestamp: client.readyTimestamp,
-      uptime: client.uptime,
-      wsPing: client.ws.ping,
-      wsStatus: client.ws.status,
-    }));
-
     let totalMemory = 0;
     let totalPing = 0;
+    let totalInteractions = 0;
+    let totalMessages = 0;
+    let totalUsers = 0;
+    let totalEmojis = 0;
+    let totalChannels = 0;
+    let totalGuilds = 0;
 
-    for (const data of shardsData) {
-      const shard = client.ws.shards.get(data.stats.shardId);
+    for (const stats of response) {
+      totalMemory += stats.data.memoryUsage.heapUsed;
+      totalPing += stats.data.wsPing!;
+      totalInteractions += stats.data.interactions;
+      totalMessages += stats.data.messages;
+      totalUsers += stats.data.users;
+      totalEmojis += stats.data.emojis;
+      totalChannels += stats.data.channels;
+      totalGuilds += stats.data.guilds;
 
-      totalMemory += data.stats.memoryUsage.heapUsed;
-      totalPing += shard?.ping ?? data.wsPing;
-
-      pingShards[data.stats.shardId === appStats.shardId ? "unshift" : "push"](
-        (env.PM2_INSTANCE_ID ? [env.PM2_INSTANCE_ID] : <any>[]).concat([
-          data.stats.shardId,
-          Status[shard?.status ?? data.wsStatus] ?? "",
-          new ParseMs(data.uptime!),
-          `${shard?.ping ?? data.wsPing}ms`,
-          new Bytes(data.stats.memoryUsage.heapUsed),
-          data.stats.interactions,
-          data.stats.messages,
-          data.stats.users,
-          data.stats.emojis,
-          data.stats.channels,
-          data.stats.guilds,
-        ]));
+      pingShards[stats.data.shardId === appStats.shardId ? "unshift" : "push"]([
+        stats.fromWorker!,
+        stats.data.shardId,
+        Status[stats.data.wsStatus] ?? "",
+        new ParseMs(stats.data.uptime!),
+        `${stats.data.wsPing}ms`,
+        new Bytes(stats.data.memoryUsage.heapUsed),
+        stats.data.interactions,
+        stats.data.messages,
+        stats.data.users,
+        stats.data.emojis,
+        stats.data.channels,
+        stats.data.guilds,
+      ]);
     }
-
-    await Promise.all(promises);
 
     const total = [
       "Total",
-      `${shardsData.length}/${appStats.shards}`,
+      `${response.length}/${appStats.shards}`,
       "",
-      `~${Math.floor(totalPing / shardsData.length)}ms`,
+      "",
+      `~${Math.floor(totalPing / response.length)}ms`,
       new Bytes(totalMemory),
-      appStats.totalInteractions,
-      appStats.totalMessages,
-      appStats.totalUsers,
-      appStats.totalEmojis,
-      appStats.totalChannels,
-      appStats.totalGuilds,
+      totalInteractions,
+      totalMessages,
+      totalUsers,
+      totalEmojis,
+      totalChannels,
+      totalGuilds,
     ];
 
     pingShards.unshift([
+      "Cluster",
       "Shard",
       "Status",
       "Uptime",
@@ -103,13 +105,6 @@ export default class extends Command {
       "Channels",
       "Servers",
     ]);
-
-    if (env.PM2_INSTANCE_ID) {
-      pingShards[0].unshift("Cluster");
-      total.unshift("Total");
-      total[1] = total[2];
-      total[2] = "";
-    }
 
     pingShards.push(total);
 

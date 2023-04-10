@@ -65,6 +65,7 @@ sharding.on("shardCreate", async function (shard) {
 
     if (typeof message.toShard === "number") {
       if (sharding.shards.has(message.toShard)) {
+        message.fromWorker ??= cluster.worker?.id;
         const toShard = message.toShard;
         delete message.toShard;
         await sharding.shards.get(toShard)?.send(message);
