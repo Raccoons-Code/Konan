@@ -57,8 +57,6 @@ export default class ClusteringManager {
         if (CPU_CORES < 2)
           totalWorkers--;
 
-        totalWorkers = 2;
-
         cluster.on("message", async (worker, message, _handle) => {
           if (message !== "getTotalWorkers") return;
 
@@ -117,7 +115,7 @@ export default class ClusteringManager {
           }, () => null);
         });
 
-        resolve(4 ?? fetchRecommendedShardCount(env.DISCORD_TOKEN!));
+        resolve(fetchRecommendedShardCount(env.DISCORD_TOKEN!));
       } else {
         cluster.worker?.setMaxListeners(cluster.worker.getMaxListeners() + 1);
 
