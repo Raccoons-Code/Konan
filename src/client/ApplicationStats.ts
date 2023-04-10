@@ -252,6 +252,7 @@ export default class ApplicationStats {
     return {
       botMessages: this.botMessages,
       channels: this.channels,
+      cpuUsage: this.cpuUsage,
       emojis: this.emojis,
       guilds: this.guilds,
       interactions: this.interactions,
