@@ -39,7 +39,7 @@ export function fetchProcessResponse<T extends BaseProcessMessage>(message: Part
       client.shard?.send(message);
     }
 
-    return Promise.all(promises).catch(() => <T[]>received);
+    return Promise.all(promises).catch(() => received);
   }
 }
 
