@@ -6,8 +6,8 @@ import client, { appStats } from "../../../client";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import Bytes from "../../../util/Bytes";
 import { CPU_CORES, CPU_MODEL, DJS_VERSION, OS_VERSION, TOTAL_RAM, VERSION } from "../../../util/constants";
-import { makeTable } from "../../../util/utils";
 import { fetchProcessResponse } from "../../../util/Process";
+import { makeTable } from "../../../util/utils";
 
 const inline = true;
 
@@ -41,12 +41,6 @@ export default class extends ButtonCommand {
       Discord.js : ${DJS_VERSION}
     `);
 
-    const machine = stripIndents(`
-      CPU : ${CPU_MODEL} (${CPU_CORES} cores)
-      OS  : ${OS_VERSION}
-      RAM : ${new Bytes(memoryUsage().heapUsed)} / ${new Bytes(TOTAL_RAM)}
-    `);
-
     const stats: [string, string | number][] = [
       ["Ping", `${client.ws.ping}ms`],
     ];
@@ -58,48 +52,58 @@ export default class extends ButtonCommand {
     if (VERSION)
       stats.push(["Version", VERSION]);
 
-      const status = await fetchProcessResponse({
-        action: "stats",
-      }) as (BaseProcessMessage & { data: Stats })[];
+    const status = await fetchProcessResponse({
+      action: "stats",
+    }) as (BaseProcessMessage & { data: Stats })[];
 
-      const data = status.reduce((acc, cur) => {
-        acc.channels += cur.data.channels;
-        acc.emojis += cur.data.emojis;
-        acc.guilds += cur.data.guilds;
-        acc.interactions += cur.data.interactions;
-        acc.messages += cur.data.messages;
-        acc.users += cur.data.users;
+    const data = status.reduce((acc, cur) => {
+      acc.channels += cur.data.channels;
+      acc.emojis += cur.data.emojis;
+      acc.guilds += cur.data.guilds;
+      acc.interactions += cur.data.interactions;
+      acc.messages += cur.data.messages;
+      acc.users += cur.data.users;
+      acc.memoryUsage.heapUsed += cur.data.memoryUsage.heapUsed;
 
-        return acc;
-      }, <Stats>{
-        channels: 0,
-        emojis: 0,
-        guilds: 0,
-        interactions: 0,
-        messages: 0,
-        users: 0,
-      });
+      return acc;
+    }, <Stats>{
+      channels: 0,
+      emojis: 0,
+      guilds: 0,
+      interactions: 0,
+      messages: 0,
+      users: 0,
+      memoryUsage: {
+        heapUsed: 0,
+      },
+    });
 
-      stats.unshift(
-        ["Servers", appStats.guilds < data.guilds ?
-          `${appStats.guilds}/${data.guilds}` :
-          appStats.guilds],
-        ["Channels", appStats.channels < data.channels ?
-          `${appStats.channels}/${data.channels}` :
-          appStats.channels],
-        ["Users", appStats.users < data.users ?
-          `${appStats.users}/${data.users}` :
-          appStats.users],
-        ["Emojis", appStats.emojis < data.emojis ?
-          `${appStats.emojis}/${data.emojis}` :
-          appStats.emojis],
-        ["Messages", appStats.messages < data.messages ?
-          `${appStats.messages}/${data.messages}` :
-          appStats.messages],
-        ["Interactions", appStats.interactions < data.interactions ?
-          `${appStats.interactions}/${data.interactions}` :
-          appStats.interactions],
-      );
+    stats.unshift(
+      ["Servers", appStats.guilds < data.guilds ?
+        `${appStats.guilds}/${data.guilds}` :
+        appStats.guilds],
+      ["Channels", appStats.channels < data.channels ?
+        `${appStats.channels}/${data.channels}` :
+        appStats.channels],
+      ["Users", appStats.users < data.users ?
+        `${appStats.users}/${data.users}` :
+        appStats.users],
+      ["Emojis", appStats.emojis < data.emojis ?
+        `${appStats.emojis}/${data.emojis}` :
+        appStats.emojis],
+      ["Messages", appStats.messages < data.messages ?
+        `${appStats.messages}/${data.messages}` :
+        appStats.messages],
+      ["Interactions", appStats.interactions < data.interactions ?
+        `${appStats.interactions}/${data.interactions}` :
+        appStats.interactions],
+    );
+
+    const machine = stripIndents(`
+      CPU : ${CPU_MODEL} (${CPU_CORES} cores)
+      OS  : ${OS_VERSION}
+      RAM : ${new Bytes(memoryUsage().heapUsed)} / ${new Bytes(data.memoryUsage.heapUsed)} / ${new Bytes(TOTAL_RAM)}
+    `);
 
     await interaction.update({
       embeds: [

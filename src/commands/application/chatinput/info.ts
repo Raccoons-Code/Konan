@@ -83,20 +83,12 @@ export default class extends ChatInputCommand {
     const iconURL = me?.displayAvatarURL() ?? user?.displayAvatarURL();
     const username = me?.displayName ?? user?.username;
 
-    const heapUsed = memoryUsage().heapUsed;
-
     const engine = stripIndents(`
       Node : ${versions.node}
     `);
 
     const library = stripIndents(`
       Discord.js : ${DJS_VERSION}
-    `);
-
-    const machine = stripIndents(`
-      CPU : ${CPU_MODEL} (${CPU_CORES} cores)
-      OS  : ${OS_VERSION}
-      RAM : ${new Bytes(heapUsed)} / ${new Bytes(TOTAL_RAM)}
     `);
 
     const stats: [string, string | number][] = [
@@ -121,6 +113,7 @@ export default class extends ChatInputCommand {
       acc.interactions += cur.data.interactions;
       acc.messages += cur.data.messages;
       acc.users += cur.data.users;
+      acc.memoryUsage.heapUsed += cur.data.memoryUsage.heapUsed;
 
       return acc;
     }, <Stats>{
@@ -130,6 +123,9 @@ export default class extends ChatInputCommand {
       interactions: 0,
       messages: 0,
       users: 0,
+      memoryUsage: {
+        heapUsed: 0,
+      },
     });
 
     stats.unshift(
@@ -152,6 +148,12 @@ export default class extends ChatInputCommand {
         `${appStats.interactions}/${data.interactions}` :
         appStats.interactions],
     );
+
+    const machine = stripIndents(`
+      CPU : ${CPU_MODEL} (${CPU_CORES} cores)
+      OS  : ${OS_VERSION}
+      RAM : ${new Bytes(memoryUsage().heapUsed)} / ${new Bytes(data.memoryUsage.heapUsed)} / ${new Bytes(TOTAL_RAM)}
+    `);
 
     await interaction.editReply({
       components: [
