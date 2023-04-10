@@ -27,6 +27,8 @@ const actions = {
     };
   },
   async stats() {
-    return appStats.fetch().then(stats => stats.toJSON());
+    return appStats.fetch()
+      .then(stats => stats.toJSON())
+      .catch(() => appStats.toJSON());
   },
 };

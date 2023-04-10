@@ -79,6 +79,7 @@ sharding.on("shardCreate", async function (shard) {
       const promises = [];
 
       for (const other of sharding.shards.values()) {
+        message.toShard = other.id;
         promises.push(other.send(message));
       }
 
