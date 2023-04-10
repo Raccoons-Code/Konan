@@ -1,4 +1,4 @@
-import cluster from "cluster";
+import cluster from "node:cluster";
 import { BaseProcessMessage } from "../@types";
 
 cluster.on("fork", (worker) => {
