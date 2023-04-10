@@ -44,16 +44,15 @@ export function fetchProcessResponse<T extends BaseProcessMessage>(message: Part
 }
 
 export function waitProcessResponse<T>(callback: (message: T) => boolean | void): Promise<T> {
+  process.setMaxListeners(process.getMaxListeners() + 1);
+
   return new Promise<T>((resolve, reject) => {
     const timeout = setTimeout(() => {
       process.removeListener("message", listener);
-
       process.setMaxListeners((process.getMaxListeners() || 1) - 1);
 
       reject(new Error("Timeout"));
     }, 5000);
-
-    process.setMaxListeners(process.getMaxListeners() + 1);
 
     const listener = function (message: any) {
       // if (!message) return;
@@ -62,7 +61,6 @@ export function waitProcessResponse<T>(callback: (message: T) => boolean | void)
         clearTimeout(timeout);
 
         process.removeListener("message", listener);
-
         process.setMaxListeners((process.getMaxListeners() || 1) - 1);
 
         if (message.error) {
