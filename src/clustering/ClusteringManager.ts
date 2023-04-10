@@ -1,15 +1,18 @@
 /* eslint-disable no-await-in-loop */
 import { Collection, fetchRecommendedShardCount } from "discord.js";
 import cluster, { Worker } from "node:cluster";
+import { EventEmitter } from "node:events";
 import { env } from "node:process";
 import { setTimeout as sleep } from "node:timers/promises";
 import sharding from "../sharding";
 import { CPU_CORES } from "../util/constants";
+import "./events";
 
-export default class ClusteringManager {
+export default class ClusteringManager extends EventEmitter {
   readonly workers = new Collection<string, Worker>();
 
   constructor() {
+    super({ captureRejections: true });
   }
 
   get isPrimary() {

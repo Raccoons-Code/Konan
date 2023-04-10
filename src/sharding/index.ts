@@ -1,7 +1,6 @@
-import { ShardingManager } from "discord.js";
+import { Collection, Shard, ShardingManager } from "discord.js";
 import { join } from "node:path";
 import { execArgv } from "node:process";
-import TopggShardingAutoposter from "../modules/Topgg/shardingAutoposter";
 import { FILE_EXT } from "../util/constants";
 
 const sharding = new ShardingManager(join(__dirname, `shard${FILE_EXT}`), {
@@ -10,15 +9,7 @@ const sharding = new ShardingManager(join(__dirname, `shard${FILE_EXT}`), {
 
 export default sharding;
 
-const topggShardingAutoposter = new TopggShardingAutoposter();
+export const shards = new Collection<number, Shard>();
 
-sharding.on("shardCreate", async function (shard) {
-  console.log(`Launched shard ${shard.id}`);
+import "./events";
 
-  shard.once("ready", async function () {
-    if (sharding.shards.size === sharding.totalShards) {
-      if (!topggShardingAutoposter.started)
-        topggShardingAutoposter.start();
-    }
-  });
-});
