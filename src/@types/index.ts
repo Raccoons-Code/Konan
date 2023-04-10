@@ -11,14 +11,12 @@ export interface BaseProcessMessage {
   actionType?: string
   data?: any
   error?: any
-  fromCluster?: number
   fromShard: number
   fromWorker?: number
+  origin?: string
   replied?: boolean
-  replyCluster?: number
   replyShard?: number
   replyWorker?: number
-  toCluster?: number
   toShard?: number
   toWorker?: number
 }

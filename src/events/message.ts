@@ -12,9 +12,9 @@ process.on("message", async function (message: BaseProcessMessage, _sendHandle) 
     message.data = await action?.() ?? action;
 
     message.replied = true;
-    message.replyCluster = message.fromCluster;
     message.replyShard = message.fromShard;
     message.replyWorker = message.fromWorker;
+    message.fromShard = appStats.shardId;
 
     await client.shard?.send(message);
   }

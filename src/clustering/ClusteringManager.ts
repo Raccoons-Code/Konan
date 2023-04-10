@@ -1,17 +1,14 @@
 /* eslint-disable no-await-in-loop */
 import { fetchRecommendedShardCount } from "discord.js";
 import cluster from "node:cluster";
-import { EventEmitter } from "node:events";
 import { env } from "node:process";
 import { setTimeout as sleep } from "node:timers/promises";
 import sharding from "../sharding";
 import { CPU_CORES } from "../util/constants";
 import "./events";
 
-export default class ClusteringManager extends EventEmitter {
-  constructor() {
-    super({ captureRejections: true });
-  }
+export default class ClusteringManager {
+  constructor() { }
 
   get isPrimary() {
     return cluster.isPrimary;
@@ -60,8 +57,15 @@ export default class ClusteringManager extends EventEmitter {
         if (CPU_CORES < 2)
           totalWorkers--;
 
+        totalWorkers = 2;
+
         cluster.on("message", async (worker, message, _handle) => {
           if (message !== "getTotalWorkers") return;
+
+          worker.emit("message", {
+            type: "totalWorkers",
+            totalWorkers,
+          });
 
           worker.send({
             type: "totalWorkers",
@@ -102,13 +106,18 @@ export default class ClusteringManager extends EventEmitter {
             await sleep(1000);
           }
 
+          worker.emit("message", {
+            type: "totalShards",
+            totalShards: this.totalShards,
+          });
+
           worker.send({
             type: "totalShards",
             totalShards: this.totalShards,
           }, () => null);
         });
 
-        resolve(fetchRecommendedShardCount(env.DISCORD_TOKEN!));
+        resolve(4 ?? fetchRecommendedShardCount(env.DISCORD_TOKEN!));
       } else {
         cluster.worker?.setMaxListeners(cluster.worker.getMaxListeners() + 1);
 

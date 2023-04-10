@@ -1,8 +1,6 @@
 import { BaseProcessMessage } from "../@types";
 import client, { appStats } from "../client";
 
-export function fetchProcessResponse<T extends BaseProcessMessage>(message: Partial<T>): Promise<T[]>;
-export function fetchProcessResponse<T extends BaseProcessMessage & { toShard: number }>(message: Partial<T>): Promise<T>;
 export function fetchProcessResponse<T extends BaseProcessMessage>(message: Partial<T>) {
   if (!message.id) {
     message.id = Date.now();
@@ -20,20 +18,24 @@ export function fetchProcessResponse<T extends BaseProcessMessage>(message: Part
     return promise;
   } else {
     const promises = [];
-    const received: number[] = [];
+
+    const originId = message.id;
 
     for (let i = 0; i < (client.shard?.count ?? 0); i++) {
-      promises.push(waitProcessResponse<BaseProcessMessage>(msg => {
-        if (message.id === msg.id) {
-          if (!received.includes(msg.fromShard)) {
-            received.push(msg.fromShard);
-            return true;
-          }
+      const id = Date.now() + i;
+
+      promises.push(waitProcessResponse<T>(msg => {
+        if (id === msg.id) {
+          msg.id = originId;
+          return true;
         }
       }));
-    }
 
-    client.shard?.send(message);
+      message.id = id;
+      message.toShard = i;
+
+      client.shard?.send(message);
+    }
 
     return Promise.all(promises);
   }
@@ -52,9 +54,9 @@ export function waitProcessResponse<T>(callback: (message: T) => boolean | void)
     process.setMaxListeners(process.getMaxListeners() + 1);
 
     const listener = function (message: any) {
-      if (!message) return;
+      // if (!message) return;
 
-      if (callback(message)) {
+      if (message?.replied && callback(message)) {
         clearTimeout(timeout);
 
         process.removeListener("message", listener);
@@ -67,6 +69,8 @@ export function waitProcessResponse<T>(callback: (message: T) => boolean | void)
 
         resolve(message);
       }
+
+      return;
     };
 
     process.on("message", listener);
