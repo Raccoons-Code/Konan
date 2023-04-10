@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
-import { Collection, fetchRecommendedShardCount } from "discord.js";
-import cluster, { Worker } from "node:cluster";
+import { fetchRecommendedShardCount } from "discord.js";
+import cluster from "node:cluster";
 import { EventEmitter } from "node:events";
 import { env } from "node:process";
 import { setTimeout as sleep } from "node:timers/promises";
@@ -9,8 +9,6 @@ import { CPU_CORES } from "../util/constants";
 import "./events";
 
 export default class ClusteringManager extends EventEmitter {
-  readonly workers = new Collection<string, Worker>();
-
   constructor() {
     super({ captureRejections: true });
   }
@@ -48,7 +46,7 @@ export default class ClusteringManager extends EventEmitter {
     return shardList;
   }
 
-  private async _fetchTotalWorkers() {
+  private _fetchTotalWorkers() {
     return new Promise<number>((resolve, _reject) => {
       if (this.isPrimary) {
         const totalShards = sharding.totalShards as number;
@@ -75,20 +73,24 @@ export default class ClusteringManager extends EventEmitter {
       } else {
         cluster.worker?.setMaxListeners(cluster.worker.getMaxListeners() + 1);
 
-        cluster.worker?.on("message", (message) => {
+        const listener = function (message: any) {
           if (message?.type !== "totalWorkers") return;
+
+          cluster.worker?.removeListener("message", listener);
 
           cluster.worker?.setMaxListeners((cluster.worker.getMaxListeners() || 1) - 1);
 
           resolve(message.totalWorkers);
-        });
+        };
+
+        cluster.worker?.on("message", listener);
 
         cluster.worker?.send("getTotalWorkers");
       }
     });
   }
 
-  private async _fetchTotalShards() {
+  private _fetchTotalShards() {
     return new Promise<number>((resolve, _reject) => {
       if (this.isPrimary) {
         cluster.setMaxListeners(cluster.getMaxListeners() + 1);
@@ -110,13 +112,17 @@ export default class ClusteringManager extends EventEmitter {
       } else {
         cluster.worker?.setMaxListeners(cluster.worker.getMaxListeners() + 1);
 
-        cluster.worker?.on("message", (message) => {
+        const listener = function (message: any) {
           if (message?.type !== "totalShards") return;
+
+          cluster.worker?.removeListener("message", listener);
 
           cluster.worker?.setMaxListeners((cluster.worker.getMaxListeners() || 1) - 1);
 
           resolve(message.totalShards);
-        });
+        };
+
+        cluster.worker?.on("message", listener);
 
         cluster.worker?.send("getTotalShards");
       }
@@ -136,22 +142,22 @@ export default class ClusteringManager extends EventEmitter {
 
         await new Promise((resolve, _) => {
           worker.setMaxListeners(worker.getMaxListeners() + 1);
-          worker.on("message", (message) => {
+
+          const listener = function (message: any) {
             if (message !== "ready") return;
+
+            worker.removeListener("message", listener);
+
             worker.setMaxListeners((worker.getMaxListeners() || 1) - 1);
+
             resolve(message);
-          });
+          };
+
+          worker.on("message", listener);
         });
       }
 
-      if (cluster.workers) {
-        for (const [id, worker] of Object.entries(cluster.workers)) {
-          if (!worker) continue;
-          this.workers.set(id, worker);
-        }
-      }
-
-      if (!this.workers.size) {
+      if (!cluster.workers?.[1]) {
         await sharding.spawn();
       }
     } else {
