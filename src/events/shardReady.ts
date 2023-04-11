@@ -32,9 +32,6 @@ client.on("shardReady", async function (shardId, unavailableGuilds) {
       .then(webhook => { logger.LOG_WEBHOOK = webhook; })
       .catch(() => null),
 
-    isLastShard &&
-    appStats.fetch(),
-
     client.application?.fetch(),
 
     prisma.$connect()
