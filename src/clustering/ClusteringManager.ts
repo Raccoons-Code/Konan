@@ -145,7 +145,12 @@ export default class ClusteringManager {
 
     if (this.isPrimary) {
       for (let i = 0; i < totalWorkers; i++) {
-        const worker = cluster.fork();
+        const worker = cluster.fork({
+          CLUSTERING: true,
+          TOTAL_SHARDS: sharding.totalShards,
+          TOTAL_WORKERS: totalWorkers,
+          WORKER_ID: i + 1,
+        });
 
         await new Promise((resolve, _) => {
           worker.setMaxListeners(worker.getMaxListeners() + 1);

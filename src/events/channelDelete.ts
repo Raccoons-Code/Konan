@@ -1,20 +1,16 @@
-import client, { appStats } from "../client";
+import client from "../client";
 import prisma from "../database/prisma";
 
 client.on("channelDelete", async function (channel) {
-  await Promise.all([
-    appStats.fetch(),
-
-    prisma.wordleInstance.updateMany({
-      where: {
-        channelId: channel.id,
-        endedAt: {
-          isSet: false,
-        },
+  await prisma.wordleInstance.updateMany({
+    where: {
+      channelId: channel.id,
+      endedAt: {
+        isSet: false,
       },
-      data: {
-        endedAt: new Date(),
-      },
-    }),
-  ]);
+    },
+    data: {
+      endedAt: new Date(),
+    },
+  });
 });

@@ -1,7 +1,7 @@
 import { stripIndents } from "common-tags";
 import { ButtonInteraction, codeBlock, EmbedBuilder, time } from "discord.js";
 import { memoryUsage, versions } from "node:process";
-import { BaseProcessMessage, InfoCustomId, Stats } from "../../../@types";
+import { InfoCustomId, Stats } from "../../../@types";
 import client, { appStats } from "../../../client";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import Bytes from "../../../util/Bytes";
@@ -52,9 +52,9 @@ export default class extends ButtonCommand {
     if (VERSION)
       stats.push(["Version", VERSION]);
 
-    const status = await fetchProcessResponse({
+    const status = await fetchProcessResponse<Stats>({
       action: "stats",
-    }) as (BaseProcessMessage & { data: Stats })[];
+    });
 
     const data = status.reduce((acc, cur) => {
       acc.channels += cur.data.channels;

@@ -4,7 +4,7 @@ import prisma from "../database/prisma";
 import commandHandler from "../handlers/CommandHandler";
 import TopggAutoposter from "../modules/Topgg/autoposter";
 
-client.on("shardReady", async function (shardId, _unavailableGuilds) {
+client.on("shardReady", async function (shardId, unavailableGuilds) {
   appStats.shardId = shardId;
 
   console.log(`Shard ${shardId} ready!`);
@@ -37,12 +37,31 @@ client.on("shardReady", async function (shardId, _unavailableGuilds) {
 
     client.application?.fetch(),
 
-    prisma.$connect(),
+    prisma.$connect()
+      .then(() => {
+        if (!unavailableGuilds?.size) return;
+
+        const guildIds = Array.from(unavailableGuilds);
+
+        prisma.$transaction([
+          prisma.wordleInstance.updateMany({
+            where: {
+              OR: guildIds.map(guildId => ({ guildId })),
+              endedAt: {
+                isSet: false,
+              },
+            },
+            data: {
+              endedAt: new Date(),
+            },
+          }),
+        ]);
+      }),
   ]);
 
   presence.start();
 
   new TopggAutoposter();
 
-  console.log(`Shard ${shardId} ready done!`);
+  console.log(`Cluster ${appStats.workerId} Shard ${shardId} ready done!`);
 });

@@ -1,10 +1,8 @@
-import client, { appStats, logger } from "../client";
+import client, { logger } from "../client";
 import prisma from "../database/prisma";
 
 client.on("guildDelete", async function (guild) {
   await Promise.all([
-    appStats.fetch(),
-
     logger.oldGuild(guild),
 
     prisma.$transaction([
@@ -17,12 +15,6 @@ client.on("guildDelete", async function (guild) {
         },
         data: {
           endedAt: new Date(),
-        },
-      }),
-
-      prisma.guild.deleteMany({
-        where: {
-          id: guild.id,
         },
       }),
     ]),

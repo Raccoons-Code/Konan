@@ -1,5 +1,5 @@
 import { AttachmentBuilder, Message, Status } from "discord.js";
-import { BaseProcessMessage, Stats } from "../../@types";
+import { Stats } from "../../@types";
 import client, { appStats } from "../../client";
 import Command from "../../structures/Command";
 import Bytes from "../../util/Bytes";
@@ -35,9 +35,9 @@ export default class extends Command {
   async shards(_message: Message, sent: Message) {
     if (!client.shard) return 1;
 
-    const response = await fetchProcessResponse({
+    const response = await fetchProcessResponse<Stats>({
       action: "stats",
-    }) as (BaseProcessMessage & { data: Stats })[];
+    });
 
     const pingShards: (string | { toString(): string })[][] = [];
 

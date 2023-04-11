@@ -1,9 +1,8 @@
-import { cpuUsage, memoryUsage } from "node:process";
+import { cpuUsage, env, memoryUsage } from "node:process";
 import client from ".";
 import { Stats } from "../@types";
 
 export default class ApplicationStats {
-
   botMessages = 0;
   interactions = 0;
   declare shardId: number;
@@ -69,6 +68,14 @@ export default class ApplicationStats {
 
   get voiceAdapters() {
     return client.voice.adapters.size;
+  }
+
+  get workerId() {
+    return env.WORKER_ID ? +env.WORKER_ID : undefined;
+  }
+
+  get workers() {
+    return env.TOTAL_WORKERS ? +env.TOTAL_WORKERS : undefined;
   }
 
   get wsPing() {
@@ -141,6 +148,8 @@ export default class ApplicationStats {
       userMessages: this.userMessages,
       users: this.users,
       voiceAdapters: this.voiceAdapters,
+      workerId: this.workerId,
+      workers: this.workers,
       wsPing: this.wsPing,
       wsStatus: this.wsStatus,
     };

@@ -1,7 +1,20 @@
-import { BaseProcessMessage } from "../@types";
+import { BaseProcessMessage, MultiProcessMessage, SingleProcessMessage } from "../@types";
 import client, { appStats } from "../client";
 
-export function fetchProcessResponse<T extends BaseProcessMessage>(message: Partial<T>) {
+fetchProcessResponse({ toShard: 1 })
+  .then(response => response);
+fetchProcessResponse({})
+  .then(response => response);
+
+export function fetchProcessResponse<
+  D,
+  M extends SingleProcessMessage = SingleProcessMessage
+>(message: M): Promise<BaseProcessMessage & { data: D }>;
+export function fetchProcessResponse<
+  D,
+  M extends MultiProcessMessage = MultiProcessMessage
+>(message: M): Promise<(BaseProcessMessage & { data: D })[]>;
+export function fetchProcessResponse<M extends BaseProcessMessage>(message: Partial<M>) {
   if (!message.id) {
     message.id = Date.now();
   }
@@ -18,14 +31,14 @@ export function fetchProcessResponse<T extends BaseProcessMessage>(message: Part
     return promise;
   } else {
     const promises = [];
-    const received: T[] = [];
+    const received: M[] = [];
 
     const originId = message.id;
 
     for (let i = 0; i < (client.shard?.count ?? 0); i++) {
       const id = Date.now() + i;
 
-      promises.push(waitProcessResponse<T>(msg => {
+      promises.push(waitProcessResponse<M>(msg => {
         if (id === msg.id && msg.fromShard === i) {
           msg.id = originId;
           received.push(msg);
@@ -39,7 +52,7 @@ export function fetchProcessResponse<T extends BaseProcessMessage>(message: Part
       client.shard?.send(message);
     }
 
-    return Promise.all(promises).catch(() => received);
+    return Promise.all(promises).catch(() => received) as Promise<M[]>;
   }
 }
 

@@ -36,6 +36,8 @@ export interface Stats {
   userMessages: number
   users: number
   voiceAdapters: number
+  workerId?: number
+  workers?: number
   wsPing: number | null
   wsStatus: Status
 }

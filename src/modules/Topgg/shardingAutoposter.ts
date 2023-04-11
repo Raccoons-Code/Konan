@@ -1,6 +1,7 @@
 import { BotStats } from "@top-gg/sdk";
-import { logger } from "../../client";
-import sharding from "../../sharding";
+import { Stats } from "../../@types";
+import { appStats, logger } from "../../client";
+import { fetchProcessResponse } from "../../util/Process";
 import api from "./api";
 
 export default class TopggShardingAutoposter {
@@ -37,11 +38,13 @@ export default class TopggShardingAutoposter {
   }
 
   async getStats(): Promise<BotStats> {
-    const guilds = await sharding.fetchClientValues("guilds.cache.size") as number[];
+    const stats = await fetchProcessResponse<Stats>({
+      action: "stats",
+    });
 
     return {
-      serverCount: guilds.reduce((a, b) => a + b, 0),
-      shardCount: guilds.length,
+      serverCount: stats.reduce((a, b) => a + b.data.guilds, 0),
+      shardCount: appStats.shards,
     };
   }
 }

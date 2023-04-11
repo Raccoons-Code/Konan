@@ -2,7 +2,7 @@ import { stripIndents } from "common-tags";
 import { ActionRowBuilder, BaseManager, BitField, ButtonBuilder, ButtonStyle, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, inlineCode, time, userMention } from "discord.js";
 import ms from "ms";
 import { memoryUsage, versions } from "node:process";
-import { BaseProcessMessage, Stats } from "../../../@types";
+import { Stats } from "../../../@types";
 import client, { appStats } from "../../../client";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
@@ -102,9 +102,9 @@ export default class extends ChatInputCommand {
     if (VERSION)
       stats.push(["Version", VERSION]);
 
-    const status = await fetchProcessResponse({
+    const status = await fetchProcessResponse<Stats>({
       action: "stats",
-    }) as (BaseProcessMessage & { data: Stats })[];
+    });
 
     const data = status.reduce((acc, cur) => {
       acc.channels += cur.data.channels;
