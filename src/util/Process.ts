@@ -1,11 +1,6 @@
 import { BaseProcessMessage, MultiProcessMessage, SingleProcessMessage } from "../@types";
 import client, { appStats } from "../client";
 
-fetchProcessResponse({ toShard: 1 })
-  .then(response => response);
-fetchProcessResponse({})
-  .then(response => response);
-
 export function fetchProcessResponse<
   D,
   M extends SingleProcessMessage = SingleProcessMessage
