@@ -49,6 +49,10 @@ export default class extends ButtonCommand {
       stats.unshift(["Shard", `${appStats.shardId + 1}/${client.shard.count}`]);
     }
 
+    if (appStats.workers) {
+      stats.unshift(["Cluster", `${appStats.workerId}/${appStats.workers}`]);
+    }
+
     if (VERSION)
       stats.push(["Version", VERSION]);
 
