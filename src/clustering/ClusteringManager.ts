@@ -115,6 +115,8 @@ export default class ClusteringManager {
           }, () => null);
         });
 
+        console.log("Fetching shard count from Discord API...");
+
         resolve(fetchRecommendedShardCount(env.DISCORD_TOKEN!));
       } else {
         cluster.worker?.setMaxListeners(cluster.worker.getMaxListeners() + 1);
