@@ -137,7 +137,9 @@ export default class ClusteringManager {
   }
 
   async spawn() {
-    console.log(cluster.isPrimary ? "Primary" : "Worker", "started.");
+    console.log(
+      cluster.isPrimary ? "Primary" : `Worker ${cluster.worker?.id}`, "started.",
+    );
 
     sharding.totalShards = await this._fetchTotalShards();
 
@@ -149,7 +151,6 @@ export default class ClusteringManager {
           CLUSTERING: true,
           TOTAL_SHARDS: sharding.totalShards,
           TOTAL_WORKERS: totalWorkers,
-          WORKER_ID: i + 1,
         });
 
         await new Promise((resolve, _) => {
@@ -173,6 +174,8 @@ export default class ClusteringManager {
         await sharding.spawn();
       }
     } else {
+      env.WORKER_ID = `${cluster.worker?.id}`;
+
       sharding.shardList = this._calculateShardList(totalWorkers);
 
       await sharding.spawn();
