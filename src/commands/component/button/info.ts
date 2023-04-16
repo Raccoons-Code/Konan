@@ -45,8 +45,12 @@ export default class extends ButtonCommand {
       ["Ping", `${client.ws.ping}ms`],
     ];
 
+    const status = await fetchProcessResponse<Stats>({
+      action: "stats",
+    });
+
     if (client.shard) {
-      stats.unshift(["Shard", `${appStats.shardId + 1}/${client.shard.count}`]);
+      stats.unshift(["Shard", `${appStats.shardId + 1}/${appStats.totalShards}`]);
     }
 
     if (appStats.workers) {
@@ -55,10 +59,6 @@ export default class extends ButtonCommand {
 
     if (VERSION)
       stats.push(["Version", VERSION]);
-
-    const status = await fetchProcessResponse<Stats>({
-      action: "stats",
-    });
 
     const data = status.reduce((acc, cur) => {
       acc.channels += cur.data.channels;

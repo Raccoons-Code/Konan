@@ -95,8 +95,12 @@ export default class extends ChatInputCommand {
       ["Ping", `${client.ws.ping}ms`],
     ];
 
+    const status = await fetchProcessResponse<Stats>({
+      action: "stats",
+    });
+
     if (client.shard) {
-      stats.unshift(["Shard", `${appStats.shardId + 1}/${client.shard.count}`]);
+      stats.unshift(["Shard", `${appStats.shardId + 1}/${appStats.totalShards}`]);
     }
 
     if (appStats.workers) {
@@ -105,10 +109,6 @@ export default class extends ChatInputCommand {
 
     if (VERSION)
       stats.push(["Version", VERSION]);
-
-    const status = await fetchProcessResponse<Stats>({
-      action: "stats",
-    });
 
     const data = status.reduce((acc, cur) => {
       acc.channels += cur.data.channels;
@@ -216,11 +216,19 @@ export default class extends ChatInputCommand {
     }
 
     if ("full" in channel) {
-      embeds[0].addFields({ name: t("full", interaction.locale), value: t(`${channel.full}`, interaction.locale), inline });
+      embeds[0].addFields({
+        name: t("full", interaction.locale),
+        value: t(`${channel.full}`, interaction.locale),
+        inline,
+      });
     }
 
     if ("memberCount" in channel && typeof channel.memberCount === "number") {
-      embeds[0].addFields({ name: t("memberCount", interaction.locale), value: `${channel.memberCount}`, inline });
+      embeds[0].addFields({
+        name: t("memberCount", interaction.locale),
+        value: `${channel.memberCount}`,
+        inline,
+      });
     }
 
     if ("messageCount" in channel && typeof channel.messageCount === "number") {
@@ -232,11 +240,19 @@ export default class extends ChatInputCommand {
     }
 
     if ("nsfw" in channel) {
-      embeds[0].addFields({ name: "NSFW", value: t(`${channel.nsfw}`, interaction.locale), inline });
+      embeds[0].addFields({
+        name: "NSFW",
+        value: t(`${channel.nsfw}`, interaction.locale),
+        inline,
+      });
     }
 
     if ("parent" in channel && channel.parent) {
-      embeds[0].addFields({ name: t("category", interaction.locale), value: `${channel.parent}`, inline });
+      embeds[0].addFields({
+        name: t("category", interaction.locale),
+        value: `${channel.parent}`,
+        inline,
+      });
     }
 
     if ("rateLimitPerUser" in channel && typeof channel.rateLimitPerUser === "number") {
@@ -256,13 +272,21 @@ export default class extends ChatInputCommand {
     }
 
     if ("topic" in channel && typeof channel.topic === "string") {
-      embeds[0].addFields({ name: t("topic", interaction.locale), value: channel.topic, inline });
+      embeds[0].addFields({
+        name: t("topic", interaction.locale),
+        value: channel.topic,
+        inline,
+      });
     }
 
     if ("type" in channel) {
       const ct = `${ChannelType[channel.type]}`.match(/([A-Z]{1,}[a-z]*)+/)?.[1];
 
-      embeds[0].addFields({ name: t("type", interaction.locale), value: t(`${ct}`, interaction.locale), inline });
+      embeds[0].addFields({
+        name: t("type", interaction.locale),
+        value: t(`${ct}`, interaction.locale),
+        inline,
+      });
     }
 
     if ("userLimit" in channel) {

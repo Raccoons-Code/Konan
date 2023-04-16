@@ -12,6 +12,7 @@ export default class ApplicationStats {
   totalInteractions = 0;
   totalMemoryUsage = 0;
   totalMessages = 0;
+  totalShards = client.shard?.count ?? 0;
   totalUsers = 0;
   totalVoiceAdapters = 0;
   userMessages = 0;
@@ -142,6 +143,7 @@ export default class ApplicationStats {
       totalInteractions: this.totalInteractions,
       totalMemoryUsage: this.totalMemoryUsage,
       totalMessages: this.totalMessages,
+      totalShards: this.totalShards,
       totalUsers: this.totalUsers,
       totalVoiceAdapters: this.totalVoiceAdapters,
       uptime: this.uptime,

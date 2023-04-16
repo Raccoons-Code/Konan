@@ -7,10 +7,9 @@ process.on("message", async function (message: BaseProcessMessage, _sendHandle) 
   if (message.replied) return;
 
   if (message.action) {
-    const action = actions[<"stats">message.action];
+    const action = actions[<keyof typeof actions>message.action];
 
-    message.data = await action?.() ?? action;
-
+    message.data = await action?.(message) ?? action;
     message.replied = true;
     message.replyShard = message.fromShard;
     message.replyWorker = message.fromWorker;
@@ -28,5 +27,9 @@ const actions = {
   },
   async stats() {
     return appStats.toJSON();
+  },
+  setShardCount(message: BaseProcessMessage<any>) {
+    client.options.shardCount = message.data.totalShards;
+    client.options.shards = message.data.shardList;
   },
 };

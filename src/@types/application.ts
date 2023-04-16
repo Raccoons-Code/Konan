@@ -30,6 +30,7 @@ export interface Stats {
   totalInteractions: number
   totalMemoryUsage: number
   totalMessages: number
+  totalShards: number
   totalUsers: number
   totalVoiceAdapters: number
   uptime: number | null

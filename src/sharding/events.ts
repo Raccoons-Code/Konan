@@ -1,15 +1,17 @@
-import { Shard } from "discord.js";
+/* eslint-disable no-await-in-loop */
 import cluster from "node:cluster";
 import sharding, { shards } from ".";
 import { BaseProcessMessage } from "../@types";
 import TopggShardingAutoposter from "../modules/Topgg/shardingAutoposter";
+import actions, { ActionType, actionTypes } from "./actions";
+import { fetchShardfromClusters } from "./utils";
 
 const topggShardingAutoposter = new TopggShardingAutoposter();
 
 sharding.on("shardCreate", async function (shard) {
   shards.set(shard.id, shard);
 
-  console.log(`Launched shard ${shard.id}`);
+  console.log("Launched cluster", cluster.worker?.id, "shard", shard.id);
 
   shard.once("ready", async function () {
     if (sharding.shards.size === sharding.totalShards) {
@@ -21,27 +23,11 @@ sharding.on("shardCreate", async function (shard) {
   const listener = async function (message: BaseProcessMessage) {
     if (!message?.id) return;
 
-    if (message.action === "getTotalWorkers") {
-      message.fromWorker = cluster.worker?.id;
-      cluster.worker?.send(message);
-      return;
-    }
-
-    if (message.action === "getShard") {
-      if (sharding.shards.has(message.toShard!)) {
-        delete message.action;
-        message.replied = true;
-        message.replyWorker = message.fromWorker;
-        message.fromWorker = cluster.worker?.id;
-        message.replyShard = message.fromShard;
-        message.fromShard = shard.id;
-        delete message.toShard;
-        message.data = {
-          workerId: cluster.worker?.id,
-        };
-        cluster.worker?.send(message);
+    if (message.action) {
+      if (actionTypes.includes(<ActionType>message.action)) {
+        await actions[<ActionType>message.action](message, shard);
+        return;
       }
-      return;
     }
 
     if (message.replyWorker) {
@@ -109,36 +95,3 @@ sharding.on("shardCreate", async function (shard) {
   shard.on("message", listener);
   process.on("message", listener);
 });
-
-function fetchShardfromClusters(shard: Shard, shardId: number) {
-  shard.setMaxListeners(shard.getMaxListeners() + 1);
-  process.setMaxListeners(process.getMaxListeners() + 1);
-
-  return new Promise<number>((resolve, _reject) => {
-    const id = Date.now() / 2;
-
-    const listener = function (message: any) {
-      if (message?.id === id) {
-        if (message.data?.workerId) {
-          shard.removeListener("message", listener);
-          shard.setMaxListeners((shard.getMaxListeners() || 1) - 1);
-          process.removeListener("message", listener);
-          process.setMaxListeners((process.getMaxListeners() || 1) - 1);
-
-          resolve(message.data.workerId);
-        }
-      }
-    };
-
-    shard.on("message", listener);
-    process.on("message", listener);
-
-    cluster.worker?.send({
-      id,
-      action: "getShard",
-      origin: "shard",
-      toShard: shardId,
-      fromWorker: cluster.worker.id,
-    });
-  });
-}

@@ -1,4 +1,4 @@
-import { ActionRow, ActionRowBuilder, APIActionRowComponent, APISelectMenuOption, APIStringSelectComponent, ComponentEmojiResolvable, ComponentType, MessageActionRowComponent, MessageActionRowComponentBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIActionRowComponentTypes, APISelectMenuOption, APIStringSelectComponent, ComponentEmojiResolvable, ComponentType, JSONEncodable, MessageActionRowComponent, SelectMenuComponentOptionData, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import { BaseComponentCustomId } from "../../../@types";
 import { JSONparse, splitArrayInGroups } from "../../utils";
 
@@ -35,8 +35,7 @@ export function createSelectMenuFromOptions(
     .map(group => new ActionRowBuilder<StringSelectMenuBuilder>()
       .addComponents(new StringSelectMenuBuilder()
         .setPlaceholder(
-          Array.isArray(
-            menuOptions?.placeholder) ?
+          Array.isArray(menuOptions?.placeholder) ?
             menuOptions?.placeholder[index] ?? "" :
             menuOptions?.placeholder ?? "",
         )
@@ -49,10 +48,7 @@ export function createSelectMenuFromOptions(
 }
 
 export function getDefaultOptionFromSelect(
-  components: (
-    | ActionRow<MessageActionRowComponent>
-    | ActionRowBuilder<MessageActionRowComponentBuilder>
-  )[],
+  components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
 ) {
   let optionDefault: APISelectMenuOption | undefined;
 

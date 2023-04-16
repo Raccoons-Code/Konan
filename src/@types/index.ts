@@ -4,13 +4,13 @@ export * from "./handlers";
 export * from "./structures";
 export * from "./util";
 
-export interface BaseProcessMessage {
+export interface BaseProcessMessage<T = unknown> {
   [k: string]: any
   id: number
   fromShard: number
   action?: string
   actionType?: string
-  data?: unknown
+  data?: T
   error?: any
   fromWorker?: number
   origin?: string
@@ -21,8 +21,9 @@ export interface BaseProcessMessage {
   toWorker?: number
 }
 
-export interface SingleProcessMessage extends Partial<BaseProcessMessage> {
+export interface SingleProcessMessage<T = unknown> extends Partial<BaseProcessMessage<T>> {
   toShard: number
 }
 
-export type MultiProcessMessage = Partial<BaseProcessMessage>;
+export interface MultiProcessMessage<T = unknown> extends Partial<BaseProcessMessage<T>> {
+}

@@ -1,3 +1,4 @@
+import { env } from "node:process";
 import { BaseProcessMessage, MultiProcessMessage, SingleProcessMessage } from "../@types";
 import client, { appStats } from "../client";
 
@@ -9,7 +10,7 @@ export function fetchProcessResponse<
   D,
   M extends MultiProcessMessage = MultiProcessMessage
 >(message: M): Promise<(BaseProcessMessage & { data: D })[]>;
-export function fetchProcessResponse<M extends BaseProcessMessage>(message: Partial<M>) {
+export async function fetchProcessResponse<M extends BaseProcessMessage>(message: Partial<M>) {
   if (!message.id) {
     message.id = Date.now();
   }
@@ -30,7 +31,18 @@ export function fetchProcessResponse<M extends BaseProcessMessage>(message: Part
 
     const originId = message.id;
 
-    for (let i = 0; i < (client.shard?.count ?? 0); i++) {
+    const res = await fetchProcessResponse<{ totalShards: number }>({
+      action: "getTotalShards",
+      toShard: appStats.shardId,
+    });
+
+    if (appStats.totalShards !== res.data.totalShards) {
+      client.options.shardCount = res.data.totalShards;
+      appStats.totalShards = client.options.shardCount;
+      env.SHARD_COUNT = `${appStats.totalShards}`;
+    }
+
+    for (let i = 0; i < res.data.totalShards; i++) {
       const id = Date.now() + i;
 
       promises.push(waitProcessResponse<M>(msg => {
@@ -59,12 +71,10 @@ export function waitProcessResponse<T>(callback: (message: T) => boolean | void)
       process.removeListener("message", listener);
       process.setMaxListeners((process.getMaxListeners() || 1) - 1);
 
-      reject(new Error("Timeout"));
+      reject(Error("Timeout"));
     }, 5000);
 
     const listener = function (message: any) {
-      // if (!message) return;
-
       if (message?.replied && callback(message)) {
         clearTimeout(timeout);
 
@@ -72,7 +82,7 @@ export function waitProcessResponse<T>(callback: (message: T) => boolean | void)
         process.setMaxListeners((process.getMaxListeners() || 1) - 1);
 
         if (message.error) {
-          reject(new Error(message.error));
+          reject(Error(message.error));
         }
 
         resolve(message);

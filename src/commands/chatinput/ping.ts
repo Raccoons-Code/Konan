@@ -78,7 +78,7 @@ export default class extends Command {
 
     const total = [
       "Total",
-      `${response.length}/${appStats.shards}`,
+      `${response.length}/${appStats.totalShards}`,
       "",
       "",
       `~${Math.floor(totalPing / response.length)}ms`,
