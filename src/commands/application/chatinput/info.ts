@@ -411,7 +411,8 @@ export default class extends ChatInputCommand {
 
   async user(interaction: ChatInputCommandInteraction) {
     const user = interaction.options.getUser("user") ?? interaction.user;
-    const member = interaction.options.getMember("user") ?? interaction.member;
+    const member = interaction.options.getMember("user") ??
+      (user.id === interaction.user.id ? interaction.member : null);
 
     user.banner ?? await user.fetch();
 
