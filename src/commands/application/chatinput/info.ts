@@ -440,7 +440,7 @@ export default class extends ChatInputCommand {
     }
 
     if ("flags" in user && user.flags) {
-      const flagsArray = user.flags.toArray();
+      const flagsArray = user.flags.toArray().filter(flag => isNaN(+flag));
       const textFlags = flagsArray.map(flag => inlineCode(t(flag, interaction.locale))).join("\n") || "-";
 
       embeds[0].addFields({ name: `Flags [${flagsArray?.length ?? 0}]`, value: textFlags });
