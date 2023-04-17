@@ -165,10 +165,10 @@
   resolved "https://registry.yarnpkg.com/@tokenizer/token/-/token-0.3.0.tgz#fe98a93fe789247e998c75e74e9c7c63217aa276"
   integrity sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==
 
-"@top-gg/sdk@^3.1.4":
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/@top-gg/sdk/-/sdk-3.1.4.tgz#e5d23d7d55a1eed4c5f2ce895ddf296ad26ff289"
-  integrity sha512-BOW3AxNKShiCl4YjxUYtKv0WxwKySuhcDWroz3i3fxx7l8T+vIKAFsuPqC9YPdLVSJuU/MVWdiK8NjFc53wGmQ==
+"@top-gg/sdk@^3.1.5":
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/@top-gg/sdk/-/sdk-3.1.5.tgz#7c4f598cfa9bf49420c9f6e65c492834fd395496"
+  integrity sha512-eIqyqKDuC/F8nXRDrUWwuvmcBgnJ65EhI8xQQPcBJL9QNpBf0IeggHjyzuNiDE2MnMDEoJHYJKeCI4bf7b811g==
   dependencies:
     raw-body "^2.5.2"
     undici "^5.21.0"
@@ -1242,10 +1242,10 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-quick.db@^9.1.5:
-  version "9.1.5"
-  resolved "https://registry.yarnpkg.com/quick.db/-/quick.db-9.1.5.tgz#2eb4f07dfbef747c2b7a2505ece230f8e5cc303a"
-  integrity sha512-Mbnr6tBM8O3i1xC6rtnMb/MKLu2mpjmTOQCLWCEtm/SuWgX47Vaf94a6XjCOsWVPJL35/udUjO7KIyPe9CfPBA==
+quick.db@^9.1.6:
+  version "9.1.6"
+  resolved "https://registry.yarnpkg.com/quick.db/-/quick.db-9.1.6.tgz#8c3682036205018c48954d507c89f8cb25559475"
+  integrity sha512-BqDkO3Ry9dsyTysZCHouU7OGpOXvLDQf/Fi0B2Vxff0gj3LX0fJnu6sfWcLspin15tpxeR4FQVJi6Prq5eJ61g==
   dependencies:
     lodash "^4.17.21"
 
