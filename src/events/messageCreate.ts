@@ -43,5 +43,12 @@ client.on("messageCreate", async function (message) {
   if (command.data.private)
     if (!appOwners.isOwner(message.author.id)) return;
 
+  const subCommand = <"execute">message.args[0].toLowerCase();
+
+  if (command[subCommand]) {
+    await command[subCommand](message);
+    return;
+  }
+
   await command.execute(message);
 });
