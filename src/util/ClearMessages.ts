@@ -174,7 +174,9 @@ export default class ClearMessages {
               new EmbedBuilder(this.interaction.message?.embeds[0]?.toJSON())
                 .spliceFields(1, 1, {
                   name: t("result", this.interaction.locale),
-                  value: `> ${t("found", this.interaction.locale)}: ${this.found} / ${this.amount}.`
+                  value:
+                    `> ${t("found", this.interaction.locale)}: `
+                    + `${this.found}${this.amount ? ` / ${this.amount}` : ""}.`
                     + `\n> ${t("deleted", this.interaction.locale)}: ${this.cleared}.`
                     + `\n> ${t("ignored", this.interaction.locale)}: ${this.ignored.count}.`
                     + (this.ignored.olds ?
