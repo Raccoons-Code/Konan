@@ -84,10 +84,32 @@ export default class extends ButtonCommand {
       amount: parsedId.amount,
       filter: Number(bits),
       target,
-      interaction,
     });
 
     cache.set(cancelId, clear);
+
+    clear.on("messageDeleteBulk", async function () {
+      await interaction.editReply({
+        embeds: [
+          new EmbedBuilder(interaction.message.embeds[0]?.toJSON())
+            .spliceFields(1, 1, {
+              name: t("result", interaction.locale),
+              value: `> ${t("found", interaction.locale)}: ${clear.found}`
+                + `${clear.amount ? ` / ${clear.amount}` : ""}.`
+                + `\n> ${t("deleted", interaction.locale)}: ${clear.cleared}.`
+                + `\n> ${t("ignored", interaction.locale)}: ${clear.ignored.count}.`
+                + (clear.ignored.olds ?
+                  `\n> ${t("ignoredVeryOld", interaction.locale)}: ${clear.ignored.olds}` :
+                  ""),
+              inline: true,
+            }),
+        ],
+      });
+    });
+
+    clear.once("end", function () {
+      clear.removeAllListeners();
+    });
 
     try {
       await clear.clear();

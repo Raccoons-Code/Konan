@@ -1,12 +1,33 @@
 /* eslint-disable no-await-in-loop */
-import { BitField, BitFieldResolvable, Collection, EmbedBuilder, GuildMember, GuildTextBasedChannel, Interaction, Message, PermissionFlagsBits } from "discord.js";
+import { BitField, BitFieldResolvable, Collection, GuildMember, GuildTextBasedChannel, Message, PermissionFlagsBits } from "discord.js";
+import EventEmitter from "node:events";
 import { setTimeout as sleep } from "node:timers/promises";
 import client from "../client";
-import { t } from "../translator";
 import { MaxBulkDeletableMessageAge } from "./constants";
 import { makeBits } from "./utils";
 
-export default class ClearMessages {
+export interface ClearEvents {
+  cancelled: []
+  end: []
+  messageDeleteBulk: [amount: number]
+}
+
+interface ClearMessages {
+  emit: (<K extends keyof ClearEvents>(event: K, ...args: ClearEvents[K]) => boolean) &
+  (<S extends string | symbol>(event: Exclude<S, keyof ClearEvents>, ...args: any[]) => boolean);
+  off: (<K extends keyof ClearEvents>(event: K, listener: (...args: ClearEvents[K]) => void) => this) &
+  (<S extends string | symbol>(event: Exclude<S, keyof ClearEvents>, listener: (...args: any[]) => void) => this);
+  on: (<K extends keyof ClearEvents>(event: K, listener: (...args: ClearEvents[K]) => void) => this) &
+  (<S extends string | symbol>(event: Exclude<S, keyof ClearEvents>, listener: (...args: any[]) => void) => this);
+  once: (<K extends keyof ClearEvents>(event: K, listener: (...args: ClearEvents[K]) => void) => this) &
+  (<S extends string | symbol>(event: Exclude<S, keyof ClearEvents>, listener: (...args: any[]) => void) => this);
+  removeAllListeners: (<K extends keyof ClearEvents>(event?: K) => this) &
+  (<S extends string | symbol>(event?: Exclude<S, keyof ClearEvents>) => this);
+  removeListener: (<K extends keyof ClearEvents>(event: K, listener: (...args: ClearEvents[K]) => void) => this) &
+  (<S extends string | symbol>(event: Exclude<S, keyof ClearEvents>, listener: (...args: any[]) => void) => this)
+}
+
+class ClearMessages extends EventEmitter {
   amount = 0;
   amountToClear = 0;
   cleared = 0;
@@ -17,8 +38,7 @@ export default class ClearMessages {
   filter = new ClearFiltersBitField(ClearFiltersBitField.Default);
   author?: GuildMember;
   afterMessage?: string;
-  target?: string[];
-  interaction?: Interaction;
+  readonly target: Set<string> = new Set();
   cancelled = false;
 
   found = 0;
@@ -32,7 +52,7 @@ export default class ClearMessages {
   webhooks = 0;
   targetMessages = 0;
 
-  ignored = {
+  readonly ignored = {
     count: 0,
     attachments: 0,
     bots: 0,
@@ -44,13 +64,15 @@ export default class ClearMessages {
     webhooks: 0,
   };
 
-  oldMessages: string[] = [];
+  readonly oldMessages: string[] = [];
 
   constructor(
     options:
       | ClearMessagesWithAmountOptions
       | ClearMessagesWithMessageIdOptions,
   ) {
+    super({ captureRejections: true });
+
     this._patch(options);
   }
 
@@ -163,31 +185,11 @@ export default class ClearMessages {
         if (!this.amountToClear) break;
       }
 
+      this.emit("messageDeleteBulk", clearedMessages.size);
+
       await sleep(1000);
 
       if (this.cancelled) break;
-
-      if (this.interaction && "message" in this.interaction) {
-        if (this.interaction.deferred || this.interaction.replied) {
-          await this.interaction.editReply({
-            embeds: [
-              new EmbedBuilder(this.interaction.message?.embeds[0]?.toJSON())
-                .spliceFields(1, 1, {
-                  name: t("result", this.interaction.locale),
-                  value:
-                    `> ${t("found", this.interaction.locale)}: `
-                    + `${this.found}${this.amount ? ` / ${this.amount}` : ""}.`
-                    + `\n> ${t("deleted", this.interaction.locale)}: ${this.cleared}.`
-                    + `\n> ${t("ignored", this.interaction.locale)}: ${this.ignored.count}.`
-                    + (this.ignored.olds ?
-                      `\n> ${t("ignoredVeryOld", this.interaction.locale)}: ${this.ignored.olds}` :
-                      ""),
-                  inline: true,
-                }),
-            ],
-          }).catch(() => null);
-        }
-      }
     }
 
     if (this.afterMessage && !this.cancelled) {
@@ -202,11 +204,16 @@ export default class ClearMessages {
 
         if (messages.size) {
           await this.channel.messages.delete(this.afterMessage)
-            .then(() => this.cleared++)
+            .then(() => {
+              this.cleared++;
+              this.emit("messageDeleteBulk", 1);
+            })
             .catch(() => null);
         }
       }
     }
+
+    this.emit("end");
 
     return this;
   }
@@ -282,7 +289,7 @@ export default class ClearMessages {
           this.ignored.olds++;
       }
 
-      if (this.target?.includes(msg.applicationId ?? msg.author.id)) {
+      if (this.target.has(msg.applicationId ?? msg.author.id)) {
         this.targetMessages++;
       }
     }
@@ -319,9 +326,9 @@ export default class ClearMessages {
       this.ignored.count += messages.sweep(msg => msg.webhookId);
     }
 
-    if (this.target) {
+    if (this.target.size) {
       this.ignored.count += messages.sweep(msg =>
-        !this.target?.includes(msg.applicationId ?? msg.author.id));
+        !this.target.has(msg.applicationId ?? msg.author.id));
     }
 
     this.undeletable += messages.sweep(msg => !msg.bulkDeletable);
@@ -329,6 +336,7 @@ export default class ClearMessages {
 
   stop() {
     this.cancelled = true;
+    this.emit("cancelled");
     return this;
   }
 
@@ -353,15 +361,18 @@ export default class ClearMessages {
     if (options.afterMessage)
       this.afterMessage = options.afterMessage;
 
-    if (options.target)
-      this.target = Array.isArray(options.target) ?
-        options.target : [options.target];
+    if (options.target) {
+      if (Array.isArray(options.target)) {
+        for (const target of options.target) {
+          this.target.add(target);
+        }
+      } else {
+        this.target.add(options.target);
+      }
+    }
 
     if (options.filter ?? false)
       this.filter = new ClearFiltersBitField(options.filter);
-
-    if (options.interaction)
-      this.interaction = options.interaction;
 
     return this;
   }
@@ -370,6 +381,8 @@ export default class ClearMessages {
     return (Date.now() - message.createdTimestamp) >= MaxBulkDeletableMessageAge;
   }
 }
+
+export default ClearMessages;
 
 export const clearFiltersFlags = [
   "ignoreAttachments",
@@ -401,7 +414,6 @@ interface ClearMessagesOptions {
   afterMessage?: string | null
   target?: string | string[] | null
   filter?: ClearMessagesFilterResolvable
-  interaction?: Interaction
 }
 
 interface ClearMessagesWithAmountOptions extends ClearMessagesOptions {
