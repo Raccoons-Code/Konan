@@ -424,20 +424,12 @@ export default class extends ChatInputCommand {
 
     const components = <ActionRowBuilder<ButtonBuilder>[]>[];
 
-    if ("createdAt" in user) {
-      embeds[0].addFields({
-        name: t("creationDate", interaction.locale),
-        value: `${time(user.createdAt)} ${time(user.createdAt, "R")}`,
-        inline,
-      });
+    if ("tag" in user) {
+      embeds[0].addFields({ name: t("discordTag", interaction.locale), value: inlineCode(user.tag) });
     }
 
     if ("id" in user) {
-      embeds[0].addFields({ name: t("discordId", interaction.locale), value: inlineCode(user.id), inline });
-    }
-
-    if ("tag" in user) {
-      embeds[0].addFields({ name: t("discordTag", interaction.locale), value: inlineCode(user.tag), inline });
+      embeds[0].addFields({ name: t("discordId", interaction.locale), value: inlineCode(user.id) });
     }
 
     if ("flags" in user && user.flags) {
@@ -447,20 +439,27 @@ export default class extends ChatInputCommand {
       embeds[0].addFields({ name: `Flags [${flagsArray?.length ?? 0}]`, value: textFlags });
     }
 
+    if ("createdAt" in user) {
+      embeds[0].addFields({
+        name: t("creationDate", interaction.locale),
+        value: `${time(user.createdAt)} ${time(user.createdAt, "R")}`,
+      });
+    }
+
     if (member) {
+      if ("joinedAt" in member && member.joinedAt) {
+        embeds[0].addFields({
+          name: t("joinedTheServerAt", interaction.locale),
+          value: `${time(member.joinedAt)} ${time(member.joinedAt, "R")}`,
+        });
+      }
+
       if ("displayAvatarURL" in member) {
         embeds[0].setThumbnail(member.displayAvatarURL());
       }
 
       if ("displayColor" in member) {
         embeds[0].setColor(member.displayColor);
-      }
-
-      if ("joinedAt" in member && member.joinedAt) {
-        embeds[0].addFields({
-          name: t("joinedTheServerAt", interaction.locale),
-          value: `${time(member.joinedAt)} ${time(member.joinedAt, "R")}`,
-        });
       }
 
       if ("roles" in member && member.roles instanceof BaseManager) {
