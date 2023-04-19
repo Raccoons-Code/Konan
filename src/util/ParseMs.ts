@@ -1,15 +1,22 @@
-export default class ParseMs {
+class ParseMs {
   static ms = 1;
   static s = this.ms * 1000;
   static m = this.s * 60;
   static h = this.m * 60;
-  static d = this.h * 24;
+  static D = this.h * 24;
+  static S = this.D * 7;
+  static M = this.D * 30.4375;
+  static Y = this.M * 12;
 
-  declare result: number | string | undefined;
+  result?: number | string;
 
-  constructor(public ms: number | string, public options: Options = {}) {
+  constructor(public readonly ms: number | string, public readonly options: Options = {}) {
     if (!this.options.levels) {
       this.options.levels = 2;
+    }
+
+    if (typeof this.options.sep !== "string") {
+      this.options.sep = " ";
     }
 
     if (typeof ms === "number") {
@@ -20,9 +27,9 @@ export default class ParseMs {
   }
 
   formatShort(ms: number): string {
-    let levels = 1;
+    let levels = 0;
 
-    return ["d", "h", "m", "s", "ms"].reduce((acc, val) => {
+    return ["D", "h", "m", "s", "ms"].reduce((acc, val) => {
       const sub = Math.floor(ms / ParseMs[<"s">val]);
 
       if (!sub) return acc;
@@ -40,7 +47,7 @@ export default class ParseMs {
       acc.push(`${sub}${val}`);
 
       return acc;
-    }, <string[]>[]).join(" ");
+    }, <string[]>[]).join(this.options.sep);
   }
 
   parse(ms: string) {
@@ -64,9 +71,15 @@ export default class ParseMs {
   }
 }
 
+export default ParseMs;
+
 interface Options {
   /**
    * @default 2
    */
   levels?: number
+  /**
+   * @default " "
+   */
+  sep?: string
 }
