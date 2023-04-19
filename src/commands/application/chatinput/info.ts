@@ -1,5 +1,5 @@
 import { stripIndents } from "common-tags";
-import { ActionRowBuilder, BaseManager, BitField, ButtonBuilder, ButtonStyle, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, inlineCode, OAuth2Scopes, PermissionFlagsBits, time, userMention } from "discord.js";
+import { ActionRowBuilder, BaseManager, BitField, ButtonBuilder, ButtonStyle, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, GatewayIntentBits, inlineCode, OAuth2Scopes, PermissionFlagsBits, time, userMention } from "discord.js";
 import ms from "ms";
 import { memoryUsage, versions } from "node:process";
 import { Stats } from "../../../@types";
@@ -374,10 +374,30 @@ export default class extends ChatInputCommand {
     }
 
     await interaction.guild.fetch();
+    await interaction.guild.members.fetch({ time: 1000 }).catch(() => null);
 
-    const MPSText = Object.entries(getAllMembersPresenceStatus(interaction.guild))
-      .map(([status, count]) => `${emojis[status] ?? status} ${inlineCode(`${count}`)}`)
-      .join("\n");
+    let MPSText;
+
+    if (client.options.intents.has(GatewayIntentBits.GuildPresences)) {
+      MPSText = Object.entries(getAllMembersPresenceStatus(interaction.guild))
+        .map(([status, count]) => `${emojis[status] ?? status} ${inlineCode(`${count}`)}`)
+        .join("\n");
+    } else {
+      MPSText = Object.entries(interaction.guild.members.cache.reduce((acc, member) => {
+        if (member.user.bot) {
+          acc.bots++;
+        } else {
+          acc.users++;
+        }
+        return acc;
+      }, {
+        bots: 0,
+        users: 0,
+      }))
+      .concat([["other", interaction.guild.memberCount - interaction.guild.members.cache.size]])
+        .map(([key, value]) => `${t(key, interaction.locale)} ${inlineCode(`${value}`)}`)
+        .join("\n");
+    }
 
     await interaction.editReply({
       embeds: [
