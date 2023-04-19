@@ -506,9 +506,10 @@ export default class extends ChatInputCommand {
     }
 
     if (interaction.guild) {
-      const integrations = await interaction.guild.fetchIntegrations();
+      const integrations = await interaction.guild.fetchIntegrations()
+        .catch(() => null);
 
-      const integration = integrations.find(i => i.account.id === user.id);
+      const integration = integrations?.find(i => i.account.id === user.id);
 
       if (integration) {
         if (integration.application) {
