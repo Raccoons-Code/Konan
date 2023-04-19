@@ -1,6 +1,8 @@
-import { EmbedBuilder, Interaction, PermissionsString } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, OAuth2Scopes, PermissionFlagsBits, PermissionsString } from "discord.js";
 import { MissingPermissionResponse } from "../@enum";
 import { CommandOptions } from "../@types";
+import client from "../client";
+import commandHandler from "../handlers/CommandHandler";
 import { t } from "../translator";
 import Base from "./Base";
 
@@ -50,6 +52,25 @@ export default abstract class BaseCommand extends Base {
       return;
     }
 
+    const components = [];
+
+    if (
+      key === "missingPermission" &&
+      interaction.memberPermissions?.has(PermissionFlagsBits.ManageRoles)
+    ) {
+      components.push(new ActionRowBuilder<ButtonBuilder>()
+        .addComponents(new ButtonBuilder()
+          .setEmoji("🔐")
+          .setLabel(t("grantMePermissions", interaction.locale))
+          .setStyle(ButtonStyle.Link)
+          .setURL(client.generateInvite({
+            scopes: [OAuth2Scopes.ApplicationsCommands, OAuth2Scopes.Bot],
+            disableGuildSelect: true,
+            guild: interaction.guild ?? undefined,
+            permissions: commandHandler.permissions,
+          }))));
+    }
+
     const embeds = [
       new EmbedBuilder()
         .setDescription(t(key, {
@@ -60,15 +81,15 @@ export default abstract class BaseCommand extends Base {
 
     if (interaction.deferred || interaction.replied) {
       if (interaction.isMessageComponent()) {
-        await interaction.followUp({ embeds, ephemeral: true });
+        await interaction.followUp({ components, embeds, ephemeral: true });
         return;
       }
 
-      await interaction.editReply({ embeds });
+      await interaction.editReply({ components, embeds });
       return;
     }
 
-    await interaction.reply({ embeds, ephemeral: true });
+    await interaction.reply({ components, embeds, ephemeral: true });
     return;
   }
 }

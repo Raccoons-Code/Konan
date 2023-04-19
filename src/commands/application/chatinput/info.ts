@@ -1,9 +1,10 @@
 import { stripIndents } from "common-tags";
-import { ActionRowBuilder, BaseManager, BitField, ButtonBuilder, ButtonStyle, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, inlineCode, time, userMention } from "discord.js";
+import { ActionRowBuilder, BaseManager, BitField, ButtonBuilder, ButtonStyle, ChannelType, ChatInputCommandInteraction, codeBlock, EmbedBuilder, inlineCode, OAuth2Scopes, PermissionFlagsBits, time, userMention } from "discord.js";
 import ms from "ms";
 import { memoryUsage, versions } from "node:process";
 import { Stats } from "../../../@types";
 import client, { appStats } from "../../../client";
+import commandHandler from "../../../handlers/CommandHandler";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import Bytes from "../../../util/Bytes";
@@ -506,13 +507,32 @@ export default class extends ChatInputCommand {
     }
 
     if (interaction.guild) {
-      const integrations = await interaction.guild.fetchIntegrations()
-        .catch(() => null);
+      const appPerms = interaction.appPermissions?.missing(PermissionFlagsBits.ManageGuild);
 
-      const integration = integrations?.find(i => i.account.id === user.id);
+      if (appPerms?.length) {
+        embeds[0].setFooter({
+          text: t("missingFeaturePermissions", interaction.locale),
+        });
 
-      if (integration) {
-        if (integration.application) {
+        if (interaction.memberPermissions?.has(PermissionFlagsBits.ManageRoles)) {
+          components.push(new ActionRowBuilder<ButtonBuilder>()
+            .addComponents(new ButtonBuilder()
+              .setEmoji("🔐")
+              .setLabel(t("grantMePermissions", interaction.locale))
+              .setStyle(ButtonStyle.Link)
+              .setURL(client.generateInvite({
+                scopes: [OAuth2Scopes.ApplicationsCommands, OAuth2Scopes.Bot],
+                disableGuildSelect: true,
+                guild: interaction.guild,
+                permissions: commandHandler.permissions,
+              }))));
+        }
+      } else {
+        const integrations = await interaction.guild.fetchIntegrations();
+
+        const integration = integrations?.find(i => i.account.id === user.id);
+
+        if (integration?.application) {
           if (integration.application.description)
             embeds[0].setDescription(integration.application.description);
 

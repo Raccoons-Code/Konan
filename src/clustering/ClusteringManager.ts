@@ -167,14 +167,14 @@ export default class ClusteringManager {
       }
 
       if (!cluster.workers?.[1]) {
-        await sharding.spawn();
+        await sharding.spawn({ timeout: 60_000 });
       }
     } else {
       env.WORKER_ID = `${cluster.worker?.id}`;
 
       sharding.shardList = this._calculateShardList(totalWorkers, Number(env.WORKER_INDEX));
 
-      await sharding.spawn();
+      await sharding.spawn({ timeout: 60_000 });
 
       cluster.worker?.send("ready", () => null);
     }

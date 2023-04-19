@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { APIApplicationCommand, BaseApplicationCommandData, Collection, PermissionsBitField, Routes } from "discord.js";
+import { APIApplicationCommand, BaseApplicationCommandData, Collection, PermissionFlagsBits, PermissionsBitField, Routes } from "discord.js";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { env } from "node:process";
@@ -15,8 +15,25 @@ import { isClass } from "../util/utils";
 class CommandHandler {
   commands = new Collection<`${CommandTypes}`, Collection<string, BaseCommand>>();
   commandsByCategory = new Collection<`${ApplicationCommandTypes}`, Collection<string, ChatInputCommand>>();
-  permissions = new PermissionsBitField();
   errors: Error[] = [];
+  permissions = new PermissionsBitField([
+    PermissionFlagsBits.AttachFiles,
+    PermissionFlagsBits.BanMembers,
+    PermissionFlagsBits.EmbedLinks,
+    PermissionFlagsBits.KickMembers,
+    PermissionFlagsBits.ManageGuild,
+    PermissionFlagsBits.ManageMessages,
+    PermissionFlagsBits.ManageRoles,
+    PermissionFlagsBits.ManageWebhooks,
+    PermissionFlagsBits.ModerateMembers,
+    PermissionFlagsBits.ReadMessageHistory,
+    PermissionFlagsBits.SendMessages,
+    PermissionFlagsBits.SendMessagesInThreads,
+    PermissionFlagsBits.UseExternalEmojis,
+    PermissionFlagsBits.UseExternalStickers,
+    PermissionFlagsBits.ViewAuditLog,
+    PermissionFlagsBits.ViewChannel,
+  ]);
 
   get applicationCommandTypes() {
     return Array.from(this.commands.keys())

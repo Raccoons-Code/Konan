@@ -27,6 +27,8 @@ const actions = {
     message.data = {
       totalShards: sharding.totalShards,
     };
+    message.replyShard = shard.id;
+    delete message.action;
     await shard.send(message);
     return;
   },

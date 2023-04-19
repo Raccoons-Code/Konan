@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, inlineCode, messageLink, TextBasedChannel, userMention } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, inlineCode, messageLink, PermissionFlagsBits, PermissionsString, TextBasedChannel, userMention } from "discord.js";
 import client from "../../../client";
 import prisma from "../../../database/prisma";
 import { dictionaries } from "../../../modules/Dictionaries";
@@ -12,6 +12,10 @@ export default class extends ChatInputCommand {
   constructor() {
     super({
       category: "Game",
+      channelAppPermissions: [
+        PermissionFlagsBits.SendMessages,
+        PermissionFlagsBits.EmbedLinks,
+      ],
     });
 
     this.data.setName("wordle")
@@ -35,7 +39,13 @@ export default class extends ChatInputCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    await interaction.deferReply({ ephemeral: true });
+    let appChannelPerms: PermissionsString[] = [];
+
+    if (interaction.channel && "permissionsFor" in interaction.channel) {
+      appChannelPerms = interaction.channel.permissionsFor(client.user!)?.missing(this.options.channelAppPermissions!) ?? [];
+    }
+
+    await interaction.deferReply({ ephemeral: !appChannelPerms.length });
 
     const locale = interaction.locale;
 
@@ -44,10 +54,7 @@ export default class extends ChatInputCommand {
 
     if (playersId?.length) {
       if (!interaction.guild) {
-        await interaction.reply({
-          content: t("onlyOnServerOption", interaction.locale),
-          ephemeral: true,
-        });
+        await interaction.editReply(t("onlyOnServerOption", interaction.locale));
         return 1;
       }
 
@@ -57,10 +64,7 @@ export default class extends ChatInputCommand {
         .then(members => members.map(member => member.id));
 
       if (!playersId.length) {
-        await interaction.reply({
-          content: t("noValidUsersFound", interaction.locale),
-          ephemeral: true,
-        });
+        await interaction.editReply(t("noValidUsersFound", interaction.locale));
         return 1;
       }
     }
@@ -191,7 +195,10 @@ export default class extends ChatInputCommand {
 
     const gameBoard = wordle.create(wordSize);
 
-    const message = await interaction.channel!.send({
+    const message = await (appChannelPerms.length ?
+      interaction.editReply.bind(interaction) :
+      interaction.channel!.send.bind(interaction)
+    )({
       components: [
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
@@ -236,7 +243,8 @@ export default class extends ChatInputCommand {
       },
     }));
 
-    promises.push(interaction.deleteReply().catch(() => null));
+    if (!appChannelPerms.length)
+      promises.push(interaction.deleteReply().catch(() => null));
 
     await Promise.all(promises);
 
