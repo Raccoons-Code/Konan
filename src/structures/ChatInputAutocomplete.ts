@@ -3,7 +3,7 @@ import type { ComponentCommandData } from "../@types";
 import BaseCommand from "./BaseCommand";
 
 export default abstract class ChatInputAutocomplete extends BaseCommand {
-  constructor(public data: ComponentCommandData) {
+  constructor(public readonly data: ComponentCommandData) {
     super({
       appPermissions: data.appPermissions,
       private: data.private,

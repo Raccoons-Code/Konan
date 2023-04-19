@@ -4,10 +4,10 @@ import client from "../client";
 import BaseCommand from "./BaseCommand";
 
 export default abstract class BaseApplicationCommand extends BaseCommand {
-  abstract data: BaseApplicationCommandData
+  readonly abstract data: BaseApplicationCommandData
     & JSONEncodable<BaseApplicationCommandData>;
 
-  constructor(public options: ApplicationCommandOptions = {}) {
+  constructor(public readonly options: ApplicationCommandOptions = {}) {
     super();
   }
 
@@ -19,9 +19,7 @@ export default abstract class BaseApplicationCommand extends BaseCommand {
     return `</${this.data.name}:${this.id}>`;
   }
 
-  build() {
-    this.data;
-  }
+  build() { }
 
   getCommandMention(): `</${string}:${string}>`;
   getCommandMention<G extends string>(subGroup: G): `</${string} ${G}:${string}>`;

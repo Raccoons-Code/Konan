@@ -7,9 +7,9 @@ import { t } from "../translator";
 import Base from "./Base";
 
 export default abstract class BaseCommand extends Base {
-  abstract data: any;
+  readonly abstract data: any;
 
-  constructor(public options: CommandOptions = {}) {
+  constructor(public readonly options: CommandOptions = {}) {
     super();
   }
 
