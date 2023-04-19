@@ -372,37 +372,59 @@ export default class extends ChatInputCommand {
       return 1;
     }
 
-    const guild = interaction.guild;
+    await interaction.guild.fetch();
 
-    await Promise.all([
-      guild.fetch(),
-      guild.members.fetch({ withPresences: true }),
-    ]);
-
-    const MPSText = Object.entries(getAllMembersPresenceStatus(guild))
+    const MPSText = Object.entries(getAllMembersPresenceStatus(interaction.guild))
       .map(([status, count]) => `${emojis[status] ?? status} ${inlineCode(`${count}`)}`)
       .join("\n");
 
     await interaction.editReply({
       embeds: [
         new EmbedBuilder()
-          .setAuthor({ name: guild.name, iconURL: guild.iconURL() ?? undefined })
+          .setAuthor({
+            name: interaction.guild.name,
+            iconURL: interaction.guild.iconURL() ?? undefined,
+          })
           .setColor("Random")
           .setFields(
-            { name: t("owner", interaction.locale), value: userMention(guild.ownerId), inline },
-            { name: t("id", interaction.locale), value: inlineCode(guild.id), inline },
-            { name: t("preferredLocale", interaction.locale), value: inlineCode(guild.preferredLocale), inline },
-            { name: `${t("members", interaction.locale)} [${guild.memberCount}]`, value: MPSText, inline },
-            { name: t("channels", interaction.locale), value: `${guild.channels.cache.size}`, inline },
-            { name: t("emojis", interaction.locale), value: `${guild.emojis.cache.size}`, inline },
+            {
+              name: t("owner", interaction.locale),
+              value: userMention(interaction.guild.ownerId),
+              inline,
+            },
+            {
+              name: t("id", interaction.locale),
+              value: inlineCode(interaction.guild.id),
+              inline,
+            },
+            {
+              name: t("preferredLocale", interaction.locale),
+              value: inlineCode(interaction.guild.preferredLocale),
+              inline,
+            },
+            {
+              name: `${t("members", interaction.locale)} [${interaction.guild.memberCount}]`,
+              value: MPSText,
+              inline,
+            },
+            {
+              name: t("channels", interaction.locale),
+              value: `${interaction.guild.channels.cache.size}`,
+              inline,
+            },
+            {
+              name: t("emojis", interaction.locale),
+              value: `${interaction.guild.emojis.cache.size}`,
+              inline,
+            },
             {
               name: t("serverCreatedAt", interaction.locale),
-              value: `${time(guild.createdAt)} ${time(guild.createdAt, "R")}`,
+              value: `${time(interaction.guild.createdAt)} ${time(interaction.guild.createdAt, "R")}`,
               inline,
             },
           )
-          .setImage(guild.bannerURL({ size: 512 }))
-          .setThumbnail(guild.iconURL()),
+          .setImage(interaction.guild.bannerURL({ size: 512 }))
+          .setThumbnail(interaction.guild.iconURL()),
       ],
     });
 
