@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, OAuth2Scopes, PermissionFlagsBits, PermissionsString } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, OAuth2Scopes, PermissionFlagsBits, PermissionsString, bold, inlineCode } from "discord.js";
 import { MissingPermissionResponse } from "../@enum";
 import { CommandOptions } from "../@types";
 import client from "../client";
@@ -73,11 +73,22 @@ export default abstract class BaseCommand extends Base {
 
     const embeds = [
       new EmbedBuilder()
-        .setDescription(t(key, {
+        .setDescription(bold(t(key, {
           locale: interaction.locale,
           permission: t(permission[0], interaction.locale),
-        })),
+        }))),
     ];
+
+    const other = permission.slice(1);
+
+    if (other.length) {
+      embeds[0].addFields({
+        name: t("otherMissingPermissions", interaction.locale),
+        value: other
+          .map(perm => inlineCode(t(perm, interaction.locale)))
+          .join("\n").slice(0, 1024),
+      });
+    }
 
     if (interaction.deferred || interaction.replied) {
       if (interaction.isMessageComponent()) {
