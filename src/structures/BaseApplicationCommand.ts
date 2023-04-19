@@ -11,8 +11,15 @@ export default abstract class BaseApplicationCommand extends BaseCommand {
     super();
   }
 
+  #id?: string;
+
+  private get _id() {
+    this.#id = client.application?.commands.cache.findKey(c => c.name === this.data.name) ?? client.user?.id;
+    return this.#id;
+  }
+
   get id() {
-    return client.application?.commands.cache.find(c => c.name === this.data.name)?.id ?? client.user?.id;
+    return client.application?.commands.cache.has(this.#id!) ? this.#id : this._id;
   }
 
   get commandMention() {
