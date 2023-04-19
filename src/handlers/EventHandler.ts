@@ -1,12 +1,12 @@
-import { IntentsBitField, Partials } from "discord.js";
+import { Partials } from "discord.js";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import client from "../client";
 import { EVENTS_PATH, FILE_EXT } from "../util/constants";
 
 class EventHandler {
-  intents = new IntentsBitField();
-  partials: Partials[] = [];
+  intents = client.options.intents;
+  partials: Partials[] = client.options.partials ?? [];
   errors: Error[] = [];
 
   async load(dir = EVENTS_PATH) {
