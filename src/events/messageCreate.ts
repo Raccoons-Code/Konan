@@ -1,20 +1,8 @@
-import { GatewayIntentBits, Partials } from "discord.js";
 import { CommandTypes } from "../@enum";
-import { EventOptions } from "../@types";
 import client, { appOwners, appStats } from "../client";
 import commandHandler from "../handlers/CommandHandler";
 import Command from "../structures/Command";
 import regexp from "../util/regexp";
-
-export const options = <EventOptions>{
-  intents: [
-    GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.GuildMessages,
-  ],
-  partials: [
-    Partials.Message,
-  ],
-};
 
 client.on("messageCreate", async function (message) {
   if (message.author.bot) {

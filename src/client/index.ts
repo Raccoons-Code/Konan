@@ -1,12 +1,27 @@
-import { Client } from "discord.js";
+import { Client, GatewayIntentBits, Partials } from "discord.js";
 import ApplicationOwners from "./ApplicationOwners";
 import ApplicationStats from "./ApplicationStats";
 import PresenceManager from "./PresenceManager";
 import WebhookLogger from "./WebhookLogger";
 
 const client = new Client({
-  intents: 0,
+  intents: [
+    GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.GuildIntegrations,
+    GatewayIntentBits.GuildInvites,
+    GatewayIntentBits.GuildModeration,
+    GatewayIntentBits.Guilds,
+  ],
   failIfNotExists: false,
+  partials: [
+    Partials.Channel,
+    Partials.GuildMember,
+    Partials.GuildScheduledEvent,
+    Partials.Message,
+    Partials.Reaction,
+    Partials.ThreadMember,
+    Partials.User,
+  ],
 });
 
 export default client;

@@ -1,34 +1,12 @@
-import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuInteraction, ChatInputCommandInteraction, codeBlock, Colors, ComponentType, EmbedBuilder, GatewayIntentBits, InteractionType, MentionableSelectMenuInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, Partials, RoleSelectMenuInteraction, RouteBases, StringSelectMenuInteraction, UserContextMenuCommandInteraction, UserSelectMenuInteraction } from "discord.js";
+import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuInteraction, ChatInputCommandInteraction, codeBlock, Colors, ComponentType, EmbedBuilder, InteractionType, MentionableSelectMenuInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RoleSelectMenuInteraction, RouteBases, StringSelectMenuInteraction, UserContextMenuCommandInteraction, UserSelectMenuInteraction } from "discord.js";
 import { env } from "node:process";
 import { CommandTypes } from "../@enum";
-import { BaseComponentCustomId, EventOptions } from "../@types";
+import { BaseComponentCustomId } from "../@types";
 import client, { appOwners, appStats, logger } from "../client";
 import commandHandler from "../handlers/CommandHandler";
+import BaseApplicationCommand from "../structures/BaseApplicationCommand";
 import { t } from "../translator";
 import { contentWithCodeBlockLength, JSONparse } from "../util/utils";
-import BaseApplicationCommand from "../structures/BaseApplicationCommand";
-
-export const options = <EventOptions>{
-  intents: [
-    GatewayIntentBits.GuildEmojisAndStickers,
-    GatewayIntentBits.GuildVoiceStates,
-    GatewayIntentBits.GuildIntegrations,
-    GatewayIntentBits.GuildInvites,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildModeration,
-    GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.Guilds,
-  ],
-  partials: [
-    Partials.Channel,
-    Partials.GuildMember,
-    Partials.GuildScheduledEvent,
-    Partials.Message,
-    Partials.Reaction,
-    Partials.ThreadMember,
-    Partials.User,
-  ],
-};
 
 client.on("interactionCreate", async function (interaction) {
   const command = <BaseApplicationCommand>InteractionTypes[interaction.type]?.(<any>interaction);
