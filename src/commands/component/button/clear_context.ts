@@ -1,5 +1,4 @@
 import { ActionRowBuilder, bold, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, messageLink } from "discord.js";
-import client from "../../../client";
 import cache from "../../../modules/Cache";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
@@ -23,14 +22,6 @@ export default class extends ButtonCommand {
     });
 
     const locale = interaction.locale;
-
-    const appPerms = interaction.channel.permissionsFor(client.user!)
-      ?.missing(this.options.channelAppPermissions!);
-
-    if (appPerms?.length) {
-      await this.replyMissingPermission(interaction, appPerms, "missingChannelPermission");
-      return 1;
-    }
 
     const cancelId = JSON.stringify({
       c: "clear",

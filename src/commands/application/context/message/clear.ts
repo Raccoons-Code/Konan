@@ -1,5 +1,4 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, MessageContextMenuCommandInteraction, PermissionFlagsBits, StringSelectMenuOptionBuilder, UserSelectMenuBuilder } from "discord.js";
-import client from "../../../../client";
 import MessageContextCommand from "../../../../structures/MessageContextCommand";
 import { t } from "../../../../translator";
 import { ClearFiltersBitField, ClearFiltersBits, clearFiltersFlags } from "../../../../util/ClearMessages";
@@ -29,14 +28,6 @@ export default class extends MessageContextCommand {
     await interaction.deferReply({ ephemeral: true });
 
     const locale = interaction.locale;
-
-    const appPerms = interaction.channel.permissionsFor(client.user!)
-      ?.missing(this.options.channelAppPermissions!);
-
-    if (appPerms?.length) {
-      await this.replyMissingPermission(interaction, appPerms, "missingChannelPermission");
-      return 1;
-    }
 
     const messages = await interaction.channel.messages.fetch({
       after: interaction.targetMessage.id,

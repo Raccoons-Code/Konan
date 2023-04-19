@@ -1,5 +1,4 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, GuildTextBasedChannel } from "discord.js";
-import client from "../../../client";
 import cache from "../../../modules/Cache";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
@@ -41,14 +40,6 @@ export default class extends ButtonCommand {
             .setTitle("Missing channel."),
         ],
       });
-      return 1;
-    }
-
-    const appPerms = channel.permissionsFor(client.user!)
-      ?.missing(this.options.channelAppPermissions!);
-
-    if (appPerms?.length) {
-      await this.replyMissingPermission(interaction, appPerms, "missingChannelPermission");
       return 1;
     }
 

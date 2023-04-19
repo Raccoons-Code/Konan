@@ -12,10 +12,6 @@ export default class extends ChatInputCommand {
   constructor() {
     super({
       category: "Game",
-      channelAppPermissions: [
-        PermissionFlagsBits.SendMessages,
-        PermissionFlagsBits.EmbedLinks,
-      ],
     });
 
     this.data.setName("wordle")
@@ -42,7 +38,11 @@ export default class extends ChatInputCommand {
     let appChannelPerms: PermissionsString[] = [];
 
     if (interaction.channel && "permissionsFor" in interaction.channel) {
-      appChannelPerms = interaction.channel.permissionsFor(client.user!)?.missing(this.options.channelAppPermissions!) ?? [];
+      appChannelPerms = interaction.channel.permissionsFor(client.user!)?.missing([
+        PermissionFlagsBits.SendMessages,
+        PermissionFlagsBits.EmbedLinks,
+        PermissionFlagsBits.ViewChannel,
+      ]) ?? [];
     }
 
     await interaction.deferReply({ ephemeral: !appChannelPerms.length });

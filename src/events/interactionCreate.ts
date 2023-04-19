@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuInteraction, ChatInputCommandInteraction, codeBlock, Colors, ComponentType, EmbedBuilder, InteractionType, MentionableSelectMenuInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RoleSelectMenuInteraction, RouteBases, StringSelectMenuInteraction, UserContextMenuCommandInteraction, UserSelectMenuInteraction } from "discord.js";
+import { ActionRowBuilder, ApplicationCommandOptionType, ApplicationCommandType, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuInteraction, ChatInputCommandInteraction, codeBlock, Colors, ComponentType, EmbedBuilder, InteractionType, MentionableSelectMenuInteraction, MessageContextMenuCommandInteraction, ModalSubmitInteraction, RoleSelectMenuInteraction, RouteBases, StringSelectMenuInteraction, UserContextMenuCommandInteraction, UserSelectMenuInteraction } from "discord.js";
 import { env } from "node:process";
 import { CommandTypes } from "../@enum";
 import { BaseComponentCustomId } from "../@types";
@@ -6,7 +6,7 @@ import client, { appOwners, appStats, logger } from "../client";
 import commandHandler from "../handlers/CommandHandler";
 import BaseApplicationCommand from "../structures/BaseApplicationCommand";
 import { t } from "../translator";
-import { contentWithCodeBlockLength, JSONparse } from "../util/utils";
+import { contentWithCodeBlockLength, getOptionFromInteractionOptions, JSONparse } from "../util/utils";
 
 client.on("interactionCreate", async function (interaction) {
   const command = <BaseApplicationCommand>InteractionTypes[interaction.type]?.(<any>interaction);
@@ -21,11 +21,31 @@ client.on("interactionCreate", async function (interaction) {
 
   let execute = true;
 
-  const appPerms = interaction.appPermissions?.missing(command.options.appPermissions!);
+  if (command.options.channelAppPermissions && "options" in interaction) {
+    const channel = interaction.options.get("channel")?.channel ??
+      getOptionFromInteractionOptions(interaction.options.data,
+        ApplicationCommandOptionType.Channel,
+        interaction.guild?.channels ?? client.channels) ??
+      interaction.channel;
 
-  if (appPerms?.length) {
-    execute = false;
-    await command.replyMissingPermission(interaction, appPerms, "missingPermission");
+    if (channel && "permissionsFor" in channel) {
+      const appChannelPerms = channel.permissionsFor(client.user!)
+        ?.missing(command.options.channelAppPermissions);
+
+      if (appChannelPerms?.length) {
+        execute = false;
+        await command.replyMissingPermission(interaction, appChannelPerms, "missingChannelPermission");
+      }
+    }
+  }
+
+  if (command.options.appPermissions) {
+    const appPerms = interaction.appPermissions?.missing(command.options.appPermissions);
+
+    if (appPerms?.length) {
+      execute = false;
+      await command.replyMissingPermission(interaction, appPerms, "missingPermission");
+    }
   }
 
   try {

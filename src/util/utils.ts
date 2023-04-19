@@ -1,4 +1,4 @@
-import { codeBlock, Locale } from "discord.js";
+import { APIInteractionDataResolvedChannel, APIInteractionDataResolvedGuildMember, APIRole, ApplicationCommandOptionType, Attachment, CachedManager, ChannelManager, codeBlock, CommandInteractionOption, GuildBasedChannel, GuildChannelManager, GuildMember, GuildMemberManager, Locale, Role, RoleManager, User, UserManager } from "discord.js";
 import { t } from "../translator";
 import { CONTENT_LENGTH, LOCALES } from "./constants";
 import regexp from "./regexp";
@@ -35,6 +35,112 @@ export function getLocalizations(
 
     return acc;
   }, <Record<Locale, string>>{});
+}
+
+export function getOptionFromInteractionOptions<T extends Attachment>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType.Attachment,
+): T | string;
+export function getOptionFromInteractionOptions<T extends boolean>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType.Boolean,
+): T;
+export function getOptionFromInteractionOptions<
+  T extends APIInteractionDataResolvedChannel | GuildBasedChannel
+>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType.Channel,
+): T | string;
+export function getOptionFromInteractionOptions<
+  T extends APIInteractionDataResolvedChannel | GuildBasedChannel
+>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType.Channel,
+  manager: ChannelManager | GuildChannelManager
+): T;
+export function getOptionFromInteractionOptions<T extends number>(
+  options: readonly CommandInteractionOption[],
+  type:
+    | ApplicationCommandOptionType.Integer
+    | ApplicationCommandOptionType.Number,
+): T;
+export function getOptionFromInteractionOptions<
+  T extends Role | APIRole
+>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType.Role,
+): T | string;
+export function getOptionFromInteractionOptions<
+  T extends Role | APIRole
+>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType.Role,
+  manager: RoleManager
+): T;
+export function getOptionFromInteractionOptions<T extends string>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType.String,
+): T;
+export function getOptionFromInteractionOptions<
+  T extends GuildMember | APIInteractionDataResolvedGuildMember | User
+>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType.User,
+): T | string;
+export function getOptionFromInteractionOptions<
+  T extends GuildMember | APIInteractionDataResolvedGuildMember | User
+>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType.User,
+  manager: GuildMemberManager | UserManager
+): T;
+export function getOptionFromInteractionOptions<T>(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType,
+  manager?: CachedManager<unknown, unknown, unknown>
+): T;
+export function getOptionFromInteractionOptions(
+  options: readonly CommandInteractionOption[],
+  type: ApplicationCommandOptionType,
+  manager?: CachedManager<unknown, unknown, unknown>,
+) {
+  let value;
+
+  for (const option of options) {
+    if (option.type === type) {
+      switch (type) {
+        case ApplicationCommandOptionType.Attachment:
+          value = option.attachment ?? option.value;
+          break;
+
+        case ApplicationCommandOptionType.Channel:
+          value = option.channel ?? manager?.resolve(option.value) ?? option.value;
+          break;
+
+        case ApplicationCommandOptionType.Mentionable:
+          value = option.member ?? option.message ?? option.role ?? option.user ?? option.value;
+          break;
+
+        case ApplicationCommandOptionType.Role:
+          value = option.role ?? manager?.resolve(option.value) ?? option.value;
+          break;
+
+        case ApplicationCommandOptionType.User:
+          value = option.member ?? option.user ?? manager?.resolve(option.value) ?? option.value;
+          break;
+
+        default:
+          value = option.value;
+          break;
+      }
+    } else {
+      if (option.options) {
+        value = getOptionFromInteractionOptions(option.options, type, manager);
+      }
+    }
+  }
+
+  return value;
 }
 
 export function JSONparse<T = Record<any, any>>(string: string): T | null {

@@ -1,5 +1,4 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, Colors, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, StringSelectMenuOptionBuilder, userMention } from "discord.js";
-import client from "../../../client";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { ClearFiltersBitField, ClearFiltersBits, clearFiltersFlags } from "../../../util/ClearMessages";
@@ -47,14 +46,6 @@ export default class extends ChatInputCommand {
     await interaction.deferReply({ ephemeral: true });
 
     const channel = <GuildTextBasedChannel>interaction.options.getChannel("channel") ?? interaction.channel;
-
-    const appPerms = channel.permissionsFor(client.user!)
-      ?.missing(this.options.channelAppPermissions!);
-
-    if (appPerms?.length) {
-      await this.replyMissingPermission(interaction, appPerms, "missingChannelPermission");
-      return 1;
-    }
 
     const locale = interaction.locale;
 

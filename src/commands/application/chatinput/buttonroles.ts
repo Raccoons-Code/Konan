@@ -13,7 +13,8 @@ export default class extends ChatInputCommand {
   constructor() {
     super({
       category: "Moderation",
-      appPermissions: ["EmbedLinks", "ManageRoles", "SendMessages"],
+      appPermissions: ["ManageRoles"],
+      channelAppPermissions: ["EmbedLinks", "SendMessages", "ViewChannel"],
       userPermissions: ["ManageRoles"],
     });
 
