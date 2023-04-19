@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, inlineCode, messageLink, PermissionFlagsBits, PermissionsString, TextBasedChannel, userMention } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, inlineCode, MessageCreateOptions, messageLink, PermissionFlagsBits, PermissionsString, TextBasedChannel, userMention } from "discord.js";
 import client from "../../../client";
 import prisma from "../../../database/prisma";
 import { dictionaries } from "../../../modules/Dictionaries";
@@ -35,7 +35,7 @@ export default class extends ChatInputCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    let appChannelPerms: PermissionsString[] = [];
+    let appChannelPerms: PermissionsString[] = ["ViewChannel"];
 
     if (interaction.channel && "permissionsFor" in interaction.channel) {
       appChannelPerms = interaction.channel.permissionsFor(client.user!)?.missing([
@@ -195,10 +195,7 @@ export default class extends ChatInputCommand {
 
     const gameBoard = wordle.create(wordSize);
 
-    const message = await (appChannelPerms.length ?
-      interaction.editReply.bind(interaction) :
-      interaction.channel!.send.bind(interaction)
-    )({
+    const payload: MessageCreateOptions = {
       components: [
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
@@ -227,7 +224,11 @@ export default class extends ChatInputCommand {
             },
           ] : []),
       ],
-    });
+    };
+
+    const message = await (appChannelPerms.length ?
+      interaction.editReply(payload) :
+      interaction.channel!.send(payload));
 
     promises.push(prisma.wordleInstance.create({
       data: {
