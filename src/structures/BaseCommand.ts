@@ -56,7 +56,7 @@ export default abstract class BaseCommand extends Base {
 
     if (
       key === "missingPermission" &&
-      interaction.memberPermissions?.has(PermissionFlagsBits.ManageRoles)
+      interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)
     ) {
       components.push(new ActionRowBuilder<ButtonBuilder>()
         .addComponents(new ButtonBuilder()

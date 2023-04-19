@@ -534,7 +534,7 @@ export default class extends ChatInputCommand {
           text: t("missingFeaturePermissions", interaction.locale),
         });
 
-        if (interaction.memberPermissions?.has(PermissionFlagsBits.ManageRoles)) {
+        if (interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
           components.push(new ActionRowBuilder<ButtonBuilder>()
             .addComponents(new ButtonBuilder()
               .setEmoji("🔐")
