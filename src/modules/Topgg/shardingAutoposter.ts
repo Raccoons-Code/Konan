@@ -1,7 +1,7 @@
 import { BotStats } from "@top-gg/sdk";
 import { Stats } from "../../@types";
 import { appStats, logger } from "../../client";
-import { fetchProcessResponse } from "../../util/Process";
+import { fetchShardingProcessMessage } from "../../sharding/utils";
 import api from "./api";
 
 export default class TopggShardingAutoposter {
@@ -38,7 +38,7 @@ export default class TopggShardingAutoposter {
   }
 
   async getStats(): Promise<BotStats> {
-    const stats = await fetchProcessResponse<Stats>({
+    const stats = await fetchShardingProcessMessage<Stats>({
       action: "stats",
     });
 
