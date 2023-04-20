@@ -1,7 +1,8 @@
-import { ButtonInteraction, EmbedBuilder, GuildMember, User, userMention } from "discord.js";
-import { setTimeout as sleep } from "node:timers/promises";
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder } from "discord.js";
+import cache from "../../../modules/Cache";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
+import Kick from "../../../util/Kick";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -16,77 +17,102 @@ export default class extends ButtonCommand {
       components: [],
     });
 
-    const kicking: Promise<void>[] = [];
-    const kicked: (string | GuildMember | User)[] = [];
-    const failed: string[] = [];
-    let index = 0;
-    let num = 0;
+    const [reasonField] = interaction.message.embeds[0].fields;
+
+    const reason = `${interaction.member.displayName}: ${reasonField.value}`
+      .slice(0, 512);
+
+    const kick = new Kick({
+      author: interaction.member,
+      guild: interaction.guild,
+      reason,
+      usersId: [],
+    });
+
+    const cancelId = JSON.stringify({
+      c: "kick",
+      sc: "cancel",
+      d: interaction.id,
+    });
+
+    cache.set(cancelId, kick);
 
     for (const embed of interaction.message.embeds) {
       const ids = embed.description?.match(/\d{17,}/g);
 
       if (ids?.length) {
-        num += ids.length;
+        kick.addUsersId(ids);
       }
     }
 
+    async function listener() {
+      await interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription((
+              (kick.kicked.length ? `✅ ${kick.kicked.join(" ")}\n` : "")
+              + (kick.failed.length ? `\n❌ ${kick.failed.join(" ")}` : "")
+            ) || null)
+            .setFields([{
+              name: t("kickedAmount", interaction.locale),
+              value: `${kick.kicked.length}/${kick.usersId.size}`,
+            }])
+            .setTitle(t("kickResult", interaction.locale)),
+        ],
+      });
+    }
+
+    kick.on("kicked", listener);
+
+    kick.once("end", function () {
+      kick.removeListener("kicked", listener);
+    });
+
     await interaction.editReply({
+      components: [
+        new ActionRowBuilder<ButtonBuilder>()
+          .addComponents(new ButtonBuilder()
+            .setCustomId(cancelId)
+            .setEmoji("❌")
+            .setStyle(ButtonStyle.Secondary)),
+      ],
       content: t("kicking", interaction.locale) + "...",
     });
 
-    for (const embed of interaction.message.embeds) {
-      const ids = embed.description?.match(/\d{17,}/g) ?? [];
-
-      const [reasonField] = embed.fields;
-
-      const reason = `${interaction.member.displayName}: ${reasonField.value}`
-        .slice(0, 512);
-
-      kicking.push(...ids.map(async (id, i) => {
-        await sleep((i + index) * 1000);
-
-        try {
-          const kick = await interaction.guild.members.kick(id, reason);
-
-          kicked.push(kick);
-        } catch {
-          failed.push(userMention(id));
-        }
-
-        await interaction.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription((
-                (kicked.length ? `✅ ${kicked.join(" ")}\n` : "")
-                + (failed.length ? `\n❌ ${failed.join(" ")}` : "")
-              ) || null)
-              .setFields([{
-                name: t("kickedAmount", interaction.locale),
-                value: `${kicked.length}/${num}`,
-              }])
-              .setTitle(t("kickResult", interaction.locale)),
-          ],
-        }).catch(() => null);
-      }));
-
-      index += ids.length;
-    }
-
-    await Promise.all(kicking);
+    await kick.start();
+    cache.delete(cancelId);
 
     await interaction.editReply({
       content: null,
       embeds: [
         new EmbedBuilder()
           .setDescription((
-            (kicked.length ? `✅ ${kicked.join(" ")}\n` : "")
-            + (failed.length ? `\n❌ ${failed.join(" ")}` : "")
+            (kick.kicked.length ? `✅ ${kick.kicked.join(" ")}\n` : "")
+            + (kick.failed.length ? `\n❌ ${kick.failed.join(" ")}` : "")
           ) || null)
           .setFields([{
             name: t("kickedAmount", interaction.locale),
-            value: `${kicked.length}/${num}`,
+            value: `${kick.kicked.length}/${kick.usersId.size}`,
           }])
           .setTitle(t("kickResult", interaction.locale)),
+      ],
+    });
+
+    return;
+  }
+
+  async cancel(interaction: ButtonInteraction<"cached">) {
+    const clear = <Kick>cache.get(interaction.customId);
+
+    clear?.stop();
+
+    cache.delete(interaction.customId);
+
+    await interaction.update({
+      components: [],
+      embeds: [
+        new EmbedBuilder(interaction.message.embeds[0].toJSON())
+          .setTitle(`❌ ${t("cancelled", interaction.locale)}.`),
       ],
     });
 
