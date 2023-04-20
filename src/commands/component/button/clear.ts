@@ -79,7 +79,7 @@ export default class extends ButtonCommand {
 
     cache.set(cancelId, clear);
 
-    clear.on("messageDeleteBulk", async function () {
+    async function listener() {
       await interaction.editReply({
         embeds: [
           new EmbedBuilder(interaction.message.embeds[0]?.toJSON())
@@ -96,10 +96,12 @@ export default class extends ButtonCommand {
             }),
         ],
       });
-    });
+    }
+
+    clear.on("messageDeleteBulk", listener);
 
     clear.once("end", function () {
-      clear.removeAllListeners();
+      clear.removeListener("messageDeleteBulk", listener);
     });
 
     try {
