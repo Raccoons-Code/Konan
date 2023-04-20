@@ -11,6 +11,14 @@
       "options": 25
     }
   },
+  "automod": {
+    "triggerType": {
+      "Keyword": 6,
+      "KeywordPreset": 1,
+      "MentionSpam": 1,
+      "Spam": 1
+    }
+  },
   "button": {
     "customId": 100,
     "label": 80

@@ -1,4 +1,4 @@
-import { AutoModerationActionType, AutoModerationRuleEventType, AutoModerationRuleTriggerType, ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js";
+import { AutoModerationActionType, AutoModerationRuleEventType, AutoModerationRuleKeywordPresetType, AutoModerationRuleTriggerType, ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 
 export default class extends ChatInputCommand {
@@ -23,13 +23,31 @@ export default class extends ChatInputCommand {
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
     interaction.guild.autoModerationRules.create({
       actions: [{
-        type: AutoModerationActionType.SendAlertMessage,
+        type: AutoModerationActionType.BlockMessage,
+        metadata: {
+          channel: "",
+          customMessage: "",
+          durationSeconds: 1,
+        },
       }],
       eventType: AutoModerationRuleEventType.MessageSend,
       name: "",
       triggerType: AutoModerationRuleTriggerType.Spam,
       enabled: true,
-      
+      exemptChannels: [],
+      exemptRoles: [],
+      reason: "",
+      triggerMetadata: {
+        allowList: [],
+        keywordFilter: [],
+        mentionTotalLimit: 1,
+        presets: [
+          AutoModerationRuleKeywordPresetType.Profanity,
+          AutoModerationRuleKeywordPresetType.SexualContent,
+          AutoModerationRuleKeywordPresetType.Slurs,
+        ],
+        regexPatterns: [],
+      },
     });
   }
 }
