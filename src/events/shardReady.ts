@@ -1,7 +1,9 @@
+/* eslint-disable no-await-in-loop */
 import { env } from "node:process";
 import client, { appStats, logger, presence } from "../client";
 import prisma from "../database/prisma";
 import commandHandler from "../handlers/CommandHandler";
+import eventHandler from "../handlers/EventHandler";
 import TopggAutoposter from "../modules/Topgg/autoposter";
 
 client.on("shardReady", async function (shardId, unavailableGuilds) {
@@ -61,4 +63,11 @@ client.on("shardReady", async function (shardId, unavailableGuilds) {
   new TopggAutoposter();
 
   console.log(`Cluster ${appStats.workerId} Shard ${shardId} ready done!`);
+
+  const errors = commandHandler.errors.splice(0, Infinity)
+    .concat(eventHandler.errors.splice(0, Infinity));
+
+  for (const error of errors) {
+    await logger.commonError(error);
+  }
 });
