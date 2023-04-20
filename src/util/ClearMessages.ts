@@ -24,7 +24,7 @@ interface ClearMessages {
   removeAllListeners: (<K extends keyof ClearEvents>(event?: K) => this) &
   (<S extends string | symbol>(event?: Exclude<S, keyof ClearEvents>) => this);
   removeListener: (<K extends keyof ClearEvents>(event: K, listener: (...args: ClearEvents[K]) => void) => this) &
-  (<S extends string | symbol>(event: Exclude<S, keyof ClearEvents>, listener: (...args: any[]) => void) => this)
+  (<S extends string | symbol>(event: Exclude<S, keyof ClearEvents>, listener: (...args: any[]) => void) => this);
 }
 
 class ClearMessages extends EventEmitter {
