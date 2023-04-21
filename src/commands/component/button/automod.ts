@@ -36,7 +36,7 @@ export default class extends ButtonCommand {
       new ModalBuilder()
         .setCustomId(JSON.stringify({ c: "automod", sc: "editName" }))
         .setTitle("Automod")
-        .addComponents([
+        .addComponents(
           new ActionRowBuilder<TextInputBuilder>()
             .addComponents([
               new TextInputBuilder()
@@ -45,7 +45,7 @@ export default class extends ButtonCommand {
                 .setRequired(true)
                 .setStyle(TextInputStyle.Short),
             ]),
-        ]),
+      ),
     );
   }
 
