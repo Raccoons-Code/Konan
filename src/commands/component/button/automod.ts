@@ -1,4 +1,4 @@
-import { ButtonInteraction, ComponentType } from "discord.js";
+import { ActionRowBuilder, ButtonInteraction, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes, getEventTypes } from "../../../util/automod";
@@ -15,17 +15,38 @@ export default class extends ButtonCommand {
   }
 
   async execute(interaction: ButtonInteraction<"cached">) {
-    await interaction.deferUpdate();
-
     const parsedId = JSON.parse(interaction.customId);
 
-    await this[<"cancel">parsedId.scg ?? parsedId.sc]?.(interaction);
+    const subcommand = <"execute">parsedId.scg ?? parsedId.sc;
+
+    if (!["editName"].includes(subcommand))
+      await interaction.deferUpdate();
+
+    await this[subcommand]?.(interaction);
 
     return;
   }
 
   async cancel(interaction: ButtonInteraction<"cached">) {
     await interaction.deleteReply();
+  }
+
+  async editName(interaction: ButtonInteraction<"cached">) {
+    await interaction.showModal(
+      new ModalBuilder()
+        .setCustomId(JSON.stringify({ c: "automod", sc: "editName" }))
+        .setTitle("Automod")
+        .addComponents([
+          new ActionRowBuilder<TextInputBuilder>()
+            .addComponents([
+              new TextInputBuilder()
+                .setCustomId("name")
+                .setLabel(t("automodEditName", interaction.locale))
+                .setRequired(true)
+                .setStyle(TextInputStyle.Short),
+            ]),
+        ]),
+    );
   }
 
   async setExemptChannels(interaction: ButtonInteraction<"cached">) {

@@ -10,6 +10,8 @@
   "automodFieldExemptRoles": "Exempt Roles",
   "automodHasMaxRules": "This server already has the maximum number of automod rules.",
   "automodHasMaxRulesFor": "This server already has the maximum number of automod rules for {{value}}.",
+  "automodName": "Automod Name",
+  "automodEditName": "Edit Name",
   "backup404": "Could not find the backup.",
   "backupDeleted": "Backup successfully deleted.",
   "backupError": "Unable to backup!",

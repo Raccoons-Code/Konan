@@ -1,6 +1,16 @@
 import { ButtonBuilder, ButtonStyle } from "discord.js";
 import { t } from "../../../translator";
 
+export function getEditNameButton(locale:string) {
+  return new ButtonBuilder()
+    .setCustomId(JSON.stringify({
+      c: "automod",
+      sc: "editName",
+    }))
+    .setLabel(t("automodEditName", locale))
+    .setStyle(ButtonStyle.Secondary);
+}
+
 export function getEventsButton(locale: string) {
   return new ButtonBuilder()
     .setCustomId(JSON.stringify({
@@ -8,7 +18,7 @@ export function getEventsButton(locale: string) {
       sc: "setEventType",
     }))
     .setLabel(t("automodFieldEventType", locale))
-    .setStyle(ButtonStyle.Primary);
+    .setStyle(ButtonStyle.Secondary);
 }
 
 export function getExemptChannelsButton(locale: string) {
@@ -18,7 +28,7 @@ export function getExemptChannelsButton(locale: string) {
       sc: "setExemptChannels",
     }))
     .setLabel(t("automodFieldExemptChannels", locale))
-    .setStyle(ButtonStyle.Primary);
+    .setStyle(ButtonStyle.Secondary);
 }
 
 export function getExemptRolesButton(locale: string) {
@@ -28,7 +38,7 @@ export function getExemptRolesButton(locale: string) {
       sc: "setExemptRoles",
     }))
     .setLabel(t("automodFieldExemptRoles", locale))
-    .setStyle(ButtonStyle.Primary);
+    .setStyle(ButtonStyle.Secondary);
 }
 
 export function getTriggersButton(locale: string) {
@@ -38,5 +48,5 @@ export function getTriggersButton(locale: string) {
       sc: "setTriggerType",
     }))
     .setLabel(t("automodFieldTriggerType", locale))
-    .setStyle(ButtonStyle.Primary);
+    .setStyle(ButtonStyle.Secondary);
 }

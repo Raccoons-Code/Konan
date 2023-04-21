@@ -2,7 +2,7 @@ import { ActionRowBuilder, AutoModerationRuleCreateOptions, ButtonBuilder, ChatI
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
-import { getEventsButton, getExemptChannelsButton, getExemptRolesButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
+import { getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -48,6 +48,7 @@ export default class extends ChatInputCommand {
       components: [
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
+            getEditNameButton(interaction.locale),
             getTriggersButton(interaction.locale),
             getEventsButton(interaction.locale),
             getExemptChannelsButton(interaction.locale),
@@ -56,7 +57,6 @@ export default class extends ChatInputCommand {
       ],
       embeds: [
         new EmbedBuilder()
-          .setTitle("Automod Setup")
           .addFields([{
             name: t("automodFieldTriggerType", interaction.locale),
             value: "-",
