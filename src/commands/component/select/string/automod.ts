@@ -88,7 +88,7 @@ export default class extends SelectMenuCommand {
     }
 
     const [embed] = interaction.message.embeds;
-    console.log("select");
+
     await interaction.editReply({
       components: toggleButtons(
         removeSelectMenuById(

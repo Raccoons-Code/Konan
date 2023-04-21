@@ -38,7 +38,7 @@ export default class extends ButtonCommand {
     }
 
     const customId = JSON.stringify({ c: "automod", sc: "setTriggerType" });
-    console.log("button");
+
     await interaction.editReply({
       components: toggleButtons(
         addSelectOptionsToRows(
