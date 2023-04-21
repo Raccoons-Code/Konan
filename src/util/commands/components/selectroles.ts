@@ -192,49 +192,6 @@ export function editStringSelectById(
   });
 }
 
-export function removeOptionsFromSelectMenu(
-  components: ActionRow<MessageActionRowComponent>[] = [],
-  menuId: string,
-  optionIds: string | string[],
-) {
-  if (!components?.length) return [];
-  if (!Array.isArray(optionIds)) optionIds = [optionIds];
-
-  return components.reduce<(
-    | ActionRow<MessageActionRowComponent>
-    | ActionRowBuilder<StringSelectMenuBuilder>
-  )[]>((acc, row) => {
-    const rowJson = <APIActionRowComponent<APIStringSelectComponent>>row.toJSON();
-
-    if (!rowJson.components.length) return acc;
-
-    if (rowJson.components[0].type !== ComponentType.StringSelect) return acc.concat(row);
-
-    const menus = rowJson.components.reduce<StringSelectMenuBuilder[]>((acc2, select) => {
-      if (select.custom_id !== menuId)
-        return acc2.concat(new StringSelectMenuBuilder(select));
-
-      select.options = select.options.filter(option => {
-        const optionId = <SelectRolesOptionValue>JSON.parse(option.value);
-
-        return !(
-          optionIds.includes(optionId.id ?? option.value) ||
-          optionIds.includes(option.value)
-        );
-      });
-
-      if (!select.options.length) return acc2;
-
-      return acc2.concat(new StringSelectMenuBuilder(select));
-    }, []);
-
-    if (!menus.length) return acc;
-
-    return acc.concat(new ActionRowBuilder<StringSelectMenuBuilder>()
-      .addComponents(menus));
-  }, []);
-}
-
 export function removeOptionsByRolesFromSelect(
   roles: string | string[],
   components: ActionRow<MessageActionRowComponent>[],

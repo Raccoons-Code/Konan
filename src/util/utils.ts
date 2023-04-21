@@ -37,6 +37,10 @@ export function getLocalizations(
   }, <Record<Locale, string>>{});
 }
 
+export function getEnumKeys<T extends Record<any, any>>(enumLike: T) {
+  return Object.values(enumLike).filter(v => isNaN(v)) as (keyof T)[];
+}
+
 export function getOptionFromInteractionOptions<T extends Attachment>(
   options: readonly CommandInteractionOption[],
   type: ApplicationCommandOptionType.Attachment,

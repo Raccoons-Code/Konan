@@ -1,11 +1,15 @@
-import { AutoModerationActionType, AutoModerationRuleEventType, AutoModerationRuleKeywordPresetType, AutoModerationRuleTriggerType, ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js";
+import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, StringSelectMenuBuilder } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
+import { t } from "../../../translator";
+import { getAvailableTriggerTypes } from "../../../util/automod";
+import { getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
 
 export default class extends ChatInputCommand {
   constructor() {
     super({
       appPermissions: ["ManageGuild"],
       userPermissions: ["ManageGuild"],
+      private: true, // Development
     });
 
     this.data.setName("automod")
@@ -21,7 +25,47 @@ export default class extends ChatInputCommand {
   }
 
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
-    interaction.guild.autoModerationRules.create({
+    await interaction.deferReply({ ephemeral: true });
+
+    const subcommand = interaction.options.getSubcommandGroup() ?? interaction.options.getSubcommand();
+
+    await this[<"create">subcommand]?.(interaction);
+
+    return;
+  }
+
+  async create(interaction: ChatInputCommandInteraction<"cached">) {
+    const rules = await interaction.guild.autoModerationRules.fetch();
+
+    const availableTriggers = getAvailableTriggerTypes(rules.values());
+
+    if (!availableTriggers.length) {
+      await interaction.editReply(t("automodHasMaxRules", interaction.locale));
+      return 1;
+    }
+
+    await interaction.editReply({
+      components: [
+        new ActionRowBuilder<StringSelectMenuBuilder>()
+          .addComponents(new StringSelectMenuBuilder()
+            .setCustomId(JSON.stringify({
+              c: "automod",
+              sc: "setTriggerType",
+            }))
+            .setPlaceholder("Set the trigger type.")
+            .addOptions(getTriggersSelectOptions(availableTriggers, interaction))),
+      ],
+      embeds: [
+        new EmbedBuilder()
+          .setTitle("Automod Setup"),
+      ],
+    });
+
+    return;
+  }
+}
+
+    /* interaction.guild.autoModerationRules.create({
       actions: [{
         type: AutoModerationActionType.BlockMessage,
         metadata: {
@@ -48,6 +92,4 @@ export default class extends ChatInputCommand {
         ],
         regexPatterns: [],
       },
-    });
-  }
-}
+    }); */

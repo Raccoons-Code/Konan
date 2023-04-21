@@ -1,11 +1,12 @@
 import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, Role, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
-import { addSelectByRoles, addSelectOptionsToRows, createSelectByRoles, editStringSelectById, removeOptionsByRolesFromSelect, removeOptionsFromSelectMenu, setDefaultRole } from "../../../util/commands/components/selectroles";
+import { addSelectByRoles, addSelectOptionsToRows, createSelectByRoles, editStringSelectById, removeOptionsByRolesFromSelect, setDefaultRole } from "../../../util/commands/components/selectroles";
 import { componentsHasRoles, filterCustomId } from "../../../util/commands/components/utils";
 import { GUILD_TEXT_CHANNEL_TYPES } from "../../../util/constants";
 import regexp from "../../../util/regexp";
 import { getLocalizations } from "../../../util/utils";
+import { removeOptionsFromSelectMenu } from "../../../util/commands/components/selectmenu";
 
 export default class extends ChatInputCommand {
   CommandNameRegExp = /"c":"selectroles"/;
