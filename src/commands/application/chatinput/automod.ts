@@ -2,7 +2,7 @@ import { ActionRowBuilder, AutoModerationRuleCreateOptions, ButtonBuilder, ChatI
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
-import { getTriggersButton } from "../../../util/commands/components/automodbutton";
+import { getEventsButton, getExemptChannelsButton, getExemptRolesButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -49,6 +49,9 @@ export default class extends ChatInputCommand {
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
             getTriggersButton(interaction.locale),
+            getEventsButton(interaction.locale),
+            getExemptChannelsButton(interaction.locale),
+            getExemptRolesButton(interaction.locale),
           ]),
       ],
       embeds: [
@@ -60,6 +63,12 @@ export default class extends ChatInputCommand {
           }, {
             name: t("automodFieldEventType", interaction.locale),
             value: "-",
+          }, {
+            name: t("automodFieldExemptChannels", interaction.locale),
+            value: "-",
+          }, {
+            name: t("automodFieldExemptRoles", interaction.locale),
+            value: "-",
           }]),
       ],
     });
@@ -70,31 +79,31 @@ export default class extends ChatInputCommand {
   }
 }
 
-    /* interaction.guild.autoModerationRules.create({
-      actions: [{
-        type: AutoModerationActionType.BlockMessage,
-        metadata: {
-          channel: "",
-          customMessage: "",
-          durationSeconds: 1,
-        },
-      }],
-      eventType: AutoModerationRuleEventType.MessageSend,
-      name: "",
-      triggerType: AutoModerationRuleTriggerType.Spam,
-      enabled: true,
-      exemptChannels: [],
-      exemptRoles: [],
-      reason: "",
-      triggerMetadata: {
-        allowList: [],
-        keywordFilter: [],
-        mentionTotalLimit: 1,
-        presets: [
-          AutoModerationRuleKeywordPresetType.Profanity,
-          AutoModerationRuleKeywordPresetType.SexualContent,
-          AutoModerationRuleKeywordPresetType.Slurs,
-        ],
-        regexPatterns: [],
-      },
-    }); */
+/* interaction.guild.autoModerationRules.create({
+  actions: [{
+    type: AutoModerationActionType.BlockMessage,
+    metadata: {
+      channel: "",
+      customMessage: "",
+      durationSeconds: 1,
+    },
+  }],
+  eventType: AutoModerationRuleEventType.MessageSend,
+  name: "",
+  triggerType: AutoModerationRuleTriggerType.Spam,
+  enabled: true,
+  exemptChannels: [],
+  exemptRoles: [],
+  reason: "",
+  triggerMetadata: {
+    allowList: [],
+    keywordFilter: [],
+    mentionTotalLimit: 1,
+    presets: [
+      AutoModerationRuleKeywordPresetType.Profanity,
+      AutoModerationRuleKeywordPresetType.SexualContent,
+      AutoModerationRuleKeywordPresetType.Slurs,
+    ],
+    regexPatterns: [],
+  },
+}); */

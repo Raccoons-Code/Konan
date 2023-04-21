@@ -5,7 +5,7 @@ import { t } from "../../../../translator";
 import { TriggerTypeString, getAvailableTriggerTypes } from "../../../../util/automod";
 import { getTriggersSelectOptions } from "../../../../util/commands/components/automodselect";
 import { toggleButtons } from "../../../../util/commands/components/button";
-import { removeSelectMenuById, setDefaultOptionByValue, setSelectMenuOptions } from "../../../../util/commands/components/selectmenu";
+import { removeSelectMenuById, setSelectMenuOptions } from "../../../../util/commands/components/selectmenu";
 
 export default class extends SelectMenuCommand {
   constructor() {
@@ -34,10 +34,13 @@ export default class extends SelectMenuCommand {
     const [embed] = interaction.message.embeds;
 
     await interaction.editReply({
-      components: setDefaultOptionByValue(
+      components: toggleButtons(
+        removeSelectMenuById(
         interaction.message.components,
         interaction.customId,
-        value,
+        ),
+        JSON.stringify({ c: "automod", sc: "setEventType" }),
+        false,
       ),
       embeds: [
         new EmbedBuilder(embed.toJSON())

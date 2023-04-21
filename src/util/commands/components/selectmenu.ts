@@ -1,6 +1,51 @@
-import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIActionRowComponentTypes, APISelectMenuOption, APIStringSelectComponent, ComponentEmojiResolvable, ComponentType, JSONEncodable, MessageActionRowComponent, SelectMenuComponentOptionData, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIActionRowComponentTypes, APISelectMenuOption, APIStringSelectComponent, ChannelSelectMenuBuilder, ComponentEmojiResolvable, ComponentType, JSONEncodable, MessageActionRowComponent, MessageActionRowComponentBuilder, RoleSelectMenuBuilder, SelectMenuComponentOptionData, SelectMenuType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import { BaseComponentCustomId, SelectRolesOptionValue } from "../../../@types";
+import { GUILD_CHANNEL_TYPES } from "../../constants";
 import { JSONparse, splitArrayInGroups } from "../../utils";
+
+export function getChannelSelect(customId: string) {
+  return new ChannelSelectMenuBuilder()
+    .setCustomId(customId)
+    .setChannelTypes(...GUILD_CHANNEL_TYPES)
+    .setMinValues(0)
+    .setMaxValues(25);
+}
+
+export function getRoleSelect(customId: string) {
+  return new RoleSelectMenuBuilder()
+    .setCustomId(customId)
+    .setMinValues(0)
+    .setMaxValues(25);
+}
+
+export function addSelectMenuByType(
+  type: Exclude<SelectMenuType, ComponentType.StringSelect>,
+  customId: string,
+  components?: (
+    | ActionRow<MessageActionRowComponent>
+    | ActionRowBuilder<MessageActionRowComponentBuilder>
+  )[],
+) {
+  if (!components) components = [];
+
+  const parsedId = JSON.parse(customId);
+  parsedId.d = Date.now();
+  customId = JSON.stringify(parsedId);
+
+  const component = new ActionRowBuilder<any>();
+
+  switch (type) {
+    case ComponentType.ChannelSelect:
+      component.addComponents(getChannelSelect(customId));
+      break;
+
+    case ComponentType.RoleSelect:
+      component.addComponents(getRoleSelect(customId));
+      break;
+  }
+
+  return components.concat(component);
+}
 
 export function addSelectOptionsToRows(
   components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<StringSelectMenuBuilder>)[],
@@ -176,6 +221,20 @@ export function removeSelectMenuById(
 
     return acc.concat(row);
   }, []);
+}
+
+export function removeSelectByType(
+  components: (
+    | ActionRow<MessageActionRowComponent>
+    | ActionRowBuilder<MessageActionRowComponentBuilder>
+  )[],
+  type: Exclude<SelectMenuType, ComponentType.StringSelect>,
+) {
+  return components.filter(row => {
+    const rowJson = row.toJSON();
+
+    return rowJson.components.some(element => element.type !== type);
+  });
 }
 
 export function setBitFieldValuesOnSelectMenus(

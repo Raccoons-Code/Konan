@@ -28,6 +28,19 @@ export function componentsHasRoles(
   })));
 }
 
+export function componentsHasRowType(
+  components: ActionRow<MessageActionRowComponent>[],
+  type: ComponentType,
+) {
+  return components.some(row => {
+    const rowJson = row.toJSON();
+
+    if (rowJson.type === type) return true;
+
+    return rowJson.components.some(element => element.type === type);
+  });
+}
+
 export function filterCustomId(
   components: ActionRow<MessageActionRowComponent>[],
   customIds: string[],

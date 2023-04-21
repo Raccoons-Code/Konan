@@ -1,4 +1,4 @@
-import { APIButtonComponentWithCustomId, ApplicationCommandOptionAllowedChannelTypes, ButtonStyle, ChannelType, GatewayIntentBits, GatewayIntentsString, GuildTextChannelType, Locale, PermissionFlagsBits, PermissionsString, version as djsVersion } from "discord.js";
+import { APIButtonComponentWithCustomId, ApplicationCommandOptionAllowedChannelTypes, ButtonStyle, ChannelType, GatewayIntentBits, GatewayIntentsString, GuildChannelType, GuildTextChannelType, Locale, PermissionFlagsBits, PermissionsString, version as djsVersion } from "discord.js";
 import { readFileSync } from "node:fs";
 import { cpus, totalmem, version } from "node:os";
 import { extname, join } from "node:path";
@@ -50,6 +50,19 @@ export const INTERACTION_BUTTON_STYLES: {
     { name: "Success", value: ButtonStyle.Success },
     { name: "Danger", value: ButtonStyle.Danger },
   ];
+
+export const GUILD_CHANNEL_TYPES: GuildChannelType[] = [
+  ChannelType.AnnouncementThread,
+  ChannelType.GuildAnnouncement,
+  ChannelType.GuildCategory,
+  ChannelType.GuildDirectory,
+  ChannelType.GuildForum,
+  ChannelType.GuildStageVoice,
+  ChannelType.GuildText,
+  ChannelType.GuildVoice,
+  ChannelType.PrivateThread,
+  ChannelType.PublicThread,
+];
 
 export const GUILD_TEXT_CHANNEL_TYPES: Extract<ApplicationCommandOptionAllowedChannelTypes, GuildTextChannelType>[] = [
   ChannelType.AnnouncementThread,

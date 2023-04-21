@@ -1,10 +1,11 @@
-import { ButtonInteraction } from "discord.js";
+import { ButtonInteraction, ComponentType } from "discord.js";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
-import { getAvailableTriggerTypes } from "../../../util/automod";
-import { getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
+import { getAvailableTriggerTypes, getEventTypes } from "../../../util/automod";
+import { getEventsSelectOptions, getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
 import { toggleButtons } from "../../../util/commands/components/button";
-import { addSelectOptionsToRows } from "../../../util/commands/components/selectmenu";
+import { addSelectMenuByType, addSelectOptionsToRows, removeSelectByType } from "../../../util/commands/components/selectmenu";
+import { componentsHasRowType } from "../../../util/commands/components/utils";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -25,6 +26,67 @@ export default class extends ButtonCommand {
 
   async cancel(interaction: ButtonInteraction<"cached">) {
     await interaction.deleteReply();
+  }
+
+  async setExemptChannels(interaction: ButtonInteraction<"cached">) {
+    const customId = JSON.stringify({ c: "automod", sc: "setExemptChannels" });
+
+    const hasMenu = componentsHasRowType(
+      interaction.message.components,
+      ComponentType.ChannelSelect,
+    );
+
+    await interaction.editReply({
+      components: hasMenu ?
+        removeSelectByType(
+          interaction.message.components,
+          ComponentType.ChannelSelect,
+        ) :
+        addSelectMenuByType(
+          ComponentType.ChannelSelect,
+          customId,
+          interaction.message.components,
+        ),
+    });
+  }
+
+  async setExemptRoles(interaction: ButtonInteraction<"cached">) {
+    const customId = JSON.stringify({ c: "automod", sc: "setExemptRoles" });
+
+    const hasMenu = componentsHasRowType(
+      interaction.message.components,
+      ComponentType.RoleSelect,
+    );
+
+    await interaction.editReply({
+      components: hasMenu ?
+        removeSelectByType(
+          interaction.message.components,
+          ComponentType.RoleSelect,
+        ) :
+        addSelectMenuByType(
+          ComponentType.RoleSelect,
+          customId,
+          interaction.message.components,
+        ),
+    });
+  }
+
+  async setEventType(interaction: ButtonInteraction<"cached">) {
+    const customId = JSON.stringify({ c: "automod", sc: "setEventType" });
+
+    await interaction.editReply({
+      components: toggleButtons(
+        addSelectOptionsToRows(
+          interaction.message.components,
+          customId,
+          getEventsSelectOptions(getEventTypes(), interaction.locale),
+          1,
+        ),
+        customId,
+        true,
+      ),
+    });
   }
 
   async setTriggerType(interaction: ButtonInteraction<"cached">) {

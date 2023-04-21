@@ -6,6 +6,8 @@
   "andNMore": "... and {{n}} more.",
   "automodFieldTriggerType": "Trigger Type",
   "automodFieldEventType": "Event Type",
+  "automodFieldExemptChannels": "Exempt Channels",
+  "automodFieldExemptRoles": "Exempt Roles",
   "automodHasMaxRules": "This server already has the maximum number of automod rules.",
   "automodHasMaxRulesFor": "This server already has the maximum number of automod rules for {{value}}.",
   "backup404": "Could not find the backup.",
