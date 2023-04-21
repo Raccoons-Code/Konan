@@ -4,6 +4,8 @@
   "activity404": "This activity does not exist.",
   "alreadyHaveABackup": "You already have a backup.",
   "andNMore": "... and {{n}} more.",
+  "automodFieldTriggerType": "Trigger Type",
+  "automodFieldEventType": "Event Type",
   "automodHasMaxRules": "This server already has the maximum number of automod rules.",
   "automodHasMaxRulesFor": "This server already has the maximum number of automod rules for {{value}}.",
   "backup404": "Could not find the backup.",

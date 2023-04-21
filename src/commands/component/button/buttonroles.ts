@@ -24,28 +24,29 @@ export default class extends ButtonCommand {
       await interaction.member.roles.add(parsedId.id);
     }
 
-    await interaction.editReply({
-      components: editButtonById(interaction.message.components, interaction.customId, {
-        count: parsedId.count + (
-          memberHasRole ?
-            parsedId.count ? -1 : 0 :
-            parsedId.count < Number.MAX_SAFE_INTEGER ? 1 : 0
-        ),
-      }),
-    });
-
-    await interaction.followUp({
-      embeds: [
-        new EmbedBuilder()
-          .setColor(memberHasRole ? Colors.Red : Colors.Green)
-          .setFields(
+    await Promise.all([
+      interaction.editReply({
+        components: editButtonById(interaction.message.components, interaction.customId, {
+          count: parsedId.count + (
             memberHasRole ?
-              { name: "Removed", value: roleMention(parsedId.id) } :
-              { name: "Added", value: roleMention(parsedId.id) },
+              parsedId.count ? -1 : 0 :
+              parsedId.count < Number.MAX_SAFE_INTEGER ? 1 : 0
           ),
-      ],
-      ephemeral: true,
-    });
+        }),
+      }),
+      interaction.followUp({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(memberHasRole ? Colors.Red : Colors.Green)
+            .setFields(
+              memberHasRole ?
+                { name: "Removed", value: roleMention(parsedId.id) } :
+                { name: "Added", value: roleMention(parsedId.id) },
+            ),
+        ],
+        ephemeral: true,
+      }),
+    ]);
 
     return;
   }

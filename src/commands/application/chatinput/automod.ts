@@ -1,8 +1,8 @@
-import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, StringSelectMenuBuilder } from "discord.js";
+import { ActionRowBuilder, AutoModerationRuleCreateOptions, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
-import { getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
+import { getTriggersButton } from "../../../util/commands/components/automodbutton";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -46,20 +46,25 @@ export default class extends ChatInputCommand {
 
     await interaction.editReply({
       components: [
-        new ActionRowBuilder<StringSelectMenuBuilder>()
-          .addComponents(new StringSelectMenuBuilder()
-            .setCustomId(JSON.stringify({
-              c: "automod",
-              sc: "setTriggerType",
-            }))
-            .setPlaceholder("Set the trigger type.")
-            .addOptions(getTriggersSelectOptions(availableTriggers, interaction))),
+        new ActionRowBuilder<ButtonBuilder>()
+          .addComponents([
+            getTriggersButton(interaction.locale),
+          ]),
       ],
       embeds: [
         new EmbedBuilder()
-          .setTitle("Automod Setup"),
+          .setTitle("Automod Setup")
+          .addFields([{
+            name: t("automodFieldTriggerType", interaction.locale),
+            value: "-",
+          }, {
+            name: t("automodFieldEventType", interaction.locale),
+            value: "-",
+          }]),
       ],
     });
+
+    const _ = <AutoModerationRuleCreateOptions>{};
 
     return;
   }

@@ -4,7 +4,8 @@ import SelectMenuCommand from "../../../../structures/SelectMenuCommand";
 import { t } from "../../../../translator";
 import { TriggerTypeString, getAvailableTriggerTypes } from "../../../../util/automod";
 import { getTriggersSelectOptions } from "../../../../util/commands/components/automodselect";
-import { removeSelectMenuByCustomId, setSelectMenuOptions } from "../../../../util/commands/components/selectmenu";
+import { toggleButtons } from "../../../../util/commands/components/button";
+import { removeSelectMenuById, setDefaultOptionByValue, setSelectMenuOptions } from "../../../../util/commands/components/selectmenu";
 
 export default class extends SelectMenuCommand {
   constructor() {
@@ -25,6 +26,29 @@ export default class extends SelectMenuCommand {
     return;
   }
 
+  async setEventType(interaction: StringSelectMenuInteraction<"cached">) {
+    const [value] = interaction.values;
+
+    const parsedValue = <AutomodEnumOptionValue>JSON.parse(value);
+
+    const [embed] = interaction.message.embeds;
+
+    await interaction.editReply({
+      components: setDefaultOptionByValue(
+        interaction.message.components,
+        interaction.customId,
+        value,
+      ),
+      embeds: [
+        new EmbedBuilder(embed.toJSON())
+          .spliceFields(1, 1, {
+            name: t("automodFieldEventType", interaction.locale),
+            value: `${parsedValue.bit} - ${t(parsedValue.type, interaction.locale)}`,
+          }),
+      ],
+    });
+  }
+
   async setTriggerType(interaction: StringSelectMenuInteraction<"cached">) {
     const rules = await interaction.guild.autoModerationRules.fetch();
 
@@ -39,7 +63,7 @@ export default class extends SelectMenuCommand {
       return 1;
     }
 
-    const [value] = <TriggerTypeString[]>interaction.values;
+    const [value] = interaction.values;
 
     const parsedValue = <AutomodEnumOptionValue>JSON.parse(value);
 
@@ -49,7 +73,7 @@ export default class extends SelectMenuCommand {
           components: setSelectMenuOptions(
             interaction.message.components,
             interaction.customId,
-            getTriggersSelectOptions(availableTriggerTypes, interaction),
+            getTriggersSelectOptions(availableTriggerTypes, interaction.locale),
           ),
         }),
         interaction.followUp({
@@ -63,15 +87,21 @@ export default class extends SelectMenuCommand {
       return 1;
     }
 
+    const [embed] = interaction.message.embeds;
+    console.log("select");
     await interaction.editReply({
-      components: removeSelectMenuByCustomId(
+      components: toggleButtons(
+        removeSelectMenuById(
         interaction.message.components,
         interaction.customId,
       ),
+        JSON.stringify({ c: "automod", sc: "setTriggerType" }),
+        false,
+      ),
       embeds: [
-        new EmbedBuilder(interaction.message.embeds[0].toJSON())
+        new EmbedBuilder(embed.toJSON())
           .spliceFields(0, 1, {
-            name: "Trigger Type",
+            name: t("automodFieldTriggerType", interaction.locale),
             value: `${parsedValue.bit} - ${t(parsedValue.type, interaction.locale)}`,
           }),
       ],

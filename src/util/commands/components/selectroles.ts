@@ -1,5 +1,5 @@
-import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIRole, APISelectMenuOption, APIStringSelectComponent, ComponentType, MessageActionRowComponent, Role, SelectMenuComponentOptionData, Snowflake, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
-import { BaseComponentCustomId, ManageSelectRolesOptions, SelectRolesCustomId, SelectRolesOptionValue } from "../../../@types";
+import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIRole, APIStringSelectComponent, ComponentType, MessageActionRowComponent, Role, Snowflake, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { ManageSelectRolesOptions, SelectRolesCustomId, SelectRolesOptionValue } from "../../../@types";
 import regexp from "../../regexp";
 import { JSONparse, splitArrayInGroups } from "../../utils";
 
@@ -14,7 +14,7 @@ export function addSelectByRoles(
   if (!options) return components;
   if (!options.roles?.length) return components;
 
-  components = components
+  return components
     .filter(component => component)
     .map(row => {
       const rowJson = <APIActionRowComponent<APIStringSelectComponent>>row.toJSON();
@@ -37,38 +37,8 @@ export function addSelectByRoles(
             .setMaxValues(roles.length + select.options.length)
             .setPlaceholder(options.menuPlaceholder ?? select.placeholder ?? "");
         }));
-    });
-
-  return components.concat(createSelectByRoles(options));
-}
-
-export function addSelectOptionsToRows(
-  components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<StringSelectMenuBuilder>)[],
-  selectId: string,
-  options: (APISelectMenuOption | StringSelectMenuOptionBuilder | SelectMenuComponentOptionData)[],
-) {
-  if (!components) components = [];
-
-  components = components.map(row => {
-    const rowJson = <APIActionRowComponent<APIStringSelectComponent>>row.toJSON();
-
-    if (!rowJson.components.length) return row;
-
-    if (rowJson.components[0].type !== ComponentType.StringSelect) return row;
-
-    if (rowJson.components.every(select => select.custom_id !== selectId)) return row;
-
-    return new ActionRowBuilder<StringSelectMenuBuilder>()
-      .addComponents(rowJson.components.map(select => {
-        const newOptions = options.splice(0, 25 - select.options.length);
-
-        return new StringSelectMenuBuilder(select)
-          .addOptions(newOptions)
-          .setMaxValues(newOptions.length + select.options.length);
-      }));
-  });
-
-  return components.concat(createSelectFromOptions(options, JSON.parse(selectId)));
+    })
+    .concat(createSelectByRoles(options));
 }
 
 export function createSelectByRoles(options: ManageSelectRolesOptions) {
@@ -91,26 +61,6 @@ export function createSelectByRoles(options: ManageSelectRolesOptions) {
             id: role.id,
           }))))
         .setPlaceholder(options.menuPlaceholder ?? "")));
-}
-
-export function createSelectFromOptions(
-  options: (APISelectMenuOption | StringSelectMenuOptionBuilder | SelectMenuComponentOptionData)[],
-  customId: BaseComponentCustomId,
-) {
-  if (typeof customId === "string")
-    customId = <BaseComponentCustomId>JSON.parse(customId);
-
-  let index = 0;
-
-  return splitArrayInGroups(options, 25).map(group =>
-    new ActionRowBuilder<StringSelectMenuBuilder>()
-      .addComponents(new StringSelectMenuBuilder()
-        .setCustomId(JSON.stringify({
-          ...customId,
-          d: Date.now() + index++,
-        }))
-        .setOptions(group)
-        .setMaxValues(group.length)));
 }
 
 export function editStringSelectById(

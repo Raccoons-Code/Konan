@@ -37,39 +37,6 @@ export function addButtonsByRoles(
     .concat(createButtonsByRoles(options));
 }
 
-export function addButtonsToRows(
-  components: (
-    | ActionRow<MessageActionRowComponent>
-    | ActionRowBuilder<ButtonBuilder>
-  )[] = [],
-  elements: ButtonBuilder[],
-) {
-  components = components
-    .map(row => {
-      const rowJson = row.toJSON();
-
-      if (!rowJson.components.length) return row;
-
-      if (rowJson.components.length === 5) return row;
-
-      if (rowJson.components[0].type !== ComponentType.Button) return row;
-
-      return new ActionRowBuilder<ButtonBuilder>(rowJson)
-        .addComponents(elements.splice(0, 5 - rowJson.components.length));
-    });
-
-  if (elements.length) {
-    for (let i = 0; i < 5 - components.length; i++) {
-      components.push(new ActionRowBuilder<ButtonBuilder>()
-        .addComponents(elements.splice(0, 5)));
-
-      if (!elements.length) break;
-    }
-  }
-
-  return components;
-}
-
 export function createButtonsByRoles(options: ManageButtonRolesOptions) {
   return splitArrayInGroups(options.roles, 5)
     .map(array => new ActionRowBuilder<ButtonBuilder>()

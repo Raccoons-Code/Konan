@@ -1,7 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, Role } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
-import { addButtonsByRoles, addButtonsToRows, createButtonsByRoles, editButtonById, removeButtonsById, reorganizeButtons } from "../../../util/commands/components/buttonroles";
+import { addButtonsToRows } from "../../../util/commands/components/button";
+import { addButtonsByRoles, createButtonsByRoles, editButtonById, removeButtonsById, reorganizeButtons } from "../../../util/commands/components/buttonroles";
 import { componentsHasRoles, filterCustomId, getMessageComponentsAmount } from "../../../util/commands/components/utils";
 import { GUILD_TEXT_CHANNEL_TYPES, INTERACTION_BUTTON_STYLES } from "../../../util/constants";
 import regexp from "../../../util/regexp";

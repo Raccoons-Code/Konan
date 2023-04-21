@@ -1,7 +1,9 @@
-import { AutoModerationRule, AutoModerationRuleTriggerType } from "discord.js";
+import { AutoModerationRule, AutoModerationRuleEventType, AutoModerationRuleTriggerType } from "discord.js";
 import { getEnumKeys } from "./utils";
 
 export type TriggerTypeString = keyof typeof AutoModerationRuleTriggerType;
+
+export type EventTypeString = keyof typeof AutoModerationRuleEventType;
 
 export const TriggerLimits: Record<AutoModerationRuleTriggerType, number> = {
   [AutoModerationRuleTriggerType.Keyword]: 6,
@@ -11,7 +13,7 @@ export const TriggerLimits: Record<AutoModerationRuleTriggerType, number> = {
 };
 
 export function getAvailableTriggerTypes(rules: Iterable<AutoModerationRule>) {
-  const rulesTriggerCount: Record<AutoModerationRuleTriggerType, number> = {
+  const ruleTriggersCount: Record<AutoModerationRuleTriggerType, number> = {
     [AutoModerationRuleTriggerType.Keyword]: 0,
     [AutoModerationRuleTriggerType.Spam]: 0,
     [AutoModerationRuleTriggerType.KeywordPreset]: 0,
@@ -19,14 +21,18 @@ export function getAvailableTriggerTypes(rules: Iterable<AutoModerationRule>) {
   };
 
   for (const rule of rules) {
-    rulesTriggerCount[rule.triggerType] ?
-      rulesTriggerCount[rule.triggerType]++ :
-      rulesTriggerCount[rule.triggerType] = 1;
+    ruleTriggersCount[rule.triggerType] ?
+      ruleTriggersCount[rule.triggerType]++ :
+      ruleTriggersCount[rule.triggerType] = 1;
   }
 
   return getEnumKeys(AutoModerationRuleTriggerType)
     .filter(t => {
       const type = AutoModerationRuleTriggerType[t];
-      return rulesTriggerCount[type] < TriggerLimits[type];
+      return ruleTriggersCount[type] < TriggerLimits[type];
     });
+}
+
+export function getEventTypes() {
+  return getEnumKeys(AutoModerationRuleEventType);
 }

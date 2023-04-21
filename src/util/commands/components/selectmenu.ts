@@ -2,6 +2,61 @@ import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIActionRowCompone
 import { BaseComponentCustomId, SelectRolesOptionValue } from "../../../@types";
 import { JSONparse, splitArrayInGroups } from "../../utils";
 
+export function addSelectOptionsToRows(
+  components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<StringSelectMenuBuilder>)[],
+  selectId: string,
+  options: (APISelectMenuOption | StringSelectMenuOptionBuilder | SelectMenuComponentOptionData)[],
+  maxOptions = 25,
+) {
+  if (!components) components = [];
+  if (!maxOptions) maxOptions = 25;
+
+  return components.map(row => {
+    const rowJson = <APIActionRowComponent<APIStringSelectComponent>>row.toJSON();
+
+    if (!rowJson.components.length) return row;
+
+    if (rowJson.components[0].type !== ComponentType.StringSelect) return row;
+
+    if (rowJson.components.every(select => select.custom_id !== selectId)) return row;
+
+    return new ActionRowBuilder<StringSelectMenuBuilder>()
+      .addComponents(rowJson.components.map(select => {
+        const newOptions = options.splice(0, 25 - select.options.length);
+
+        const optionsSize = newOptions.length + select.options.length;
+
+        return new StringSelectMenuBuilder(select)
+          .addOptions(newOptions)
+          .setMaxValues(optionsSize > maxOptions ? maxOptions : optionsSize);
+      }));
+  })
+    .concat(createSelectFromOptions(options, JSON.parse(selectId), maxOptions));
+}
+
+export function createSelectFromOptions(
+  options: (APISelectMenuOption | StringSelectMenuOptionBuilder | SelectMenuComponentOptionData)[],
+  customId: BaseComponentCustomId,
+  maxOptions = 25,
+) {
+  if (!options?.length) return [];
+  if (!maxOptions) maxOptions = 25;
+  if (typeof customId === "string")
+    customId = <BaseComponentCustomId>JSON.parse(customId);
+
+  let index = 0;
+
+  return splitArrayInGroups(options, 25).map(group =>
+    new ActionRowBuilder<StringSelectMenuBuilder>()
+      .addComponents(new StringSelectMenuBuilder()
+        .setCustomId(JSON.stringify({
+          ...customId,
+          d: Date.now() + index++,
+        }))
+        .setOptions(group)
+        .setMaxValues(group.length > maxOptions ? maxOptions : group.length)));
+}
+
 export function calculateBitFieldFromSelectMenus(
   components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<StringSelectMenuBuilder>)[],
 ) {
@@ -105,7 +160,7 @@ export function removeOptionsFromSelectMenu(
   }, []);
 }
 
-export function removeSelectMenuByCustomId(
+export function removeSelectMenuById(
   components: ActionRow<MessageActionRowComponent>[],
   customId: string | string[],
 ) {
@@ -167,6 +222,28 @@ export function setBitFieldValuesOnSelectMenus(
 export interface EmojisData {
   Success?: ComponentEmojiResolvable;
   Danger?: ComponentEmojiResolvable;
+}
+
+export function setDefaultOptionByValue(
+  components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<StringSelectMenuBuilder>)[],
+  customId: string,
+  defaultValue: string,
+) {
+  return components.map(row => {
+    const rowJson = <APIActionRowComponent<APIStringSelectComponent>>row.toJSON();
+
+    if (rowJson.components[0].type !== ComponentType.StringSelect) return row;
+    if (rowJson.components[0].custom_id !== customId) return row;
+
+    return new ActionRowBuilder<StringSelectMenuBuilder>()
+      .addComponents(rowJson.components.map(element => {
+        const selectMenu = new StringSelectMenuBuilder(element);
+
+        return selectMenu.setOptions(element.options
+          .map(option => new StringSelectMenuOptionBuilder(option)
+            .setDefault(defaultValue === option.value)));
+      }));
+  });
 }
 
 export function setSelectMenuOptions(
