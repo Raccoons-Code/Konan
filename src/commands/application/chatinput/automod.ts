@@ -1,8 +1,8 @@
-import { ActionRowBuilder, AutoModerationRuleCreateOptions, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from "discord.js";
+import { ActionRowBuilder, AutoModerationActionType, AutoModerationRuleCreateOptions, AutoModerationRuleEventType, AutoModerationRuleKeywordPresetType, AutoModerationRuleTriggerType, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
-import { getAddActionButton, getCancelButton, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getRemActionButton, getSuccessButton, getToggleButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
+import { getAddActionButton, getAllowListButton, getCancelButton, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getKeywordFilterButton, getKeywordPresetsButton, getMentionTotalLimitButton, getRegexPatternsButton, getRemActionButton, getSuccessButton, getToggleButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
 import { configEmbedFields } from "../../../util/commands/embeds/automod";
 
 export default class extends ChatInputCommand {
@@ -50,6 +50,14 @@ export default class extends ChatInputCommand {
       components: [
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
+            getSuccessButton(true),
+            getCancelButton(),
+            getToggleButton(interaction.locale),
+            getAddActionButton(interaction.locale),
+            getRemActionButton(interaction.locale),
+          ]),
+        new ActionRowBuilder<ButtonBuilder>()
+          .addComponents([
             getEditNameButton(interaction.locale),
             getTriggersButton(interaction.locale),
             getEventsButton(interaction.locale),
@@ -58,11 +66,11 @@ export default class extends ChatInputCommand {
           ]),
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
-            getSuccessButton(),
-            getCancelButton(),
-            getToggleButton(interaction.locale),
-            getAddActionButton(interaction.locale),
-            getRemActionButton(interaction.locale),
+            getAllowListButton(interaction.locale, true),
+            getKeywordFilterButton(interaction.locale, true),
+            getKeywordPresetsButton(interaction.locale, true),
+            getMentionTotalLimitButton(interaction.locale, true),
+            getRegexPatternsButton(interaction.locale, true),
           ]),
       ],
       embeds: [
@@ -80,7 +88,48 @@ export default class extends ChatInputCommand {
       ],
     });
 
-    const _ = <AutoModerationRuleCreateOptions>{};
+    const _ = <AutoModerationRuleCreateOptions>{
+      actions: [{
+        type: AutoModerationActionType.BlockMessage,
+        metadata: {
+          channel: "",
+          customMessage: null,
+          durationSeconds: null,
+        },
+      }, {
+        type: AutoModerationActionType.SendAlertMessage,
+        metadata: {
+          channel: "",
+          customMessage: null,
+          durationSeconds: null,
+        },
+      }, {
+        type: AutoModerationActionType.Timeout,
+        metadata: {
+          channel: "",
+          customMessage: null,
+          durationSeconds: null,
+        },
+      }],
+      eventType: AutoModerationRuleEventType.MessageSend,
+      name: "automod 1",
+      triggerType: AutoModerationRuleTriggerType.Keyword,
+      enabled: true,
+      exemptChannels: [],
+      exemptRoles: [],
+      reason: "",
+      triggerMetadata: {
+        allowList: [],
+        keywordFilter: [],
+        mentionTotalLimit: 1,
+        presets: [
+          AutoModerationRuleKeywordPresetType.Profanity,
+          AutoModerationRuleKeywordPresetType.SexualContent,
+          AutoModerationRuleKeywordPresetType.Slurs,
+        ],
+        regexPatterns: [],
+      },
+    };
 
     return;
   }

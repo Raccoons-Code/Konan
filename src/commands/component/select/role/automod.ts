@@ -28,7 +28,7 @@ export default class extends SelectMenuCommand {
     interaction.message.embeds.splice(0, 1,
       <any>new EmbedBuilder(embed.toJSON())
         .spliceFields(3, 1, {
-          name: t("automodFieldExemptRoles", interaction.locale),
+          name: t("automodExemptRoles", interaction.locale),
           value: interaction.roles.toJSON().join(" ") || " ",
         }),
     );

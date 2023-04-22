@@ -1,17 +1,21 @@
-import { ActionRowBuilder, AutoModerationActionType, AutoModerationRuleEventType, AutoModerationRuleTriggerType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { ActionRowBuilder, AutoModerationActionType, AutoModerationRuleEventType, AutoModerationRuleKeywordPresetType, AutoModerationRuleTriggerType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import { t } from "../../../translator";
-import { ActionTypeString, EventTypeString, TriggerTypeString } from "../../automod";
+import { ActionTypeString, EventTypeString, KeywordPresetTypeString, TriggerTypeString } from "../../automod";
+
+const c = "automod";
 
 export function getAddActionsSelectMenu(
   actionTypes: ActionTypeString[],
   locale: string,
+  disabled = false,
 ) {
   return new ActionRowBuilder<StringSelectMenuBuilder>()
     .addComponents(new StringSelectMenuBuilder()
       .setCustomId(JSON.stringify({
-        c: "automod",
+        c,
         sc: "addAction",
       }))
+      .setDisabled(disabled)
       .setPlaceholder("Set the action type.")
       .addOptions(getAddActionsSelectOptions(actionTypes, locale)));
 }
@@ -33,13 +37,15 @@ export function getAddActionsSelectOptions(
 export function getEventsSelectMenu(
   eventTypes: EventTypeString[],
   locale: string,
+  disabled = false,
 ) {
   return new ActionRowBuilder<StringSelectMenuBuilder>()
     .addComponents(new StringSelectMenuBuilder()
       .setCustomId(JSON.stringify({
-        c: "automod",
+        c,
         sc: "setEventType",
       }))
+      .setDisabled(disabled)
       .setPlaceholder("Set the event type.")
       .addOptions(getEventsSelectOptions(eventTypes, locale)));
 }
@@ -58,16 +64,48 @@ export function getEventsSelectOptions(
       })));
 }
 
-export function getTriggersSelectMenu(
-  availableTriggers: TriggerTypeString[],
+export function getKeywordPresetsSelectMenu(
+  keywordPresets: KeywordPresetTypeString[],
   locale: string,
+  disabled = false,
 ) {
   return new ActionRowBuilder<StringSelectMenuBuilder>()
     .addComponents(new StringSelectMenuBuilder()
       .setCustomId(JSON.stringify({
-        c: "automod",
+        c,
+        sc: "setKeywordPresets",
+      }))
+      .setDisabled(disabled)
+      .setPlaceholder("Set keyword presets list.")
+      .addOptions(getKeywordPresetsSelectOptions(keywordPresets, locale)));
+}
+
+export function getKeywordPresetsSelectOptions(
+  keywordPresets: KeywordPresetTypeString[],
+  locale: string,
+) {
+  return keywordPresets
+    .map(type => new StringSelectMenuOptionBuilder()
+      .setDescription(t(type + "Description", locale).slice(0, 100))
+      .setLabel(t(type, locale))
+      .setValue(JSON.stringify({
+        bit: AutoModerationRuleKeywordPresetType[type],
+        type,
+      })));
+}
+
+export function getTriggersSelectMenu(
+  availableTriggers: TriggerTypeString[],
+  locale: string,
+  disabled = false,
+) {
+  return new ActionRowBuilder<StringSelectMenuBuilder>()
+    .addComponents(new StringSelectMenuBuilder()
+      .setCustomId(JSON.stringify({
+        c,
         sc: "setTriggerType",
       }))
+      .setDisabled(disabled)
       .setPlaceholder("Set the trigger type.")
       .addOptions(getTriggersSelectOptions(availableTriggers, locale)));
 }

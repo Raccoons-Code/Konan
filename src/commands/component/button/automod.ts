@@ -1,15 +1,17 @@
-import { ActionRowBuilder, AutoModerationActionType, ButtonBuilder, ButtonInteraction, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, AutoModerationActionType, ButtonInteraction, ButtonStyle, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
-import { getActionTypes, getAvailableTriggerTypes, getEventTypes } from "../../../util/automod";
-import { getAddActionButton, getCancelButton, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getRemActionButton, getSuccessButton, getToggleButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
-import { getAddActionsSelectOptions, getEventsSelectOptions, getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
+import { getActionTypes, getAvailableTriggerTypes, getEventTypes, getKeywordPresetTypes } from "../../../util/automod";
+import { getAddActionsSelectOptions, getEventsSelectOptions, getKeywordPresetsSelectOptions, getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
+import { editButtonById } from "../../../util/commands/components/button";
 import { addSelectMenuByType, addSelectOptionsToRows, removeSelectMenuById } from "../../../util/commands/components/selectmenu";
 import { componentsHasRowById } from "../../../util/commands/components/utils";
 import { configEmbedFields } from "../../../util/commands/embeds/automod";
 import { getEmbedFields, getSelectOptionsFromEmbedFields } from "../../../util/commands/embeds/utils";
 
 export default class extends ButtonCommand {
+  readonly nonDefer = ["editName", "setAllowList", "setKeywordFilter", "setMentionTotalLimit", "setRegexPatterns"];
+
   constructor() {
     super({
       name: "automod",
@@ -21,7 +23,7 @@ export default class extends ButtonCommand {
 
     const subcommand = <"execute">parsedId.scg ?? parsedId.sc;
 
-    if (!["editName"].includes(subcommand))
+    if (!this.nonDefer.includes(subcommand))
       await interaction.deferUpdate();
 
     await this[subcommand]?.(interaction);
@@ -41,10 +43,11 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: componentsHasRowById(
-        interaction.message.components,
-        customId,
-      ) ?
+      components: interaction.message.components.length === 4 ||
+        componentsHasRowById(
+          interaction.message.components,
+          customId,
+        ) ?
         removeSelectMenuById(
           interaction.message.components, [
           customId,
@@ -76,10 +79,11 @@ export default class extends ButtonCommand {
       a: ComponentType.StringSelect,
     });
 
-    if (componentsHasRowById(
-      interaction.message.components,
-      customId,
-    )) {
+    if (interaction.message.components.length === 5 ||
+      componentsHasRowById(
+        interaction.message.components,
+        customId,
+      )) {
       await interaction.editReply({
         components: removeSelectMenuById(
           interaction.message.components,
@@ -130,6 +134,106 @@ export default class extends ButtonCommand {
     );
   }
 
+  async setAllowList(interaction: ButtonInteraction<"cached">) {
+    await interaction.showModal(
+      new ModalBuilder()
+        .setCustomId(JSON.stringify({ c: "automod", sc: "setAllowList" }))
+        .setTitle("Automod")
+        .addComponents(
+          new ActionRowBuilder<TextInputBuilder>()
+            .addComponents([
+              new TextInputBuilder()
+                .setCustomId("allowList")
+                .setLabel(t("automodAllowList", interaction.locale))
+                .setRequired(true)
+                .setStyle(TextInputStyle.Paragraph),
+            ]),
+        ),
+    );
+  }
+
+  async setKeywordFilter(interaction: ButtonInteraction<"cached">) {
+    await interaction.showModal(
+      new ModalBuilder()
+        .setCustomId(JSON.stringify({ c: "automod", sc: "setKeywordFilter" }))
+        .setTitle("Automod")
+        .addComponents(
+          new ActionRowBuilder<TextInputBuilder>()
+            .addComponents([
+              new TextInputBuilder()
+                .setCustomId("keywordFilter")
+                .setLabel(t("automodKeywordFilter", interaction.locale))
+                .setRequired(true)
+                .setStyle(TextInputStyle.Paragraph),
+            ]),
+        ),
+    );
+  }
+
+  async setKeywordPresets(interaction: ButtonInteraction<"cached">) {
+    const customId = JSON.stringify({
+      c: "automod",
+      sc: "setKeywordPresets",
+      a: ComponentType.StringSelect,
+    });
+
+    await interaction.editReply({
+      components: interaction.message.components.length === 5 ||
+        componentsHasRowById(
+          interaction.message.components,
+          customId,
+        ) ?
+        removeSelectMenuById(
+          interaction.message.components,
+          customId,
+        ) :
+        addSelectOptionsToRows(
+          interaction.message.components,
+          customId,
+          getKeywordPresetsSelectOptions(getKeywordPresetTypes(), interaction.locale), {
+          distinct: false,
+          maxOptions: 25,
+        }),
+    });
+  }
+
+  async setMentionTotalLimit(interaction: ButtonInteraction<"cached">) {
+    await interaction.showModal(
+      new ModalBuilder()
+        .setCustomId(JSON.stringify({ c: "automod", sc: "setMentionTotalLimit" }))
+        .setTitle("Automod")
+        .addComponents(
+          new ActionRowBuilder<TextInputBuilder>()
+            .addComponents([
+              new TextInputBuilder()
+                .setCustomId("mentionTotalLimit")
+                .setLabel(t("automodMentionTotalLimit", interaction.locale))
+                .setMaxLength(2)
+                .setRequired(true)
+                .setStyle(TextInputStyle.Short),
+            ]),
+        ),
+    );
+  }
+
+  async setRegexPatterns(interaction: ButtonInteraction<"cached">) {
+    await interaction.showModal(
+      new ModalBuilder()
+        .setCustomId(JSON.stringify({ c: "automod", sc: "setRegexPatterns" }))
+        .setTitle("Automod")
+        .addComponents(
+          new ActionRowBuilder<TextInputBuilder>()
+            .addComponents([
+              new TextInputBuilder()
+                .setCustomId("regexPatterns")
+                .setLabel(t("automodRegexPatterns", interaction.locale))
+                .setRequired(true)
+                .setStyle(TextInputStyle.Paragraph),
+            ]),
+        ),
+    );
+  }
+
   async setExemptChannels(interaction: ButtonInteraction<"cached">) {
     const customId = JSON.stringify({
       c: "automod",
@@ -138,10 +242,11 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: componentsHasRowById(
-        interaction.message.components,
-        customId,
-      ) ?
+      components: interaction.message.components.length === 5 ||
+        componentsHasRowById(
+          interaction.message.components,
+          customId,
+        ) ?
         removeSelectMenuById(
           interaction.message.components,
           customId,
@@ -163,10 +268,11 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: componentsHasRowById(
-        interaction.message.components,
-        customId,
-      ) ?
+      components: interaction.message.components.length === 5 ||
+        componentsHasRowById(
+          interaction.message.components,
+          customId,
+        ) ?
         removeSelectMenuById(
           interaction.message.components,
           customId,
@@ -188,10 +294,11 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: componentsHasRowById(
-        interaction.message.components,
-        customId,
-      ) ?
+      components: interaction.message.components.length === 5 ||
+        componentsHasRowById(
+          interaction.message.components,
+          customId,
+        ) ?
         removeSelectMenuById(
           interaction.message.components,
           customId,
@@ -223,10 +330,11 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: componentsHasRowById(
-        interaction.message.components,
-        customId,
-      ) ?
+      components: interaction.message.components.length === 5 ||
+        componentsHasRowById(
+          interaction.message.components,
+          customId,
+        ) ?
         removeSelectMenuById(
           interaction.message.components,
           customId,
@@ -247,24 +355,13 @@ export default class extends ButtonCommand {
     const parsedId = JSON.parse(interaction.customId);
 
     await interaction.editReply({
-      components: [
-        new ActionRowBuilder<ButtonBuilder>()
-          .addComponents([
-            getEditNameButton(interaction.locale),
-            getTriggersButton(interaction.locale),
-            getEventsButton(interaction.locale),
-            getExemptChannelsButton(interaction.locale),
-            getExemptRolesButton(interaction.locale),
-          ]),
-        new ActionRowBuilder<ButtonBuilder>()
-          .addComponents([
-            getSuccessButton(),
-            getCancelButton(),
-            getToggleButton(interaction.locale, !parsedId.a),
-            getAddActionButton(interaction.locale),
-            getRemActionButton(interaction.locale),
-          ]),
-      ],
+      components: editButtonById(
+        interaction.message.components,
+        interaction.customId, {
+        custom_id: JSON.stringify({ ...parsedId, a: !parsedId.a }),
+        name: parsedId.a ? t("activated") : t("disabled"),
+        style: parsedId.a ? ButtonStyle.Success : ButtonStyle.Danger,
+      }),
     });
   }
 }

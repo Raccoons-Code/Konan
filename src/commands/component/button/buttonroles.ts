@@ -1,7 +1,7 @@
 import { ButtonInteraction, Colors, EmbedBuilder, roleMention } from "discord.js";
 import { ButtonRolesCustomId } from "../../../@types";
 import ButtonCommand from "../../../structures/ButtonCommand";
-import { editButtonById } from "../../../util/commands/components/buttonroles";
+import { editRoleButtonById } from "../../../util/commands/components/buttonroles";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -26,7 +26,7 @@ export default class extends ButtonCommand {
 
     await Promise.all([
       interaction.editReply({
-        components: editButtonById(interaction.message.components, interaction.customId, {
+        components: editRoleButtonById(interaction.message.components, interaction.customId, {
           count: parsedId.count + (
             memberHasRole ?
               parsedId.count ? -1 : 0 :

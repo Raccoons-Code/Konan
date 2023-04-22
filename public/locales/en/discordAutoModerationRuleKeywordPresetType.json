@@ -1,5 +1,8 @@
 {
   "Profanity": "Profanity",
+  "ProfanityDescription": "Words that may be considered forms of swearing or cursing",
   "SexualContent": "Sexual Content",
-  "Slurs": "Slurs"
+  "SexualContentDescription": "Words that refer to sexually explicit behavior or activity",
+  "Slurs": "Slurs",
+  "SlursDescription": "Personal insults or words that may be considered hate speech"
 }

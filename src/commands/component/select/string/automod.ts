@@ -195,6 +195,37 @@ export default class extends SelectMenuCommand {
     });
   }
 
+  async setKeywordPresets(interaction: StringSelectMenuInteraction<"cached">) {
+    const customId = JSON.stringify({
+      c: "automod",
+      sc: "setKeywordPresets",
+      a: ComponentType.StringSelect,
+    });
+
+    const [embed] = interaction.message.embeds;
+
+    interaction.message.embeds.splice(0, 1,
+      <any>new EmbedBuilder(embed.toJSON())
+        .spliceFields(7, 1, {
+          name: t("automodKeywordPresets", interaction.locale),
+          value: interaction.values.flatMap(value => {
+            const parsedValue = JSON.parse(value);
+            return `${parsedValue.bit} - ${t(parsedValue.type, interaction.locale)}`;
+          }).join("\n"),
+        }),
+    );
+
+    const embeds = interaction.message.embeds;
+
+    await interaction.editReply({
+      components: removeSelectMenuById(
+        interaction.message.components,
+        customId,
+      ),
+      embeds,
+    });
+  }
+
   async setEventType(interaction: StringSelectMenuInteraction<"cached">) {
     const [value] = interaction.values;
 
@@ -205,7 +236,7 @@ export default class extends SelectMenuCommand {
     interaction.message.embeds.splice(0, 1,
       <any>new EmbedBuilder(embed.toJSON())
         .spliceFields(1, 1, {
-          name: t("automodFieldEventType", interaction.locale),
+          name: t("automodEventType", interaction.locale),
           value: `${parsedValue.bit} - ${t(parsedValue.type, interaction.locale)}`,
         }),
     );
@@ -264,7 +295,7 @@ export default class extends SelectMenuCommand {
     interaction.message.embeds.splice(0, 1,
       <any>new EmbedBuilder(embed.toJSON())
         .spliceFields(0, 1, {
-          name: t("automodFieldTriggerType", interaction.locale),
+          name: t("automodTriggerType", interaction.locale),
           value: `${parsedValue.bit} - ${t(parsedValue.type, interaction.locale)}`,
         }),
     );

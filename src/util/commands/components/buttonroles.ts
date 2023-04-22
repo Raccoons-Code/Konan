@@ -50,7 +50,7 @@ export function createButtonsByRoles(options: ManageButtonRolesOptions) {
         .setStyle(ButtonStyle.Primary))));
 }
 
-export function editButtonById(
+export function editRoleButtonById(
   components: (
     | ActionRow<MessageActionRowComponent>
     | ActionRowBuilder<ButtonBuilder>

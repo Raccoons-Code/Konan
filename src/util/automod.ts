@@ -1,4 +1,4 @@
-import { AutoModerationActionType, AutoModerationRule, AutoModerationRuleEventType, AutoModerationRuleTriggerType } from "discord.js";
+import { AutoModerationActionType, AutoModerationRule, AutoModerationRuleEventType, AutoModerationRuleKeywordPresetType, AutoModerationRuleTriggerType } from "discord.js";
 import { getEnumKeys } from "./utils";
 
 export type TriggerTypeString = keyof typeof AutoModerationRuleTriggerType;
@@ -6,6 +6,8 @@ export type TriggerTypeString = keyof typeof AutoModerationRuleTriggerType;
 export type EventTypeString = keyof typeof AutoModerationRuleEventType;
 
 export type ActionTypeString = keyof typeof AutoModerationActionType;
+
+export type KeywordPresetTypeString = keyof typeof AutoModerationRuleKeywordPresetType;
 
 export const TriggerLimits: Record<AutoModerationRuleTriggerType, number> = {
   [AutoModerationRuleTriggerType.Keyword]: 6,
@@ -41,4 +43,8 @@ export function getEventTypes() {
 
 export function getActionTypes() {
   return getEnumKeys(AutoModerationActionType);
+}
+
+export function getKeywordPresetTypes() {
+  return getEnumKeys(AutoModerationRuleKeywordPresetType);
 }

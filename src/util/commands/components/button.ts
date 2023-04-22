@@ -25,6 +25,47 @@ export function addButtonsToRows(
         .addComponents(buttons)));
 }
 
+export function editButtonById(
+  components: (
+    | ActionRow<MessageActionRowComponent>
+    | ActionRowBuilder<ButtonBuilder>
+  )[],
+  buttonId: string,
+  options: {
+    custom_id?: string | null
+    disabled?: boolean | null
+    emoji?: string | null
+    name?: string | null
+    style?: number | null
+  },
+) {
+  if (!components?.length) return [];
+  if (!buttonId) return components;
+
+  return components.map(row => {
+    const rowJson = <APIActionRowComponent<APIButtonComponentWithCustomId>>row.toJSON();
+
+    if (!rowJson.components.length) return row;
+
+    if (rowJson.components[0].type !== ComponentType.Button) return row;
+
+    if (rowJson.components.every(button => button.custom_id !== buttonId)) return row;
+
+    return new ActionRowBuilder<ButtonBuilder>()
+      .addComponents(rowJson.components.map(button => {
+        if (button.custom_id !== buttonId)
+          return new ButtonBuilder(button);
+
+        return new ButtonBuilder()
+          .setCustomId(options.custom_id ?? buttonId)
+          .setDisabled(options.disabled ?? button.disabled ?? false)
+          .setEmoji(options.emoji ?? button.emoji ?? {})
+          .setLabel(options.name ?? button.label ?? "")
+          .setStyle(options.style ?? button.style);
+      }));
+  });
+}
+
 export function toggleButtons(
   components: (
     | ActionRow<MessageActionRowComponent>

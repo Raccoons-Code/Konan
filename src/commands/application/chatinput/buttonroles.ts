@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteracti
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { addButtonsToRows } from "../../../util/commands/components/button";
-import { addButtonsByRoles, createButtonsByRoles, editButtonById, removeButtonsById, reorganizeButtons } from "../../../util/commands/components/buttonroles";
+import { addButtonsByRoles, createButtonsByRoles, editRoleButtonById, removeButtonsById, reorganizeButtons } from "../../../util/commands/components/buttonroles";
 import { componentsHasRoles, filterCustomId, getMessageComponentsAmount } from "../../../util/commands/components/utils";
 import { GUILD_TEXT_CHANNEL_TYPES, INTERACTION_BUTTON_STYLES } from "../../../util/constants";
 import regexp from "../../../util/regexp";
@@ -383,7 +383,7 @@ export default class extends ChatInputCommand {
       const button_name = interaction.options.getString("button_name");
       const button_style = interaction.options.getInteger("button_style");
 
-      const components = editButtonById(message.components, buttonId!, {
+      const components = editRoleButtonById(message.components, buttonId!, {
         button_disabled,
         button_emoji,
         button_name,

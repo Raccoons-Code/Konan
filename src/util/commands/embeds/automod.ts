@@ -1,14 +1,29 @@
 export const configEmbedFields = [[{
-  name: "automodFieldTriggerType",
+  name: "automodTriggerType",
   value: " ",
 }, {
-  name: "automodFieldEventType",
+  name: "automodEventType",
   value: " ",
 }, {
-  name: "automodFieldExemptChannels",
+  name: "automodExemptChannels",
   value: " ",
 }, {
-  name: "automodFieldExemptRoles",
+  name: "automodExemptRoles",
+  value: " ",
+}, {
+  name: "automodAllowList",
+  value: " ",
+}, {
+  name: "automodKeywordFilter",
+  value: " ",
+}, {
+  name: "automodMentionTotalLimit",
+  value: " ",
+}, {
+  name: "automodKeywordPresets",
+  value: " ",
+}, {
+  name: "automodRegexPatterns",
   value: " ",
 }], [{
   name: "BlockMessage",
