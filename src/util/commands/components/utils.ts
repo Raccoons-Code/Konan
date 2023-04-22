@@ -43,11 +43,13 @@ export function componentsHasRowType(
 
 export function componentsHasRowById(
   components: ActionRow<MessageActionRowComponent>[],
-  customId: string,
+  customId: string | string[],
 ) {
+  if (!Array.isArray(customId)) customId = [customId];
+
   return components.some(row =>
     row.toJSON().components.some(element =>
-      "custom_id" in element && element.custom_id === customId));
+      "custom_id" in element && customId.includes(element.custom_id)));
 }
 
 export function filterCustomId(

@@ -1,11 +1,12 @@
-import { ActionRowBuilder, ButtonInteraction, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, AutoModerationActionType, ButtonInteraction, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
 import { getActionTypes, getAvailableTriggerTypes, getEventTypes } from "../../../util/automod";
 import { getAddActionsSelectOptions, getEventsSelectOptions, getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
-import { toggleButtons } from "../../../util/commands/components/button";
-import { addSelectMenuByType, addSelectOptionsToRows, removeSelectByType } from "../../../util/commands/components/selectmenu";
-import { componentsHasRowType } from "../../../util/commands/components/utils";
+import { addSelectMenuByType, addSelectOptionsToRows, removeSelectMenuById } from "../../../util/commands/components/selectmenu";
+import { componentsHasRowById } from "../../../util/commands/components/utils";
+import { configEmbedFields } from "../../../util/commands/embeds/automod";
+import { getEmbedFields, getSelectOptionsFromEmbedFields } from "../../../util/commands/embeds/utils";
 
 export default class extends ButtonCommand {
   constructor() {
@@ -32,27 +33,82 @@ export default class extends ButtonCommand {
   }
 
   async addAction(interaction: ButtonInteraction<"cached">) {
+    const customId = JSON.stringify({
+      c: "automod",
+      sc: "addAction",
+      a: ComponentType.StringSelect,
+    });
+
     await interaction.editReply({
-      components: toggleButtons(
-        addSelectOptionsToRows(
-          interaction.message.components,
+      components: componentsHasRowById(
+        interaction.message.components,
+        customId,
+      ) ?
+        removeSelectMenuById(
+          interaction.message.components, [
+          customId,
           JSON.stringify({
             c: "automod",
-            sc: "addAction",
-            a: ComponentType.StringSelect,
+            sc: "setSendAlertMessageAction",
+            a: AutoModerationActionType.SendAlertMessage,
           }),
+          JSON.stringify({
+            c: "automod",
+            sc: "setTimeoutAction",
+            a: AutoModerationActionType.Timeout,
+          }),
+        ]) :
+        addSelectOptionsToRows(
+          interaction.message.components,
+          customId,
           getAddActionsSelectOptions(getActionTypes(), interaction.locale), {
           distinct: false,
           maxOptions: 1,
         }),
-        JSON.stringify({ c: "automod", sc: "addAction" }),
-        true,
-      ),
     });
   }
 
   async remAction(interaction: ButtonInteraction<"cached">) {
+    const customId = JSON.stringify({
+      c: "automod",
+      sc: "remAction",
+      a: ComponentType.StringSelect,
+    });
 
+    if (componentsHasRowById(
+      interaction.message.components,
+      customId,
+    )) {
+      await interaction.editReply({
+        components: removeSelectMenuById(
+          interaction.message.components,
+          customId,
+        ),
+      });
+      return;
+    }
+
+    const embedsCollection = getEmbedFields(
+      interaction.message.embeds, {
+      names: configEmbedFields[1].flatMap(field => [
+        `ON - ${t(field.name)}`,
+        `ON - ${t(field.name, interaction.locale)}`,
+      ]),
+    });
+
+    const embedFields = embedsCollection.get(1);
+
+    if (!embedFields?.size) return;
+
+    await interaction.editReply({
+      components: addSelectOptionsToRows(
+        interaction.message.components,
+        customId,
+        getSelectOptionsFromEmbedFields(embedFields), {
+        distinct: false,
+        maxOptions: embedFields.size,
+      }),
+    });
   }
 
   async editName(interaction: ButtonInteraction<"cached">) {
@@ -77,25 +133,24 @@ export default class extends ButtonCommand {
     const customId = JSON.stringify({
       c: "automod",
       sc: "setExemptChannels",
-      a: ComponentType.StringSelect,
+      a: ComponentType.ChannelSelect,
     });
 
-    const hasMenu = componentsHasRowType(
-      interaction.message.components,
-      ComponentType.ChannelSelect,
-    );
-
     await interaction.editReply({
-      components: hasMenu ?
-        removeSelectByType(
+      components: componentsHasRowById(
+        interaction.message.components,
+        customId,
+      ) ?
+        removeSelectMenuById(
           interaction.message.components,
-          ComponentType.ChannelSelect,
+          customId,
         ) :
         addSelectMenuByType(
           ComponentType.ChannelSelect,
           customId,
-          interaction.message.components,
-        ),
+          interaction.message.components, {
+          distinct: false,
+        }),
     });
   }
 
@@ -103,48 +158,50 @@ export default class extends ButtonCommand {
     const customId = JSON.stringify({
       c: "automod",
       sc: "setExemptRoles",
-      a: ComponentType.StringSelect,
+      a: ComponentType.RoleSelect,
     });
 
-    const hasMenu = componentsHasRowType(
-      interaction.message.components,
-      ComponentType.RoleSelect,
-    );
-
     await interaction.editReply({
-      components: hasMenu ?
-        removeSelectByType(
+      components: componentsHasRowById(
+        interaction.message.components,
+        customId,
+      ) ?
+        removeSelectMenuById(
           interaction.message.components,
-          ComponentType.RoleSelect,
+          customId,
         ) :
         addSelectMenuByType(
           ComponentType.RoleSelect,
           customId,
-          interaction.message.components,
-        ),
+          interaction.message.components, {
+          distinct: false,
+        }),
     });
   }
 
   async setEventType(interaction: ButtonInteraction<"cached">) {
+    const customId = JSON.stringify({
+      c: "automod",
+      sc: "setEventType",
+      a: ComponentType.StringSelect,
+    });
+
     await interaction.editReply({
-      components: toggleButtons(
+      components: componentsHasRowById(
+        interaction.message.components,
+        customId,
+      ) ?
+        removeSelectMenuById(
+          interaction.message.components,
+          customId,
+        ) :
         addSelectOptionsToRows(
           interaction.message.components,
-          JSON.stringify({
-            c: "automod",
-            sc: "setEventType",
-            a: ComponentType.StringSelect,
-          }),
+          customId,
           getEventsSelectOptions(getEventTypes(), interaction.locale), {
           distinct: false,
           maxOptions: 1,
         }),
-        JSON.stringify({
-          c: "automod",
-          sc: "setEventType",
-        }),
-        true,
-      ),
     });
   }
 
@@ -158,25 +215,28 @@ export default class extends ButtonCommand {
       return 1;
     }
 
+    const customId = JSON.stringify({
+      c: "automod",
+      sc: "setTriggerType",
+      a: ComponentType.StringSelect,
+    });
+
     await interaction.editReply({
-      components: toggleButtons(
+      components: componentsHasRowById(
+        interaction.message.components,
+        customId,
+      ) ?
+        removeSelectMenuById(
+          interaction.message.components,
+          customId,
+        ) :
         addSelectOptionsToRows(
           interaction.message.components,
-          JSON.stringify({
-            c: "automod",
-            sc: "setTriggerType",
-            a: ComponentType.StringSelect,
-          }),
+          customId,
           getTriggersSelectOptions(availableTriggers, interaction.locale), {
           distinct: false,
           maxOptions: 1,
         }),
-        JSON.stringify({
-          c: "automod",
-          sc: "setTriggerType",
-        }),
-        true,
-      ),
     });
 
     return;

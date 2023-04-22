@@ -5,9 +5,10 @@ import { t } from "../../../../translator";
 import ParseMs from "../../../../util/ParseMs";
 import { TriggerTypeString, getAvailableTriggerTypes } from "../../../../util/automod";
 import { getTriggersSelectOptions } from "../../../../util/commands/components/automodselect";
-import { toggleButtons } from "../../../../util/commands/components/button";
 import { addSelectMenuByType, addSelectOptionsToRows, getTimesSelectOptions, removeSelectByType, removeSelectMenuById, setSelectMenuOptions } from "../../../../util/commands/components/selectmenu";
 import { componentsHasRowById, componentsHasRowType } from "../../../../util/commands/components/utils";
+import { configEmbedFields } from "../../../../util/commands/embeds/automod";
+import { getEmbedFields } from "../../../../util/commands/embeds/utils";
 
 export default class extends SelectMenuCommand {
   constructor() {
@@ -70,7 +71,7 @@ export default class extends SelectMenuCommand {
               ComponentType.ChannelSelect,
               JSON.stringify({
                 c: "automod",
-                sc: "addAction",
+                sc: "setSendAlertMessageAction",
                 a: AutoModerationActionType.SendAlertMessage,
               }),
               removeSelectMenuById(
@@ -118,6 +119,56 @@ export default class extends SelectMenuCommand {
     }
   }
 
+  async remAction(interaction: StringSelectMenuInteraction<"cached">) {
+    const embedsCollection = getEmbedFields(
+      interaction.message.embeds, {
+      namePatterns: interaction.values.map(value =>
+        RegExp(`^${JSON.parse(value).n}`)),
+    });
+
+    const fields = embedsCollection.get(1);
+
+    const customId = JSON.stringify({
+      c: "automod",
+      sc: "remAction",
+      a: ComponentType.StringSelect,
+    });
+
+    if (!fields?.size) {
+      await interaction.editReply({
+        components: removeSelectMenuById(
+          interaction.message.components,
+          customId,
+        ),
+      });
+      return 1;
+    }
+
+    const [, oldEmbed] = interaction.message.embeds;
+
+    const newEmbed = new EmbedBuilder(oldEmbed.toJSON());
+
+    for (const [i] of fields) {
+      interaction.message.embeds.splice(1, 1,
+        <any>newEmbed
+          .spliceFields(i, 1, {
+            name: t(configEmbedFields[1][i].name, interaction.locale),
+            value: configEmbedFields[1][i].value,
+          }),
+      );
+    }
+
+    const embeds = interaction.message.embeds;
+
+    await interaction.editReply({
+      components: removeSelectMenuById(
+        interaction.message.components,
+        customId,
+      ),
+      embeds,
+    });
+  }
+
   async setTimeoutAction(interaction: StringSelectMenuInteraction<"cached">) {
     const [value] = interaction.values;
 
@@ -128,7 +179,7 @@ export default class extends SelectMenuCommand {
     interaction.message.embeds.splice(1, 1,
       <any>new EmbedBuilder(embed.toJSON())
         .spliceFields(2, 1, {
-          name: t("Timeout", interaction.locale),
+          name: `ON - ${t("Timeout", interaction.locale)}`,
           value: `${parsedValue.ms ? new ParseMs(parsedValue.ms) : " "}`,
         }),
     );
@@ -136,21 +187,10 @@ export default class extends SelectMenuCommand {
     const embeds = interaction.message.embeds;
 
     await interaction.editReply({
-      components: toggleButtons(
-        removeSelectMenuById(
-          interaction.message.components, [
-          interaction.customId,
-          JSON.stringify({
-            c: "automod",
-            sc: "addAction",
-            a: ComponentType.StringSelect,
-          }),
-        ]), [
-        JSON.stringify({ c: "automod", sc: "addAction" }),
-        JSON.stringify({ c: "automod", sc: "remAction" }),
-      ],
-        false,
-      ),
+      components: removeSelectMenuById(
+        interaction.message.components, [
+        interaction.customId,
+      ]),
       embeds,
     });
   }
@@ -173,13 +213,9 @@ export default class extends SelectMenuCommand {
     const embeds = interaction.message.embeds;
 
     await interaction.editReply({
-      components: toggleButtons(
-        removeSelectMenuById(
-          interaction.message.components,
-          interaction.customId,
-        ),
-        JSON.stringify({ c: "automod", sc: "setEventType" }),
-        false,
+      components: removeSelectMenuById(
+        interaction.message.components,
+        interaction.customId,
       ),
       embeds,
     });
@@ -236,13 +272,9 @@ export default class extends SelectMenuCommand {
     const embeds = interaction.message.embeds;
 
     await interaction.editReply({
-      components: toggleButtons(
-        removeSelectMenuById(
-          interaction.message.components,
-          interaction.customId,
-        ),
-        JSON.stringify({ c: "automod", sc: "setTriggerType" }),
-        false,
+      components: removeSelectMenuById(
+        interaction.message.components,
+        interaction.customId,
       ),
       embeds,
     });

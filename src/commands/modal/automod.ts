@@ -30,7 +30,7 @@ export default class extends ModalSubmit {
     interaction.message?.embeds.splice(1, 1,
       <any>new EmbedBuilder(embed.toJSON())
         .spliceFields(0, 1, {
-          name: t("BlockMessage", interaction.locale),
+          name: `ON - ${t("BlockMessage", interaction.locale)}`,
           value: message || " ",
         }),
     );

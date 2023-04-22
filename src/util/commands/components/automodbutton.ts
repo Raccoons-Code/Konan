@@ -38,7 +38,6 @@ export function getRemActionButton(locale: string) {
       c: "automod",
       sc: "remAction",
     }))
-    .setDisabled(true)
     .setLabel(t("automodRemAction", locale))
     .setStyle(ButtonStyle.Secondary);
 }

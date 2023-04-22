@@ -3,6 +3,7 @@ import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
 import { getAddActionButton, getCancelButton, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getRemActionButton, getSuccessButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
+import { configEmbedFields } from "../../../util/commands/embeds/automod";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -65,31 +66,16 @@ export default class extends ChatInputCommand {
       ],
       embeds: [
         new EmbedBuilder()
-          .addFields([{
-            name: t("automodFieldTriggerType", interaction.locale),
-            value: " ",
-          }, {
-            name: t("automodFieldEventType", interaction.locale),
-            value: " ",
-          }, {
-            name: t("automodFieldExemptChannels", interaction.locale),
-            value: " ",
-          }, {
-            name: t("automodFieldExemptRoles", interaction.locale),
-            value: " ",
-          }]),
+          .addFields(configEmbedFields[0].map(field => ({
+            name: t(field.name, interaction.locale),
+            value: field.value,
+          }))),
         new EmbedBuilder()
           .setTitle("Automod Actions")
-          .addFields([{
-            name: t("BlockMessage", interaction.locale),
-            value: " ",
-          }, {
-            name: t("SendAlertMessage", interaction.locale),
-            value: " ",
-          }, {
-            name: t("Timeout", interaction.locale),
-            value: " ",
-          }]),
+          .addFields(configEmbedFields[1].map(field => ({
+            name: t(field.name, interaction.locale),
+            value: field.value,
+          }))),
       ],
     });
 
