@@ -2,7 +2,7 @@ import { ActionRowBuilder, AutoModerationRuleCreateOptions, ButtonBuilder, ChatI
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
-import { getAddActionButton, getCancelButton, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getRemActionButton, getSuccessButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
+import { getAddActionButton, getCancelButton, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getRemActionButton, getSuccessButton, getToggleButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
 import { configEmbedFields } from "../../../util/commands/embeds/automod";
 
 export default class extends ChatInputCommand {
@@ -60,6 +60,7 @@ export default class extends ChatInputCommand {
           .addComponents([
             getSuccessButton(),
             getCancelButton(),
+            getToggleButton(interaction.locale),
             getAddActionButton(interaction.locale),
             getRemActionButton(interaction.locale),
           ]),

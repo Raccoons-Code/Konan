@@ -1,7 +1,8 @@
-import { ActionRowBuilder, AutoModerationActionType, ButtonInteraction, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, AutoModerationActionType, ButtonBuilder, ButtonInteraction, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
 import { getActionTypes, getAvailableTriggerTypes, getEventTypes } from "../../../util/automod";
+import { getAddActionButton, getCancelButton, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getRemActionButton, getSuccessButton, getToggleButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
 import { getAddActionsSelectOptions, getEventsSelectOptions, getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
 import { addSelectMenuByType, addSelectOptionsToRows, removeSelectMenuById } from "../../../util/commands/components/selectmenu";
 import { componentsHasRowById } from "../../../util/commands/components/utils";
@@ -240,5 +241,30 @@ export default class extends ButtonCommand {
     });
 
     return;
+  }
+
+  async toggle(interaction: ButtonInteraction<"cached">) {
+    const parsedId = JSON.parse(interaction.customId);
+
+    await interaction.editReply({
+      components: [
+        new ActionRowBuilder<ButtonBuilder>()
+          .addComponents([
+            getEditNameButton(interaction.locale),
+            getTriggersButton(interaction.locale),
+            getEventsButton(interaction.locale),
+            getExemptChannelsButton(interaction.locale),
+            getExemptRolesButton(interaction.locale),
+          ]),
+        new ActionRowBuilder<ButtonBuilder>()
+          .addComponents([
+            getSuccessButton(),
+            getCancelButton(),
+            getToggleButton(interaction.locale, !parsedId.a),
+            getAddActionButton(interaction.locale),
+            getRemActionButton(interaction.locale),
+          ]),
+      ],
+    });
   }
 }

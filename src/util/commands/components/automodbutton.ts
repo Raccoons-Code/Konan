@@ -32,6 +32,17 @@ export function getAddActionButton(locale: string) {
     .setStyle(ButtonStyle.Secondary);
 }
 
+export function getToggleButton(locale: string, disabled = false) {
+  return new ButtonBuilder()
+    .setCustomId(JSON.stringify({
+      c: "automod",
+      sc: "toggle",
+      a: disabled,
+    }))
+    .setLabel(t(disabled ? "disabled" : "activated", locale))
+    .setStyle(disabled ? ButtonStyle.Danger : ButtonStyle.Success);
+}
+
 export function getRemActionButton(locale: string) {
   return new ButtonBuilder()
     .setCustomId(JSON.stringify({
