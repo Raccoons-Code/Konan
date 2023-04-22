@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteracti
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { ClearFiltersBitField, ClearFiltersBits, clearFiltersFlags } from "../../../util/ClearMessages";
-import { createSelectMenuFromOptions } from "../../../util/commands/components/selectmenu";
+import { createSelectFromOptions } from "../../../util/commands/components/selectmenu";
 import { GUILD_TEXT_CHANNEL_TYPES } from "../../../util/constants";
 import { getLocalizations } from "../../../util/utils";
 
@@ -84,10 +84,10 @@ export default class extends ChatInputCommand {
           })),
       ],
       components: [
-        ...createSelectMenuFromOptions(clearOptions, {
+        ...createSelectFromOptions(clearOptions, JSON.stringify({
           c: "clear",
           sc: "filters",
-        }, {
+        }), {
           placeholder: `♻️ ${t("clearFilters", interaction.locale)}`,
         }),
         new ActionRowBuilder<ButtonBuilder>()

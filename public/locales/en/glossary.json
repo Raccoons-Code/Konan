@@ -1,4 +1,5 @@
 {
+  "activated": "activated",
   "automatic": "automatic",
   "banning": "banning",
   "cancelled": "cancelled",
@@ -7,6 +8,7 @@
   "checkers": "checkers",
   "chess": "chess",
   "deleted": "deleted",
+  "disabled": "disabled",
   "donate": "donate",
   "false": "false",
   "fishing": "fishing",

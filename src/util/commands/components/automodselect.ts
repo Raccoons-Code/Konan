@@ -1,6 +1,34 @@
-import { ActionRowBuilder, AutoModerationRuleEventType, AutoModerationRuleTriggerType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
+import { ActionRowBuilder, AutoModerationActionType, AutoModerationRuleEventType, AutoModerationRuleTriggerType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import { t } from "../../../translator";
-import { EventTypeString, TriggerTypeString } from "../../automod";
+import { ActionTypeString, EventTypeString, TriggerTypeString } from "../../automod";
+
+export function getAddActionsSelectMenu(
+  actionTypes: ActionTypeString[],
+  locale: string,
+) {
+  return new ActionRowBuilder<StringSelectMenuBuilder>()
+    .addComponents(new StringSelectMenuBuilder()
+      .setCustomId(JSON.stringify({
+        c: "automod",
+        sc: "addAction",
+      }))
+      .setPlaceholder("Set the action type.")
+      .addOptions(getAddActionsSelectOptions(actionTypes, locale)));
+}
+
+export function getAddActionsSelectOptions(
+  actionTypes: ActionTypeString[],
+  locale: string,
+) {
+  return actionTypes
+    .map(type => new StringSelectMenuOptionBuilder()
+      .setDescription(t(type + "Description", locale).slice(0, 100))
+      .setLabel(t(type, locale))
+      .setValue(JSON.stringify({
+        bit: AutoModerationActionType[type],
+        type,
+      })));
+}
 
 export function getEventsSelectMenu(
   eventTypes: EventTypeString[],

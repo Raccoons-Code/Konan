@@ -1,6 +1,48 @@
 import { ButtonBuilder, ButtonStyle } from "discord.js";
 import { t } from "../../../translator";
 
+export function getSuccessButton() {
+  return new ButtonBuilder()
+    .setCustomId(JSON.stringify({
+      c: "automod",
+      sc: "success",
+    }))
+    .setDisabled(true)
+    .setEmoji("✅")
+    .setStyle(ButtonStyle.Success);
+}
+
+export function getCancelButton() {
+  return new ButtonBuilder()
+    .setCustomId(JSON.stringify({
+      c: "automod",
+      sc: "cancel",
+    }))
+    .setEmoji("✖️")
+    .setStyle(ButtonStyle.Danger);
+}
+
+export function getAddActionButton(locale: string) {
+  return new ButtonBuilder()
+    .setCustomId(JSON.stringify({
+      c: "automod",
+      sc: "addAction",
+    }))
+    .setLabel(t("automodAddAction", locale))
+    .setStyle(ButtonStyle.Secondary);
+}
+
+export function getRemActionButton(locale: string) {
+  return new ButtonBuilder()
+    .setCustomId(JSON.stringify({
+      c: "automod",
+      sc: "remAction",
+    }))
+    .setDisabled(true)
+    .setLabel(t("automodRemAction", locale))
+    .setStyle(ButtonStyle.Secondary);
+}
+
 export function getEditNameButton(locale:string) {
   return new ButtonBuilder()
     .setCustomId(JSON.stringify({

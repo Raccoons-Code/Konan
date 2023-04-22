@@ -1,21 +1,41 @@
 import { ActionRow, ActionRowBuilder, APIActionRowComponent, APIActionRowComponentTypes, APISelectMenuOption, APIStringSelectComponent, ChannelSelectMenuBuilder, ComponentEmojiResolvable, ComponentType, JSONEncodable, MessageActionRowComponent, MessageActionRowComponentBuilder, RoleSelectMenuBuilder, SelectMenuComponentOptionData, SelectMenuType, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
-import { BaseComponentCustomId, SelectRolesOptionValue } from "../../../@types";
+import { SelectRolesOptionValue } from "../../../@types";
+import { t } from "../../../translator";
 import { GUILD_CHANNEL_TYPES } from "../../constants";
+import ParseMs from "../../ParseMs";
 import { JSONparse, splitArrayInGroups } from "../../utils";
 
-export function getChannelSelect(customId: string) {
+export interface CreateMenuOptions {
+  /**
+   * @default 25
+   */
+  maxOptions: number
+  placeholder: string | string[]
+  /**
+   * @default true
+   */
+  distinct: boolean
+}
+
+export function getChannelSelect(
+  customId: string,
+  menuOptions: Partial<CreateMenuOptions> = {},
+) {
   return new ChannelSelectMenuBuilder()
     .setCustomId(customId)
     .setChannelTypes(...GUILD_CHANNEL_TYPES)
     .setMinValues(0)
-    .setMaxValues(25);
+    .setMaxValues(menuOptions.maxOptions ?? 25);
 }
 
-export function getRoleSelect(customId: string) {
+export function getRoleSelect(
+  customId: string,
+  menuOptions: Partial<CreateMenuOptions> = {},
+) {
   return new RoleSelectMenuBuilder()
     .setCustomId(customId)
     .setMinValues(0)
-    .setMaxValues(25);
+    .setMaxValues(menuOptions.maxOptions ?? 25);
 }
 
 export function addSelectMenuByType(
@@ -25,22 +45,25 @@ export function addSelectMenuByType(
     | ActionRow<MessageActionRowComponent>
     | ActionRowBuilder<MessageActionRowComponentBuilder>
   )[],
+  menuOptions: Partial<CreateMenuOptions> = {},
 ) {
   if (!components) components = [];
 
-  const parsedId = JSON.parse(customId);
-  parsedId.d = Date.now();
-  customId = JSON.stringify(parsedId);
+  if (menuOptions.distinct ?? true) {
+    const parsedId = JSON.parse(customId);
+    parsedId.d = Date.now();
+    customId = JSON.stringify(parsedId);
+  }
 
   const component = new ActionRowBuilder<any>();
 
   switch (type) {
     case ComponentType.ChannelSelect:
-      component.addComponents(getChannelSelect(customId));
+      component.addComponents(getChannelSelect(customId, menuOptions));
       break;
 
     case ComponentType.RoleSelect:
-      component.addComponents(getRoleSelect(customId));
+      component.addComponents(getRoleSelect(customId, menuOptions));
       break;
   }
 
@@ -51,10 +74,14 @@ export function addSelectOptionsToRows(
   components: (ActionRow<MessageActionRowComponent> | ActionRowBuilder<StringSelectMenuBuilder>)[],
   selectId: string,
   options: (APISelectMenuOption | StringSelectMenuOptionBuilder | SelectMenuComponentOptionData)[],
-  maxOptions = 25,
+  menuOptions: Partial<CreateMenuOptions> = {},
 ) {
   if (!components) components = [];
-  if (!maxOptions) maxOptions = 25;
+  menuOptions = {
+    maxOptions: menuOptions.maxOptions ?? 25,
+    placeholder: menuOptions.placeholder,
+    distinct: menuOptions.distinct,
+  };
 
   return components.map(row => {
     const rowJson = <APIActionRowComponent<APIStringSelectComponent>>row.toJSON();
@@ -73,33 +100,49 @@ export function addSelectOptionsToRows(
 
         return new StringSelectMenuBuilder(select)
           .addOptions(newOptions)
-          .setMaxValues(optionsSize > maxOptions ? maxOptions : optionsSize);
+          .setMaxValues(optionsSize > menuOptions.maxOptions! ?
+            menuOptions.maxOptions! : optionsSize);
       }));
   })
-    .concat(createSelectFromOptions(options, JSON.parse(selectId), maxOptions));
+    .concat(createSelectFromOptions(options, selectId, menuOptions));
 }
 
 export function createSelectFromOptions(
-  options: (APISelectMenuOption | StringSelectMenuOptionBuilder | SelectMenuComponentOptionData)[],
-  customId: BaseComponentCustomId,
-  maxOptions = 25,
+  options: (
+    | APISelectMenuOption
+    | SelectMenuComponentOptionData
+    | StringSelectMenuOptionBuilder
+  )[],
+  customId: string,
+  menuOptions: Partial<CreateMenuOptions> = {},
 ) {
-  if (!options?.length) return [];
-  if (!maxOptions) maxOptions = 25;
-  if (typeof customId === "string")
-    customId = <BaseComponentCustomId>JSON.parse(customId);
+  menuOptions = {
+    maxOptions: menuOptions.maxOptions ?? 25,
+    placeholder: menuOptions.placeholder,
+    distinct: menuOptions.distinct ?? true,
+  };
 
   let index = 0;
 
-  return splitArrayInGroups(options, 25).map(group =>
-    new ActionRowBuilder<StringSelectMenuBuilder>()
+  return splitArrayInGroups(options, 25)
+    .map(group => new ActionRowBuilder<StringSelectMenuBuilder>()
       .addComponents(new StringSelectMenuBuilder()
-        .setCustomId(JSON.stringify({
-          ...customId,
-          d: Date.now() + index++,
-        }))
+        .setPlaceholder(
+          Array.isArray(menuOptions.placeholder) ?
+            menuOptions.placeholder[index] ?? "" :
+            menuOptions.placeholder ?? "",
+        )
+        .setCustomId(
+          menuOptions.distinct ?
+            JSON.stringify({
+              ...JSON.parse(customId),
+              d: Date.now() + index++,
+            }) :
+            customId,
+        )
         .setOptions(group)
-        .setMaxValues(group.length > maxOptions ? maxOptions : group.length)));
+        .setMaxValues(group.length > menuOptions.maxOptions! ?
+          menuOptions.maxOptions! : group.length)));
 }
 
 export function calculateBitFieldFromSelectMenus(
@@ -120,31 +163,6 @@ export function calculateBitFieldFromSelectMenus(
       }, 0n);
     }, 0n);
   }, 0n);
-}
-
-export function createSelectMenuFromOptions(
-  options: (APISelectMenuOption | SelectMenuComponentOptionData | StringSelectMenuOptionBuilder)[],
-  customId: BaseComponentCustomId,
-  menuOptions?: {
-    placeholder: string | string[]
-  },
-) {
-  let index = 0;
-
-  return splitArrayInGroups(options, 25)
-    .map(group => new ActionRowBuilder<StringSelectMenuBuilder>()
-      .addComponents(new StringSelectMenuBuilder()
-        .setPlaceholder(
-          Array.isArray(menuOptions?.placeholder) ?
-            menuOptions?.placeholder[index] ?? "" :
-            menuOptions?.placeholder ?? "",
-        )
-        .setCustomId(JSON.stringify({
-          d: Date.now() + index++,
-          ...customId,
-        }))
-        .setOptions(group)
-        .setMaxValues(group.length)));
 }
 
 export function getDefaultOptionFromSelect(
@@ -214,7 +232,7 @@ export function removeSelectMenuById(
   return components.reduce<ActionRow<MessageActionRowComponent>[]>((acc, row) => {
     const rowJson = row.toJSON();
 
-    if (rowJson.components[0].type !== ComponentType.StringSelect)
+    if (rowJson.components[0].type === ComponentType.Button)
       return acc.concat(row);
 
     if (customId.includes(rowJson.components[0].custom_id)) return acc;
@@ -329,4 +347,125 @@ export function setSelectMenuOptions(
       })
         .addOptions(options)));
   });
+}
+
+export function getTimesSelectOptions(locale: string) {
+  return [
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NSeconds", { locale, n: 60 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.m,
+        s: 60,
+        m: 1,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NMinutes", { locale, n: 5 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.m * 5,
+        s: 60 * 5,
+        m: 5,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NMinutes", { locale, n: 10 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.m * 10,
+        s: 60 * 10,
+        m: 10,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NMinutes", { locale, n: 20 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.m * 20,
+        s: 60 * 20,
+        m: 20,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NMinutes", { locale, n: 30 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.m * 30,
+        s: 60 * 30,
+        m: 30,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NMinutes", { locale, n: 60 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.h,
+        s: 60 * 60,
+        m: 60,
+        h: 1,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NHours", { locale, n: 6 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.h * 6,
+        s: 60 * 60 * 6,
+        m: 60 * 6,
+        h: 6,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NHours", { locale, n: 12 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.h * 12,
+        s: 60 * 60 * 12,
+        m: 60 * 12,
+        h: 12,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NHours", { locale, n: 18 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.h * 18,
+        s: 60 * 60 * 18,
+        m: 60 * 18,
+        h: 18,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NHours", { locale, n: 24 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.D,
+        s: 60 * 60 * 24,
+        m: 60 * 24,
+        h: 24,
+        d: 1,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NDays", { locale, n: 7 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.S,
+        s: 60 * 60 * 24 * 7,
+        m: 60 * 24 * 7,
+        h: 24 * 7,
+        d: 7,
+        w: 1,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NWeeks", { locale, n: 2 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.S * 2,
+        s: 60 * 60 * 24 * 7 * 2,
+        m: 60 * 24 * 7 * 2,
+        h: 24 * 7 * 2,
+        d: 7 * 2,
+        w: 2,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NWeeks", { locale, n: 3 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.S * 3,
+        s: 60 * 60 * 24 * 7 * 3,
+        m: 60 * 24 * 7 * 3,
+        h: 24 * 7 * 3,
+        d: 7 * 3,
+        w: 3,
+      })),
+    new StringSelectMenuOptionBuilder()
+      .setLabel(t("NWeeks", { locale, n: 4 }))
+      .setValue(JSON.stringify({
+        ms: ParseMs.S * 4,
+        s: 60 * 60 * 24 * 7 * 4,
+        m: 60 * 24 * 7 * 4,
+        h: 24 * 7 * 4,
+        d: 7 * 4,
+        w: 4,
+      })),
+  ];
 }

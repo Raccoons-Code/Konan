@@ -25,18 +25,22 @@ export default class extends SelectMenuCommand {
   async setExemptRoles(interaction: RoleSelectMenuInteraction<"cached">) {
     const [embed] = interaction.message.embeds;
 
+    interaction.message.embeds.splice(0, 1,
+      <any>new EmbedBuilder(embed.toJSON())
+        .spliceFields(3, 1, {
+          name: t("automodFieldExemptRoles", interaction.locale),
+          value: interaction.roles.toJSON().join(" ") || " ",
+        }),
+    );
+
+    const embeds = interaction.message.embeds;
+
     await interaction.editReply({
       components: removeSelectMenuById(
         interaction.message.components,
         interaction.customId,
       ),
-      embeds: [
-        new EmbedBuilder(embed.toJSON())
-          .spliceFields(3, 1, {
-            name: t("automodFieldExemptRoles", interaction.locale),
-            value: interaction.roles.toJSON().join(" ") || "-",
-          }),
-      ],
+      embeds,
     });
   }
 }

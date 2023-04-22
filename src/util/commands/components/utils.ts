@@ -41,6 +41,15 @@ export function componentsHasRowType(
   });
 }
 
+export function componentsHasRowById(
+  components: ActionRow<MessageActionRowComponent>[],
+  customId: string,
+) {
+  return components.some(row =>
+    row.toJSON().components.some(element =>
+      "custom_id" in element && element.custom_id === customId));
+}
+
 export function filterCustomId(
   components: ActionRow<MessageActionRowComponent>[],
   customIds: string[],

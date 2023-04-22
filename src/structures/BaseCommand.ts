@@ -27,7 +27,7 @@ export default abstract class BaseCommand extends Base {
     ];
 
     if (interaction.deferred || interaction.replied) {
-      if (interaction.isMessageComponent()) {
+      if (interaction.isMessageComponent() || interaction.isModalSubmit()) {
         await interaction.followUp({ embeds, ephemeral: true });
         return;
       }
@@ -91,7 +91,7 @@ export default abstract class BaseCommand extends Base {
     }
 
     if (interaction.deferred || interaction.replied) {
-      if (interaction.isMessageComponent()) {
+      if (interaction.isMessageComponent() || interaction.isModalSubmit()) {
         await interaction.followUp({ components, embeds, ephemeral: true });
         return;
       }

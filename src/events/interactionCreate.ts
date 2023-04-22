@@ -79,7 +79,7 @@ client.on("interactionCreate", async function (interaction) {
 
     try {
       if (!interaction.isAutocomplete()) {
-        if (interaction.isMessageComponent()) {
+        if (interaction.isMessageComponent() || interaction.isModalSubmit()) {
           await interaction.followUp({ components, embeds, ephemeral: true });
         } else if (interaction.deferred || interaction.replied) {
           await interaction.editReply({ components, embeds });

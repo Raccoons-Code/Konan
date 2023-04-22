@@ -2,7 +2,7 @@ import { ActionRowBuilder, AutoModerationRuleCreateOptions, ButtonBuilder, ChatI
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
-import { getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
+import { getAddActionButton, getCancelButton, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getRemActionButton, getSuccessButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -27,7 +27,8 @@ export default class extends ChatInputCommand {
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
     await interaction.deferReply({ ephemeral: true });
 
-    const subcommand = interaction.options.getSubcommandGroup() ?? interaction.options.getSubcommand();
+    const subcommand = interaction.options.getSubcommandGroup() ??
+      interaction.options.getSubcommand();
 
     await this[<"create">subcommand]?.(interaction);
 
@@ -54,21 +55,40 @@ export default class extends ChatInputCommand {
             getExemptChannelsButton(interaction.locale),
             getExemptRolesButton(interaction.locale),
           ]),
+        new ActionRowBuilder<ButtonBuilder>()
+          .addComponents([
+            getSuccessButton(),
+            getCancelButton(),
+            getAddActionButton(interaction.locale),
+            getRemActionButton(interaction.locale),
+          ]),
       ],
       embeds: [
         new EmbedBuilder()
           .addFields([{
             name: t("automodFieldTriggerType", interaction.locale),
-            value: "-",
+            value: " ",
           }, {
             name: t("automodFieldEventType", interaction.locale),
-            value: "-",
+            value: " ",
           }, {
             name: t("automodFieldExemptChannels", interaction.locale),
-            value: "-",
+            value: " ",
           }, {
             name: t("automodFieldExemptRoles", interaction.locale),
-            value: "-",
+            value: " ",
+          }]),
+        new EmbedBuilder()
+          .setTitle("Automod Actions")
+          .addFields([{
+            name: t("BlockMessage", interaction.locale),
+            value: " ",
+          }, {
+            name: t("SendAlertMessage", interaction.locale),
+            value: " ",
+          }, {
+            name: t("Timeout", interaction.locale),
+            value: " ",
           }]),
       ],
     });
@@ -79,7 +99,8 @@ export default class extends ChatInputCommand {
   }
 }
 
-/* interaction.guild.autoModerationRules.create({
+/*
+interaction.guild.autoModerationRules.create({
   actions: [{
     type: AutoModerationActionType.BlockMessage,
     metadata: {
@@ -106,4 +127,5 @@ export default class extends ChatInputCommand {
     ],
     regexPatterns: [],
   },
-}); */
+});
+*/

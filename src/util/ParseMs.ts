@@ -1,12 +1,12 @@
 class ParseMs {
-  static ms = 1;
-  static s = this.ms * 1000;
-  static m = this.s * 60;
-  static h = this.m * 60;
-  static D = this.h * 24;
-  static S = this.D * 7;
-  static M = this.D * 30.4375;
-  static Y = this.M * 12;
+  static readonly ms = 1;
+  static readonly s = this.ms * 1000 as 1_000;
+  static readonly m = this.s * 60 as 60_000;
+  static readonly h = this.m * 60 as 3_600_000;
+  static readonly D = this.h * 24 as 86_400_000;
+  static readonly S = this.D * 7 as 604_800_000;
+  static readonly M = this.D * 30.4375 as 2_629_800_000;
+  static readonly Y = this.M * 12 as 31_557_600_000;
 
   result?: number | string;
 

@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, Mes
 import MessageContextCommand from "../../../../structures/MessageContextCommand";
 import { t } from "../../../../translator";
 import { ClearFiltersBitField, ClearFiltersBits, clearFiltersFlags } from "../../../../util/ClearMessages";
-import { createSelectMenuFromOptions } from "../../../../util/commands/components/selectmenu";
+import { createSelectFromOptions } from "../../../../util/commands/components/selectmenu";
 import { getLocalizations } from "../../../../util/utils";
 
 export default class extends MessageContextCommand {
@@ -69,10 +69,10 @@ export default class extends MessageContextCommand {
           })),
       ],
       components: [
-        ...createSelectMenuFromOptions(clearOptions, {
+        ...createSelectFromOptions(clearOptions, JSON.stringify({
           c: "clear",
           sc: "filters",
-        }, {
+        }), {
           placeholder: `♻️ ${t("clearFilters", interaction.locale)}`,
         }),
         new ActionRowBuilder<UserSelectMenuBuilder>()

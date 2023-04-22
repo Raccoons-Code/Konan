@@ -30,17 +30,19 @@ export function toggleButtons(
     | ActionRow<MessageActionRowComponent>
     | ActionRowBuilder<MessageActionRowComponentBuilder>
   )[],
-  customId: string,
+  customId: string | string[],
   disabled: boolean,
 ) {
+  if (!Array.isArray(customId)) customId = [customId];
+
   return components.map(row => {
     const rowJson = <APIActionRowComponent<APIButtonComponentWithCustomId>>row.toJSON();
 
-    if (rowJson.components.every(e => e.custom_id !== customId)) return row;
+    if (rowJson.components.every(e => !customId.includes(e.custom_id))) return row;
 
     return new ActionRowBuilder<ButtonBuilder>()
       .addComponents(rowJson.components.map(button => {
-        if (button.custom_id !== customId)
+        if (!customId.includes(button.custom_id))
           return new ButtonBuilder(button);
 
         return new ButtonBuilder({

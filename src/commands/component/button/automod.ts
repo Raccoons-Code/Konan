@@ -1,8 +1,8 @@
 import { ActionRowBuilder, ButtonInteraction, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
-import { getAvailableTriggerTypes, getEventTypes } from "../../../util/automod";
-import { getEventsSelectOptions, getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
+import { getActionTypes, getAvailableTriggerTypes, getEventTypes } from "../../../util/automod";
+import { getAddActionsSelectOptions, getEventsSelectOptions, getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
 import { toggleButtons } from "../../../util/commands/components/button";
 import { addSelectMenuByType, addSelectOptionsToRows, removeSelectByType } from "../../../util/commands/components/selectmenu";
 import { componentsHasRowType } from "../../../util/commands/components/utils";
@@ -31,6 +31,30 @@ export default class extends ButtonCommand {
     await interaction.deleteReply();
   }
 
+  async addAction(interaction: ButtonInteraction<"cached">) {
+    await interaction.editReply({
+      components: toggleButtons(
+        addSelectOptionsToRows(
+          interaction.message.components,
+          JSON.stringify({
+            c: "automod",
+            sc: "addAction",
+            a: ComponentType.StringSelect,
+          }),
+          getAddActionsSelectOptions(getActionTypes(), interaction.locale), {
+          distinct: false,
+          maxOptions: 1,
+        }),
+        JSON.stringify({ c: "automod", sc: "addAction" }),
+        true,
+      ),
+    });
+  }
+
+  async remAction(interaction: ButtonInteraction<"cached">) {
+
+  }
+
   async editName(interaction: ButtonInteraction<"cached">) {
     await interaction.showModal(
       new ModalBuilder()
@@ -50,7 +74,11 @@ export default class extends ButtonCommand {
   }
 
   async setExemptChannels(interaction: ButtonInteraction<"cached">) {
-    const customId = JSON.stringify({ c: "automod", sc: "setExemptChannels" });
+    const customId = JSON.stringify({
+      c: "automod",
+      sc: "setExemptChannels",
+      a: ComponentType.StringSelect,
+    });
 
     const hasMenu = componentsHasRowType(
       interaction.message.components,
@@ -72,7 +100,11 @@ export default class extends ButtonCommand {
   }
 
   async setExemptRoles(interaction: ButtonInteraction<"cached">) {
-    const customId = JSON.stringify({ c: "automod", sc: "setExemptRoles" });
+    const customId = JSON.stringify({
+      c: "automod",
+      sc: "setExemptRoles",
+      a: ComponentType.StringSelect,
+    });
 
     const hasMenu = componentsHasRowType(
       interaction.message.components,
@@ -94,17 +126,23 @@ export default class extends ButtonCommand {
   }
 
   async setEventType(interaction: ButtonInteraction<"cached">) {
-    const customId = JSON.stringify({ c: "automod", sc: "setEventType" });
-
     await interaction.editReply({
       components: toggleButtons(
         addSelectOptionsToRows(
           interaction.message.components,
-          customId,
-          getEventsSelectOptions(getEventTypes(), interaction.locale),
-          1,
-        ),
-        customId,
+          JSON.stringify({
+            c: "automod",
+            sc: "setEventType",
+            a: ComponentType.StringSelect,
+          }),
+          getEventsSelectOptions(getEventTypes(), interaction.locale), {
+          distinct: false,
+          maxOptions: 1,
+        }),
+        JSON.stringify({
+          c: "automod",
+          sc: "setEventType",
+        }),
         true,
       ),
     });
@@ -120,17 +158,23 @@ export default class extends ButtonCommand {
       return 1;
     }
 
-    const customId = JSON.stringify({ c: "automod", sc: "setTriggerType" });
-
     await interaction.editReply({
       components: toggleButtons(
         addSelectOptionsToRows(
           interaction.message.components,
-          customId,
-          getTriggersSelectOptions(availableTriggers, interaction.locale),
-          1,
-        ),
-        customId,
+          JSON.stringify({
+            c: "automod",
+            sc: "setTriggerType",
+            a: ComponentType.StringSelect,
+          }),
+          getTriggersSelectOptions(availableTriggers, interaction.locale), {
+          distinct: false,
+          maxOptions: 1,
+        }),
+        JSON.stringify({
+          c: "automod",
+          sc: "setTriggerType",
+        }),
         true,
       ),
     });
