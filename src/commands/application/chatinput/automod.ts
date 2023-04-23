@@ -11,7 +11,6 @@ export default class extends ChatInputCommand {
     super({
       appPermissions: ["ManageGuild"],
       userPermissions: ["ManageGuild"],
-      private: true, // Development
     });
 
     this.data.setName("automod")
