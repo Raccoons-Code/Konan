@@ -80,6 +80,44 @@ export const automodToggleButtonsByTrigger = {
   },
 };
 
+export function getEditButtonsByTrigger(
+  trigger: AutoModerationRuleTriggerType,
+  locale: string,
+  enabled = true,
+) {
+  return [[
+    getEditNameButton(locale),
+    getTriggersButton(locale),
+    getEventsButton(locale),
+    getAddActionButton(locale),
+    getRemActionButton(locale),
+  ], [
+    getSuccessButton(true),
+    getCancelButton(),
+    getToggleButton(locale, !enabled),
+    getExemptChannelsButton(locale),
+    getExemptRolesButton(locale),
+  ], [
+    getAllowListButton(locale, ![
+      AutoModerationRuleTriggerType.KeywordPreset,
+      AutoModerationRuleTriggerType.Keyword,
+    ].includes(trigger)),
+    getKeywordFilterButton(locale, ![
+      AutoModerationRuleTriggerType.KeywordPreset,
+      AutoModerationRuleTriggerType.Keyword,
+    ].includes(trigger)),
+    getKeywordPresetsButton(locale, ![
+      AutoModerationRuleTriggerType.KeywordPreset,
+    ].includes(trigger)),
+    getMentionTotalLimitButton(locale, ![
+      AutoModerationRuleTriggerType.MentionSpam,
+    ].includes(trigger)),
+    getRegexPatternsButton(locale, ![
+      AutoModerationRuleTriggerType.Keyword,
+    ].includes(trigger)),
+  ]];
+}
+
 export function getSuccessButton(disabled = false) {
   return new ButtonBuilder()
     .setCustomId(automodSuccessButtonCustomId)

@@ -1,71 +1,117 @@
-import { APIEmbedField, AutoModerationActionMetadataOptions, AutoModerationActionOptions, AutoModerationActionType, AutoModerationRuleCreateOptions, AutoModerationRuleTriggerType, AutoModerationTriggerMetadataOptions, Embed } from "discord.js";
+import { APIEmbed, APIEmbedField, AutoModerationAction, AutoModerationActionMetadata, AutoModerationActionMetadataOptions, AutoModerationActionOptions, AutoModerationActionType, AutoModerationRule, AutoModerationRuleCreateOptions, AutoModerationRuleEventType, AutoModerationRuleKeywordPresetType, AutoModerationRuleTriggerType, AutoModerationTriggerMetadataOptions, Collection, Embed } from "discord.js";
+import ms from "ms";
 import { t } from "../../../translator";
 import ParseMs from "../../ParseMs";
 import { automodMetadataByTrigger, getActionTypes, getRequiredMetadataByTrigger } from "../../automod";
 
-export const configEmbedFields = [[{
+export const configEmbedFields: {
+  name: string
+  value: string
+  key: string
+  index: number
+  parent?: string
+  type?: any
+  convert: (v: string) => any
+  convertToEmbed: (v: any, l: string) => string
+}[][] = [[{
   name: "automodTriggerType",
   value: " ",
   key: "triggerType",
   index: 0,
+  convert: (v: string) => +v.split(" - ")[0],
+  convertToEmbed: (v: AutoModerationRuleTriggerType, l: string) =>
+    `${v} - ${t(AutoModerationRuleTriggerType[v], l)}`,
 }, {
   name: "automodEventType",
   value: " ",
   key: "eventType",
   index: 1,
+  convert: (v: string) => +v.split(" - ")[0],
+  convertToEmbed: (v: AutoModerationRuleEventType, l: string) =>
+    `${v} - ${t(AutoModerationRuleEventType[v], l)}`,
 }, {
   name: "automodExemptChannels",
   value: " ",
   key: "exemptChannels",
   index: 2,
+  convert: (v: string) => v.match(/\d{17,}/g) ?? [],
+  convertToEmbed: <T>(v: Collection<string, T>) => v.toJSON().join(" "),
 }, {
   name: "automodExemptRoles",
   value: " ",
   key: "exemptRoles",
   index: 3,
+  convert: (v: string) => v.match(/\d{17,}/g) ?? [],
+  convertToEmbed: <T>(v: Collection<string, T>) => v.toJSON().join(" "),
 }, {
   name: "automodAllowList",
   value: " ",
   key: "allowList",
+  parent: "triggerMetadata",
   index: 4,
+  convert: (v: string) => v.split(/[,\r\n]+/),
+  convertToEmbed: <T>(v: T[]) => v.join(","),
 }, {
   name: "automodKeywordFilter",
   value: " ",
   key: "keywordFilter",
+  parent: "triggerMetadata",
   index: 5,
+  convert: (v: string) => v.split(/[,\r\n]+/),
+  convertToEmbed: <T>(v: T[]) => v.join(","),
 }, {
   name: "automodKeywordPresets",
   value: " ",
   key: "presets",
+  parent: "triggerMetadata",
   index: 6,
+  convert: (v: string) => v.split("\n").map(a => +a.split(" - ")[0]),
+  convertToEmbed: (presets: AutoModerationRuleKeywordPresetType[], l: string) =>
+    presets.map(preset => `${preset} - ${t(AutoModerationRuleKeywordPresetType[preset], l)}`)
+      .join("\n"),
 }, {
   name: "automodMentionTotalLimit",
   value: " ",
   key: "mentionTotalLimit",
+  parent: "triggerMetadata",
   index: 7,
+  convert: (v: string) => +v,
+  convertToEmbed: (v: number) => `${v}`,
 }, {
   name: "automodRegexPatterns",
   value: " ",
   key: "regexPatterns",
+  parent: "triggerMetadata",
   index: 8,
+  convert: (v: string) => v.split(/[\r\n]+/),
+  convertToEmbed: <T>(v: T[]) => v.join("\n"),
 }], [{
   name: "BlockMessage",
   value: " ",
   key: "customMessage",
+  parent: "actions",
   index: 0,
   type: AutoModerationActionType.BlockMessage,
+  convert: (v: string) => v,
+  convertToEmbed: (v: string) => v,
 }, {
   name: "SendAlertMessage",
   value: " ",
   key: "channel",
+  parent: "actions",
   index: 1,
   type: AutoModerationActionType.SendAlertMessage,
+  convert: (v: string) => v.match(/\d{17,}/)?.[1] ?? "",
+  convertToEmbed: (v: string) => `${v}`,
 }, {
   name: "Timeout",
   value: " ",
   key: "durationSeconds",
+  parent: "actions",
   index: 2,
   type: AutoModerationActionType.Timeout,
+  convert: (v: string) => ms(v) / 1000,
+  convertToEmbed: (v: number) => `${ms(v * 1000)}`,
 }]];
 
 /* const idFields = [
@@ -236,4 +282,69 @@ export function getRequiredFields(
   }
 
   return fields;
+}
+
+export function getEmbedFieldsFromRule(rule: AutoModerationRule, locale: string) {
+  const embeds: APIEmbed[] = [];
+
+  {
+    const fields: APIEmbedField[] = [];
+
+    for (const field of configEmbedFields[0]) {
+      let value: any;
+
+      if (field.parent)
+        value = rule[<keyof AutoModerationRule>field.parent];
+
+      value = (value ?? rule)[<keyof AutoModerationRule>field.key];
+
+      if (value) {
+        value = field.convertToEmbed(value, locale);
+      } else {
+        value = field.value;
+      }
+
+      fields.push({
+        name: t(field.name, locale),
+        value,
+      });
+    }
+
+    const embed = {
+      title: rule.name,
+      fields,
+    };
+
+    embeds.push(embed);
+  }
+
+  {
+    const fields: APIEmbedField[] = [];
+
+    for (const field of configEmbedFields[1]) {
+      const action = <AutoModerationAction | undefined>rule.actions
+        .find(action => action.type === field.type);
+
+      let value = action?.metadata[<keyof AutoModerationActionMetadata>field.key];
+      if (value) {
+        value = field.convertToEmbed(value, locale);
+      } else {
+        value = field.value;
+      }
+
+      fields.push({
+        name: field.name,
+        value,
+      });
+    }
+
+    const embed = {
+      title: t("automodActions", locale),
+      fields,
+    };
+
+    embeds.push(embed);
+  }
+
+  return embeds;
 }

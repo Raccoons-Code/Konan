@@ -2,8 +2,8 @@ import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuil
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
-import { getAddActionButton, getAllowListButton, getCancelButton, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getKeywordFilterButton, getKeywordPresetsButton, getMentionTotalLimitButton, getRegexPatternsButton, getRemActionButton, getSuccessButton, getToggleButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
-import { configEmbedFields } from "../../../util/commands/embeds/automod";
+import { getAddActionButton, getAllowListButton, getCancelButton, getEditButtonsByTrigger, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getKeywordFilterButton, getKeywordPresetsButton, getMentionTotalLimitButton, getRegexPatternsButton, getRemActionButton, getSuccessButton, getToggleButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
+import { configEmbedFields, getEmbedFieldsFromRule } from "../../../util/commands/embeds/automod";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -22,7 +22,19 @@ export default class extends ChatInputCommand {
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
       .addSubcommand(subcommand => subcommand.setName("create")
-        .setDescription("Create automod rule"));
+        .setDescription("Create automod rule"))
+      .addSubcommand(subcommand => subcommand.setName("edit")
+        .setDescription("Edit automod rule")
+        .addStringOption(option => option.setName("rule")
+          .setDescription("Select a rule")
+          .setAutocomplete(true)
+          .setRequired(true)))
+      .addSubcommand(subcommand => subcommand.setName("delete")
+        .setDescription("Delete automod rule")
+        .addStringOption(option => option.setName("rule")
+          .setDescription("Select a rule")
+          .setAutocomplete(true)
+          .setRequired(true)));
   }
 
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
@@ -90,5 +102,53 @@ export default class extends ChatInputCommand {
     });
 
     return;
+  }
+
+  async edit(interaction: ChatInputCommandInteraction<"cached">) {
+    const ruleId = interaction.options.getString("rule")!;
+
+    const rule = interaction.guild.autoModerationRules.cache.get(ruleId);
+
+    if (!rule) {
+      await interaction.editReply(t("automodRule404", interaction.locale));
+      return 1;
+    }
+
+    const embeds = getEmbedFieldsFromRule(rule, interaction.locale);
+
+    await interaction.editReply({
+      components: getEditButtonsByTrigger(rule.triggerType, interaction.locale, rule.enabled)
+        .map(buttons => new ActionRowBuilder<ButtonBuilder>()
+          .addComponents(buttons)),
+      embeds: [
+        new EmbedBuilder(embeds[0])
+          .setDescription(codeBlock(`${t("automodHelpText", interaction.locale)}\n\n${t("required", interaction.locale)} *`))
+          .setFooter({
+            text: rule.id,
+          }),
+        new EmbedBuilder(embeds[1])
+          .setTitle(t("automodActions", interaction.locale)),
+      ],
+    });
+  }
+
+  async delete(interaction: ChatInputCommandInteraction<"cached">) {
+    const ruleId = interaction.options.getString("rule")!;
+
+    const rule = interaction.guild.autoModerationRules.cache.get(ruleId);
+
+    if (!rule) {
+      await interaction.editReply(t("automodRule404", interaction.locale));
+      return 1;
+    }
+
+    try {
+      await rule.delete();
+    } catch {
+      await interaction.editReply(t("automodFailToDeleteRule", interaction.locale));
+      return 1;
+    }
+
+    await interaction.editReply(t("automodSuccessToDeleteRule", interaction.locale));
   }
 }

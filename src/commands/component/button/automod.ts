@@ -396,6 +396,16 @@ export default class extends ButtonCommand {
   async success(interaction: ButtonInteraction<"cached">) {
     const [embed] = interaction.message.embeds;
 
+    if (embed.data?.footer?.text ?? embed.footer?.text) {
+      await this.successEdit(interaction);
+      return;
+    }
+
+    const name = embed.title ||
+      embed.data.title ||
+      embed.toJSON().title ||
+      `${interaction.user.tag}: Automod`;
+
     const button = getComponentById(
       interaction.message.components, [
       JSON.stringify({ c: "automod", sc: "toggle", a: true }),
@@ -409,17 +419,14 @@ export default class extends ButtonCommand {
     try {
       await interaction.guild.autoModerationRules.create({
         ...metadata,
-        name: embed.title ||
-          embed.data.title ||
-          embed.toJSON().title ||
-          `${interaction.user.tag}: Automod`,
-        reason: `${interaction.user.tag}: Automod`,
+        name,
+        reason: `${interaction.user.tag}: Automod Create`,
         enabled: parsedId?.a ?? true,
       });
     } catch (error) {
       await interaction.editReply({
         components: [],
-        content: t("fail", interaction.locale),
+        content: t("automodFailToCreateRule", interaction.locale),
         embeds: [],
       });
       throw error;
@@ -427,7 +434,56 @@ export default class extends ButtonCommand {
 
     await interaction.editReply({
       components: [],
-      content: t("success", interaction.locale),
+      content: t("automodSuccessToCreateRule", interaction.locale),
+      embeds: [],
+    });
+  }
+
+  async successEdit(interaction: ButtonInteraction<"cached">) {
+    const [embed] = interaction.message.embeds;
+
+    const ruleId = embed.data.footer?.text ?? embed.footer?.text;
+
+    const rule = interaction.guild.autoModerationRules.cache.get(ruleId!);
+
+    if (!rule) {
+      return 1;
+    }
+
+    const name = embed.title ||
+      embed.data.title ||
+      embed.toJSON().title ||
+      rule.name;
+
+    const button = getComponentById(
+      interaction.message.components, [
+      JSON.stringify({ c: "automod", sc: "toggle", a: true }),
+      JSON.stringify({ c: "automod", sc: "toggle", a: false }),
+    ]) as APIButtonComponentWithCustomId;
+
+    const parsedId = JSONparse(button.custom_id);
+
+    const metadata = getEmbedFieldsValues(interaction.message.embeds);
+
+    try {
+      await rule.edit({
+        ...metadata,
+        enabled: parsedId?.a ?? rule.enabled,
+        name,
+        reason: `${interaction.user.tag}: Automod Edit`,
+      });
+    } catch {
+      await interaction.editReply({
+        components: [],
+        content: t("automodFailToEditRule", interaction.locale),
+        embeds: [],
+      });
+      return 1;
+    }
+
+    await interaction.editReply({
+      components: [],
+      content: t("automodSuccessToEditRule", interaction.locale),
       embeds: [],
     });
   }
