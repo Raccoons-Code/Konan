@@ -4,12 +4,12 @@ import SelectMenuCommand from "../../../../structures/SelectMenuCommand";
 import { t } from "../../../../translator";
 import ParseMs from "../../../../util/ParseMs";
 import { TriggerTypeString, getAvailableTriggerTypes } from "../../../../util/automod";
-import { automodToggleButtonsByTrigger } from "../../../../util/commands/components/automodbutton";
+import { automodSuccessButtonCustomId, automodToggleButtonsByTrigger } from "../../../../util/commands/components/automodbutton";
 import { getTriggersSelectOptions } from "../../../../util/commands/components/automodselect";
 import { toggleButtons } from "../../../../util/commands/components/button";
 import { addSelectMenuByType, addSelectOptionsToRows, getTimesSelectOptions, removeSelectByType, removeSelectMenuById, setSelectMenuOptions } from "../../../../util/commands/components/selectmenu";
 import { componentsHasRowById, componentsHasRowType } from "../../../../util/commands/components/utils";
-import { configEmbedFields } from "../../../../util/commands/embeds/automod";
+import { configEmbedFields, embedsHasRequiredFieldsByTrigger } from "../../../../util/commands/embeds/automod";
 import { getEmbedFields } from "../../../../util/commands/embeds/utils";
 
 export default class extends SelectMenuCommand {
@@ -163,10 +163,12 @@ export default class extends SelectMenuCommand {
     const embeds = interaction.message.embeds;
 
     await interaction.editReply({
-      components: removeSelectMenuById(
+      components: toggleButtons(removeSelectMenuById(
         interaction.message.components,
         customId,
       ),
+      automodSuccessButtonCustomId,
+      !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale)),
       embeds,
     });
   }
@@ -189,10 +191,12 @@ export default class extends SelectMenuCommand {
     const embeds = interaction.message.embeds;
 
     await interaction.editReply({
-      components: removeSelectMenuById(
+      components: toggleButtons(removeSelectMenuById(
         interaction.message.components, [
         interaction.customId,
       ]),
+      automodSuccessButtonCustomId,
+      !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale)),
       embeds,
     });
   }
@@ -220,10 +224,12 @@ export default class extends SelectMenuCommand {
     const embeds = interaction.message.embeds;
 
     await interaction.editReply({
-      components: removeSelectMenuById(
+      components: toggleButtons(removeSelectMenuById(
         interaction.message.components,
         customId,
       ),
+      automodSuccessButtonCustomId,
+      !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale)),
       embeds,
     });
   }
@@ -246,10 +252,12 @@ export default class extends SelectMenuCommand {
     const embeds = interaction.message.embeds;
 
     await interaction.editReply({
-      components: removeSelectMenuById(
+      components: toggleButtons(removeSelectMenuById(
         interaction.message.components,
         interaction.customId,
       ),
+        automodSuccessButtonCustomId,
+        !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale)),
       embeds,
     });
   }
@@ -305,13 +313,15 @@ export default class extends SelectMenuCommand {
     const embeds = interaction.message.embeds;
 
     await interaction.editReply({
-      components: toggleButtons(toggleButtons(removeSelectMenuById(
+      components: toggleButtons(toggleButtons(toggleButtons(removeSelectMenuById(
         interaction.message.components,
         interaction.customId),
         automodToggleButtonsByTrigger[<1>parsedValue.bit].enable,
         false),
         automodToggleButtonsByTrigger[<1>parsedValue.bit].disable,
         true),
+        automodSuccessButtonCustomId,
+        !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale)),
       embeds,
     });
   }

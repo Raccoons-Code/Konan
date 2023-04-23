@@ -1,7 +1,10 @@
 import { ChannelSelectMenuInteraction, EmbedBuilder } from "discord.js";
 import SelectMenuCommand from "../../../../structures/SelectMenuCommand";
 import { t } from "../../../../translator";
+import { automodSuccessButtonCustomId } from "../../../../util/commands/components/automodbutton";
+import { toggleButtons } from "../../../../util/commands/components/button";
 import { removeSelectMenuById } from "../../../../util/commands/components/selectmenu";
+import { embedsHasRequiredFieldsByTrigger } from "../../../../util/commands/embeds/automod";
 
 export default class extends SelectMenuCommand {
   constructor() {
@@ -58,10 +61,12 @@ export default class extends SelectMenuCommand {
     const embeds = interaction.message.embeds;
 
     await interaction.editReply({
-      components: removeSelectMenuById(
+      components: toggleButtons(removeSelectMenuById(
         interaction.message.components, [
         interaction.customId,
       ]),
+        automodSuccessButtonCustomId,
+        !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale)),
       embeds,
     });
   }
