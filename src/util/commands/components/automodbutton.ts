@@ -162,7 +162,7 @@ export function getEditNameButton(locale: string, disabled = false) {
   return new ButtonBuilder()
     .setCustomId(automodButtonsCustomId.editName)
     .setDisabled(disabled)
-    .setLabel(t("automodEditName", locale))
+    .setLabel(t("automodRuleEditName", locale))
     .setStyle(ButtonStyle.Secondary);
 }
 

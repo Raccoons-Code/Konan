@@ -147,7 +147,7 @@ export default class extends ButtonCommand {
             .addComponents([
               new TextInputBuilder()
                 .setCustomId("name")
-                .setLabel(t("automodEditName", interaction.locale))
+                .setLabel(t("automodRuleEditName", interaction.locale))
                 .setRequired(true)
                 .setStyle(TextInputStyle.Short)
                 .setValue(title),
