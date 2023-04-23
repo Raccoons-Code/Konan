@@ -87,7 +87,7 @@ export function getEditButtonsByTrigger(
 ) {
   return [[
     getEditNameButton(locale),
-    getTriggersButton(locale),
+    getTriggersButton(locale, true),
     getEventsButton(locale),
     getAddActionButton(locale),
     getRemActionButton(locale),

@@ -17,6 +17,12 @@
       "KeywordPreset": 1,
       "MentionSpam": 1,
       "Spam": 1
+    },
+    "triggerMetadata": {
+      "keywordFilter": 1000,
+      "regexPatterns": 10,
+      "allowList": 1000,
+      "mentionTotalLimit": 50
     }
   },
   "button": {

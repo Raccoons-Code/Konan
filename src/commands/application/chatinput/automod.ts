@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, codeBlock } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, codeBlock } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
@@ -142,13 +142,27 @@ export default class extends ChatInputCommand {
       return 1;
     }
 
-    try {
-      await rule.delete();
-    } catch {
-      await interaction.editReply(t("automodFailToDeleteRule", interaction.locale));
-      return 1;
-    }
+    const embeds = getEmbedFieldsFromRule(rule, interaction.locale);
 
-    await interaction.editReply(t("automodSuccessToDeleteRule", interaction.locale));
+    await interaction.editReply({
+      components: [
+        new ActionRowBuilder<ButtonBuilder>()
+          .addComponents([
+            new ButtonBuilder()
+              .setCustomId(JSON.stringify({ c: "automod", sc: "delete" }))
+              .setEmoji("🚮")
+              .setStyle(ButtonStyle.Danger),
+          ]),
+      ],
+      content: t("automodConfirmDelete", interaction.locale),
+      embeds: [
+        new EmbedBuilder(embeds[0])
+          .setFooter({
+            text: rule.id,
+          }),
+        new EmbedBuilder(embeds[1])
+          .setTitle(t("automodActions", interaction.locale)),
+      ],
+    });
   }
 }

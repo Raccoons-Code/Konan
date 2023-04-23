@@ -93,6 +93,13 @@ export default class extends SelectMenuCommand {
       }
 
       case AutoModerationActionType.Timeout: {
+        const userPerms = interaction.memberPermissions.missing("ModerateMembers");
+
+        if (userPerms.length) {
+          await this.replyMissingPermission(interaction, userPerms, "missingUserPermission");
+          return 1;
+        }
+
         const customId = JSON.stringify({
           c: "automod",
           sc: "setTimeoutAction",

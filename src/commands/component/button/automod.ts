@@ -488,6 +488,40 @@ export default class extends ButtonCommand {
     });
   }
 
+  async delete(interaction: ButtonInteraction<"cached">) {
+    const [embed] = interaction.message.embeds;
+
+    const ruleId = embed.data?.footer?.text ?? embed.footer?.text;
+
+    const rule = interaction.guild.autoModerationRules.cache.get(ruleId!);
+
+    if (!rule) {
+      await interaction.editReply({
+        content: t("automodRule404", interaction.locale),
+        components: [],
+        embeds: [],
+      });
+      return 1;
+    }
+
+    try {
+      await rule.delete();
+    } catch {
+      await interaction.editReply({
+        components: [],
+        content: t("automodFailToDeleteRule", interaction.locale),
+        embeds: [],
+      });
+      return 1;
+    }
+
+    await interaction.editReply({
+      components: [],
+      content: t("automodSuccessToDeleteRule", interaction.locale),
+      embeds: [],
+    });
+  }
+
   async toggle(interaction: ButtonInteraction<"cached">) {
     const parsedId = JSON.parse(interaction.customId);
 
