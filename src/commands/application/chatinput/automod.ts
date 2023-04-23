@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AutoModerationActionType, AutoModerationRuleCreateOptions, AutoModerationRuleEventType, AutoModerationRuleKeywordPresetType, AutoModerationRuleTriggerType, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits } from "discord.js";
+import { ActionRowBuilder, AutoModerationActionType, AutoModerationRuleCreateOptions, AutoModerationRuleEventType, AutoModerationRuleKeywordPresetType, AutoModerationRuleTriggerType, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, codeBlock } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
@@ -50,17 +50,17 @@ export default class extends ChatInputCommand {
       components: [
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
-            getSuccessButton(true),
-            getCancelButton(),
-            getToggleButton(interaction.locale),
+            getEditNameButton(interaction.locale),
+            getTriggersButton(interaction.locale),
+            getEventsButton(interaction.locale),
             getAddActionButton(interaction.locale),
             getRemActionButton(interaction.locale),
           ]),
         new ActionRowBuilder<ButtonBuilder>()
           .addComponents([
-            getEditNameButton(interaction.locale),
-            getTriggersButton(interaction.locale),
-            getEventsButton(interaction.locale),
+            getSuccessButton(true),
+            getCancelButton(),
+            getToggleButton(interaction.locale),
             getExemptChannelsButton(interaction.locale),
             getExemptRolesButton(interaction.locale),
           ]),
@@ -75,12 +75,13 @@ export default class extends ChatInputCommand {
       ],
       embeds: [
         new EmbedBuilder()
+          .setDescription(codeBlock(`${t("required")} *`))
           .addFields(configEmbedFields[0].map(field => ({
             name: t(field.name, interaction.locale),
             value: field.value,
           }))),
         new EmbedBuilder()
-          .setTitle("Automod Actions")
+          .setTitle(t("automodActions", interaction.locale))
           .addFields(configEmbedFields[1].map(field => ({
             name: t(field.name, interaction.locale),
             value: field.value,

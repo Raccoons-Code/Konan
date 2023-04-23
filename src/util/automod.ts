@@ -9,6 +9,27 @@ export type ActionTypeString = keyof typeof AutoModerationActionType;
 
 export type KeywordPresetTypeString = keyof typeof AutoModerationRuleKeywordPresetType;
 
+export const actionTypesByTrigger = {
+  [AutoModerationRuleTriggerType.Keyword]: [
+    AutoModerationActionType.BlockMessage,
+    AutoModerationActionType.SendAlertMessage,
+    AutoModerationActionType.Timeout,
+  ],
+  [AutoModerationRuleTriggerType.Spam]: [
+    AutoModerationActionType.BlockMessage,
+    AutoModerationActionType.SendAlertMessage,
+  ],
+  [AutoModerationRuleTriggerType.KeywordPreset]: [
+    AutoModerationActionType.BlockMessage,
+    AutoModerationActionType.SendAlertMessage,
+  ],
+  [AutoModerationRuleTriggerType.MentionSpam]: [
+    AutoModerationActionType.BlockMessage,
+    AutoModerationActionType.SendAlertMessage,
+    AutoModerationActionType.Timeout,
+  ],
+};
+
 export const TriggerLimits: Record<AutoModerationRuleTriggerType, number> = {
   [AutoModerationRuleTriggerType.Keyword]: 6,
   [AutoModerationRuleTriggerType.Spam]: 1,
@@ -41,8 +62,11 @@ export function getEventTypes() {
   return getEnumKeys(AutoModerationRuleEventType);
 }
 
-export function getActionTypes() {
-  return getEnumKeys(AutoModerationActionType);
+export function getActionTypes(
+  triggerType: AutoModerationRuleTriggerType,
+) {
+  const actions = actionTypesByTrigger[triggerType];
+  return <ActionTypeString[]>actions.map(t => AutoModerationActionType[t]);
 }
 
 export function getKeywordPresetTypes() {

@@ -1,4 +1,4 @@
-import { ButtonBuilder, ButtonStyle } from "discord.js";
+import { AutoModerationRuleTriggerType, ButtonBuilder, ButtonStyle } from "discord.js";
 import { t } from "../../../translator";
 
 const c = "automod";
@@ -16,6 +16,52 @@ export const automodButtonsCustomId = {
   setMentionTotalLimit: JSON.stringify({ c, sc: "setMentionTotalLimit" }),
   setRegexPatterns: JSON.stringify({ c, sc: "setRegexPatterns" }),
   setTriggerType: JSON.stringify({ c, sc: "setTriggerType" }),
+};
+
+export const automodToggleButtonsByTrigger = {
+  [AutoModerationRuleTriggerType.Keyword]: {
+    enable: [
+      automodButtonsCustomId.setAllowList,
+      automodButtonsCustomId.setKeywordFilter,
+      automodButtonsCustomId.setRegexPatterns,
+    ],
+    disable: [
+      automodButtonsCustomId.setKeywordPresets,
+      automodButtonsCustomId.setMentionTotalLimit,
+    ],
+  },
+  [AutoModerationRuleTriggerType.KeywordPreset]: {
+    enable: [
+      automodButtonsCustomId.setAllowList,
+      automodButtonsCustomId.setKeywordPresets,
+    ],
+    disable: [
+      automodButtonsCustomId.setKeywordFilter,
+      automodButtonsCustomId.setMentionTotalLimit,
+      automodButtonsCustomId.setRegexPatterns,
+    ],
+  },
+  [AutoModerationRuleTriggerType.MentionSpam]: {
+    enable: [
+      automodButtonsCustomId.setMentionTotalLimit,
+    ],
+    disable: [
+      automodButtonsCustomId.setAllowList,
+      automodButtonsCustomId.setKeywordFilter,
+      automodButtonsCustomId.setKeywordPresets,
+      automodButtonsCustomId.setRegexPatterns,
+    ],
+  },
+  [AutoModerationRuleTriggerType.Spam]: {
+    enable: [],
+    disable: [
+      automodButtonsCustomId.setAllowList,
+      automodButtonsCustomId.setKeywordFilter,
+      automodButtonsCustomId.setKeywordPresets,
+      automodButtonsCustomId.setMentionTotalLimit,
+      automodButtonsCustomId.setRegexPatterns,
+    ],
+  },
 };
 
 export function getSuccessButton(disabled = false) {
@@ -39,7 +85,7 @@ export function getAddActionButton(locale: string, disabled = false) {
     .setCustomId(automodButtonsCustomId.addAction)
     .setDisabled(disabled)
     .setLabel(t("automodAddAction", locale))
-    .setStyle(ButtonStyle.Secondary);
+    .setStyle(ButtonStyle.Primary);
 }
 
 export function getRemActionButton(locale: string, disabled = false) {
@@ -71,7 +117,7 @@ export function getEventsButton(locale: string, disabled = false) {
     .setCustomId(automodButtonsCustomId.setEventType)
     .setDisabled(disabled)
     .setLabel(t("automodEventType", locale))
-    .setStyle(ButtonStyle.Secondary);
+    .setStyle(ButtonStyle.Primary);
 }
 
 export function getExemptChannelsButton(locale: string, disabled = false) {
@@ -125,7 +171,7 @@ export function getRegexPatternsButton(locale: string, disabled = false) {
 export function getToggleButton(locale: string, disabled = false) {
   return new ButtonBuilder()
     .setCustomId(JSON.stringify({ c, sc: "toggle", a: disabled }))
-    .setLabel(t(disabled ? "disabled" : "activated", locale))
+    .setLabel(t(disabled ? "disabled" : "enabled", locale))
     .setStyle(disabled ? ButtonStyle.Danger : ButtonStyle.Success);
 }
 
@@ -134,5 +180,5 @@ export function getTriggersButton(locale: string, disabled = false) {
     .setCustomId(automodButtonsCustomId.setTriggerType)
     .setDisabled(disabled)
     .setLabel(t("automodTriggerType", locale))
-    .setStyle(ButtonStyle.Secondary);
+    .setStyle(ButtonStyle.Primary);
 }

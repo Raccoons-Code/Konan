@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AutoModerationActionType, ButtonInteraction, ButtonStyle, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, AutoModerationActionType, AutoModerationRuleTriggerType, ButtonInteraction, ButtonStyle, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
 import { getActionTypes, getAvailableTriggerTypes, getEventTypes, getKeywordPresetTypes } from "../../../util/automod";
@@ -36,6 +36,18 @@ export default class extends ButtonCommand {
   }
 
   async addAction(interaction: ButtonInteraction<"cached">) {
+    const [embed] = interaction.message.embeds;
+
+    const [triggerField] = embed.fields;
+
+    const [bitString] = triggerField.value.split(" - ");
+
+    const bit = Number(bitString);
+
+    if (!(AutoModerationRuleTriggerType[bit] ?? false)) {
+      return 1;
+    }
+
     const customId = JSON.stringify({
       c: "automod",
       sc: "addAction",
@@ -65,7 +77,7 @@ export default class extends ButtonCommand {
         addSelectOptionsToRows(
           interaction.message.components,
           customId,
-          getAddActionsSelectOptions(getActionTypes(), interaction.locale), {
+          getAddActionsSelectOptions(getActionTypes(bit), interaction.locale), {
           distinct: false,
           maxOptions: 1,
         }),
@@ -79,7 +91,7 @@ export default class extends ButtonCommand {
       a: ComponentType.StringSelect,
     });
 
-    if (interaction.message.components.length === 5 ||
+    if (interaction.message.components.length === 4 ||
       componentsHasRowById(
         interaction.message.components,
         customId,
@@ -178,7 +190,7 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: interaction.message.components.length === 5 ||
+      components: interaction.message.components.length === 4 ||
         componentsHasRowById(
           interaction.message.components,
           customId,
@@ -242,7 +254,7 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: interaction.message.components.length === 5 ||
+      components: interaction.message.components.length === 4 ||
         componentsHasRowById(
           interaction.message.components,
           customId,
@@ -268,7 +280,7 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: interaction.message.components.length === 5 ||
+      components: interaction.message.components.length === 4 ||
         componentsHasRowById(
           interaction.message.components,
           customId,
@@ -294,7 +306,7 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: interaction.message.components.length === 5 ||
+      components: interaction.message.components.length === 4 ||
         componentsHasRowById(
           interaction.message.components,
           customId,
@@ -330,7 +342,7 @@ export default class extends ButtonCommand {
     });
 
     await interaction.editReply({
-      components: interaction.message.components.length === 5 ||
+      components: interaction.message.components.length === 4 ||
         componentsHasRowById(
           interaction.message.components,
           customId,
@@ -359,7 +371,7 @@ export default class extends ButtonCommand {
         interaction.message.components,
         interaction.customId, {
         custom_id: JSON.stringify({ ...parsedId, a: !parsedId.a }),
-        name: parsedId.a ? t("activated") : t("disabled"),
+          name: parsedId.a ? t("enabled") : t("disabled"),
         style: parsedId.a ? ButtonStyle.Success : ButtonStyle.Danger,
       }),
     });
