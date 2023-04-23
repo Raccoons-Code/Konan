@@ -333,7 +333,7 @@ export function getEmbedFieldsFromRule(rule: AutoModerationRule, locale: string)
       }
 
       fields.push({
-        name: field.name,
+        name: t(field.name, locale),
         value,
       });
     }

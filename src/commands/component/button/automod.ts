@@ -361,7 +361,11 @@ export default class extends ButtonCommand {
     const availableTriggers = getAvailableTriggerTypes(rules.values());
 
     if (!availableTriggers.length) {
-      await interaction.editReply(t("automodHasMaxRules", interaction.locale));
+      await interaction.editReply({
+        content: t("automodHasMaxRules", interaction.locale),
+        components: [],
+        embeds: [],
+      });
       return 1;
     }
 
