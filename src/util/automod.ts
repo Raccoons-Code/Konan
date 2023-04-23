@@ -9,7 +9,7 @@ export type ActionTypeString = keyof typeof AutoModerationActionType;
 
 export type KeywordPresetTypeString = keyof typeof AutoModerationRuleKeywordPresetType;
 
-export const actionTypesByTrigger = {
+export const automodActionTypesByTrigger = {
   [AutoModerationRuleTriggerType.Keyword]: [
     AutoModerationActionType.BlockMessage,
     AutoModerationActionType.SendAlertMessage,
@@ -65,7 +65,7 @@ export function getEventTypes() {
 export function getActionTypes(
   triggerType: AutoModerationRuleTriggerType,
 ) {
-  const actions = actionTypesByTrigger[triggerType];
+  const actions = automodActionTypesByTrigger[triggerType];
   return <ActionTypeString[]>actions.map(t => AutoModerationActionType[t]);
 }
 

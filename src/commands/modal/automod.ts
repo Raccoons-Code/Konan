@@ -1,6 +1,9 @@
 import { EmbedBuilder, ModalSubmitInteraction } from "discord.js";
 import ModalSubmit from "../../structures/ModalSubmit";
 import { t } from "../../translator";
+import { automodSuccessButtonCustomId } from "../../util/commands/components/automodbutton";
+import { toggleButtons } from "../../util/commands/components/button";
+import { embedsHasRequiredFieldsByTrigger } from "../../util/commands/embeds/automod";
 
 
 export default class extends ModalSubmit {
@@ -52,9 +55,16 @@ export default class extends ModalSubmit {
         .setTitle(name),
     );
 
-    const embeds = interaction.message?.embeds;
+    const embeds = interaction.message?.embeds ?? [];
 
-    await interaction.editReply({ embeds });
+    await interaction.editReply({
+      components: toggleButtons(
+        interaction.message?.components ?? [],
+        automodSuccessButtonCustomId,
+        !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale),
+      ),
+      embeds,
+    });
 
     return;
   }
@@ -74,9 +84,16 @@ export default class extends ModalSubmit {
         }),
     );
 
-    const embeds = interaction.message?.embeds;
+    const embeds = interaction.message?.embeds ?? [];
 
-    await interaction.editReply({ embeds });
+    await interaction.editReply({
+      components: toggleButtons(
+        interaction.message?.components ?? [],
+        automodSuccessButtonCustomId,
+        !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale),
+      ),
+      embeds,
+    });
 
     return;
   }
@@ -96,9 +113,16 @@ export default class extends ModalSubmit {
         }),
     );
 
-    const embeds = interaction.message?.embeds;
+    const embeds = interaction.message?.embeds ?? [];
 
-    await interaction.editReply({ embeds });
+    await interaction.editReply({
+      components: toggleButtons(
+        interaction.message?.components ?? [],
+        automodSuccessButtonCustomId,
+        !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale),
+      ),
+      embeds,
+    });
 
     return;
   }
@@ -120,9 +144,16 @@ export default class extends ModalSubmit {
         }),
     );
 
-    const embeds = interaction.message?.embeds;
+    const embeds = interaction.message?.embeds ?? [];
 
-    await interaction.editReply({ embeds });
+    await interaction.editReply({
+      components: toggleButtons(
+        interaction.message?.components ?? [],
+        automodSuccessButtonCustomId,
+        !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale),
+      ),
+      embeds,
+    });
 
     return;
   }
@@ -165,9 +196,16 @@ export default class extends ModalSubmit {
         }),
     );
 
-    const embeds = interaction.message?.embeds;
+    const embeds = interaction.message?.embeds ?? [];
 
-    await interaction.editReply({ embeds });
+    await interaction.editReply({
+      components: toggleButtons(
+        interaction.message?.components ?? [],
+        automodSuccessButtonCustomId,
+        !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale),
+      ),
+      embeds,
+    });
 
     return;
   }

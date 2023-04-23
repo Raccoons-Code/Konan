@@ -18,6 +18,11 @@ export const automodButtonsCustomId = {
   setTriggerType: JSON.stringify({ c, sc: "setTriggerType" }),
 };
 
+export const automodSuccessButtonCustomId = JSON.stringify({
+  c,
+  sc: "success",
+});
+
 export const automodToggleButtonsByTrigger = {
   [AutoModerationRuleTriggerType.Keyword]: {
     enable: [
@@ -66,7 +71,7 @@ export const automodToggleButtonsByTrigger = {
 
 export function getSuccessButton(disabled = false) {
   return new ButtonBuilder()
-    .setCustomId(JSON.stringify({ c, sc: "success" }))
+    .setCustomId(automodSuccessButtonCustomId)
     .setDisabled(disabled)
     .setEmoji("✅")
     .setStyle(ButtonStyle.Success);
