@@ -4,6 +4,7 @@ import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
 import { getAddActionButton, getAllowListButton, getCancelButton, getEditButtonsByTrigger, getEditNameButton, getEventsButton, getExemptChannelsButton, getExemptRolesButton, getKeywordFilterButton, getKeywordPresetsButton, getMentionTotalLimitButton, getRegexPatternsButton, getRemActionButton, getSuccessButton, getToggleButton, getTriggersButton } from "../../../util/commands/components/automodbutton";
 import { configEmbedFields, getEmbedFieldsFromRule } from "../../../util/commands/embeds/automod";
+import { getLocalizations } from "../../../util/utils";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -14,25 +15,37 @@ export default class extends ChatInputCommand {
     });
 
     this.data.setName("automod")
-      .setDescription("Setup automod system");
+      .setDescription("Setup automod system.");
   }
 
   build() {
     this.data
       .setDMPermission(false)
       .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+      .setNameLocalizations(getLocalizations("automodName"))
+      .setDescriptionLocalizations(getLocalizations("automodDescription"))
       .addSubcommand(subcommand => subcommand.setName("create")
-        .setDescription("Create automod rule"))
+        .setDescription("Create automod rule.")
+        .setNameLocalizations(getLocalizations("automodCreateName"))
+        .setDescriptionLocalizations(getLocalizations("automodCreateDescription")))
       .addSubcommand(subcommand => subcommand.setName("edit")
-        .setDescription("Edit automod rule")
+        .setDescription("Edit automod rule.")
+        .setNameLocalizations(getLocalizations("automodEditName"))
+        .setDescriptionLocalizations(getLocalizations("automodEditDescription"))
         .addStringOption(option => option.setName("rule")
-          .setDescription("Select a rule")
+          .setDescription("Select a rule.")
+          .setNameLocalizations(getLocalizations("automodEditRuleName"))
+          .setDescriptionLocalizations(getLocalizations("automodEditRuleDescription"))
           .setAutocomplete(true)
           .setRequired(true)))
       .addSubcommand(subcommand => subcommand.setName("delete")
-        .setDescription("Delete automod rule")
+        .setDescription("Delete automod rule.")
+        .setNameLocalizations(getLocalizations("automodDeleteName"))
+        .setDescriptionLocalizations(getLocalizations("automodDeleteDescription"))
         .addStringOption(option => option.setName("rule")
-          .setDescription("Select a rule")
+          .setDescription("Select a rule.")
+          .setNameLocalizations(getLocalizations("automodDeleteRuleName"))
+          .setDescriptionLocalizations(getLocalizations("automodDeleteRuleDescription"))
           .setAutocomplete(true)
           .setRequired(true)));
   }

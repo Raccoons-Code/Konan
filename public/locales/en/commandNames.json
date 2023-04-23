@@ -1,4 +1,10 @@
 {
+  "automodName": "automod",
+  "automodCreateName": "create",
+  "automodEditName": "edit",
+  "automodEditRuleName": "rule",
+  "automodDeleteName": "delete",
+  "automodDeleteRuleName": "rule",
   "avatarName": "avatar",
   "avatarUserName": "user",
   "backupName": "backup",
