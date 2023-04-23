@@ -1,0 +1,10 @@
+{
+  "Keyword": "Palavra-chave",
+  "KeywordDescription": "Verifique se o conteúdo contém palavras de uma lista de palavras-chave definida pelo usuário (Máximo de 6 por servidor).",
+  "KeywordPreset": "Predefinição de palavras-chave",
+  "KeywordPresetDescription": "Verifique se o conteúdo contém palavras de conjuntos de palavras predefinidos internos (Máximo de 1 por servidor).",
+  "MentionSpam": "Spam de Menção",
+  "MentionSpamDescription": "Verifique se o conteúdo contém mais menções do que o permitido (Máximo de 1 por servidor).",
+  "Spam": "Spam",
+  "SpamDescription": "Verifique se o conteúdo representa spam genérico (Máximo de 1 por servidor)."
+}

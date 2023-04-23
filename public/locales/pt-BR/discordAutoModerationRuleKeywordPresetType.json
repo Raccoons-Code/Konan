@@ -1,0 +1,8 @@
+{
+  "Profanity": "Obscenity",
+  "ProfanityDescription": "Palavras que podem ser consideradas formas de palavrões ou xingamentos.",
+  "SexualContent": "Conteúdo Sexual",
+  "SexualContentDescription": "Palavras que se referem a comportamento ou atividade sexualmente explícito.",
+  "Slurs": "Insultos",
+  "SlursDescription": "Insultos pessoais ou palavras que possam ser consideradas discurso de ódio."
+}

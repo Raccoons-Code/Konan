@@ -13,7 +13,7 @@
   "andNMore": "... and {{n}} more.",
   "automodActions": "Automod Actions *",
   "automodAddAction": "Add Action *",
-  "automodAllowList": "Allow List",
+  "automodAllowList": "Allowed Word List.",
   "automodConfirmDelete": "Are you sure you want to delete this Automod rule?",
   "automodEditName": "Edit Name *",
   "automodEventType": "Event Type *",

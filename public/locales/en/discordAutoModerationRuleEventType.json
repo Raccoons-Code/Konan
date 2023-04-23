@@ -1,4 +1,4 @@
 {
   "MessageSend": "Message Send",
-  "MessageSendDescription": "When a member sends or edits a message in the guild."
+  "MessageSendDescription": "When a member sends or edits a message in the server."
 }

@@ -2,7 +2,7 @@
   "BlockMessage": "Block Message",
   "BlockMessageDescription": "Blocks a member's message and prevents it from being posted.",
   "SendAlertMessage": "Send Alert Message",
-  "SendAlertMessageDescription": "Logs user content to a specified channel",
+  "SendAlertMessageDescription": "Logs user content to a specified channel.",
   "Timeout": "Timeout",
-  "TimeoutDescription": "Timeout user for specified duration"
+  "TimeoutDescription": "Timeout user for specified duration."
 }
