@@ -1,4 +1,4 @@
-import { ActionRow, APIRole, ButtonStyle, ComponentType, MessageActionRowComponent, Role } from "discord.js";
+import { ActionRow, APIActionRowComponent, APIActionRowComponentTypes, APIButtonComponentWithCustomId, APIChannelSelectComponent, APIMentionableSelectComponent, APIRole, APIRoleSelectComponent, APIStringSelectComponent, APITextInputComponent, APIUserSelectComponent, ButtonStyle, ComponentType, JSONEncodable, MessageActionRowComponent, Role } from "discord.js";
 import { ButtonRolesCustomId, SelectRolesOptionValue } from "../../../@types";
 import { JSONparse } from "../../utils";
 
@@ -103,6 +103,29 @@ export function filterCustomId(
   }
 
   return customIds;
+}
+
+export function getComponentById(
+  components: JSONEncodable<APIActionRowComponent<APIActionRowComponentTypes>>[],
+  customId: string | string[],
+) {
+  if (!Array.isArray(customId)) customId = [customId];
+
+  let component:
+    | APIButtonComponentWithCustomId
+    | APIStringSelectComponent
+    | APIUserSelectComponent
+    | APIRoleSelectComponent
+    | APIMentionableSelectComponent
+    | APIChannelSelectComponent
+    | APITextInputComponent
+    | undefined;
+
+  components.some(row =>
+    row.toJSON().components.some(element =>
+      "custom_id" in element && customId.includes(element.custom_id) && (component = element)));
+
+  return component;
 }
 
 export function getMessageComponentsAmount(

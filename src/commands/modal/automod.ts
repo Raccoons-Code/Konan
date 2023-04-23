@@ -38,9 +38,16 @@ export default class extends ModalSubmit {
         }),
     );
 
-    const embeds = interaction.message?.embeds;
+    const embeds = interaction.message?.embeds ?? [];
 
-    await interaction.editReply({ embeds });
+    await interaction.editReply({
+      components: toggleButtons(
+        interaction.message?.components ?? [],
+        automodSuccessButtonCustomId,
+        !embedsHasRequiredFieldsByTrigger(embeds, interaction.locale),
+      ),
+      embeds,
+    });
 
     return;
   }

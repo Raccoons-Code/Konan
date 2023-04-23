@@ -34,6 +34,10 @@ export const automodToggleButtonsByTrigger = {
       automodButtonsCustomId.setKeywordPresets,
       automodButtonsCustomId.setMentionTotalLimit,
     ],
+    required: [
+      automodButtonsCustomId.setKeywordFilter,
+      automodButtonsCustomId.setRegexPatterns,
+    ],
   },
   [AutoModerationRuleTriggerType.KeywordPreset]: {
     enable: [
@@ -44,6 +48,9 @@ export const automodToggleButtonsByTrigger = {
       automodButtonsCustomId.setKeywordFilter,
       automodButtonsCustomId.setMentionTotalLimit,
       automodButtonsCustomId.setRegexPatterns,
+    ],
+    required: [
+      automodButtonsCustomId.setKeywordPresets,
     ],
   },
   [AutoModerationRuleTriggerType.MentionSpam]: {
@@ -56,6 +63,9 @@ export const automodToggleButtonsByTrigger = {
       automodButtonsCustomId.setKeywordPresets,
       automodButtonsCustomId.setRegexPatterns,
     ],
+    required: [
+      automodButtonsCustomId.setMentionTotalLimit,
+    ],
   },
   [AutoModerationRuleTriggerType.Spam]: {
     enable: [],
@@ -66,6 +76,7 @@ export const automodToggleButtonsByTrigger = {
       automodButtonsCustomId.setMentionTotalLimit,
       automodButtonsCustomId.setRegexPatterns,
     ],
+    required: [],
   },
 };
 
@@ -175,7 +186,7 @@ export function getRegexPatternsButton(locale: string, disabled = false) {
 
 export function getToggleButton(locale: string, disabled = false) {
   return new ButtonBuilder()
-    .setCustomId(JSON.stringify({ c, sc: "toggle", a: disabled }))
+    .setCustomId(JSON.stringify({ c, sc: "toggle", a: !disabled }))
     .setLabel(t(disabled ? "disabled" : "enabled", locale))
     .setStyle(disabled ? ButtonStyle.Danger : ButtonStyle.Success);
 }

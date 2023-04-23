@@ -1,13 +1,14 @@
-import { ActionRowBuilder, AutoModerationActionType, AutoModerationRuleTriggerType, ButtonInteraction, ButtonStyle, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { APIButtonComponentWithCustomId, ActionRowBuilder, AutoModerationActionType, AutoModerationRuleTriggerType, ButtonInteraction, ButtonStyle, ComponentType, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
 import { getActionTypes, getAvailableTriggerTypes, getEventTypes, getKeywordPresetTypes } from "../../../util/automod";
 import { getAddActionsSelectOptions, getEventsSelectOptions, getKeywordPresetsSelectOptions, getTriggersSelectOptions } from "../../../util/commands/components/automodselect";
 import { editButtonById } from "../../../util/commands/components/button";
 import { addSelectMenuByType, addSelectOptionsToRows, removeSelectMenuById } from "../../../util/commands/components/selectmenu";
-import { componentsHasRowById } from "../../../util/commands/components/utils";
-import { configEmbedFields } from "../../../util/commands/embeds/automod";
+import { componentsHasRowById, getComponentById } from "../../../util/commands/components/utils";
+import { configEmbedFields, getEmbedFieldsValues } from "../../../util/commands/embeds/automod";
 import { getEmbedFields, getSelectOptionsFromEmbedFields } from "../../../util/commands/embeds/utils";
+import { JSONparse } from "../../../util/utils";
 
 export default class extends ButtonCommand {
   readonly nonDefer = ["editName", "setAllowList", "setKeywordFilter", "setMentionTotalLimit", "setRegexPatterns"];
@@ -45,6 +46,10 @@ export default class extends ButtonCommand {
     const bit = Number(bitString);
 
     if (!(AutoModerationRuleTriggerType[bit] ?? false)) {
+      await interaction.followUp({
+        content: t("automodTriggerIsRequired", interaction.locale),
+        ephemeral: true,
+      });
       return 1;
     }
 
@@ -142,7 +147,7 @@ export default class extends ButtonCommand {
                 .setRequired(true)
                 .setStyle(TextInputStyle.Short),
             ]),
-      ),
+        ),
     );
   }
 
@@ -157,7 +162,7 @@ export default class extends ButtonCommand {
               new TextInputBuilder()
                 .setCustomId("allowList")
                 .setLabel(t("automodAllowList", interaction.locale))
-                .setRequired(true)
+                .setRequired(false)
                 .setStyle(TextInputStyle.Paragraph),
             ]),
         ),
@@ -175,7 +180,7 @@ export default class extends ButtonCommand {
               new TextInputBuilder()
                 .setCustomId("keywordFilter")
                 .setLabel(t("automodKeywordFilter", interaction.locale))
-                .setRequired(true)
+                .setRequired(false)
                 .setStyle(TextInputStyle.Paragraph),
             ]),
         ),
@@ -239,7 +244,7 @@ export default class extends ButtonCommand {
               new TextInputBuilder()
                 .setCustomId("regexPatterns")
                 .setLabel(t("automodRegexPatterns", interaction.locale))
-                .setRequired(true)
+                .setRequired(false)
                 .setStyle(TextInputStyle.Paragraph),
             ]),
         ),
@@ -363,6 +368,45 @@ export default class extends ButtonCommand {
     return;
   }
 
+  async success(interaction: ButtonInteraction<"cached">) {
+    const [embed] = interaction.message.embeds;
+
+    const button = getComponentById(
+      interaction.message.components, [
+      JSON.stringify({ c: "automod", sc: "toggle", a: true }),
+      JSON.stringify({ c: "automod", sc: "toggle", a: false }),
+    ]) as APIButtonComponentWithCustomId;
+
+    const parsedId = JSONparse(button.custom_id);
+
+    const metadata = getEmbedFieldsValues(interaction.message.embeds);
+
+    try {
+      await interaction.guild.autoModerationRules.create({
+        ...metadata,
+        name: embed.title ||
+          embed.data.title ||
+          embed.toJSON().title ||
+          `${interaction.user.tag}: Automod`,
+        reason: `${interaction.user.tag}: Automod`,
+        enabled: parsedId?.a ?? true,
+      });
+    } catch (error) {
+      await interaction.editReply({
+        components: [],
+        content: t("fail", interaction.locale),
+        embeds: [],
+      });
+      throw error;
+    }
+
+    await interaction.editReply({
+      components: [],
+      content: t("success", interaction.locale),
+      embeds: [],
+    });
+  }
+
   async toggle(interaction: ButtonInteraction<"cached">) {
     const parsedId = JSON.parse(interaction.customId);
 
@@ -371,8 +415,8 @@ export default class extends ButtonCommand {
         interaction.message.components,
         interaction.customId, {
         custom_id: JSON.stringify({ ...parsedId, a: !parsedId.a }),
-          name: parsedId.a ? t("enabled") : t("disabled"),
-        style: parsedId.a ? ButtonStyle.Success : ButtonStyle.Danger,
+        name: parsedId.a ? t("disabled") : t("enabled"),
+        style: parsedId.a ? ButtonStyle.Danger : ButtonStyle.Success,
       }),
     });
   }

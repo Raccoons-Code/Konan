@@ -27,6 +27,7 @@
   "automodRegexPatterns": "Regex Patterns",
   "automodRemAction": "Remove Action",
   "automodTriggerType": "Trigger Type *",
+  "automodTriggerIsRequired": "Trigger is Required!",
   "backup404": "Could not find the backup.",
   "backupDeleted": "Backup successfully deleted.",
   "backupError": "Unable to backup!",

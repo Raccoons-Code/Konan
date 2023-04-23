@@ -1,0 +1,3 @@
+{
+  "automodHelpText": "Automod Setup\n\n1 - Define the name of the rule (1st button)\n2 - Set the trigger type (2nd button)\n3 - Define the type of event (3rd button)\n4 - Define an action (4th button)\n5-\n- If trigger is Keyword, set Keyword Filter or Regex Pattern.\n- If the trigger is Keyword Presets, set the Keyword Filter.\n- If the trigger is MentionSpam, set Mention Total Limit.\n\nTo complete, click the ✅ button."
+}

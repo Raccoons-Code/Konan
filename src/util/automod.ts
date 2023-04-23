@@ -30,6 +30,22 @@ export const automodActionTypesByTrigger = {
   ],
 };
 
+export const automodMetadataByTrigger: Record<AutoModerationRuleTriggerType, string[]> = {
+  [AutoModerationRuleTriggerType.Keyword]: [
+    "allowList",
+    "keywordFilter",
+    "regexPatterns",
+  ],
+  [AutoModerationRuleTriggerType.Spam]: [],
+  [AutoModerationRuleTriggerType.KeywordPreset]: [
+    "allowList",
+    "keywordFilter",
+  ],
+  [AutoModerationRuleTriggerType.MentionSpam]: [
+    "mentionTotalLimit",
+  ],
+};
+
 export const TriggerLimits: Record<AutoModerationRuleTriggerType, number> = {
   [AutoModerationRuleTriggerType.Keyword]: 6,
   [AutoModerationRuleTriggerType.Spam]: 1,
@@ -62,13 +78,16 @@ export function getEventTypes() {
   return getEnumKeys(AutoModerationRuleEventType);
 }
 
-export function getActionTypes(
-  triggerType: AutoModerationRuleTriggerType,
-) {
+export function getActionTypes(triggerType: AutoModerationRuleTriggerType) {
   const actions = automodActionTypesByTrigger[triggerType];
   return <ActionTypeString[]>actions.map(t => AutoModerationActionType[t]);
 }
 
 export function getKeywordPresetTypes() {
   return getEnumKeys(AutoModerationRuleKeywordPresetType);
+}
+
+export function getRequiredMetadataByTrigger(triggerType: AutoModerationRuleTriggerType) {
+  return automodMetadataByTrigger[triggerType]
+    .filter(key => !["allowList"].includes(key));
 }

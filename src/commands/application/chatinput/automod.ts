@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AutoModerationActionType, AutoModerationRuleCreateOptions, AutoModerationRuleEventType, AutoModerationRuleKeywordPresetType, AutoModerationRuleTriggerType, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, codeBlock } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, codeBlock } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
 import { getAvailableTriggerTypes } from "../../../util/automod";
@@ -75,7 +75,7 @@ export default class extends ChatInputCommand {
       ],
       embeds: [
         new EmbedBuilder()
-          .setDescription(codeBlock(`${t("required")} *`))
+          .setDescription(codeBlock(`${t("automodHelpText", interaction.locale)}\n\n${t("required", interaction.locale)} *`))
           .addFields(configEmbedFields[0].map(field => ({
             name: t(field.name, interaction.locale),
             value: field.value,
@@ -89,80 +89,6 @@ export default class extends ChatInputCommand {
       ],
     });
 
-    const _ = <AutoModerationRuleCreateOptions>{
-      actions: [{
-        type: AutoModerationActionType.BlockMessage,
-        metadata: {
-          channel: "",
-          customMessage: null,
-          durationSeconds: null,
-        },
-      }, {
-        type: AutoModerationActionType.SendAlertMessage,
-        metadata: {
-          channel: "",
-          customMessage: null,
-          durationSeconds: null,
-        },
-      }, {
-        type: AutoModerationActionType.Timeout,
-        metadata: {
-          channel: "",
-          customMessage: null,
-          durationSeconds: null,
-        },
-      }],
-      eventType: AutoModerationRuleEventType.MessageSend,
-      name: "automod 1",
-      triggerType: AutoModerationRuleTriggerType.Keyword,
-      enabled: true,
-      exemptChannels: [],
-      exemptRoles: [],
-      reason: "",
-      triggerMetadata: {
-        allowList: [],
-        keywordFilter: [],
-        mentionTotalLimit: 1,
-        presets: [
-          AutoModerationRuleKeywordPresetType.Profanity,
-          AutoModerationRuleKeywordPresetType.SexualContent,
-          AutoModerationRuleKeywordPresetType.Slurs,
-        ],
-        regexPatterns: [],
-      },
-    };
-
     return;
   }
 }
-
-/*
-interaction.guild.autoModerationRules.create({
-  actions: [{
-    type: AutoModerationActionType.BlockMessage,
-    metadata: {
-      channel: "",
-      customMessage: "",
-      durationSeconds: 1,
-    },
-  }],
-  eventType: AutoModerationRuleEventType.MessageSend,
-  name: "",
-  triggerType: AutoModerationRuleTriggerType.Spam,
-  enabled: true,
-  exemptChannels: [],
-  exemptRoles: [],
-  reason: "",
-  triggerMetadata: {
-    allowList: [],
-    keywordFilter: [],
-    mentionTotalLimit: 1,
-    presets: [
-      AutoModerationRuleKeywordPresetType.Profanity,
-      AutoModerationRuleKeywordPresetType.SexualContent,
-      AutoModerationRuleKeywordPresetType.Slurs,
-    ],
-    regexPatterns: [],
-  },
-});
-*/
