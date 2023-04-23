@@ -141,7 +141,9 @@ export function getEmbedFieldsValues(embeds: Embed[]) {
   const actions: AutoModerationActionOptions[] = [];
 
   for (const field of configEmbedFields[1]) {
-    if (/^ON - /.test(config[field.name]) && "type" in field) {
+    if (!("type" in field)) continue;
+
+    if (/^ON - /.test(config[field.name])) {
       const metadata = <AutoModerationActionMetadataOptions>{};
 
       switch (field.key) {
@@ -171,7 +173,7 @@ export function getEmbedFieldsValues(embeds: Embed[]) {
         case "durationSeconds":
           if (allowedTimeoutActionByTrigger.includes(triggerType)) {
             if (config.durationSeconds !== " ") {
-              metadata.durationSeconds = new ParseMs(config.durationSeconds).result as number;
+              metadata.durationSeconds = (<number>new ParseMs(config.durationSeconds).result) / ParseMs.s;
             } else {
               metadata.durationSeconds = null;
             }
