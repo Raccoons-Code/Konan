@@ -145,7 +145,7 @@ export default class extends ModalSubmit {
 
     interaction.message?.embeds.splice(0, 1,
       <any>new EmbedBuilder(embed.toJSON())
-        .spliceFields(6, 1, {
+        .spliceFields(7, 1, {
           name: t("automodMentionTotalLimit", interaction.locale),
           value: `${mentionTotalLimit}`,
         }),

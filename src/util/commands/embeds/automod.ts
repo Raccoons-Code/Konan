@@ -34,14 +34,14 @@ export const configEmbedFields = [[{
   key: "keywordFilter",
   index: 5,
 }, {
-  name: "automodMentionTotalLimit",
-  value: " ",
-  key: "mentionTotalLimit",
-  index: 6,
-}, {
   name: "automodKeywordPresets",
   value: " ",
   key: "presets",
+  index: 6,
+}, {
+  name: "automodMentionTotalLimit",
+  value: " ",
+  key: "mentionTotalLimit",
   index: 7,
 }, {
   name: "automodRegexPatterns",

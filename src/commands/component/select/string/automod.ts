@@ -212,7 +212,7 @@ export default class extends SelectMenuCommand {
 
     interaction.message.embeds.splice(0, 1,
       <any>new EmbedBuilder(embed.toJSON())
-        .spliceFields(7, 1, {
+        .spliceFields(6, 1, {
           name: t("automodKeywordPresets", interaction.locale),
           value: interaction.values.flatMap(value => {
             const parsedValue = JSON.parse(value);

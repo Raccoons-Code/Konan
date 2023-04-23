@@ -134,6 +134,10 @@ export default class extends ButtonCommand {
   }
 
   async editName(interaction: ButtonInteraction<"cached">) {
+    const [embed] = interaction.message.embeds;
+
+    const title = embed.title || embed.data.title || "";
+
     await interaction.showModal(
       new ModalBuilder()
         .setCustomId(JSON.stringify({ c: "automod", sc: "editName" }))
@@ -145,13 +149,18 @@ export default class extends ButtonCommand {
                 .setCustomId("name")
                 .setLabel(t("automodEditName", interaction.locale))
                 .setRequired(true)
-                .setStyle(TextInputStyle.Short),
+                .setStyle(TextInputStyle.Short)
+                .setValue(title),
             ]),
         ),
     );
   }
 
   async setAllowList(interaction: ButtonInteraction<"cached">) {
+    const [embed] = interaction.message.embeds;
+
+    const value = (embed.fields ?? embed.data.fields).at(4)?.value ?? "";
+
     await interaction.showModal(
       new ModalBuilder()
         .setCustomId(JSON.stringify({ c: "automod", sc: "setAllowList" }))
@@ -163,13 +172,18 @@ export default class extends ButtonCommand {
                 .setCustomId("allowList")
                 .setLabel(t("automodAllowList", interaction.locale))
                 .setRequired(false)
-                .setStyle(TextInputStyle.Paragraph),
+                .setStyle(TextInputStyle.Paragraph)
+                .setValue(value),
             ]),
         ),
     );
   }
 
   async setKeywordFilter(interaction: ButtonInteraction<"cached">) {
+    const [embed] = interaction.message.embeds;
+
+    const value = (embed.fields ?? embed.data.fields).at(5)?.value ?? "";
+
     await interaction.showModal(
       new ModalBuilder()
         .setCustomId(JSON.stringify({ c: "automod", sc: "setKeywordFilter" }))
@@ -181,7 +195,8 @@ export default class extends ButtonCommand {
                 .setCustomId("keywordFilter")
                 .setLabel(t("automodKeywordFilter", interaction.locale))
                 .setRequired(false)
-                .setStyle(TextInputStyle.Paragraph),
+                .setStyle(TextInputStyle.Paragraph)
+                .setValue(value),
             ]),
         ),
     );
@@ -215,6 +230,10 @@ export default class extends ButtonCommand {
   }
 
   async setMentionTotalLimit(interaction: ButtonInteraction<"cached">) {
+    const [embed] = interaction.message.embeds;
+
+    const value = (embed.fields ?? embed.data.fields).at(7)?.value ?? "";
+
     await interaction.showModal(
       new ModalBuilder()
         .setCustomId(JSON.stringify({ c: "automod", sc: "setMentionTotalLimit" }))
@@ -227,13 +246,18 @@ export default class extends ButtonCommand {
                 .setLabel(t("automodMentionTotalLimit", interaction.locale))
                 .setMaxLength(2)
                 .setRequired(true)
-                .setStyle(TextInputStyle.Short),
+                .setStyle(TextInputStyle.Short)
+                .setValue(value),
             ]),
         ),
     );
   }
 
   async setRegexPatterns(interaction: ButtonInteraction<"cached">) {
+    const [embed] = interaction.message.embeds;
+
+    const value = (embed.fields ?? embed.data.fields).at(8)?.value ?? "";
+
     await interaction.showModal(
       new ModalBuilder()
         .setCustomId(JSON.stringify({ c: "automod", sc: "setRegexPatterns" }))
@@ -245,7 +269,8 @@ export default class extends ButtonCommand {
                 .setCustomId("regexPatterns")
                 .setLabel(t("automodRegexPatterns", interaction.locale))
                 .setRequired(false)
-                .setStyle(TextInputStyle.Paragraph),
+                .setStyle(TextInputStyle.Paragraph)
+                .setValue(value),
             ]),
         ),
     );

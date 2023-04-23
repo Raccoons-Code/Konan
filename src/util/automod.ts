@@ -39,7 +39,7 @@ export const automodMetadataByTrigger: Record<AutoModerationRuleTriggerType, str
   [AutoModerationRuleTriggerType.Spam]: [],
   [AutoModerationRuleTriggerType.KeywordPreset]: [
     "allowList",
-    "keywordFilter",
+    "presets",
   ],
   [AutoModerationRuleTriggerType.MentionSpam]: [
     "mentionTotalLimit",
