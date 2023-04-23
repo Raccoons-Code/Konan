@@ -54,10 +54,10 @@ export default class extends SelectMenuCommand {
       await interaction.member.roles.add(roles.add);
     }
 
-    await interaction.member.fetch();
-
-    await this.setComponents(interaction, roles);
-    await this.sendResponse(interaction, roles);
+    await Promise.all([
+      this.setComponents(interaction, roles),
+      this.sendResponse(interaction, roles),
+    ]);
     return;
   }
 

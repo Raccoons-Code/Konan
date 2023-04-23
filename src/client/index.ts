@@ -6,6 +6,8 @@ import WebhookLogger from "./WebhookLogger";
 
 const client = new Client({
   intents: [
+    GatewayIntentBits.AutoModerationConfiguration,
+    GatewayIntentBits.AutoModerationExecution,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.GuildEmojisAndStickers,
     GatewayIntentBits.GuildIntegrations,

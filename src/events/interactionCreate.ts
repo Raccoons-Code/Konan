@@ -21,16 +21,21 @@ client.on("interactionCreate", async function (interaction) {
 
   let execute = true;
 
-  if (command.options.channelAppPermissions && "options" in interaction) {
-    const channel = interaction.options.get("channel")?.channel ??
+  if ((command.options.channelAppPermissions ?? false) && "options" in interaction) {
+    const getChannel = interaction.options.get("channel");
+
+    const channelManager = interaction.guild?.channels ?? client.channels;
+
+    const channel = getChannel?.channel ??
+      channelManager.cache.get(`${getChannel?.value ?? ""}`) ??
       getOptionFromInteractionOptions(interaction.options.data,
         ApplicationCommandOptionType.Channel,
-        interaction.guild?.channels ?? client.channels) ??
+        channelManager) ??
       interaction.channel;
 
-    if (channel && "permissionsFor" in channel) {
+    if ("permissionsFor" in channel) {
       const appChannelPerms = channel.permissionsFor(client.user!)
-        ?.missing(command.options.channelAppPermissions);
+        ?.missing(command.options.channelAppPermissions!);
 
       if (appChannelPerms?.length) {
         execute = false;
@@ -74,7 +79,7 @@ client.on("interactionCreate", async function (interaction) {
 
     try {
       if (!interaction.isAutocomplete()) {
-        if (interaction.isMessageComponent()) {
+        if (interaction.isMessageComponent() || interaction.isModalSubmit()) {
           await interaction.followUp({ components, embeds, ephemeral: true });
         } else if (interaction.deferred || interaction.replied) {
           await interaction.editReply({ components, embeds });

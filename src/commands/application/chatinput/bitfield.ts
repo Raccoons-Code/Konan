@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GatewayIntentBits, GuildMember, inlineCode, IntentsBitField, PermissionFlagsBits, PermissionsBitField, Role, StringSelectMenuOptionBuilder } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
-import { createSelectMenuFromOptions } from "../../../util/commands/components/selectmenu";
+import { createSelectFromOptions } from "../../../util/commands/components/selectmenu";
 import { INTENTS_STRING, PERMISSIONS_STRING } from "../../../util/constants";
 
 export default class extends ChatInputCommand {
@@ -54,10 +54,10 @@ export default class extends ChatInputCommand {
         .setValue(JSON.stringify({ n: `${GatewayIntentBits[key]}`, v: 0 })));
 
     await interaction.editReply({
-      components: createSelectMenuFromOptions(intentsOptions, {
+      components: createSelectFromOptions(intentsOptions, JSON.stringify({
         c: "bitfield",
         sc: "intents",
-      }),
+      })),
       embeds: [
         new EmbedBuilder()
           .setColor("Random")
@@ -102,10 +102,10 @@ export default class extends ChatInputCommand {
         .setLabel(`${t(key, interaction.locale)} #${PermissionFlagsBits[key]}`)
         .setValue(JSON.stringify({ n: `${PermissionFlagsBits[key]}`, v: 0 })));
 
-    const permissionsRows = createSelectMenuFromOptions(permissionsOptions, {
+    const permissionsRows = createSelectFromOptions(permissionsOptions, JSON.stringify({
       c: "bitfield",
       sc: "permissions",
-    });
+    }));
 
     await interaction.editReply({
       components: permissionsRows,

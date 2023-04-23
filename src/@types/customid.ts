@@ -7,6 +7,11 @@ export interface BaseComponentCustomId {
   scg?: string
 }
 
+export interface AutomodEnumOptionValue extends BaseComponentCustomId {
+  bit: number
+  type: string
+}
+
 export interface BanCustomId extends BaseComponentCustomId {
   a: boolean
 }

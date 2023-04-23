@@ -1,0 +1,3 @@
+{
+  "automodHelpText": "Configuração do Automod\n\n1 - Defina o nome da regra (1º botão)\n2 - Defina o tipo de Acionador (2º botão)\n3 - Defina o tipo de evento (3º botão)\n4 - Definir uma ação (4º botão)\n5-\n- Se o Acionador for Palavra-chave, defina Filtro de palavra-chave ou Padrão de Regex.\n- Se o Acionador for Predefinições de palavras-chave, defina o Filtro de palavras-chave.\n- Se o Acionador for Spam de Menção, defina Limite Total de Menções.\n\nPara concluir, clique no botão ✅."
+}

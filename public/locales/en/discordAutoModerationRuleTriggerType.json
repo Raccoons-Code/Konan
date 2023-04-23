@@ -1,0 +1,10 @@
+{
+  "Keyword": "Keyword",
+  "KeywordDescription": "Check if content contains words from a user defined list of keywords (Maximum of 6 per guild).",
+  "KeywordPreset": "Keyword Preset",
+  "KeywordPresetDescription": "Check if content contains words from internal pre-defined wordsets (Maximum of 1 per guild).",
+  "MentionSpam": "Mention Spam",
+  "MentionSpamDescription": "Check if content contains more mentions than allowed (Maximum of 1 per guild).",
+  "Spam": "Spam",
+  "SpamDescription": "Check if content represents generic spam (Maximum of 1 per guild)."
+}

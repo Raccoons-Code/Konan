@@ -1,0 +1,8 @@
+{
+  "BlockMessage": "Bloquear Mensagem",
+  "BlockMessageDescription": "Bloqueia a mensagem de um membro e impede que ela seja postada.",
+  "SendAlertMessage": "Enviar Mensagem de Alerta",
+  "SendAlertMessageDescription": "Registra o conteúdo do usuário em um canal especificado.",
+  "Timeout": "Silenciar",
+  "TimeoutDescription": "Silenciar o usuário pela duração especificada."
+}

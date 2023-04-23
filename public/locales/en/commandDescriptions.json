@@ -1,4 +1,10 @@
 {
+  "automodDescription": "Setup automod system.",
+  "automodCreateDescription": "Create automod rule.",
+  "automodEditDescription": "Edit automod rule.",
+  "automodEditRuleDescription": "Select a rule.",
+  "automodDeleteDescription": "Delete automod rule.",
+  "automodDeleteRuleDescription": "Select a rule.",
   "avatarDescription": "Replies with the user's profile picture.",
   "avatarUserDescription": "Select a user to get their profile picture.",
   "backupDescription": "Make backup for your server - Powered by Discord Backup.",
