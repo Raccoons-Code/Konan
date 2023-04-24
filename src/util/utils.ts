@@ -216,12 +216,15 @@ export function makeTable<T extends [any, any]>(array: T[], sep = " : ") {
   return array.reduce((acc, arr) => `${acc}${arr[0].padEnd(greaterLength)}${sep}${arr[1]}\n`, "");
 }
 
-export function mathRandom<T>(length: number | T[] | Set<T> | Map<string, T>) {
+export function mathRandom<T extends number>(x: T): number;
+export function mathRandom<T>(length: T[]): number;
+export function mathRandom<T>(size: Set<T> | Map<string, T>): number;
+export function mathRandom<T>(xls: number | T[] | Set<T> | Map<string, T>) {
   const num =
-    typeof length === "number" ? length :
-      "length" in length ? length.length :
-        "size" in length ? length.size :
-          length;
+    typeof xls === "number" ? xls :
+      "length" in xls ? xls.length :
+        "size" in xls ? xls.size :
+          xls;
 
   return Math.floor(Math.random() * (isNaN(num) ? 0 : num));
 }
