@@ -1,9 +1,9 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder } from "discord.js";
 import ms from "ms";
+import cache from "../../../modules/Cache";
 import ButtonCommand from "../../../structures/ButtonCommand";
 import { t } from "../../../translator";
 import Ban from "../../../util/Ban";
-import cache from "../../../modules/Cache";
 
 export default class extends ButtonCommand {
   constructor() {
