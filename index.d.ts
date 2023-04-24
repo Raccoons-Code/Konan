@@ -4,6 +4,7 @@ declare namespace NodeJS {
     DISCORD_APPLICATION_ID?: string
     DISCORD_APPLICATION_PUBLIC_KEY?: string
     DISCORD_APPLICATION_SECRET?: string
+    DISCORD_DM_FORWARD_USER_ID?: string
     DISCORD_ERROR_CHANNEL?: string
     DISCORD_GUILD_ID?: string
     DISCORD_GUILD_INVITE?: string
