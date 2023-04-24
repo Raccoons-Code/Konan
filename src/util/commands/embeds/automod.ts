@@ -256,9 +256,9 @@ export function embedsHasRequiredFieldsByTrigger(
     ]).join("|")})`, "i");
 
   return Object.values(config).some(field => actionTypes.test(field.name)) &&
-    metadataKeys.length ?
+    (metadataKeys.length ?
     metadataKeys.some(key => config[key].value && config[key].value !== " ") :
-    true;
+    true);
 }
 
 export function getRequiredFields(
