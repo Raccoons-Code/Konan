@@ -9,6 +9,7 @@ import { getLocalizations } from "../../../util/utils";
 export default class extends ChatInputCommand {
   constructor() {
     super({
+      category: "Moderation",
       appPermissions: ["ManageGuild"],
       userPermissions: ["ManageGuild"],
     });
