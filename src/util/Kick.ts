@@ -95,6 +95,10 @@ class Kick extends EventEmitter {
       this.author = options.author;
     }
 
+    if (options.guild) {
+      this.guild = options.guild;
+    }
+
     if (options.reason) {
       this.reason = options.reason;
     }

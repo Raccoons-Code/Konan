@@ -103,6 +103,10 @@ class Ban extends EventEmitter {
       this.deleteMessageSeconds = options.deleteMessageSeconds;
     }
 
+    if (options.guild) {
+      this.guild = options.guild;
+    }
+
     if (options.reason) {
       this.reason = options.reason;
     }
