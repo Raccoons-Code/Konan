@@ -16,6 +16,7 @@ export default class ApplicationStats {
   totalUsers = 0;
   totalVoiceAdapters = 0;
   userMessages = 0;
+  readonly usedCommands: Record<string, number> = {};
 
   constructor() { }
 
@@ -147,6 +148,7 @@ export default class ApplicationStats {
       totalUsers: this.totalUsers,
       totalVoiceAdapters: this.totalVoiceAdapters,
       uptime: this.uptime,
+      usedCommands: this.usedCommands,
       userMessages: this.userMessages,
       users: this.users,
       voiceAdapters: this.voiceAdapters,

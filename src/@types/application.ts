@@ -34,6 +34,7 @@ export interface Stats {
   totalUsers: number
   totalVoiceAdapters: number
   uptime: number | null
+  usedCommands: Record<string, number>
   userMessages: number
   users: number
   voiceAdapters: number

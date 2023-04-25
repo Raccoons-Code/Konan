@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { env } from "node:process";
 import { ApplicationCommandTypes, CommandTypes } from "../@enum";
 import { CommandRegisterOptions } from "../@types";
-import client from "../client";
+import client, { appStats } from "../client";
 import BaseApplicationCommand from "../structures/BaseApplicationCommand";
 import BaseCommand from "../structures/BaseCommand";
 import ChatInputCommand from "../structures/ChatInputCommand";
@@ -124,6 +124,10 @@ class CommandHandler {
 
       commands.set(command.data.name, command);
 
+      if (typeof appStats.usedCommands[command.data.name] !== "number") {
+        appStats.usedCommands[command.data.name] = 0;
+      }
+
       continue;
     }
 
@@ -137,7 +141,7 @@ class CommandHandler {
     options = {
       ...options,
       appId: options?.appId ?? client.user?.id ?? env.DISCORD_APPLICATION_ID,
-      guilds: options?.guilds ?? env.DISCORD_TEST_GUILD_ID?.split(/\s*,\s*/),
+      guilds: options?.guilds ?? env.DISCORD_TEST_GUILD_ID?.split(/\D+/),
       token: options?.token ?? client.token ?? env.DISCORD_TOKEN,
     };
 
