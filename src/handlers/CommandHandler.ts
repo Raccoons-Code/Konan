@@ -124,8 +124,8 @@ class CommandHandler {
 
       commands.set(command.data.name, command);
 
-      if (typeof appStats.usedCommands[command.data.name] !== "number") {
-        appStats.usedCommands[command.data.name] = 0;
+      if (dir.includes("application")) {
+        appStats.usedCommands[command.data.name] ??= 0;
       }
 
       continue;

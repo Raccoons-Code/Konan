@@ -69,6 +69,16 @@ export default class extends ButtonCommand {
       acc.users += cur.data.users;
       acc.memoryUsage.heapUsed += cur.data.memoryUsage.heapUsed;
 
+      Object.keys(cur.data.usedCommands).reduce((acc2, key) => {
+        if (acc2[key]) {
+          acc2[key] += cur.data.usedCommands[key];
+        } else {
+          acc2[key] = cur.data.usedCommands[key];
+        }
+
+        return acc2;
+      }, acc.usedCommands);
+
       return acc;
     }, <Stats>{
       channels: 0,
@@ -80,6 +90,7 @@ export default class extends ButtonCommand {
       memoryUsage: {
         heapUsed: 0,
       },
+      usedCommands: {},
     });
 
     stats.unshift(
@@ -103,6 +114,17 @@ export default class extends ButtonCommand {
         appStats.interactions],
     );
 
+    const popularCommands: [string, string | number][] =
+      Object.keys(data.usedCommands)
+        .sort((a, b) => data.usedCommands[a] > data.usedCommands[b] ? -1 : 1)
+        .reduce<[string, string | number][]>((acc, key) => {
+          acc.push([key, appStats.usedCommands[key] < data.usedCommands[key] ?
+            `${appStats.usedCommands[key]}/${data.usedCommands[key]}` :
+            appStats.usedCommands[key]]);
+
+          return acc;
+        }, []).slice(0, 10);
+
     const machine = stripIndents(`
       CPU : ${CPU_MODEL} (${CPU_CORES} cores)
       OS  : ${OS_VERSION}
@@ -117,8 +139,9 @@ export default class extends ButtonCommand {
           .setFields([
             { name: "Library", value: codeBlock("c", library), inline },
             { name: "Engine", value: codeBlock("c", engine), inline },
-            { name: "Stats", value: codeBlock("c", makeTable(stats)) },
             { name: "Machine", value: codeBlock("c", machine) },
+            { name: "Stats", value: codeBlock("c", makeTable(stats)), inline },
+            { name: "Popular Commands", value: codeBlock("c", makeTable(popularCommands)), inline },
             { name: "Uptime", value: `${time(client.readyAt!)} ${time(client.readyAt!, "R")}` },
           ]),
       ],

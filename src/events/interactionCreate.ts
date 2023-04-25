@@ -17,7 +17,8 @@ client.on("interactionCreate", async function (interaction) {
     if (command.options.private) return;
 
     appStats.interactions++;
-    appStats.usedCommands[command.data.name]++;
+    if (typeof appStats.usedCommands[command.data.name] === "number")
+      appStats.usedCommands[command.data.name]++;
   }
 
   let execute = true;
