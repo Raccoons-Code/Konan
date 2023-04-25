@@ -300,7 +300,7 @@ export function getEmbedFieldsFromRule(rule: AutoModerationRule, locale: string)
 
       value = (value ?? rule)[<keyof AutoModerationRule>field.key];
 
-      if (value) {
+      if (value !== null && value !== undefined) {
         value = field.convertToEmbed(value, locale);
       } else {
         value = field.value;
@@ -328,14 +328,18 @@ export function getEmbedFieldsFromRule(rule: AutoModerationRule, locale: string)
         .find(action => action.type === field.type);
 
       let value = action?.metadata[<keyof AutoModerationActionMetadata>field.key];
-      if (value) {
+
+      let name;
+      if (value !== null && value !== undefined) {
+        name = `ON - ${t(field.name, locale)}`;
         value = field.convertToEmbed(value, locale);
       } else {
+        name = t(field.name, locale);
         value = field.value;
       }
 
       fields.push({
-        name: t(field.name, locale),
+        name,
         value,
       });
     }
