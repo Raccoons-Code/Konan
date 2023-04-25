@@ -1,7 +1,7 @@
-import { APIWebhook, ApplicationCommandType, chatInputApplicationCommandMention, codeBlock, Colors, ComponentType, EmbedBuilder, Guild, inlineCode, Interaction, InteractionType, Routes, time, userMention, WebhookClient } from "discord.js";
+import { APIEmbedField, APIWebhook, ApplicationCommandType, Colors, ComponentType, EmbedBuilder, Guild, Interaction, InteractionType, Routes, WebhookClient, channelMention, chatInputApplicationCommandMention, codeBlock, inlineCode, time, userMention } from "discord.js";
 import client from ".";
 import { BaseComponentCustomId } from "../@types";
-import { contentWithCodeBlockLength, JSONparse } from "../util/utils";
+import { JSONparse, contentWithCodeBlockLength } from "../util/utils";
 
 const inline = true;
 
@@ -110,12 +110,12 @@ export default class WebhookLogger {
       if (parsedId) {
         commandName.push(parsedId.c);
 
-        if (parsedId.sc) {
-          commandName.push(parsedId.sc);
-        }
-
         if (parsedId.scg) {
           commandName.push(parsedId.scg);
+        }
+
+        if (parsedId.sc) {
+          commandName.push(parsedId.sc);
         }
       }
     }
@@ -130,15 +130,30 @@ export default class WebhookLogger {
       interactionType.push(ComponentType[interaction.componentType]);
     }
 
+    const fields: APIEmbedField[] = [];
+
+    if (interaction.channelId) {
+      fields.push({
+        name: "Channel",
+        value: channelMention(interaction.channelId),
+        inline: true,
+      });
+    }
+
+    if (interaction.guild) {
+      fields.push({
+        name: "Server",
+        value: codeBlock(`${interaction.guild.nameAcronym} ${interaction.guild.name}`),
+        inline: true,
+      });
+    }
+
     try {
       await this.ERROR_WEBHOOK.send({
         avatarURL: client.user?.displayAvatarURL(),
         embeds: [
           new EmbedBuilder()
-            .setColor(Colors.Red)
-            .setDescription(codeBlock("ts", `${error.stack}`
-              .slice(0, contentWithCodeBlockLength("ts"))))
-            .setFields([{
+            .addFields(fields.concat([{
               name: "Author",
               value: `${interaction.user}`
                 + ` ${inlineCode(interaction.user.tag)}`
@@ -151,7 +166,10 @@ export default class WebhookLogger {
             }, {
               name: "Type",
               value: codeBlock("c", interactionType.filter(i => i).join(" > ")),
-            }])
+              }]))
+            .setColor(Colors.Red)
+            .setDescription(codeBlock("ts", `${error.stack}`
+              .slice(0, contentWithCodeBlockLength("ts"))))
             .setTitle(`${error.name}: ${error.message}`.slice(0, 256))
             .setFooter("code" in error ? { text: `Error code: ${error.code}` } : null),
         ],
