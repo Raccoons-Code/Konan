@@ -23,7 +23,7 @@ client.on("interactionCreate", async function (interaction) {
 
   let execute = true;
 
-  if ((command.options.channelAppPermissions ?? false) && "options" in interaction) {
+  if (command.options.channelAppPermissions && "options" in interaction) {
     const getChannel = interaction.options.get("channel");
 
     const channelManager = interaction.guild?.channels ?? client.channels;
@@ -37,7 +37,7 @@ client.on("interactionCreate", async function (interaction) {
 
     if ("permissionsFor" in channel) {
       const appChannelPerms = channel.permissionsFor(client.user!)
-        ?.missing(command.options.channelAppPermissions!);
+        ?.missing(command.options.channelAppPermissions);
 
       if (appChannelPerms?.length) {
         execute = false;
