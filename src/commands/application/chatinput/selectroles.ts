@@ -434,7 +434,10 @@ export default class extends ChatInputCommand {
     const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(role);
 
     if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
-      await interaction.followUp(t("roleManagementHierarchyError", interaction.locale));
+      await interaction.followUp({
+        content: t("roleManagementHierarchyError", interaction.locale),
+        ephemeral: true,
+      });
       return;
     }
 
@@ -566,7 +569,10 @@ export default class extends ChatInputCommand {
         const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(role);
 
         if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
-          await interaction.followUp(t("roleManagementHierarchyError", interaction.locale));
+          await interaction.followUp({
+            content: t("roleManagementHierarchyError", interaction.locale),
+            ephemeral: true,
+          });
           return 1;
         }
       }
@@ -631,7 +637,10 @@ export default class extends ChatInputCommand {
       const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(role);
 
       if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
-        await interaction.followUp(t("roleManagementHierarchyError", interaction.locale));
+        await interaction.followUp({
+          content: t("roleManagementHierarchyError", interaction.locale),
+          ephemeral: true,
+        });
         return 1;
       }
     }
