@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, EmbedBuilder } from "discord.js";
+import { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
 import { env } from "node:process";
 import { CommandTypes } from "../@enum";
 import client, { appOwners, appStats } from "../client";
@@ -6,7 +6,6 @@ import commandHandler from "../handlers/CommandHandler";
 import Command from "../structures/Command";
 import dMForward from "../util/DMForward";
 import regexp from "../util/regexp";
-import { ButtonStyle } from "discord.js";
 
 client.on("messageCreate", async function (message) {
   if (message.author.bot) {
@@ -67,7 +66,16 @@ dMForward.on("messageCreate", async function (message) {
   const embeds = message.attachments.map(att => new EmbedBuilder()
     .setImage(`attachment://${att.name}`)).slice(0, 10);
 
-  embeds.at(-1)?.setDescription(`${message.author}`);
+  if (!embeds.length) {
+    embeds.push(new EmbedBuilder());
+  }
+
+  embeds.at(-1)
+    ?.setDescription([
+      message.author,
+      message.author.tag,
+      message.author.id,
+    ].join(" "));
 
   const components = [
     new ActionRowBuilder<ButtonBuilder>()

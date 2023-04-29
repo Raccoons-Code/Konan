@@ -124,7 +124,7 @@ class CommandHandler {
 
       commands.set(command.data.name, command);
 
-      if (dir.includes("application")) {
+      if (dir.includes("application") && !command.options.private) {
         appStats.usedCommands[command.data.name] ??= 0;
       }
 
