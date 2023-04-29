@@ -283,10 +283,18 @@ export default class extends ChatInputCommand {
   async create(interaction: ChatInputCommandInteraction<"cached">) {
     const locale = interaction.locale;
 
-    const role = interaction.options.getRole("role");
+    const role = interaction.options.getRole("role", true);
+
+    const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(role);
+
+    if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
+      await interaction.followUp(t("roleManagementHierarchyError", interaction.locale));
+      return;
+    }
+
     const button_emoji = interaction.options.getString("button_emoji") ?? {};
     const button_disabled = Boolean(interaction.options.getBoolean("button_disabled"));
-    const button_name = interaction.options.getString("button_name") ?? role?.name.slice(0, 63);
+    const button_name = interaction.options.getString("button_name") ?? role.name.slice(0, 63);
     const button_style = interaction.options.getInteger("button_style") ?? ButtonStyle.Primary;
     const channel = <GuildTextBasedChannel>interaction.options.getChannel("channel") ?? interaction.channel;
     const [, title, description] = interaction.options.getString("text")?.match(regexp.embed) ?? [];
@@ -372,9 +380,18 @@ export default class extends ChatInputCommand {
     if (subcommand === "button") {
       const role = interaction.options.getRole("role");
 
-      if (role ? componentsHasRoles(message.components, role) : false) {
-        await interaction.editReply(t("editError", { locale, string: "Button Role" }));
-        return 1;
+      if (role) {
+        if (componentsHasRoles(message.components, role)) {
+          await interaction.editReply(t("itemAddError", interaction.locale));
+          return 1;
+        }
+
+        const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(role);
+
+        if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
+          await interaction.followUp(t("roleManagementHierarchyError", interaction.locale));
+          return;
+        }
       }
 
       const buttonId = interaction.options.getString("button");
@@ -425,9 +442,18 @@ export default class extends ChatInputCommand {
 
     const role = interaction.options.getRole("role");
 
-    if (role ? componentsHasRoles(message.components, role) : true) {
-      await interaction.editReply(t("itemAddError", interaction.locale));
-      return 1;
+    if (role) {
+      if (componentsHasRoles(message.components, role)) {
+        await interaction.editReply(t("itemAddError", interaction.locale));
+        return 1;
+      }
+
+      const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(role);
+
+      if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
+        await interaction.followUp(t("roleManagementHierarchyError", interaction.locale));
+        return;
+      }
     }
 
     const subcommand = interaction.options.getSubcommand();
@@ -531,6 +557,30 @@ export default class extends ChatInputCommand {
     const roles = await Promise.all(rolesId)
       .then(rs => <Role[]>rs.filter(r => r).slice(0, 25));
 
+    if (interaction.guild.members.me) {
+      const unmanageable: Role[] = [];
+
+      for (let i = 0; i < roles.length; i++) {
+        const role = roles[i];
+
+        if (interaction.guild.members.me!.roles.highest.comparePositionTo(role) < 1) {
+          unmanageable.push(role);
+          roles.splice(i, 1);
+          i--;
+        }
+      }
+
+      if (unmanageable.length) {
+        await interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle(t("roleManagementHierarchyError", interaction.locale))
+              .setDescription(unmanageable.join(" ")),
+          ],
+        });
+      }
+    }
+
     if (!roles.length) {
       await interaction.editReply(t("noNewRoleFoudInRoleInput", interaction.locale));
       return 1;
@@ -591,6 +641,31 @@ export default class extends ChatInputCommand {
     const roles = await Promise.all(filterCustomId(message.components, rolesId)
       .map(id => interaction.guild.roles.fetch(id)))
       .then(rs => <Role[]>rs.filter(r => r).slice(0, 25));
+
+    if (interaction.guild.members.me) {
+      const unmanageable: Role[] = [];
+
+      for (let i = 0; i < roles.length; i++) {
+        const role = roles[i];
+
+        if (interaction.guild.members.me!.roles.highest.comparePositionTo(role) < 1) {
+          unmanageable.push(role);
+          roles.splice(i, 1);
+          i--;
+        }
+      }
+
+      if (unmanageable.length) {
+        await interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle(t("roleManagementHierarchyError", interaction.locale))
+              .setDescription(unmanageable.join(" ")),
+          ],
+        });
+      }
+    }
+
     if (!roles.length) {
       await interaction.editReply(t("noNewRoleFoudInRoleInput", interaction.locale));
       return 1;

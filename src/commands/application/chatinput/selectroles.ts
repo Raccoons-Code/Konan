@@ -1,12 +1,12 @@
 import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel, PermissionFlagsBits, Role, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
+import { addSelectOptionsToRows, removeOptionsFromSelectMenu } from "../../../util/commands/components/selectmenu";
 import { addSelectByRoles, createSelectByRoles, editStringSelectById, removeOptionsByRolesFromSelect, setDefaultRole } from "../../../util/commands/components/selectroles";
 import { componentsHasRoles, filterCustomId } from "../../../util/commands/components/utils";
 import { GUILD_TEXT_CHANNEL_TYPES } from "../../../util/constants";
 import regexp from "../../../util/regexp";
 import { getLocalizations } from "../../../util/utils";
-import { addSelectOptionsToRows, removeOptionsFromSelectMenu } from "../../../util/commands/components/selectmenu";
 
 export default class extends ChatInputCommand {
   CommandNameRegExp = /"c":"selectroles"/;
@@ -429,12 +429,20 @@ export default class extends ChatInputCommand {
   async create(interaction: ChatInputCommandInteraction<"cached">) {
     const locale = interaction.locale;
 
-    const role = interaction.options.getRole("role");
+    const role = interaction.options.getRole("role", true);
+
+    const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(role);
+
+    if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
+      await interaction.followUp(t("roleManagementHierarchyError", interaction.locale));
+      return;
+    }
+
     const channel = <GuildTextBasedChannel>interaction.options.getChannel("channel") ?? interaction.channel;
     const option_description = interaction.options.getString("option_description") ?? undefined;
     const option_default = Boolean(interaction.options.getBoolean("option_default"));
     const option_emoji = interaction.options.getString("option_emoji") ?? {};
-    const option_name = interaction.options.getString("option_name") ?? role?.name.slice(0, 83);
+    const option_name = interaction.options.getString("option_name") ?? role.name.slice(0, 83);
     const menu_disabled = Boolean(interaction.options.getBoolean("menu_disabled"));
     const menu_place_holder = interaction.options.getString("menu_place_holder") || "";
     const [, title, description] = interaction.options.getString("text")?.match(regexp.embed) ?? [];
@@ -549,9 +557,18 @@ export default class extends ChatInputCommand {
     if (subcommand === "option") {
       const role = interaction.options.getRole("role");
 
-      if (role ? componentsHasRoles(message.components, role) : true) {
-        await interaction.editReply(t("itemAddError", interaction.locale));
-        return 1;
+      if (role) {
+        if (componentsHasRoles(message.components, role)) {
+          await interaction.editReply(t("itemAddError", interaction.locale));
+          return 1;
+        }
+
+        const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(role);
+
+        if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
+          await interaction.followUp(t("roleManagementHierarchyError", interaction.locale));
+          return 1;
+        }
       }
 
       const option_default = interaction.options.getBoolean("option_default");
@@ -605,9 +622,18 @@ export default class extends ChatInputCommand {
 
     const role = interaction.options.getRole("role");
 
-    if (role ? componentsHasRoles(message.components, role) : true) {
-      await interaction.editReply(t("itemAddError", interaction.locale));
-      return 1;
+    if (role) {
+      if (componentsHasRoles(message.components, role)) {
+        await interaction.editReply(t("itemAddError", interaction.locale));
+        return 1;
+      }
+
+      const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(role);
+
+      if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
+        await interaction.followUp(t("roleManagementHierarchyError", interaction.locale));
+        return 1;
+      }
     }
 
     const option_default = interaction.options.getBoolean("option_default");
@@ -774,6 +800,30 @@ export default class extends ChatInputCommand {
     const roles = await Promise.all(rolesId)
       .then(rs => <Role[]>rs.filter(role => role));
 
+    if (interaction.guild.members.me) {
+      const unmanageable: Role[] = [];
+
+      for (let i = 0; i < roles.length; i++) {
+        const role = roles[i];
+
+        if (interaction.guild.members.me!.roles.highest.comparePositionTo(role) < 1) {
+          unmanageable.push(role);
+          roles.splice(i, 1);
+          i--;
+        }
+      }
+
+      if (unmanageable.length) {
+        await interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle(t("roleManagementHierarchyError", interaction.locale))
+              .setDescription(unmanageable.join(" ")),
+          ],
+        });
+      }
+    }
+
     if (!roles.length) {
       await interaction.editReply(t("noNewRoleFoudInRoleInput", interaction.locale));
       return 1;
@@ -838,8 +888,33 @@ export default class extends ChatInputCommand {
 
     const roles = await Promise.all(filterCustomId(message.components, rolesId).map(id =>
       interaction.guild.roles.fetch(id))).then(rs => <Role[]>rs.filter(r => r).slice(0, 125));
+
+    if (interaction.guild.members.me) {
+      const unmanageable: Role[] = [];
+
+      for (let i = 0; i < roles.length; i++) {
+        const role = roles[i];
+
+        if (interaction.guild.members.me!.roles.highest.comparePositionTo(role) < 1) {
+          unmanageable.push(role);
+          roles.splice(i, 1);
+          i--;
+        }
+      }
+
+      if (unmanageable.length) {
+        await interaction.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setTitle(t("roleManagementHierarchyError", interaction.locale))
+              .setDescription(unmanageable.join(" ")),
+          ],
+        });
+      }
+    }
+
     if (!roles.length) {
-      await interaction.editReply("No new role were found in roles input.");
+      await interaction.editReply(t("noNewRoleFoudInRoleInput", interaction.locale));
       return 1;
     }
 

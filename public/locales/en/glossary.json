@@ -1,5 +1,6 @@
 {
   "activated": "activated",
+  "added": "added",
   "automatic": "automatic",
   "banning": "banning",
   "cancelled": "cancelled",
@@ -23,6 +24,7 @@
   "owner": "owner",
   "permissions": "permissions",
   "players": "players",
+  "removed": "removed",
   "restoring": "restoring",
   "required": "required",
   "result": "result",

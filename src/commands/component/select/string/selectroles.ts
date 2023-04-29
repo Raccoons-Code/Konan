@@ -1,6 +1,7 @@
 import { ActionRowBuilder, APIActionRowComponent, APIStringSelectComponent, Colors, ComponentType, EmbedBuilder, roleMention, StringSelectMenuBuilder, StringSelectMenuInteraction } from "discord.js";
 import { SelectRolesCustomId, SelectRolesManagement, SelectRolesOptionValue } from "../../../../@types";
 import SelectMenuCommand from "../../../../structures/SelectMenuCommand";
+import { t } from "../../../../translator";
 import { getDefaultOptionFromSelect } from "../../../../util/commands/components/selectmenu";
 import regexp from "../../../../util/regexp";
 
@@ -14,7 +15,7 @@ export default class extends SelectMenuCommand {
 
   async execute(
     interaction: StringSelectMenuInteraction<"cached">,
-    roles: SelectRolesManagement = { add: [], remove: [] },
+    roles: SelectRolesManagement = { add: [], remove: [], unmanageable: [] },
   ) {
     await interaction.deferUpdate();
 
@@ -25,7 +26,11 @@ export default class extends SelectMenuCommand {
 
       const id = parsedValue.id ?? parsedValue.roleId;
 
-      roles.add.push(id);
+      const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(id);
+
+      if (typeof comparedRolePosition === "number" && comparedRolePosition > 0) {
+        roles.add.push(id);
+      }
 
       roles.default = interaction.member.roles.resolve(id)?.id;
     }
@@ -36,6 +41,13 @@ export default class extends SelectMenuCommand {
       const id = parsedValue.id ?? parsedValue.roleId;
 
       if (roles.add.includes(id) || roles.remove.includes(id)) continue;
+
+      const comparedRolePosition = interaction.guild.members.me?.roles.highest.comparePositionTo(id);
+
+      if (typeof comparedRolePosition === "number" && comparedRolePosition < 1) {
+        roles.unmanageable.push(id);
+        continue;
+      }
 
       const role = interaction.member.roles.resolve(id);
 
@@ -177,7 +189,7 @@ export default class extends SelectMenuCommand {
 
     if (added.length) {
       embeds[0].addFields({
-        name: `✅ Added [${added.length}]`,
+        name: `✅ ${t("added", interaction.locale)} [${added.length}]`,
         value: added.join("\n"),
         inline: true,
       });
@@ -185,7 +197,7 @@ export default class extends SelectMenuCommand {
 
     if (removed.length) {
       embeds[0].addFields({
-        name: `❌ Removed [${removed.length}]`,
+        name: `❌ ${t("removed", interaction.locale)} [${removed.length}]`,
         value: removed.join("\n"),
         inline: true,
       });
@@ -201,7 +213,7 @@ export default class extends SelectMenuCommand {
 
       if (addFails.length) {
         embeds[0].addFields({
-          name: `⚠️ Failed to add [${addFails.length}]`,
+          name: `⚠️ ${t("failedToAdd", interaction.locale)} [${addFails.length}]`,
           value: addFails.join("\n"),
           inline: true,
         });
@@ -209,11 +221,20 @@ export default class extends SelectMenuCommand {
 
       if (removeFails.length) {
         embeds[0].addFields({
-          name: `⚠️ Failed to remove [${removeFails.length}]`,
+          name: `⚠️ ${t("failedToRemove", interaction.locale)} [${removeFails.length}]`,
           value: removeFails.join("\n"),
           inline: true,
         });
       }
+    }
+
+    if (roles.unmanageable.length) {
+      embeds[0].addFields({
+        name: `⚠️ ${t("unmanageable", interaction.locale)} [${roles.unmanageable.length}]`,
+        value: roles.unmanageable.join("\n"),
+        inline: embeds[0].data.fields?.length !== 2 &&
+          embeds[0].data.fields?.length !== 4,
+      });
     }
 
     await interaction.followUp({ embeds, ephemeral: true });

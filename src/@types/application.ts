@@ -8,6 +8,7 @@ export interface SelectRolesManagement {
   add: string[]
   default?: string
   remove: string[]
+  unmanageable: string[]
 }
 
 export interface Stats {
