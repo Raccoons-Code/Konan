@@ -13,12 +13,14 @@ export default class extends ModalSubmit {
   }
 
   async execute(interaction: ModalSubmitInteraction) {
+    await interaction.deferUpdate();
+
     const locale = interaction.locale;
 
     const userAttempt = interaction.fields.getTextInputValue("try");
 
     if (!await dictionaries.hasAsync(locale, userAttempt)) {
-      await interaction.reply({
+      await interaction.followUp({
         content: t("wordOnDictionary404", {
           locale,
           word: inlineCode(userAttempt),
@@ -27,8 +29,6 @@ export default class extends ModalSubmit {
       });
       return 1;
     }
-
-    await interaction.deferUpdate();
 
     const wordleInstance = await prisma.wordleInstance.findFirst({
       where: {
@@ -41,12 +41,11 @@ export default class extends ModalSubmit {
 
     if (!wordleInstance) return;
 
-    const { board, lose, win } =
-      wordle.check(
-        wordleInstance.data.word,
-        userAttempt,
-        <string[][]>wordleInstance.data.board,
-      );
+    const { board, lose, win } = wordle.check(
+      wordleInstance.data.word,
+      userAttempt,
+      <string[][]>wordleInstance.data.board,
+    );
 
     await prisma.wordleInstance.update({
       where: {
@@ -90,8 +89,8 @@ export default class extends ModalSubmit {
         ].flat()),
     ];
 
-    await interaction.message?.edit({
-      components: (win || lose) ? [] : interaction.message.components,
+    await interaction.editReply({
+      components: (win || lose) ? [] : interaction.message?.components,
       embeds,
     });
 
