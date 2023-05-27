@@ -12,6 +12,7 @@ export default class extends ChatInputCommand {
       category: "Moderation",
       appPermissions: ["ManageGuild"],
       userPermissions: ["ManageGuild"],
+      private: true,
     });
 
     this.data.setName("automod")
