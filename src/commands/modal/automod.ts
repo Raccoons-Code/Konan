@@ -5,7 +5,6 @@ import { automodSuccessButtonCustomId } from "../../util/commands/components/aut
 import { toggleButtons } from "../../util/commands/components/button";
 import { embedsHasRequiredFieldsByTrigger } from "../../util/commands/embeds/automod";
 
-
 export default class extends ModalSubmit {
   constructor() {
     super({
