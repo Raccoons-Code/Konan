@@ -81,9 +81,13 @@ dMForward.on("messageCreate", async function (message) {
     new ActionRowBuilder<ButtonBuilder>()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId(JSON.stringify({ c: "automod", sc: "cancel" }))
+          .setCustomId(JSON.stringify({ c: "common", sc: "cancel" }))
           .setEmoji("✖️")
           .setStyle(ButtonStyle.Danger),
+        new ButtonBuilder()
+          .setCustomId(JSON.stringify({ c: "common", sc: "dmreply", userId: message.author.id }))
+          .setEmoji("📨")
+          .setStyle(ButtonStyle.Secondary),
       ),
   ];
 
