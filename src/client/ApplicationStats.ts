@@ -5,6 +5,7 @@ import { Stats } from "../@types";
 export default class ApplicationStats {
   botMessages = 0;
   interactions = 0;
+  isLastShard = false;
   declare shardId: number;
   totalChannels = 0;
   totalEmojis = 0;
@@ -131,6 +132,7 @@ export default class ApplicationStats {
       emojis: this.emojis,
       guilds: this.guilds,
       interactions: this.interactions,
+      isLastShard: this.isLastShard,
       memoryUsage: this.memoryUsage,
       messages: this.messages,
       readyAt: this.readyAt,

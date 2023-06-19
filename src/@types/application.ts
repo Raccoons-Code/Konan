@@ -17,6 +17,7 @@ export interface Stats {
   emojis: number
   guilds: number
   interactions: number
+  isLastShard: boolean
   cpuUsage: NodeJS.CpuUsage
   memoryUsage: NodeJS.MemoryUsage
   messages: number

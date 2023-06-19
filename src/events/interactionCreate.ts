@@ -72,7 +72,7 @@ client.on("interactionCreate", async function (interaction) {
 
     const components = [];
 
-    if (env.DISCORD_GUILD_ID)
+    if (env.GUILD_INVITE)
       components.push(new ActionRowBuilder<ButtonBuilder>()
         .addComponents(new ButtonBuilder()
           .setStyle(ButtonStyle.Link)

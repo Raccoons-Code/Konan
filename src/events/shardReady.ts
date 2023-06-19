@@ -9,6 +9,8 @@ import TopggAutoposter from "../modules/Topgg/autoposter";
 client.on("shardReady", async function (shardId, unavailableGuilds) {
   appStats.shardId = shardId;
 
+  appStats.isLastShard = client.shard?.count === (shardId + 1);
+
   console.log(`Shard ${shardId} ready!`);
 
   if (env.DISCORD_ERROR_CHANNEL) {
@@ -21,10 +23,8 @@ client.on("shardReady", async function (shardId, unavailableGuilds) {
 
   await commandHandler.load();
 
-  const isLastShard = client.shard?.count === shardId + 1;
-
   await Promise.all([
-    isLastShard &&
+    appStats.isLastShard &&
     commandHandler.register({
       reset: env.NODE_ENV === "production",
     }),
