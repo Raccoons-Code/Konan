@@ -20,10 +20,10 @@ export default class extends ButtonCommand {
 
     const [reasonField, deleteField] = interaction.message.embeds[0].fields;
 
-    const reason = `${interaction.member.displayName}: ${reasonField.value}`
+    const reason = `${interaction.member.displayName}: ${reasonField?.value ?? ""}`
       .slice(0, 512);
 
-    const deleteMessageSeconds = ms(deleteField.value) / 1000;
+    const deleteMessageSeconds = ms(deleteField?.value ?? 0) / 1000;
 
     const ban = new Ban({
       author: interaction.member,

@@ -19,7 +19,7 @@ export default class extends ButtonCommand {
 
     const [reasonField] = interaction.message.embeds[0].fields;
 
-    const reason = `${interaction.member.displayName}: ${reasonField.value}`
+    const reason = `${interaction.member.displayName}: ${reasonField?.value ?? ""}`
       .slice(0, 512);
 
     const kick = new Kick({

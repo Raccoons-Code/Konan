@@ -99,7 +99,7 @@ class Kick extends EventEmitter {
       this.guild = options.guild;
     }
 
-    if (options.reason) {
+    if ("reason" in options) {
       this.reason = options.reason;
     }
 

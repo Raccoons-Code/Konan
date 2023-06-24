@@ -99,7 +99,7 @@ class Ban extends EventEmitter {
       this.author = options.author;
     }
 
-    if (options.deleteMessageSeconds) {
+    if ("deleteMessageSeconds" in options) {
       this.deleteMessageSeconds = options.deleteMessageSeconds;
     }
 
@@ -107,7 +107,7 @@ class Ban extends EventEmitter {
       this.guild = options.guild;
     }
 
-    if (options.reason) {
+    if ("reason" in options) {
       this.reason = options.reason;
     }
 
