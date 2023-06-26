@@ -13,7 +13,8 @@ datasource db {
 model Guild {
   ObjectId  String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now()) @db.Timestamp
-  id        String   @unique
+  id        String   @unique @default(uuid())
+  discordId String?
   User      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: Cascade)
   userId    String
 }
@@ -21,8 +22,10 @@ model Guild {
 model User {
   ObjectId  String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now()) @db.Timestamp
-  id        String   @unique
+  id        String   @unique @default(uuid())
+  discordId String?
   email     String?
+  hash      String?
   coins     Float    @default(0)
   guilds    Guild[]
 }
