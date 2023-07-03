@@ -24,7 +24,7 @@ model User {
   id        String   @unique
   email     String?
   hash      String?
-  coins     Float    @default(0)
+  coins     BigInt    @default(0)
   guilds    Guild[]
 }
 
