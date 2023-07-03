@@ -34,7 +34,7 @@
     "ignore": []
   },
   "dependencies": {
-    "@prisma/client": "^4.16.1",
+    "@prisma/client": "^4.16.2",
     "@top-gg/sdk": "^3.1.5",
     "better-sqlite3": "^8.4.0",
     "common-tags": "^1.8.2",
@@ -48,13 +48,13 @@
   "devDependencies": {
     "@types/common-tags": "^1.8.1",
     "@types/ms": "^0.7.31",
-    "@types/node": "^20.3.2",
+    "@types/node": "^20.3.3",
     "@types/source-map-support": "^0.5.6",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
-    "eslint": "^8.43.0",
+    "eslint": "^8.44.0",
     "nodemon": "^2.0.22",
-    "prisma": "^4.16.1",
-    "typescript": "^5.1.5"
+    "prisma": "^4.16.2",
+    "typescript": "^5.1.6"
   }
 }
