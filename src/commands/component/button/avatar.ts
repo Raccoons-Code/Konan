@@ -31,7 +31,7 @@ export default class extends ButtonCommand {
     const member = await interaction.guild?.members.fetch(id).catch(() => null);
     const user = member?.user ?? await client.users.fetch(id);
 
-    user.banner ?? await user.fetch();
+    await user.fetch();
 
     const components = [new ActionRowBuilder<ButtonBuilder>()];
 
@@ -102,7 +102,7 @@ export default class extends ButtonCommand {
     const member = await interaction.guild?.members.fetch(id).catch(() => null);
     const user = member?.user ?? await client.users.fetch(id);
 
-    user.banner ?? await user.fetch();
+    await user.fetch();
 
     const components = [new ActionRowBuilder<ButtonBuilder>()];
 
@@ -173,9 +173,9 @@ export default class extends ButtonCommand {
     });
 
     const member = await interaction.guild?.members.fetch(id).catch(() => null);
-    const user = await client.users.fetch(id);
+    const user = member?.user ?? await client.users.fetch(id);
 
-    user.banner ?? await user.fetch();
+    await user.fetch();
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()

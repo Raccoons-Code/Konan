@@ -19,7 +19,7 @@ export default class extends UserContextCommand {
 
     const target = interaction.targetMember ?? interaction.targetUser;
 
-    interaction.targetUser.banner ?? await interaction.targetUser.fetch();
+    await interaction.targetUser.fetch();
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()

@@ -31,7 +31,7 @@ export default class extends ChatInputCommand {
       (user.id === interaction.user.id ? interaction.member : null);
     const target = member ?? user;
 
-    user.banner ?? await user.fetch();
+    await user.fetch();
 
     const components = [
       new ActionRowBuilder<ButtonBuilder>()
