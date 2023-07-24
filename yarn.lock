@@ -1522,10 +1522,10 @@ ts-mixer@^6.0.3:
   resolved "https://registry.yarnpkg.com/ts-mixer/-/ts-mixer-6.0.3.tgz#69bd50f406ff39daa369885b16c77a6194c7cae6"
   integrity sha512-k43M7uCG1AkTyxgnmI5MPwKoUvS/bRvLvUb7+Pgpdlmok8AoqmUaZxUUw8zKM5B1lqZrt41GjYgnvAi0fppqgQ==
 
-tslib@^2.5.0, tslib@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.0.tgz#b295854684dbda164e181d259a22cd779dcd7bc3"
-  integrity sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==
+tslib@^2.5.0, tslib@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.1.tgz#fd8c9a0ff42590b25703c0acb3de3d3f4ede0410"
+  integrity sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==
 
 tunnel-agent@^0.6.0:
   version "0.6.0"
