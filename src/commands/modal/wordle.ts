@@ -58,7 +58,7 @@ export default class extends ModalSubmit {
           },
         },
         endedAt: (win || lose) ? new Date() : undefined,
-        winner: win ? interaction.user.id : undefined,
+        winnerId: win ? interaction.user.id : undefined,
       },
     });
 
