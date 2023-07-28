@@ -10,36 +10,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Authorization {
+  ObjectId    String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamp
+  hash        String   @unique
+  referenceId String   @unique
+}
+
 model Guild {
-  ObjectId  String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now()) @db.Timestamp
-  id        String   @unique
-  User      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  ObjectId  String           @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime         @default(now()) @db.Timestamp
+  updatedAt DateTime         @default(now()) @updatedAt @db.Timestamp
+  id        String           @unique
+  user      User             @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: Cascade)
   userId    String
+  wordles   WordleInstance[]
 }
 
 model User {
-  ObjectId  String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now()) @db.Timestamp
-  id        String   @unique
+  ObjectId  String           @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime         @default(now()) @db.Timestamp
+  updatedAt DateTime         @default(now()) @updatedAt @db.Timestamp
+  id        String           @unique
   email     String?
-  hash      String?
-  coins     BigInt    @default(0)
+  coins     Int              @default(0) @db.Long()
   guilds    Guild[]
+  wordles   WordleInstance[]
 }
 
 model WordleInstance {
   ObjectId  String         @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime       @default(now()) @db.Timestamp
+  updatedAt DateTime       @default(now()) @updatedAt @db.Timestamp
   endedAt   DateTime?      @db.Timestamp
   channelId String
+  guild     Guild?         @relation(fields: [guildId], references: [id], onDelete: NoAction, onUpdate: Cascade)
   guildId   String?
   messageId String         @unique
+  user      User           @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: Cascade)
   userId    String
   data      WordleGameData
   players   String[]
   quitters  String[]
-  winner    String?
+  winnerId  String?
 }
 
 type WordleGameData {
