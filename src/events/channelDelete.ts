@@ -4,13 +4,13 @@ import prisma from "../database/prisma";
 client.on("channelDelete", async function (channel) {
   await prisma.wordleInstance.updateMany({
     where: {
-      channelId: channel.id,
-      endedAt: {
+      channel_id: channel.id,
+      ended_at: {
         isSet: false,
       },
     },
     data: {
-      endedAt: new Date(),
+      ended_at: new Date(),
     },
   });
 });

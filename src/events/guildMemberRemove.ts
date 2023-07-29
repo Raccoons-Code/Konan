@@ -4,14 +4,14 @@ import prisma from "../database/prisma";
 client.on("guildMemberRemove", async function (member) {
   await prisma.wordleInstance.updateMany({
     where: {
-      userId: member.id,
-      guildId: member.guild.id,
-      endedAt: {
+      user_id: member.id,
+      guild_id: member.guild.id,
+      ended_at: {
         isSet: false,
       },
     },
     data: {
-      endedAt: new Date(),
+      ended_at: new Date(),
     },
   });
 });

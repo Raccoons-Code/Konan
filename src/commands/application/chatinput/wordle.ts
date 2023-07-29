@@ -74,8 +74,8 @@ export default class extends ChatInputCommand {
 
     const oldInstance = await prisma.wordleInstance.findFirst({
       where: {
-        userId: interaction.user.id,
-        endedAt: {
+        user_id: interaction.user.id,
+        ended_at: {
           isSet: false,
         },
       },
@@ -84,8 +84,8 @@ export default class extends ChatInputCommand {
     const promises: Promise<unknown>[] = [];
 
     if (oldInstance) {
-      const channel = await client.channels.fetch(oldInstance.channelId) as TextBasedChannel | null;
-      const message = await channel?.messages.fetch(oldInstance.messageId).catch(() => null);
+      const channel = await client.channels.fetch(oldInstance.channel_id) as TextBasedChannel | null;
+      const message = await channel?.messages.fetch(oldInstance.message_id).catch(() => null);
 
       if (message) {
         if (playersId.length) {
@@ -100,7 +100,7 @@ export default class extends ChatInputCommand {
 
           promises.push(prisma.wordleInstance.update({
             where: {
-              messageId: oldInstance.messageId,
+              message_id: oldInstance.message_id,
             },
             data: {
               players: {
@@ -136,7 +136,7 @@ export default class extends ChatInputCommand {
                     .setEmoji("🔍")
                     .setLabel(t("joinGame", interaction.locale))
                     .setStyle(ButtonStyle.Link)
-                    .setURL(messageLink(oldInstance.channelId, oldInstance.messageId)),
+                    .setURL(messageLink(oldInstance.channel_id, oldInstance.message_id)),
                 ]),
             ],
             embeds: [
@@ -159,7 +159,7 @@ export default class extends ChatInputCommand {
                   .setEmoji("🔍")
                   .setLabel(t("joinGame", interaction.locale))
                   .setStyle(ButtonStyle.Link)
-                  .setURL(messageLink(oldInstance.channelId, oldInstance.messageId)),
+                  .setURL(messageLink(oldInstance.channel_id, oldInstance.message_id)),
                 new ButtonBuilder()
                   .setCustomId(JSON.stringify({ c: "wordle", sc: "giveupOldInstance" }))
                   .setEmoji("🚮")
@@ -174,13 +174,13 @@ export default class extends ChatInputCommand {
 
       promises.push(prisma.wordleInstance.updateMany({
         where: {
-          messageId: oldInstance.messageId,
-          endedAt: {
+          message_id: oldInstance.message_id,
+          ended_at: {
             isSet: false,
           },
         },
         data: {
-          endedAt: new Date(),
+          ended_at: new Date(),
         },
       }));
     }
@@ -232,10 +232,10 @@ export default class extends ChatInputCommand {
 
     promises.push(prisma.wordleInstance.create({
       data: {
-        channelId: `${interaction.channel?.id}`,
-        guildId: interaction.guild?.id,
-        messageId: message.id,
-        userId: interaction.user.id,
+        channel_id: `${interaction.channel?.id}`,
+        guild_id: interaction.guild?.id,
+        message_id: message.id,
+        user_id: interaction.user.id,
         data: {
           word: word.toLowerCase(),
           board: gameBoard,

@@ -4,14 +4,14 @@ import prisma from "../database/prisma";
 client.on("guildBanAdd", async function (ban) {
   await prisma.wordleInstance.updateMany({
     where: {
-      userId: ban.user.id,
-      guildId: ban.guild.id,
-      endedAt: {
+      user_id: ban.user.id,
+      guild_id: ban.guild.id,
+      ended_at: {
         isSet: false,
       },
     },
     data: {
-      endedAt: new Date(),
+      ended_at: new Date(),
     },
   });
 });

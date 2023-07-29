@@ -3,19 +3,6 @@ import prisma from "../database/prisma";
 
 client.on("guildUpdate", async function (oldGuild, newGuild) {
   if (oldGuild.ownerId !== newGuild.ownerId) {
-    const oldOwner = await prisma.user.findFirst({
-      where: {
-        id: oldGuild.ownerId,
-        guilds: {
-          some: {
-            id: oldGuild.id,
-          },
-        },
-      },
-    });
-
-    if (!oldOwner) return;
-
     await prisma.user.upsert({
       create: {
         id: newGuild.ownerId,
@@ -32,6 +19,11 @@ client.on("guildUpdate", async function (oldGuild, newGuild) {
       },
       where: {
         id: oldGuild.ownerId,
+        guilds: {
+          some: {
+            id: oldGuild.id,
+          },
+        },
       },
       update: {
         guilds: {

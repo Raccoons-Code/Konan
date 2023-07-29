@@ -22,7 +22,7 @@ export default class extends ButtonCommand {
   async try(interaction: ButtonInteraction) {
     const oldInstance = await prisma.wordleInstance.findFirst({
       where: {
-        messageId: interaction.message.id,
+        message_id: interaction.message.id,
         players: {
           has: interaction.user.id,
         },
@@ -58,8 +58,8 @@ export default class extends ButtonCommand {
   async giveupOldInstance(interaction: ButtonInteraction) {
     let oldInstance = await prisma.wordleInstance.findFirst({
       where: {
-        userId: interaction.user.id,
-        endedAt: {
+        user_id: interaction.user.id,
+        ended_at: {
           isSet: false,
         },
       },
@@ -74,11 +74,11 @@ export default class extends ButtonCommand {
 
     oldInstance = await prisma.wordleInstance.update({
       where: {
-        messageId: oldInstance.messageId,
+        message_id: oldInstance.message_id,
       },
       data: {
-        endedAt: playersId.length ? undefined : new Date(),
-        userId: playersId[0],
+        ended_at: playersId.length ? undefined : new Date(),
+        user_id: playersId[0],
         players: {
           set: playersId,
         },
@@ -107,7 +107,7 @@ export default class extends ButtonCommand {
   async giveup(interaction: ButtonInteraction) {
     const wordleInstance = await prisma.wordleInstance.findFirst({
       where: {
-        messageId: interaction.message.id,
+        message_id: interaction.message.id,
         players: {
           has: interaction.user.id,
         },
@@ -125,17 +125,17 @@ export default class extends ButtonCommand {
 
     promises.push(prisma.wordleInstance.update({
       where: {
-        messageId: interaction.message.id,
+        message_id: interaction.message.id,
       },
       data: {
-        userId: interaction.user.id === wordleInstance.userId ? playersId[0] : wordleInstance.userId,
+        user_id: interaction.user.id === wordleInstance.user_id ? playersId[0] : wordleInstance.user_id,
         players: {
           set: playersId,
         },
         quitters: {
           push: interaction.user.id,
         },
-        endedAt: playersId.length ? undefined : new Date(),
+        ended_at: playersId.length ? undefined : new Date(),
       },
     }));
 
@@ -163,7 +163,7 @@ export default class extends ButtonCommand {
   async debug(interaction: ButtonInteraction) {
     const oldInstances = await prisma.wordleInstance.findMany({
       where: {
-        endedAt: {
+        ended_at: {
           isSet: false,
         },
         players: {
@@ -179,8 +179,8 @@ export default class extends ButtonCommand {
 
       promises.push(prisma.wordleInstance.update({
         data: {
-          endedAt: playersId.length ? undefined : new Date(),
-          userId: interaction.user.id === instance.userId ? playersId[0] : instance.userId,
+          ended_at: playersId.length ? undefined : new Date(),
+          user_id: interaction.user.id === instance.user_id ? playersId[0] : instance.user_id,
           players: {
             set: playersId,
           },
@@ -189,7 +189,7 @@ export default class extends ButtonCommand {
           },
         },
         where: {
-          messageId: instance.messageId,
+          message_id: instance.message_id,
         },
       })
         .then(data => {
@@ -210,20 +210,20 @@ export default class extends ButtonCommand {
   }
 
   async #giveupByMessageId(interaction: ButtonInteraction, data: WordleInstance) {
-    if (!data.channelId) return;
+    if (!data.channel_id) return;
 
-    const channel = await interaction.client.channels.fetch(data.channelId);
+    const channel = await interaction.client.channels.fetch(data.channel_id);
     if (!channel?.isTextBased()) return;
 
-    const message = await channel.messages.fetch(data.messageId).catch(() => null);
+    const message = await channel.messages.fetch(data.message_id).catch(() => null);
     if (!message) return;
 
     const embedJson = message.embeds[0].toJSON();
 
     const embeds = [
       new EmbedBuilder(embedJson)
-        .setColor(data.endedAt ? "DarkRed" : embedJson.color ?? "Random")
-        .setDescription(data.endedAt ? null : `${embedJson.description}`)
+        .setColor(data.ended_at ? "DarkRed" : embedJson.color ?? "Random")
+        .setDescription(data.ended_at ? null : `${embedJson.description}`)
         .setFields([
           data.players.length > 1 ? [
             {
@@ -234,7 +234,7 @@ export default class extends ButtonCommand {
                   ""}`,
             },
           ] : [],
-          data.endedAt ? [
+          data.ended_at ? [
             {
               name: "The word was:",
               value: inlineCode(data.data.word),
@@ -245,7 +245,7 @@ export default class extends ButtonCommand {
 
     try {
       await message.edit({
-        components: data.endedAt ? [] : message.components,
+        components: data.ended_at ? [] : message.components,
         embeds,
       });
     } catch { null; }
