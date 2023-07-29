@@ -2,7 +2,7 @@ import client from "../client";
 import prisma from "../database/prisma";
 
 client.on("guildMemberRemove", async function (member) {
-  await prisma.wordleInstance.updateMany({
+  await prisma.wordle.updateMany({
     where: {
       user_id: member.id,
       guild_id: member.guild.id,

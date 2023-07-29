@@ -19,27 +19,27 @@ model Authorization {
 }
 
 model Guild {
-  ObjectId   String           @id @default(auto()) @map("_id") @db.ObjectId
-  created_at DateTime         @default(now()) @db.Timestamp
-  updated_at DateTime         @default(now()) @updatedAt @db.Timestamp
-  id         String           @unique
-  user       User             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  ObjectId   String   @id @default(auto()) @map("_id") @db.ObjectId
+  created_at DateTime @default(now()) @db.Timestamp
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamp
+  id         String   @unique
+  user       User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: Cascade)
   user_id    String
-  wordles    WordleInstance[]
+  wordles    Wordle[]
 }
 
 model User {
-  ObjectId   String           @id @default(auto()) @map("_id") @db.ObjectId
-  created_at DateTime         @default(now()) @db.Timestamp
-  updated_at DateTime         @default(now()) @updatedAt @db.Timestamp
-  id         String           @unique
+  ObjectId   String   @id @default(auto()) @map("_id") @db.ObjectId
+  created_at DateTime @default(now()) @db.Timestamp
+  updated_at DateTime @default(now()) @updatedAt @db.Timestamp
+  id         String   @unique
   email      String?
-  coins      Int              @default(0) @db.Long()
+  coins      Int      @default(0) @db.Long()
   guilds     Guild[]
-  wordles    WordleInstance[]
+  wordles    Wordle[]
 }
 
-model WordleInstance {
+model Wordle {
   ObjectId   String         @id @default(auto()) @map("_id") @db.ObjectId
   created_at DateTime       @default(now()) @db.Timestamp
   updated_at DateTime       @default(now()) @updatedAt @db.Timestamp

@@ -30,7 +30,7 @@ export default class extends ModalSubmit {
       return 1;
     }
 
-    const wordleInstance = await prisma.wordleInstance.findFirst({
+    const wordleInstance = await prisma.wordle.findFirst({
       where: {
         ended_at: {
           isSet: false,
@@ -47,7 +47,7 @@ export default class extends ModalSubmit {
       <string[][]>wordleInstance.data.board,
     );
 
-    await prisma.wordleInstance.update({
+    await prisma.wordle.update({
       where: {
         message_id: interaction.message?.id,
       },

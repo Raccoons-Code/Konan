@@ -1,4 +1,4 @@
-import { WordleInstance } from "@prisma/client";
+import { Wordle } from "@prisma/client";
 import { ActionRowBuilder, ButtonInteraction, Colors, EmbedBuilder, inlineCode, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import prisma from "../../../database/prisma";
 import wordle from "../../../modules/Wordle";
@@ -20,7 +20,7 @@ export default class extends ButtonCommand {
   }
 
   async try(interaction: ButtonInteraction) {
-    const oldInstance = await prisma.wordleInstance.findFirst({
+    const oldInstance = await prisma.wordle.findFirst({
       where: {
         message_id: interaction.message.id,
         players: {
@@ -56,7 +56,7 @@ export default class extends ButtonCommand {
   }
 
   async giveupOldInstance(interaction: ButtonInteraction) {
-    let oldInstance = await prisma.wordleInstance.findFirst({
+    let oldInstance = await prisma.wordle.findFirst({
       where: {
         user_id: interaction.user.id,
         ended_at: {
@@ -72,7 +72,7 @@ export default class extends ButtonCommand {
 
     const playersId = oldInstance.players.filter(id => id !== interaction.user.id);
 
-    oldInstance = await prisma.wordleInstance.update({
+    oldInstance = await prisma.wordle.update({
       where: {
         message_id: oldInstance.message_id,
       },
@@ -105,7 +105,7 @@ export default class extends ButtonCommand {
   }
 
   async giveup(interaction: ButtonInteraction) {
-    const wordleInstance = await prisma.wordleInstance.findFirst({
+    const wordleInstance = await prisma.wordle.findFirst({
       where: {
         message_id: interaction.message.id,
         players: {
@@ -123,7 +123,7 @@ export default class extends ButtonCommand {
 
     const promises: Promise<unknown>[] = [];
 
-    promises.push(prisma.wordleInstance.update({
+    promises.push(prisma.wordle.update({
       where: {
         message_id: interaction.message.id,
       },
@@ -161,7 +161,7 @@ export default class extends ButtonCommand {
   }
 
   async debug(interaction: ButtonInteraction) {
-    const oldInstances = await prisma.wordleInstance.findMany({
+    const oldInstances = await prisma.wordle.findMany({
       where: {
         ended_at: {
           isSet: false,
@@ -177,7 +177,7 @@ export default class extends ButtonCommand {
     for (const instance of oldInstances) {
       const playersId = instance.players.filter(id => id !== interaction.user.id);
 
-      promises.push(prisma.wordleInstance.update({
+      promises.push(prisma.wordle.update({
         data: {
           ended_at: playersId.length ? undefined : new Date(),
           user_id: interaction.user.id === instance.user_id ? playersId[0] : instance.user_id,
@@ -209,7 +209,7 @@ export default class extends ButtonCommand {
     return;
   }
 
-  async #giveupByMessageId(interaction: ButtonInteraction, data: WordleInstance) {
+  async #giveupByMessageId(interaction: ButtonInteraction, data: Wordle) {
     if (!data.channel_id) return;
 
     const channel = await interaction.client.channels.fetch(data.channel_id);

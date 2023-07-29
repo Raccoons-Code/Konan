@@ -72,7 +72,7 @@ export default class extends ChatInputCommand {
     const players = Array.from(new Set([interaction.user.id].concat(playersId)))
       .map(id => userMention(id));
 
-    const oldInstance = await prisma.wordleInstance.findFirst({
+    const oldInstance = await prisma.wordle.findFirst({
       where: {
         user_id: interaction.user.id,
         ended_at: {
@@ -98,7 +98,7 @@ export default class extends ChatInputCommand {
             return 1;
           }
 
-          promises.push(prisma.wordleInstance.update({
+          promises.push(prisma.wordle.update({
             where: {
               message_id: oldInstance.message_id,
             },
@@ -172,7 +172,7 @@ export default class extends ChatInputCommand {
         return;
       }
 
-      promises.push(prisma.wordleInstance.updateMany({
+      promises.push(prisma.wordle.updateMany({
         where: {
           message_id: oldInstance.message_id,
           ended_at: {
@@ -230,7 +230,7 @@ export default class extends ChatInputCommand {
       interaction.editReply(payload) :
       interaction.channel!.send(payload));
 
-    promises.push(prisma.wordleInstance.create({
+    promises.push(prisma.wordle.create({
       data: {
         channel_id: `${interaction.channel?.id}`,
         guild_id: interaction.guild?.id,

@@ -43,7 +43,7 @@ client.on("shardReady", async function (shardId, unavailableGuilds) {
         const guildIds = Array.from(unavailableGuilds);
 
         prisma.$transaction([
-          prisma.wordleInstance.updateMany({
+          prisma.wordle.updateMany({
             where: {
               OR: guildIds.map(guild_id => ({ guild_id })),
               ended_at: {
