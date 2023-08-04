@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:lts-alpine
 
 RUN mkdir /usr/app && chown -R node:node /usr/app
 WORKDIR /usr/app
