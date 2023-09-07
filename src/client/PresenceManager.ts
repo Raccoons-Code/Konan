@@ -4,7 +4,7 @@ import client, { appStats } from ".";
 export default class PresenceManager {
   constructor() { }
 
-  declare interval: NodeJS.Timer;
+  declare interval: NodeJS.Timeout;
 
   readonly activities: ActivitiesOptions[] = [
     { name: "Cat Vibing Meme", type: ActivityType.Streaming, url: ytURL("NUYvbT6vTPs") },

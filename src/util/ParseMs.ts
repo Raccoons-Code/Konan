@@ -30,7 +30,7 @@ class ParseMs {
     let levels = 0;
 
     return ["D", "h", "m", "s", "ms"].reduce((acc, val) => {
-      const sub = Math.floor(ms / ParseMs[<"s">val]);
+      const sub = Math.floor(ms / ParseMs[<"ms">val]);
 
       if (!sub) return acc;
 
@@ -60,7 +60,7 @@ class ParseMs {
     for (const iterator of values) {
       const match = iterator.split(/(?<value>-?\d+(?:\.\d+)?)\s*(?<type>\w+)?/i);
 
-      result += Number(match[1]) * ParseMs[<"s">match[2]];
+      result += Number(match[1]) * ParseMs[<"ms">match[2]];
     }
 
     return result;

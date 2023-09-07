@@ -1,12 +1,12 @@
-import { BitFieldResolvable, GatewayIntentsString, Partials, PermissionsString } from "discord.js";
+import { BitFieldResolvable, GatewayIntentsString, Partials, PermissionResolvable } from "discord.js";
 import { CommandCategory } from "../@enum";
 
 interface BaseOptions {
   private?: boolean
-  appPermissions?: BitFieldResolvable<PermissionsString, bigint>
-  userPermissions?: BitFieldResolvable<PermissionsString, bigint>
-  channelAppPermissions?: BitFieldResolvable<PermissionsString, bigint>
-  channelUserPermissions?: BitFieldResolvable<PermissionsString, bigint>
+  appPermissions?: PermissionResolvable
+  userPermissions?: PermissionResolvable
+  channelAppPermissions?: PermissionResolvable
+  channelUserPermissions?: PermissionResolvable
 }
 
 export interface ApplicationCommandOptions extends BaseOptions {
