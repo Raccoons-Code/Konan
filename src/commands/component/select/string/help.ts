@@ -1,5 +1,6 @@
 import { ActionRowBuilder, APIEmbedField, ButtonBuilder, ButtonStyle, codeBlock, EmbedBuilder, OAuth2Scopes, RouteBases, StringSelectMenuBuilder, StringSelectMenuInteraction, StringSelectMenuOptionBuilder } from "discord.js";
 import { env } from "node:process";
+import { ApplicationCommandTypes } from "../../../../@enum";
 import client from "../../../../client";
 import commandHandler from "../../../../handlers/CommandHandler";
 import BaseCommand from "../../../../structures/BaseCommand";
@@ -7,8 +8,7 @@ import SelectMenuCommand from "../../../../structures/SelectMenuCommand";
 import Translator, { t } from "../../../../translator";
 import { HELP_PAGE_LIMIT } from "../../../../util/constants";
 import { formatLocale } from "../../../../util/Locales";
-import { mathRandom } from "../../../../util/utils";
-import { ApplicationCommandTypes } from "../../../../@enum";
+import { randomInt } from "../../../../util/utils";
 
 export default class extends SelectMenuCommand {
   constructor() {
@@ -74,7 +74,7 @@ export default class extends SelectMenuCommand {
                 .setLabel("Commands")
                 .setValue("commands"),
               new StringSelectMenuOptionBuilder()
-                .setEmoji(["🌎", "🌏", "🌍"][mathRandom(3)])
+                .setEmoji(["🌎", "🌏", "🌍"][randomInt(3)])
                 .setLabel("Languages")
                 .setValue("localization"),
             )),
@@ -164,7 +164,7 @@ export default class extends SelectMenuCommand {
           .setValue("commands"),
         new StringSelectMenuOptionBuilder()
           .setDefault(i === 2)
-          .setEmoji(["🌎", "🌏", "🌍"][mathRandom(3)])
+          .setEmoji(["🌎", "🌏", "🌍"][randomInt(3)])
           .setLabel("Languages")
           .setValue("localization"),
       );

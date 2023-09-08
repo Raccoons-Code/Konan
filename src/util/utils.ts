@@ -22,12 +22,13 @@ export function getLocalizations(
   options?: Record<string, any>,
 ): Partial<Record<Locale, string | null>> {
   return LOCALES.reduce((acc, locale) => {
-    const translation = t(key, {
+    const translation = t(key, Object.assign({
       locale,
       capitalize: null,
-      translation: { noScape: true },
-      ...options,
-    });
+      translation: {
+        noScape: true,
+      },
+    }, options));
 
     if (!translation) return acc;
 
@@ -216,10 +217,10 @@ export function makeTable<T extends [any, any]>(array: T[], sep = " : ") {
   return array.reduce((acc, arr) => `${acc}${arr[0].padEnd(greaterLength)}${sep}${arr[1]}\n`, "");
 }
 
-export function mathRandom<T extends number>(x: T): number;
-export function mathRandom<T>(length: T[]): number;
-export function mathRandom<T>(size: Set<T> | Map<string, T>): number;
-export function mathRandom<T>(xls: number | T[] | Set<T> | Map<string, T>) {
+export function randomInt<T extends number>(x: T): number;
+export function randomInt<T>(length: T[]): number;
+export function randomInt<T>(size: Set<T> | Map<string, T>): number;
+export function randomInt<T>(xls: number | T[] | Set<T> | Map<string, T>) {
   const num =
     typeof xls === "number" ? xls :
       "length" in xls ? xls.length :

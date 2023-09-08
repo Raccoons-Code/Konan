@@ -41,7 +41,7 @@ class Wordle {
 
     const letters = attempt.split("");
     const lettersCount = word.split("").reduce((acc, l) =>
-      ({ ...acc, [l]: acc[l] ? acc[l] + 1 : 1 }),
+      Object.assign(acc, { [l]: acc[l] ? acc[l] + 1 : 1 }),
       <Record<string, number>>{});
 
     for (let i = 0; i < word.length; i++) {

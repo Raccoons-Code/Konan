@@ -138,12 +138,11 @@ class CommandHandler {
   }
 
   async register(options?: CommandRegisterOptions) {
-    options = {
-      ...options,
+    options = Object.assign({}, options, {
       appId: options?.appId ?? client.user?.id ?? env.DISCORD_APPLICATION_ID,
       guilds: options?.guilds ?? env.DISCORD_TEST_GUILD_ID?.split(/\D+/),
       token: options?.token ?? client.token ?? env.DISCORD_TOKEN,
-    };
+    });
 
     if (!options.appId || !options.token)
       throw Error(

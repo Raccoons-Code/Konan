@@ -35,7 +35,7 @@ export default class Memory {
 
     const buttons = this.#randomize(this.#duplicate(options.emojis)
       .map((emoji, i) => new ButtonBuilder()
-        .setCustomId(JSON.stringify({ c: "mg", e: emoji, v: i % 2, ...customOptions }))
+        .setCustomId(JSON.stringify(Object.assign({ c: "mg", e: emoji, v: i % 2 }, customOptions)))
         .setEmoji(Emojis.gray_question)
         .setStyle(ButtonStyle.Secondary)));
 
@@ -45,7 +45,7 @@ export default class Memory {
       components.push(new ActionRowBuilder<ButtonBuilder>()
         .addComponents(buttons.splice(0, 5)));
 
-    return { ...options, components };
+    return Object.assign(options, { components });
   }
 
   #duplicate<T = any>(array: T[]) {

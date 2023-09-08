@@ -4,7 +4,7 @@ import client from "../../../client";
 import commandHandler from "../../../handlers/CommandHandler";
 import ChatInputCommand from "../../../structures/ChatInputCommand";
 import { t } from "../../../translator";
-import { getLocalizations, mathRandom } from "../../../util/utils";
+import { getLocalizations, randomInt } from "../../../util/utils";
 
 export default class extends ChatInputCommand {
   constructor() {
@@ -85,7 +85,7 @@ export default class extends ChatInputCommand {
                 .setLabel("Commands")
                 .setValue("commands"),
               new StringSelectMenuOptionBuilder()
-                .setEmoji(["🌎", "🌏", "🌍"][mathRandom(3)])
+                .setEmoji(["🌎", "🌏", "🌍"][randomInt(3)])
                 .setLabel("Languages")
                 .setValue("localization"),
             )),

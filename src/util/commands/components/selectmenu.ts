@@ -134,10 +134,9 @@ export function createSelectFromOptions(
         )
         .setCustomId(
           menuOptions.distinct ?
-            JSON.stringify({
-              ...JSON.parse(customId),
+            JSON.stringify(Object.assign({}, JSON.parse(customId), {
               d: Date.now() + index++,
-            }) :
+            })) :
             customId,
         )
         .setOptions(group)
@@ -287,10 +286,9 @@ export function setBitFieldValuesOnSelectMenus(
             return new StringSelectMenuOptionBuilder(option)
               .setEmoji(values.includes(option.value) ? parsedValue.v ?
                 Danger : Success : option.emoji ?? {})
-              .setValue(JSON.stringify({
-                ...parsedValue,
+              .setValue(JSON.stringify(Object.assign({}, parsedValue, {
                 v: values.includes(option.value) ? parsedValue.v ? 0 : 1 : parsedValue.v,
-              }));
+              })));
           }));
       }));
   });
