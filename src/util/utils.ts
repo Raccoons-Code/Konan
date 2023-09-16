@@ -170,6 +170,7 @@ export function makeBits<T extends string | number | symbol>(array: Readonly<T[]
   const bits = <Record<T, typeof i>>{};
 
   for (const iterator of array) {
+    if (!iterator) continue;
     bits[iterator] = i;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
