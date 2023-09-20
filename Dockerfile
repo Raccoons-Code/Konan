@@ -4,7 +4,7 @@ RUN mkdir /usr/app
 WORKDIR /usr/app
 
 COPY --chown=node:node . .
-RUN npm i -g yarn || true
+RUN npm i -g yarn || yarn -h
 RUN yarn
 RUN npm run build
 RUN rm -rf node_modules
