@@ -50,7 +50,7 @@
     "@types/ms": "^0.7.31",
     "@types/node": "^20.6.3",
     "@types/source-map-support": "^0.5.7",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
     "eslint": "^8.49.0",
     "nodemon": "^3.0.1",
