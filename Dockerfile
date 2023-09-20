@@ -1,6 +1,6 @@
 FROM node:lts
 
-RUN ls /usr/app
+RUN ls /usr
 RUN mkdir /usr/app && chown -R node:node /usr/app
 WORKDIR /usr/app
 
