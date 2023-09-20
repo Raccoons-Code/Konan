@@ -47,6 +47,6 @@ jobs:
         with:
           context: .
           builder: ${{ steps.buildx.outputs.name }}
-          platforms: ${{ steps.buildx.outputs.platforms }}
+          platforms: linux/amd64,linux/arm64
           push: false
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/konan:latest
