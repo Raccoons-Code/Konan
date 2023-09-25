@@ -207,10 +207,10 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.0.tgz#591c1ce3a702c45ee15f47a42ade72c2fd78978a"
   integrity sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==
 
-"@types/source-map-support@^0.5.7":
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/@types/source-map-support/-/source-map-support-0.5.7.tgz#68b3cc568cc4cc4d141d58edfca164c1354044b9"
-  integrity sha512-rJqBfLel8jPuL5MwXxMH2Cdb6D80Snu3YJxDE+VJAmtT04l7j3OA7h+FYXlYDys0WeBVH/MPbExj3B8NCaDw9g==
+"@types/source-map-support@^0.5.8":
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/@types/source-map-support/-/source-map-support-0.5.8.tgz#ec9bd9d4c6ef9183f516109f26225350b73f91be"
+  integrity sha512-u5nwLcaENciDwebPwwZb2AM1LvdlgFQfqCKxWQxcgNsQhUQciGuUnJ2LjGFAkInY2APXQzIypiUSa9zB6Epddg==
   dependencies:
     source-map "^0.6.0"
 
