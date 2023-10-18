@@ -46,7 +46,7 @@
     "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@types/common-tags": "^1.8.2",
+    "@types/common-tags": "^1.8.3",
     "@types/ms": "^0.7.33",
     "@types/node": "^20.8.7",
     "@types/source-map-support": "^0.5.9",
