@@ -151,10 +151,10 @@
   resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-5.5.0-19.475c616176945d72f4330c92801f0c5e6398dc0f.tgz#c3ddca62ee65158a20ce194c2492791f506f4bfc"
   integrity sha512-/1orOUq7I54ISYBJockYB15FmF/VkCBeFzYYkWyLtBl2tLlJWHmA3NEUBM+wSmXGLK78BmuSNHrLbf8bmXkukQ==
 
-"@prisma/engines@5.5.0":
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-5.5.0.tgz#80b9035d533e3dcd4297ddeada4806fe176ae7bf"
-  integrity sha512-WX+8l4sJuWeS3A/5WqJpdBHp32UzUticiKwUWbFggcd6/sqGtCiiaFmXYmNw6Au2O6hjSX37Y07Vu2ZhP9cmWg==
+"@prisma/engines@5.5.2":
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-5.5.2.tgz#fe0d2361a48c7d59568ccf0d35c75432594e1ac1"
+  integrity sha512-Be5hoNF8k+lkB3uEMiCHbhbfF6aj1GnrTBnn5iYFT7GEr3TsOEp1soviEcBR0tYCgHbxjcIxJMhdbvxALJhAqg==
 
 "@sapphire/async-queue@^1.5.0":
   version "1.5.0"
@@ -1196,12 +1196,12 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prisma@^5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/prisma/-/prisma-5.5.0.tgz#088c3733ddc578cabdbddb89adc53ddc423ac27f"
-  integrity sha512-QyMMh1WQiGU07Iz3Q8jd6y5KlomGLDVb4etkMWpQ4EmDAaY+zGgNHmBk2MfRPb0A+un1Ior1nZWZorfnKD6E5A==
+prisma@^5.5.2:
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/prisma/-/prisma-5.5.2.tgz#54ad2f04f0dd4174f27128e4447013e8d75c4d69"
+  integrity sha512-WQtG6fevOL053yoPl6dbHV+IWgKo25IRN4/pwAGqcWmg7CrtoCzvbDbN9fXUc7QS2KK0LimHIqLsaCOX/vHl8w==
   dependencies:
-    "@prisma/engines" "5.5.0"
+    "@prisma/engines" "5.5.2"
 
 pstree.remy@^1.1.8:
   version "1.1.8"
