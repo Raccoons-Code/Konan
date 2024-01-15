@@ -54,7 +54,7 @@
     "@typescript-eslint/parser": "^6.18.1",
     "eslint": "^8.56.0",
     "nodemon": "^3.0.2",
-    "prisma": "^5.8.0",
+    "prisma": "^5.8.1",
     "typescript": "^5.3.3"
   }
 }
