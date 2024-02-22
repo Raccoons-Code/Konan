@@ -36,7 +36,7 @@
   "dependencies": {
     "@prisma/client": "^5.10.2",
     "@top-gg/sdk": "^3.1.6",
-    "better-sqlite3": "^9.4.2",
+    "better-sqlite3": "^9.4.3",
     "common-tags": "^1.8.2",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
